@@ -1,10 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>
-<html>
-<head>
-<title>Home</title>
-</head>
-<body>
-  <h1>Welcome to GraffitiTracker</h1>
-</body>
-</html>
+<div>
+  <h2>Welcome to GraffitiTracker</h2>
+  <p>Options for non logged in users will go here</p>
+</div>
