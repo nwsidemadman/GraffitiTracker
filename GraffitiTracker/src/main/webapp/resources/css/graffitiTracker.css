@@ -1,7 +1,7 @@
 body {
   margin: 0pt;
   padding: 0pt;
-  background: #000000; fixed left top;
+  background: #000000;
   color: #333333;
   font-family: 'Lucida Grande', sans-serif;
   font-size: 0.75em;
@@ -58,13 +58,36 @@ body {
 }
 
 #footer {
-  background: #FFFFFF;
+  background: #000000;
   position: absolute;
   bottom: 0px;
-  margin-top: 6px;
-  float: left;
+  margin: 0px;
+  padding: 0px;
+}
+
+#info {
+  background: #000000;
+  font-size: 1.4em;
+  color: #986F33;
   text-align: center;
   width: 755px;
+  font-weight:bold;
+  border-top: 5px solid #986F33;
+  line-height: .3;
+}
+
+#copyright {
+  font-size: 0.9em;
+  background: #000000;
+  color: #FFFFFF;
+  text-align: center;
+  width: 755px;
+  line-height: .3;
+}
+
+#company_name {
+  font-weight: bold;
+  font-style: normal;
 }
 
 th label {
