@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
-@PropertySource("classpath:/net/ccaper/GraffitiTracker/local/GraffitiTracker.properties")
+@PropertySource("classpath:/net/ccaper/GraffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker.properties")
 public class AppConfig {
   @Autowired
   Environment properties;
