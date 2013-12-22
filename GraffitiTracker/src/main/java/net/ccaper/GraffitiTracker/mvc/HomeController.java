@@ -1,4 +1,4 @@
-package net.ccaper.GraffitiTracker;
+package net.ccaper.GraffitiTracker.mvc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

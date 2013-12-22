@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns="http://www.springframework.org/schema/security"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+  <context:annotation-config/>
+  <beans:bean name="AppConfig"
+    class="net.ccaper.GraffitiTracker.spring.AppConfig" />
+
+  <!-- Automatically registers a login form, BASIC authentication, anonymous 
+    authentication, logout services, remember-me and servlet-api-integration. -->
+  <http use-expressions="true">
+    <form-login login-page="/login" login-processing-url="/static/j_spring_security_check"
+      authentication-failure-url="/home" />
+    <logout logout-url="/static/j_spring_security_logout" />
+    <intercept-url pattern="/favicon.ico" access="permitAll" />
+    <intercept-url pattern="/" access="permitAll" />
+    <intercept-url pattern="/home" access="permitAll" />
+    <intercept-url pattern="*/**" access="isAuthenticated()" />
+    <remember-me key="graffitiTrackerKey"
+      token-validity-seconds="2419200" />
+  </http>
+
+  <!--<start id="jdbc_user_service"/> -->
+  <jdbc-user-service id="userService" data-source-ref="dataSource"
+    users-by-username-query="SELECT `username`, `password`, `is_active` FROM `graffiti_tracker`.`users` WHERE `username` = ?;"
+    authorities-by-username-query="SELECT `username`, `role` FROM `graffiti_tracker`.`users` INNER JOIN `graffiti_tracker`.`roles` WHERE `users`.`user_id` = `roles`.`user_id` AND `username` = ?;" />
+  <!--<end id="jdbc_user_service"/> -->
+
+  <!--<start id="authentication_manager"/> -->
+  <authentication-manager alias="authenticationManager">
+    <authentication-provider user-service-ref="userService" />
+  </authentication-manager>
+  <!--<end id="authentication_manager"/> -->
+
+</beans:beans>

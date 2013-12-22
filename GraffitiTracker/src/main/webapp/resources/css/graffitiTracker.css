@@ -46,6 +46,7 @@ body {
 }
 
 #side {
+  font-size: .8em;
   background: #E0E0E0 none repeat scroll 0%;
   border: 1px solid #000000;
   float: right;
@@ -55,6 +56,10 @@ body {
   margin-right: 6px;
   padding: 12px;
   width: 162px;
+}
+
+label {
+  font-size: 1.2em;
 }
 
 #footer {
@@ -184,10 +189,6 @@ h2 {
   padding: 10px 10px;
   cursor: default;
   font-size: 12pt;
-}
-
-label {
-  font-size: 20px;
 }
 
 .submit {

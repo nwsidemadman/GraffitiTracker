@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker;
 
 import static org.junit.Assert.*;
+import net.ccaper.GraffitiTracker.mvc.HomeController;
 
 import org.junit.After;
 import org.junit.Before;
