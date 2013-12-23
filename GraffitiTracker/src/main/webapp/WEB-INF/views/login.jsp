@@ -6,6 +6,12 @@
 <sec:authorize access="isAnonymous()">
   <div>
     <h2>Sign in to Graffiti Tracker</h2>
+    
+    <c:if test="${not empty param.login_error}">
+      <div class="error">
+          Your login attempt was not successful, please try again.
+      </div>
+    </c:if>
 
     <s:url var="authUrl" value="/static/j_spring_security_check" />
     <!--<co id="co_securityCheckPath"/>-->

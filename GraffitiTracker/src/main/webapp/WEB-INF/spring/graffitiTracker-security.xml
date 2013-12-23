@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
-  xmlns="http://www.springframework.org/schema/security"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <context:annotation-config/>
+  <context:annotation-config />
   <beans:bean name="AppConfig"
     class="net.ccaper.GraffitiTracker.spring.AppConfig" />
 
   <!-- Automatically registers a login form, BASIC authentication, anonymous 
     authentication, logout services, remember-me and servlet-api-integration. -->
   <http use-expressions="true">
-    <form-login login-page="/login" login-processing-url="/static/j_spring_security_check"
-      authentication-failure-url="/home" />
+    <form-login login-page="/home" login-processing-url="/static/j_spring_security_check"
+      authentication-failure-url="/home?login_error=t" />
     <logout logout-url="/static/j_spring_security_logout" />
     <intercept-url pattern="/favicon.ico" access="permitAll" />
     <intercept-url pattern="/" access="permitAll" />
