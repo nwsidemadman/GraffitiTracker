@@ -15,7 +15,7 @@ public class AppConfig {
   @Autowired
   Environment properties;
 
-  @Bean
+  @Bean(destroyMethod = "close")
   public DataSource dataSource() {
     BasicDataSource dataSource = new BasicDataSource();
     dataSource.setDriverClassName(properties.getProperty("db.driverClassName"));
