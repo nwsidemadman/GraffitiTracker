@@ -30,12 +30,12 @@
     users-by-username-query="SELECT `username`, `password`, `is_active` FROM `graffiti_tracker`.`users` WHERE `username` = ?;"
     authorities-by-username-query="SELECT `username`, `role` FROM `graffiti_tracker`.`users` INNER JOIN `graffiti_tracker`.`roles` WHERE `users`.`user_id` = `roles`.`user_id` AND `username` = ?;" />
   <!--<end id="jdbc_user_service"/> -->
-
+  
   <!--<start id="authentication_manager"/> -->
   <authentication-manager alias="authenticationManager">
     <authentication-provider user-service-ref="userService">
-      <password-encoder hash="sha-256">
-        <!-- <salt-source user-property="username"/> -->
+      <password-encoder ref="passwordEncoder">
+        <salt-source user-property="username"/>
       </password-encoder>
     </authentication-provider>
   </authentication-manager>
