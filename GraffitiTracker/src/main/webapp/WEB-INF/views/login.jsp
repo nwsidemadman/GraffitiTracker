@@ -2,6 +2,7 @@
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <sec:authorize access="isAnonymous()">
   <div>
@@ -53,14 +54,16 @@
     <p>
       <a href="${unauthUrl}">Logout</a>
     </p>
-    <p>
-      Welcome, <sec:authentication property="principal.username" />.
-    </p>
-    <p>Roles:</p>
     <sec:authentication property="authorities" var="roles" />
-    <c:forEach var="role" items="${roles}">
+    <p>Username: ${user.getUsername()} (ID: ${user.getUserId()})</p>
+    <p>Is Active: ${user.getIsActive()}</p>
+    <p>Register Date: <fmt:formatDate value="${user.getRegisterDate()}" pattern="yyyy-MM-d" /></p>
+    <p>Last Login: <fmt:formatDate value="${user.getLastLogin()}" pattern="yyyy-MM-d" /></p>
+    <p>Roles:</p>
+    <c:forEach var="role" items="${user.getRoles()}">
       <p>
-        <c:out value="${role}" />
+        <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-d" var="grantedDate"/>
+        <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" />
       </p>
     </c:forEach>
   </div>
