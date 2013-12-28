@@ -4,4 +4,6 @@ import net.ccaper.GraffitiTracker.objects.User;
 
 public interface UserService {
   User getUser(String username);
+  
+  void addUser(User user);
 }

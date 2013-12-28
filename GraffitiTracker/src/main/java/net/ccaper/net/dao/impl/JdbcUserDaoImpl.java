@@ -31,12 +31,20 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
       USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_DATE_COL, PASSWORD_COL,
       LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL);
+  private static final String SQL_INSERT_USER = String.format(
+      "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
+      USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
+      PASSWORD_COL);
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
       "SELECT %s, %s FROM %s where %s = :%s", ROLE_COL,
       ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL);
+  private static final String SQL_INSERT_ROLE = String.format(
+      "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
+      ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
+      USERNAME_COL);
 
   RowMapper<User> userRowMapper = new RowMapper<User>() {
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -51,7 +59,7 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       return user;
     }
   };
-  
+
   RowMapper<Role> rolesRowMapper = new RowMapper<Role>() {
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
       Role role = new Role();
@@ -73,5 +81,17 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
     user.setRoles(new HashSet<Role>(roles));
     return user;
+  }
+
+  @Override
+  public void addUser(User user) {
+    Map<String, String> userParamMap = new HashMap<String, String>();
+    userParamMap.put(USERNAME_COL, user.getUsername());
+    userParamMap.put(EMAIL_COL, user.getEmail());
+    userParamMap.put(PASSWORD_COL, user.getPassword());
+    getNamedParameterJdbcTemplate().update(SQL_INSERT_USER, userParamMap);
+    Map<String, String> roleParamMap = new HashMap<String, String>();
+    roleParamMap.put(USERNAME_COL, user.getUsername());
+    getNamedParameterJdbcTemplate().update(SQL_INSERT_ROLE, roleParamMap);
   }
 }

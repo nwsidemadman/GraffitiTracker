@@ -1,6 +1,6 @@
 <div id="info">
   <p>
-    Contact &middot; About
+    Contact &middot; About &middot; Legal &middot; Privacy
   </p>
 </div>
 <div id="copyright">
