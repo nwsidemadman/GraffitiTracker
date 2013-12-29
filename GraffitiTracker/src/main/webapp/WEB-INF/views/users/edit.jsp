@@ -17,7 +17,7 @@
         </p>
         <p>
           <sf:label path="password">Password:</sf:label>
-          <sf:password path="password" size="30" showPassword="true" maxlength="64"/> 
+          <sf:password path="password" size="30" showPassword="false" maxlength="64"/> 
           <small>6 characters or more</small><br/>
           <sf:errors path="password" cssClass="error" />
         </p>
