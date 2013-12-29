@@ -23,7 +23,6 @@ public class UserController {
   
   @RequestMapping(method=RequestMethod.GET, params="new")
   public String createUserProfile(Model model) {
-    logger.info("Create user profile hit in UserController!");
     model.addAttribute(new User());
     return "users/edit";
   }
