@@ -17,7 +17,6 @@ public class User {
   static private final int MAX_PASSWORD_LENGTH = 64;
   static private EmailValidator emailValidator = EmailValidator
       .getInstance(false);
-  private static final ShaPasswordEncoder PASSWORD_ENCODER = new ShaPasswordEncoder(256);
   private int userId;
   @NotBlank(message = "Username must be supplied.")
   @List({
@@ -36,6 +35,7 @@ public class User {
     @Length(max = 64, message = "Password must less than 65 characters long.")
   })
   private String password;
+  private String passwordEncoded;
   private Timestamp lastLogin;
   private Set<Role> roles;
   
@@ -92,7 +92,7 @@ public class User {
   }
 
   public String getPassword() {
-    return password;
+    return passwordEncoded;
   }
 
   public void setPassword(String password) {
@@ -104,14 +104,23 @@ public class User {
                   "Invalid password. The password must be longer than %s characters and less than %s characters",
                    MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
     }
-    if (username == null) {
-      throw new IllegalStateException("Username needed for salting has not been set.");
-    }
-    this.password = PASSWORD_ENCODER.encodePassword(password, username);
+    this.password = password;
   }
   
-  public void setPasswordEncoded(String password) {
-    this.password = password;
+  public void setPasswordEncoded(String passwordEncoded) {
+    this.passwordEncoded = passwordEncoded;
+  }
+  
+  public void encodePassword() {
+    if (username == null) {
+      throw new IllegalStateException("Username needed for salting is null."); 
+    }
+    if (password == null) {
+      throw new IllegalStateException("Password is null."); 
+    }
+    ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder(256);
+    passwordEncoded = passwordEncoder.encodePassword(password, username);
+    password = null;
   }
 
   public Timestamp getLastLogin() {
@@ -137,7 +146,7 @@ public class User {
     result = prime * result + ((email == null) ? 0 : email.hashCode());
     result = prime * result + (isActive ? 1231 : 1237);
     result = prime * result + ((lastLogin == null) ? 0 : lastLogin.hashCode());
-    result = prime * result + ((password == null) ? 0 : password.hashCode());
+    result = prime * result + ((passwordEncoded == null) ? 0 : passwordEncoded.hashCode());
     result = prime * result
         + ((registerDate == null) ? 0 : registerDate.hashCode());
     result = prime * result + ((roles == null) ? 0 : roles.hashCode());
@@ -167,10 +176,10 @@ public class User {
         return false;
     } else if (!lastLogin.equals(other.lastLogin))
       return false;
-    if (password == null) {
-      if (other.password != null)
+    if (passwordEncoded == null) {
+      if (other.passwordEncoded != null)
         return false;
-    } else if (!password.equals(other.password))
+    } else if (!passwordEncoded.equals(other.passwordEncoded))
       return false;
     if (registerDate == null) {
       if (other.registerDate != null)

@@ -21,24 +21,24 @@ public class UserTest {
 
   @Test
   public void testValidateEmailHappyPath() throws Exception {
-    String email = "name@domain.com";
+    String email = "test@test.com";
     user.setEmail(email);
     assertEquals(email, user.getEmail());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testValidateEmailSadPath() throws Exception {
-    user.setEmail("blah@blah");
+    user.setEmail("test@test");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testValidateEmailLocal() throws Exception {
-    user.setEmail("blah@localhost");
+    user.setEmail("test@localhost");
   }
 
   @Test
   public void testSetUsernameHappyPath() throws Exception {
-    String username = "someUser";
+    String username = "testUsername";
     user.setUsername(username);
     assertEquals(username, user.getUsername());
   }
@@ -56,14 +56,22 @@ public class UserTest {
   @Test
   public void testSetPasswordEncodeClearText() throws Exception {
     String password = "testPassword";
-    user.setUsername("testUserName");
+    user.setUsername("testUsername");
     user.setPassword(password);
+    user.encodePassword();
     assertFalse(password.equals(user.getPassword()));
   }
 
   @Test(expected = IllegalStateException.class)
-  public void testSetPasswordEncodeClearText_UsernameNull() throws Exception {
+  public void testEncodePassword_UsernameNull() throws Exception {
     user.setPassword("testPassword");
+    user.encodePassword();
+  }
+  
+  @Test(expected = IllegalStateException.class)
+  public void testEncodePassword_PasswordNull() throws Exception {
+    user.setUsername("testUsername");
+    user.encodePassword();
   }
 
   @Test(expected = IllegalArgumentException.class)
