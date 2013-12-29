@@ -88,7 +88,7 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(USERNAME_COL, user.getUsername());
     userParamMap.put(EMAIL_COL, user.getEmail());
-    userParamMap.put(PASSWORD_COL, user.getPassword());
+    userParamMap.put(PASSWORD_COL, user.getPasswordEncoded());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_USER, userParamMap);
     Map<String, String> roleParamMap = new HashMap<String, String>();
     roleParamMap.put(USERNAME_COL, user.getUsername());

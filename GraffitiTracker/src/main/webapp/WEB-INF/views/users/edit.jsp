@@ -10,21 +10,26 @@
     <sf:form method="POST" modelAttribute="user" >
       <fieldset> 
         <p>
+          <sf:errors path="username" cssClass="error" /><br/>
           <sf:label path="username">Username:</sf:label>
           <sf:input path="username" size="20" maxlength="20" />
           <small id="username_msg">No spaces, please. 6 characters or more</small>
-          <sf:errors path="username" cssClass="error" />
         </p>
         <p>
+          <sf:errors path="password" cssClass="error" /><br/>
           <sf:label path="password">Password:</sf:label>
           <sf:password path="password" size="30" showPassword="false" maxlength="64"/> 
           <small>6 characters or more</small><br/>
-          <sf:errors path="password" cssClass="error" />
         </p>
         <p>
+          <sf:errors path="confirmPassword" cssClass="error" /><br/>
+          <sf:label path="confirmPassword">Confirm Password:</sf:label>
+          <sf:password path="confirmPassword" size="30" showPassword="false" maxlength="64"/> 
+        </p>
+        <p>
+          <sf:errors path="email" cssClass="error" /><br/>
           <sf:label path="email">Email Address:</sf:label>
           <sf:input path="email" size="30" maxlength="100"/> 
-          <sf:errors path="email" cssClass="error" />
         </p>
         <p>
           <input name="commit" type="submit" 

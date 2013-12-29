@@ -28,6 +28,5 @@ public class AppConfigTest {
   @Test
   public void testWiring() {
     assertNotNull(context.getBean("dataSource"));
-    assertNotNull(context.getBean("passwordEncoder"));
   }
 }
