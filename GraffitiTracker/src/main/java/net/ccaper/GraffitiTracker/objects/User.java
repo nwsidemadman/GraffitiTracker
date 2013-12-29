@@ -4,7 +4,10 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Length.List;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
 public class User {
@@ -14,18 +17,28 @@ public class User {
   static private final int MAX_PASSWORD_LENGTH = 64;
   static private EmailValidator emailValidator = EmailValidator
       .getInstance(false);
-  // TODO: set type to higher level
-  @Autowired
-  private ShaPasswordEncoder passwordEncoder;
+  private static final ShaPasswordEncoder PASSWORD_ENCODER = new ShaPasswordEncoder(256);
   private int userId;
+  @NotBlank(message = "Username must be supplied.")
+  @List({
+    @Length(min = 6, message = "Username must be at least 6 characters long."),
+    @Length(max = 20, message = "Username must less than 21 characters long.")
+  })
   private String username;
+  @NotBlank(message = "Email must be supplied.")
+  @Email(message = "Email must be valid.")
   private String email;
   private boolean isActive;
   private Timestamp registerDate;
+  @NotBlank(message = "Password must be supplied.")
+  @List({
+    @Length(min = 6, message = "Password must be at least 6 characters long."),
+    @Length(max = 64, message = "Password must less than 65 characters long.")
+  })
   private String password;
   private Timestamp lastLogin;
   private Set<Role> roles;
-
+  
   public int getUserId() {
     return userId;
   }
@@ -83,14 +96,6 @@ public class User {
   }
 
   public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public void setPasswordEncoder(ShaPasswordEncoder passwordEncoder) {
-    this.passwordEncoder = passwordEncoder;
-  }
-
-  public void setPasswordEncodeClearText(String password, String username) {
     if (password.length() < MIN_PASSWORD_LENGTH
         || password.length() > MAX_PASSWORD_LENGTH) {
       throw new IllegalArgumentException(
@@ -99,10 +104,14 @@ public class User {
                   "Invalid password. The password must be longer than %s characters and less than %s characters",
                    MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
     }
-    if (passwordEncoder == null) {
-      throw new IllegalStateException("Password Encoder has not been set.");
+    if (username == null) {
+      throw new IllegalStateException("Username needed for salting has not been set.");
     }
-    this.password = passwordEncoder.encodePassword(password, username);
+    this.password = PASSWORD_ENCODER.encodePassword(password, username);
+  }
+  
+  public void setPasswordEncoded(String password) {
+    this.password = password;
   }
 
   public Timestamp getLastLogin() {

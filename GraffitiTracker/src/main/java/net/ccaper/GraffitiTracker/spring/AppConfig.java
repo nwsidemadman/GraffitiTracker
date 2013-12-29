@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
 @Configuration
 @PropertySource("classpath:/net/ccaper/GraffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker.properties")
@@ -21,11 +20,6 @@ public class AppConfig {
   @Autowired
   private Environment properties;
   
-  @Bean
-  public ShaPasswordEncoder passwordEncoder() {
-    return new ShaPasswordEncoder(256);
-  }
-
   @Bean(destroyMethod = "close")
   public DataSource dataSource() {
     BasicDataSource dataSource = new BasicDataSource();

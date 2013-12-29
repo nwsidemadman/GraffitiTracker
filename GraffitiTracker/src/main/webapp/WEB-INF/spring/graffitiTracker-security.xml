@@ -34,7 +34,7 @@
   <!--<start id="authentication_manager"/> -->
   <authentication-manager alias="authenticationManager">
     <authentication-provider user-service-ref="userService">
-      <password-encoder ref="passwordEncoder">
+      <password-encoder hash="sha-256">
         <salt-source user-property="username"/>
       </password-encoder>
     </authentication-provider>

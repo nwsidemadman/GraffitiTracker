@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
 public class UserTest {
   User user;
@@ -57,25 +56,31 @@ public class UserTest {
   @Test
   public void testSetPasswordEncodeClearText() throws Exception {
     String password = "testPassword";
-    user.setPasswordEncoder(new ShaPasswordEncoder(256));
-    user.setPasswordEncodeClearText(password, "testUserName");
+    user.setUsername("testUserName");
+    user.setPassword(password);
     assertFalse(password.equals(user.getPassword()));
   }
 
   @Test(expected = IllegalStateException.class)
-  public void testSetPasswordEncodeClearText_EncoderNull() throws Exception {
-    user.setPasswordEncodeClearText("testPassword", "testUserName");
+  public void testSetPasswordEncodeClearText_UsernameNull() throws Exception {
+    user.setPassword("testPassword");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetPasswordEncodeClearTextTooShort() throws Exception {
-    user.setPasswordEncodeClearText("1", "testUserName");
+    user.setPassword("1");
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testSetPasswordEncodeClearTextTooLong() throws Exception {
-    user.setPasswordEncodeClearText(
-        "12345678901234567890123456789012345678901234567890123456789012345",
-        "testUserName");
+    user.setPassword(
+        "12345678901234567890123456789012345678901234567890123456789012345");
+  }
+  
+  @Test
+  public void testSetPasswordEncoded() throws Exception {
+    String password = "testPassword";
+    user.setPasswordEncoded(password);
+    assertEquals(password, user.getPassword());
   }
 }
