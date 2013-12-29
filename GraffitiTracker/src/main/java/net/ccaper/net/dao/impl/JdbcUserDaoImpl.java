@@ -35,6 +35,12 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
       PASSWORD_COL);
+  private static final String SQL_SELECT_COUNT_USERNAME = String.format(
+      "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
+      USERNAME_COL, USERNAME_COL);
+  private static final String SQL_SELECT_COUNT_EMAIL = String.format(
+      "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
+      EMAIL_COL, EMAIL_COL);
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -59,7 +65,13 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       return user;
     }
   };
-
+  
+  RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
+    public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return new Integer(rs.getInt(1));
+    }
+  };
+  
   RowMapper<Role> rolesRowMapper = new RowMapper<Role>() {
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
       Role role = new Role();
@@ -93,5 +105,29 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     Map<String, String> roleParamMap = new HashMap<String, String>();
     roleParamMap.put(USERNAME_COL, user.getUsername());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_ROLE, roleParamMap);
+  }
+
+  @Override
+  public boolean doesUsernameExist(String username) {
+    Map<String, String> userParamMap = new HashMap<String, String>();
+    userParamMap.put(USERNAME_COL, username);
+    Integer count = getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_COUNT_USERNAME, userParamMap, countRowMapper);
+    if (count == 0) {
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public boolean doesEmailExist(String email) {
+    Map<String, String> userParamMap = new HashMap<String, String>();
+    userParamMap.put(EMAIL_COL, email);
+    Integer count = getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_COUNT_EMAIL, userParamMap, countRowMapper);
+    if (count == 0) {
+      return false;
+    }
+    return true;
   }
 }

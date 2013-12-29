@@ -21,4 +21,14 @@ public class UserServiceImpl implements UserService {
   public void addUser(User user) {
     userDao.addUser(user);
   }
+
+  @Override
+  public boolean doesUsernameExist(String username) {
+    return userDao.doesUsernameExist(username);
+  }
+
+  @Override
+  public boolean doesEmailExist(String email) {
+    return userDao.doesEmailExist(email);
+  }
 }

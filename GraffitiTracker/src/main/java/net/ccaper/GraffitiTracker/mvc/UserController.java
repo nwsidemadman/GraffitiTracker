@@ -29,7 +29,7 @@ public class UserController {
   
   @RequestMapping(method=RequestMethod.POST)
   public String addUserFromForm(User user, BindingResult bindingResult) {
-    UserValidator userValidator = new UserValidator();
+    UserValidator userValidator = new UserValidator(userService);
     userValidator.validate(user, bindingResult);
     if(bindingResult.hasErrors()) {
       return "users/edit";

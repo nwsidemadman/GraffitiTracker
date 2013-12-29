@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc.validators;
 
 import net.ccaper.GraffitiTracker.objects.User;
+import net.ccaper.GraffitiTracker.service.UserService;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,11 @@ public class UserValidator implements Validator {
   static private final int MAX_EMAIL_LENGTH = 100;
   static private EmailValidator EMAIL_VALIDATOR = EmailValidator
       .getInstance(false);
+  private UserService userService;
+  
+  public UserValidator(UserService userService) {
+    this.userService = userService;
+  }
 
   @Override
   public boolean supports(Class<?> clazz) {
@@ -41,6 +47,12 @@ public class UserValidator implements Validator {
           "username",
           "invalidUsername",
           String.format("The username \"%s\" can not contain whitespace.",
+              user.getUsername()));
+    } else if (userService.doesUsernameExist(user.getUsername())) {
+      errors.rejectValue(
+          "username",
+          "invalidUsername",
+          String.format("The username \"%s\" already exists, please chose another.",
               user.getUsername()));
     }
     if (StringUtils.isEmpty(user.getPassword())) {
@@ -74,6 +86,12 @@ public class UserValidator implements Validator {
     } else if (!EMAIL_VALIDATOR.isValid(user.getEmail())) {
       errors.rejectValue("email", "invalidemail",
           String.format("The email \"%s\" is not valid.", user.getEmail()));
+    } else if (userService.doesEmailExist(user.getEmail())) {
+      errors.rejectValue(
+          "email",
+          "invalidEmail",
+          String.format("The email \"%s\" already exists, one email per user.",
+              user.getEmail()));
     }
   }
 }
