@@ -48,7 +48,7 @@ public class UserValidator implements Validator {
           "invalidUsername",
           String.format("The username \"%s\" can not contain whitespace.",
               user.getUsername()));
-    } else if (userService.doesUsernameExist(user.getUsername())) {
+    } else if (user.getAcceptTerms() == true && userService.doesUsernameExist(user.getUsername())) {
       errors.rejectValue(
           "username",
           "invalidUsername",
@@ -86,12 +86,18 @@ public class UserValidator implements Validator {
     } else if (!EMAIL_VALIDATOR.isValid(user.getEmail())) {
       errors.rejectValue("email", "invalidemail",
           String.format("The email \"%s\" is not valid.", user.getEmail()));
-    } else if (userService.doesEmailExist(user.getEmail())) {
+    } else if (user.getAcceptTerms() == true && userService.doesEmailExist(user.getEmail())) {
       errors.rejectValue(
           "email",
           "invalidEmail",
           String.format("The email \"%s\" already exists, one email per user.",
               user.getEmail()));
+    }
+    if (user.getAcceptTerms() == false) {
+      errors.rejectValue(
+          "acceptTerms",
+          "invalidAcceptTerms",
+          "You must accept the terms and conditions.");
     }
   }
 }

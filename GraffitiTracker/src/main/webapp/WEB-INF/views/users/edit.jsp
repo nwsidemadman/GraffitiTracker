@@ -32,6 +32,11 @@
           <sf:input path="email" size="30" maxlength="100"/> 
         </p>
         <p>
+          <sf:errors path="acceptTerms" cssClass="error" /><br/>
+          <sf:label path="acceptTerms">Accept Terms & Conditions:</sf:label>
+          <sf:checkbox path="acceptTerms"/>
+        </p>
+        <p>
           <input name="commit" type="submit" 
                     value="I accept. Create my account." />
         </p>

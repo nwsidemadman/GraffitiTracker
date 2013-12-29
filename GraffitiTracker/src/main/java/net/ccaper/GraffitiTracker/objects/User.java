@@ -16,6 +16,7 @@ public class User {
   private String passwordEncoded;
   private Timestamp lastLogin;
   private Set<Role> roles;
+  private boolean acceptTerms;
 
   public int getUserId() {
     return userId;
@@ -108,6 +109,14 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+  
+  public boolean getAcceptTerms() {
+    return acceptTerms;
+  }
+  
+  public void setAcceptTerms(boolean acceptTerms) {
+    this.acceptTerms = acceptTerms;
   }
 
   @Override
