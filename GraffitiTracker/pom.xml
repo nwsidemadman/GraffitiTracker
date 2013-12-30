@@ -157,11 +157,18 @@
       <version>5.1.27</version>
     </dependency>
 
-    <!-- Apache Commons -->
+    <!-- Apache Commons Validator -->
     <dependency>
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
       <version>1.4.0</version>
+    </dependency>
+
+    <!-- Apache Commons Lang -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.1</version>
     </dependency>
 
     <!-- Test -->
