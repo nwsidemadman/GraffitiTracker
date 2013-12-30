@@ -12,6 +12,6 @@ CREATE TABLE `users` (
   UNIQUE KEY `userId_UNIQUE` (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 INSERT INTO `graffiti_tracker`.`users` (`username`, `email`, `password`) VALUES ('ccaper', 'ccaper@gmail.com', 'test');
