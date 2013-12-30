@@ -3,9 +3,9 @@ package net.ccaper.GraffitiTracker.spring;
 import javax.sql.DataSource;
 
 import net.ccaper.GraffitiTracker.dao.UserDao;
+import net.ccaper.GraffitiTracker.dao.impl.JdbcUserDaoImpl;
 import net.ccaper.GraffitiTracker.service.UserService;
 import net.ccaper.GraffitiTracker.serviceImpl.UserServiceImpl;
-import net.ccaper.net.dao.impl.JdbcUserDaoImpl;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;

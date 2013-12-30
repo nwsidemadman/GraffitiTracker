@@ -1,4 +1,4 @@
-package net.ccaper.net.dao.impl;
+package net.ccaper.GraffitiTracker.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +16,6 @@ import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.Role;
 import net.ccaper.GraffitiTracker.objects.User;
 
-@Repository("userDao")
 public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     UserDao {
   private static final String USERS_TABLE = "users";
