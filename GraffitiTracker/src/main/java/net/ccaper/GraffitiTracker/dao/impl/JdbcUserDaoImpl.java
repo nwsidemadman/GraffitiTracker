@@ -28,17 +28,17 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
       USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_DATE_COL, PASSWORD_COL,
-      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL);
+      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
-      PASSWORD_COL);
+      PASSWORD_COL).toLowerCase();
   private static final String SQL_SELECT_COUNT_USERNAME = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
-      USERNAME_COL, USERNAME_COL);
+      USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_SELECT_COUNT_EMAIL = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
-      EMAIL_COL, EMAIL_COL);
+      EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
