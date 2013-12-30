@@ -7,14 +7,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import net.ccaper.GraffitiTracker.dao.UserDao;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.Role;
 import net.ccaper.GraffitiTracker.objects.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
+@Repository("userDao")
 public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 UserDao {
   private static final String USERS_TABLE = "users";
@@ -81,6 +86,11 @@ UserDao {
       return role;
     }
   };
+  
+  @Autowired 
+  public void setDs(DataSource dataSource) {
+      setDataSource(dataSource);
+  }
 
   @Override
   public User getUserByUsername(String username) {

@@ -2,11 +2,6 @@ package net.ccaper.GraffitiTracker.spring;
 
 import javax.sql.DataSource;
 
-import net.ccaper.GraffitiTracker.dao.UserDao;
-import net.ccaper.GraffitiTracker.dao.impl.JdbcUserDaoImpl;
-import net.ccaper.GraffitiTracker.service.UserService;
-import net.ccaper.GraffitiTracker.serviceImpl.UserServiceImpl;
-
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,17 +27,5 @@ public class AppConfig {
     dataSource.setMaxActive(Integer.parseInt(properties
         .getProperty("db.pool.maxActive")));
     return dataSource;
-  }
-  
-  @Bean
-  public UserDao userDao() {
-    JdbcUserDaoImpl userDao = new JdbcUserDaoImpl();
-    userDao.setDataSource(dataSource());
-    return userDao;
-  }
-  
-  @Bean
-  public UserService userService() {
-    return new UserServiceImpl();
   }
 }
