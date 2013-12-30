@@ -27,8 +27,8 @@
 
   <!--<start id="jdbc_user_service"/> -->
   <jdbc-user-service id="userService" data-source-ref="dataSource"
-    users-by-username-query="SELECT `username`, `password`, `is_active` FROM `graffiti_tracker`.`users` WHERE `username` = ?;"
-    authorities-by-username-query="SELECT `username`, `role` FROM `graffiti_tracker`.`users` INNER JOIN `graffiti_tracker`.`roles` WHERE `users`.`user_id` = `roles`.`user_id` AND `username` = ?;" />
+    users-by-username-query="SELECT `username`, `password`, `is_active` FROM `users` WHERE `username` = ?;"
+    authorities-by-username-query="SELECT `username`, `role` FROM `users` INNER JOIN `roles` WHERE `users`.`user_id` = `roles`.`user_id` AND `username` = ?;" />
   <!--<end id="jdbc_user_service"/> -->
   
   <!--<start id="authentication_manager"/> -->

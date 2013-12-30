@@ -7,17 +7,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-
 import net.ccaper.GraffitiTracker.dao.UserDao;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.Role;
 import net.ccaper.GraffitiTracker.objects.User;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+
 public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-    UserDao {
-  private static final String USERS_TABLE = "users".toLowerCase();
+UserDao {
+  private static final String USERS_TABLE = "users";
   private static final String USER_ID_COL = "user_id";
   private static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
@@ -28,18 +28,18 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
       USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_DATE_COL, PASSWORD_COL,
-      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL);
+      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
-      PASSWORD_COL);
+      PASSWORD_COL).toLowerCase();
   private static final String SQL_SELECT_COUNT_USERNAME = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
-      USERNAME_COL, USERNAME_COL);
+      USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_SELECT_COUNT_EMAIL = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
-      EMAIL_COL, EMAIL_COL);
-  private static final String ROLES_TABLE = "roles".toLowerCase();
+      EMAIL_COL, EMAIL_COL).toLowerCase();
+  private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
@@ -48,9 +48,10 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
       ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
-      USERNAME_COL);
+      USERNAME_COL).toLowerCase();
 
   RowMapper<User> userRowMapper = new RowMapper<User>() {
+    @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
       User user = new User();
       user.setUserId(rs.getInt(USER_ID_COL));
@@ -63,14 +64,16 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       return user;
     }
   };
-  
+
   RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
+    @Override
     public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new Integer(rs.getInt(1));
     }
   };
-  
+
   RowMapper<Role> rolesRowMapper = new RowMapper<Role>() {
+    @Override
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
       Role role = new Role();
       role.setRole(RoleEnum.getRoleEnumFromDbString(rs.getString(ROLE_COL)));
