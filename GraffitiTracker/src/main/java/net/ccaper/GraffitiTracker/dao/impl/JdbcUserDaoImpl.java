@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
-import org.springframework.stereotype.Repository;
 
 import net.ccaper.GraffitiTracker.dao.UserDao;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
