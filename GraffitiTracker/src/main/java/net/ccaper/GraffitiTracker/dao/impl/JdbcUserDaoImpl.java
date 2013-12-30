@@ -17,7 +17,7 @@ import net.ccaper.GraffitiTracker.objects.User;
 
 public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     UserDao {
-  private static final String USERS_TABLE = "users";
+  private static final String USERS_TABLE = "users".toLowerCase();
   private static final String USER_ID_COL = "user_id";
   private static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
@@ -28,18 +28,18 @@ public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
       USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_DATE_COL, PASSWORD_COL,
-      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
+      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL);
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
-      PASSWORD_COL).toLowerCase();
+      PASSWORD_COL);
   private static final String SQL_SELECT_COUNT_USERNAME = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
-      USERNAME_COL, USERNAME_COL).toLowerCase();
+      USERNAME_COL, USERNAME_COL);
   private static final String SQL_SELECT_COUNT_EMAIL = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
-      EMAIL_COL, EMAIL_COL).toLowerCase();
-  private static final String ROLES_TABLE = "roles";
+      EMAIL_COL, EMAIL_COL);
+  private static final String ROLES_TABLE = "roles".toLowerCase();
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
