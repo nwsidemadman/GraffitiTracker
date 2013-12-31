@@ -61,7 +61,7 @@ public class UserValidator implements Validator {
           "Username can only contain alphanumeric characters.");
     } else if (checkWDYL(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
-          "Username contatins a banned word.");
+          "Username contains a banned word.");
     } else if (user.getAcceptTerms() == true
         && userService.doesUsernameExist(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
