@@ -14,7 +14,7 @@ import org.springframework.core.env.Environment;
 public class AppConfig {
   @Autowired
   private Environment properties;
-  
+
   @Bean(destroyMethod = "close")
   public DataSource dataSource() {
     BasicDataSource dataSource = new BasicDataSource();
@@ -27,5 +27,10 @@ public class AppConfig {
     dataSource.setMaxActive(Integer.parseInt(properties
         .getProperty("db.pool.maxActive")));
     return dataSource;
+  }
+
+  @Bean(name = "captchaKey")
+  public String captchaKey() {
+    return properties.getProperty("captcha.key");
   }
 }
