@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +123,9 @@ public class TextCaptchaServiceImpl implements CaptchaService {
   
   @Override
   public boolean isCaptchaAnswerCorrect(TextCaptcha textCaptcha, String answer) {
+    if (StringUtils.isEmpty(answer)) {
+      return false;
+    }
     return textCaptcha.getAnswers().contains(
         DigestUtils.md5Hex(answer.toLowerCase()));
   }

@@ -17,6 +17,8 @@ public class User {
   private Timestamp lastLogin;
   private Set<Role> roles;
   private boolean acceptTerms;
+  private String userCaptchaAnswer;
+  private TextCaptcha textCaptcha;
 
   public int getUserId() {
     return userId;
@@ -118,7 +120,23 @@ public class User {
   public void setAcceptTerms(boolean acceptTerms) {
     this.acceptTerms = acceptTerms;
   }
-
+  
+  public String getUserCaptchaAnswer() {
+    return userCaptchaAnswer;
+  }
+  
+  public void setUserCaptchaAnswer(String userCaptchaAnswer) {
+    this.userCaptchaAnswer = userCaptchaAnswer;
+  }
+  
+  public TextCaptcha getTextCaptcha() {
+    return textCaptcha;
+  }
+  
+  public void setTextCaptcha(TextCaptcha textCaptcha) {
+    this.textCaptcha = textCaptcha;
+  }
+  
   @Override
   public int hashCode() {
     final int prime = 31;

@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <sec:authorize access="isAnonymous()">
@@ -32,10 +33,16 @@
           <sf:input path="email" size="30" maxlength="100"/> 
         </p>
         <p>
+          <sf:errors path="userCaptchaAnswer" cssClass="error" /><br/>
+          <sf:label path="userCaptchaAnswer"><c:out value="${user.getTextCaptcha().getQuestion()}" /></sf:label>
+          <sf:input path="userCaptchaAnswer" size="10" maxlength="20"/>
+        </p>
+        <p>
           <sf:errors path="acceptTerms" cssClass="error" /><br/>
           <sf:label path="acceptTerms">Accept Terms & Conditions:</sf:label>
           <sf:checkbox path="acceptTerms"/>
         </p>
+        <sf:hidden path="textCaptcha" />
         <p>
           <input name="commit" type="submit" 
                     value="Create account" />

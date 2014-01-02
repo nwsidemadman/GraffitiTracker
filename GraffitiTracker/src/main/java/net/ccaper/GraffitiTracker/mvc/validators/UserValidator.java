@@ -6,6 +6,7 @@ import java.net.URL;
 
 import net.ccaper.GraffitiTracker.objects.User;
 import net.ccaper.GraffitiTracker.objects.WDYLResponse;
+import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,9 +16,12 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class UserValidator implements Validator {
   private static final Logger logger = LoggerFactory
       .getLogger(UserValidator.class);
@@ -28,11 +32,10 @@ public class UserValidator implements Validator {
   static private final int MAX_EMAIL_LENGTH = 100;
   static private EmailValidator EMAIL_VALIDATOR = EmailValidator
       .getInstance(false);
+  @Autowired
   private UserService userService;
-
-  public UserValidator(UserService userService) {
-    this.userService = userService;
-  }
+  @Autowired
+  private CaptchaService captchaService;
 
   @Override
   public boolean supports(Class<?> clazz) {
@@ -43,6 +46,12 @@ public class UserValidator implements Validator {
   public void validate(Object target, Errors errors) {
     // TODO: unit test
     User user = (User) target;
+    boolean isCaptchaAnswerCorrect = captchaService.isCaptchaAnswerCorrect(
+        user.getTextCaptcha(), user.getUserCaptchaAnswer());
+    if (!isCaptchaAnswerCorrect) {
+      errors.rejectValue("userCaptchaAnswer", "inncorrectCaptchaAnswer",
+          "Captcha answer incorrect.");
+    }
     if (StringUtils.isEmpty(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username can not be empty.");
@@ -59,10 +68,10 @@ public class UserValidator implements Validator {
     } else if (!StringUtils.isAlphanumeric(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username can only contain alphanumeric characters.");
-    } else if (checkWDYL(user.getUsername())) {
+    } else if (isCaptchaAnswerCorrect && checkWDYL(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username contains a banned word.");
-    } else if (user.getAcceptTerms() == true
+    } else if (user.getAcceptTerms() && isCaptchaAnswerCorrect
         && userService.doesUsernameExist(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username already exists, please chose another.");
@@ -94,7 +103,7 @@ public class UserValidator implements Validator {
           "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
     } else if (!EMAIL_VALIDATOR.isValid(user.getEmail())) {
       errors.rejectValue("email", "invalidemail", "Email is not valid.");
-    } else if (user.getAcceptTerms() == true
+    } else if (user.getAcceptTerms() && isCaptchaAnswerCorrect
         && userService.doesEmailExist(user.getEmail())) {
       errors.rejectValue("email", "invalidEmail",
           "Email already exists, one email per user.");
@@ -120,8 +129,11 @@ public class UserValidator implements Validator {
           "JsonMappingException when checking WDYL for string %s.", string), e);
       return false;
     } catch (MalformedURLException e) {
-      logger.error(String.format(
-          "MalformedURLException when checking WDYL for string %s.", string), e);
+      logger
+          .error(String
+              .format(
+                  "MalformedURLException when checking WDYL for string %s.",
+                  string), e);
       return false;
     } catch (IOException e) {
       logger.error(String.format(
