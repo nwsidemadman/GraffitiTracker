@@ -33,4 +33,10 @@ public class AppConfig {
   public String captchaKey() {
     return properties.getProperty("captcha.key");
   }
+
+  @Bean(name = "maxNumberCaptchaFetchRetries")
+  public Integer maxNumberCaptchaFetchRetries() {
+    return Integer.parseInt(properties
+        .getProperty("captcha.maxNumberFetchRetries"));
+  }
 }
