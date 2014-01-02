@@ -1,10 +1,14 @@
 package net.ccaper.GraffitiTracker.mvc;
 
+import javax.servlet.http.HttpSession;
+
 import net.ccaper.GraffitiTracker.mvc.validators.UserValidator;
+import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.User;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.UserService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +17,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
 @RequestMapping("/users")
+@SessionAttributes("textCaptcha")
 public class UserController {
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
@@ -25,34 +31,41 @@ public class UserController {
   CaptchaService captchaService;
   @Autowired
   UserValidator userValidator;
-  
-  @RequestMapping(method=RequestMethod.GET, params="new")
-  public String createUserProfile(Model model) {
+
+  @RequestMapping(method = RequestMethod.GET, params = "new")
+  public String createUserProfile(Model model, HttpSession session) {
+    TextCaptcha captcha = captchaService.getTextCaptcha();
+    session.setAttribute("textCaptcha", captcha);
     User user = new User();
-    user.setTextCaptcha(captchaService.getTextCaptcha());
+    user.setTextCaptchaQuestion(captcha.getQuestion());
     model.addAttribute(user);
     return "users/edit";
   }
-  
-  @RequestMapping(method=RequestMethod.POST)
-  public String addUserFromForm(User user, BindingResult bindingResult) {
-    if (user.getTextCaptcha() == null) {
-      logger.info("TextCaptcha is null");
-    }
+
+  @RequestMapping(method = RequestMethod.POST)
+  public String addUserFromForm(HttpSession session, User user,
+      BindingResult bindingResult) {
     userValidator.validate(user, bindingResult);
-    if(bindingResult.hasErrors()) {
-      user.setTextCaptcha(captchaService.getTextCaptcha());
-      user.setUserCaptchaAnswer(null);
+    if (bindingResult.hasErrors()) {
+      TextCaptcha captcha = captchaService.getTextCaptcha();
+      session.setAttribute("textCaptcha", captcha);
+      user.setTextCaptchaQuestion(captcha.getQuestion());
+      user.setCaptchaAnswer(null);
       return "users/edit";
     }
-    logger.info("valid input, checking captcha");
-    if(!captchaService.isCaptchaAnswerCorrect(user.getTextCaptcha(), user.getUserCaptchaAnswer())) {
-      user.setTextCaptcha(captchaService.getTextCaptcha());
-      user.setUserCaptchaAnswer(null);
+    TextCaptcha captcha = (TextCaptcha) session.getAttribute("textCaptcha");
+    if (!captchaService.isCaptchaAnswerCorrect(captcha,
+        StringUtils.trimToEmpty(user.getCaptchaAnswer()))) {
+      TextCaptcha newCaptcha = captchaService.getTextCaptcha();
+      session.setAttribute("textCaptcha", newCaptcha);
+      user.setTextCaptchaQuestion(newCaptcha.getQuestion());
+      user.setCaptchaAnswer(null);
+      bindingResult.rejectValue("captchaAnswer", "incorrectCaptchaAnswer",
+          "Incorrect captcha answer.");
       return "users/edit";
     }
     user.encodePassword();
     userService.addUser(user);
     return "redirect:/home";
-  }  
+  }
 }

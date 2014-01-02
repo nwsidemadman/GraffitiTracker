@@ -17,8 +17,8 @@ public class User {
   private Timestamp lastLogin;
   private Set<Role> roles;
   private boolean acceptTerms;
-  private String userCaptchaAnswer;
-  private TextCaptcha textCaptcha;
+  private String captchaAnswer;
+  private String textCaptchaQuestion;
 
   public int getUserId() {
     return userId;
@@ -67,11 +67,11 @@ public class User {
   public void setPassword(String password) {
     this.password = password;
   }
-  
+
   public String getConfirmPassword() {
     return confirmPassword;
   }
-  
+
   public void setConfirmPassword(String confirmPassword) {
     this.confirmPassword = confirmPassword;
   }
@@ -79,7 +79,7 @@ public class User {
   public void setPasswordEncoded(String passwordEncoded) {
     this.passwordEncoded = passwordEncoded;
   }
-  
+
   public String getPasswordEncoded() {
     return passwordEncoded;
   }
@@ -112,31 +112,31 @@ public class User {
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
-  
+
   public boolean getAcceptTerms() {
     return acceptTerms;
   }
-  
+
   public void setAcceptTerms(boolean acceptTerms) {
     this.acceptTerms = acceptTerms;
   }
-  
-  public String getUserCaptchaAnswer() {
-    return userCaptchaAnswer;
+
+  public String getCaptchaAnswer() {
+    return captchaAnswer;
   }
-  
-  public void setUserCaptchaAnswer(String userCaptchaAnswer) {
-    this.userCaptchaAnswer = userCaptchaAnswer;
+
+  public void setCaptchaAnswer(String captchaAnswer) {
+    this.captchaAnswer = captchaAnswer;
   }
-  
-  public TextCaptcha getTextCaptcha() {
-    return textCaptcha;
+
+  public String getTextCaptchaQuestion() {
+    return textCaptchaQuestion;
   }
-  
-  public void setTextCaptcha(TextCaptcha textCaptcha) {
-    this.textCaptcha = textCaptcha;
+
+  public void setTextCaptchaQuestion(String textCaptchaQuestion) {
+    this.textCaptchaQuestion = textCaptchaQuestion;
   }
-  
+
   @Override
   public int hashCode() {
     final int prime = 31;

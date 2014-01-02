@@ -6,7 +6,6 @@ import java.net.URL;
 
 import net.ccaper.GraffitiTracker.objects.User;
 import net.ccaper.GraffitiTracker.objects.WDYLResponse;
-import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +33,6 @@ public class UserValidator implements Validator {
       .getInstance(false);
   @Autowired
   private UserService userService;
-  @Autowired
-  private CaptchaService captchaService;
 
   @Override
   public boolean supports(Class<?> clazz) {
@@ -46,12 +43,6 @@ public class UserValidator implements Validator {
   public void validate(Object target, Errors errors) {
     // TODO: unit test
     User user = (User) target;
-    boolean isCaptchaAnswerCorrect = captchaService.isCaptchaAnswerCorrect(
-        user.getTextCaptcha(), user.getUserCaptchaAnswer());
-    if (!isCaptchaAnswerCorrect) {
-      errors.rejectValue("userCaptchaAnswer", "inncorrectCaptchaAnswer",
-          "Captcha answer incorrect.");
-    }
     if (StringUtils.isEmpty(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username can not be empty.");
@@ -68,10 +59,10 @@ public class UserValidator implements Validator {
     } else if (!StringUtils.isAlphanumeric(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username can only contain alphanumeric characters.");
-    } else if (isCaptchaAnswerCorrect && checkWDYL(user.getUsername())) {
+    } else if (checkWDYL(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username contains a banned word.");
-    } else if (user.getAcceptTerms() && isCaptchaAnswerCorrect
+    } else if (user.getAcceptTerms()
         && userService.doesUsernameExist(user.getUsername())) {
       errors.rejectValue("username", "invalidUsername",
           "Username already exists, please chose another.");
@@ -103,7 +94,7 @@ public class UserValidator implements Validator {
           "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
     } else if (!EMAIL_VALIDATOR.isValid(user.getEmail())) {
       errors.rejectValue("email", "invalidemail", "Email is not valid.");
-    } else if (user.getAcceptTerms() && isCaptchaAnswerCorrect
+    } else if (user.getAcceptTerms()
         && userService.doesEmailExist(user.getEmail())) {
       errors.rejectValue("email", "invalidEmail",
           "Email already exists, one email per user.");
@@ -130,10 +121,10 @@ public class UserValidator implements Validator {
       return false;
     } catch (MalformedURLException e) {
       logger
-          .error(String
-              .format(
-                  "MalformedURLException when checking WDYL for string %s.",
-                  string), e);
+      .error(String
+          .format(
+              "MalformedURLException when checking WDYL for string %s.",
+              string), e);
       return false;
     } catch (IOException e) {
       logger.error(String.format(

@@ -12,7 +12,7 @@
       <fieldset> 
         <p>
           <sf:errors path="username" cssClass="error" /><br/>
-          <sf:label path="username">Username:</sf:label>
+          <sf:label path="username">User name:</sf:label>
           <sf:input path="username" size="20" maxlength="20" />
           <small id="username_msg">No spaces, please. 6 characters or more</small>
         </p>
@@ -33,16 +33,15 @@
           <sf:input path="email" size="30" maxlength="100"/> 
         </p>
         <p>
-          <sf:errors path="userCaptchaAnswer" cssClass="error" /><br/>
-          <sf:label path="userCaptchaAnswer"><c:out value="${user.getTextCaptcha().getQuestion()}" /></sf:label>
-          <sf:input path="userCaptchaAnswer" size="10" maxlength="20"/>
+          <sf:errors path="captchaAnswer" cssClass="error" /><br/>
+          <sf:label path="captchaAnswer"><c:out value="${user.getTextCaptchaQuestion()}" /></sf:label>
+          <sf:input path="captchaAnswer" size="10" maxlength="20"/>
         </p>
         <p>
           <sf:errors path="acceptTerms" cssClass="error" /><br/>
           <sf:label path="acceptTerms">Accept Terms & Conditions:</sf:label>
           <sf:checkbox path="acceptTerms"/>
         </p>
-        <sf:hidden path="textCaptcha" />
         <p>
           <input name="commit" type="submit" 
                     value="Create account" />
