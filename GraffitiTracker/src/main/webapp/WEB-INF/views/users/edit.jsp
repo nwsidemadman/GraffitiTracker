@@ -33,14 +33,14 @@
           <sf:input path="email" size="30" maxlength="100"/> 
         </p>
         <p>
-          <sf:errors path="captchaAnswer" cssClass="error" /><br/>
-          <sf:label path="captchaAnswer"><c:out value="${user.getTextCaptchaQuestion()}" /></sf:label>
-          <sf:input path="captchaAnswer" size="10" maxlength="20"/>
-        </p>
-        <p>
           <sf:errors path="acceptTerms" cssClass="error" /><br/>
           <sf:label path="acceptTerms">Accept Terms & Conditions:</sf:label>
           <sf:checkbox path="acceptTerms"/>
+        </p>
+        <p>
+          <sf:errors path="captchaAnswer" cssClass="error" /><br/>
+          <sf:label path="captchaAnswer"><c:out value="${user.getTextCaptchaQuestion()}" /></sf:label>
+          <sf:input path="captchaAnswer" size="10" maxlength="20"/>
         </p>
         <p>
           <input name="commit" type="submit" 
