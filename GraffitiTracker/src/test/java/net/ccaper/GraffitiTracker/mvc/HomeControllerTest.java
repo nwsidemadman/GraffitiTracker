@@ -1,6 +1,6 @@
-package net.ccaper.GraffitiTracker;
+package net.ccaper.GraffitiTracker.mvc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.ui.Model;
 
 public class HomeControllerTest {
 
