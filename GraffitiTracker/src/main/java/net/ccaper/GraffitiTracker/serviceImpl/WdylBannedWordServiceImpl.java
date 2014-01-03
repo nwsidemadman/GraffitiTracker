@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service("BannedWordService")
 public class WdylBannedWordServiceImpl implements BannedWordService {
+  // TODO: unit test
   private static final Logger logger = LoggerFactory
       .getLogger(WdylBannedWordServiceImpl.class);
 
