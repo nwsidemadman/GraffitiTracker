@@ -16,16 +16,14 @@ import org.springframework.stereotype.Service;
 
 @Service("BannedWordService")
 public class WdylBannedWordServiceImpl implements BannedWordService {
-  // TODO: unit test
   private static final Logger logger = LoggerFactory
       .getLogger(WdylBannedWordServiceImpl.class);
+  private static final String WDYL_URL = "http://www.wdyl.com/profanity?q=";
 
   @Override
   public boolean doesStringContainBannedWord(String string) {
-    ObjectMapper mapper = new ObjectMapper();
     try {
-      WDYLResponse response = mapper.readValue(new URL(
-          "http://www.wdyl.com/profanity?q=" + string), WDYLResponse.class);
+      WDYLResponse response = getWdylResponse(new URL(WDYL_URL + string));
       return response.getResponse();
     } catch (JsonParseException e) {
       logger.error(String.format(
@@ -47,5 +45,12 @@ public class WdylBannedWordServiceImpl implements BannedWordService {
           "IOException when checking WDYL for string %s.", string), e);
       return false;
     }
+  }
+
+  // visible for testing
+  WDYLResponse getWdylResponse(URL url) throws JsonParseException,
+  JsonMappingException, IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(url, WDYLResponse.class);
   }
 }
