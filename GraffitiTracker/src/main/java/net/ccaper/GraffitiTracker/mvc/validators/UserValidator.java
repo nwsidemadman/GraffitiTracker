@@ -33,6 +33,10 @@ public class UserValidator implements Validator {
     this.userService = userService;
   }
 
+  public void setBannedWordService(BannedWordService bannedWordService) {
+    this.bannedWordService = bannedWordService;
+  }
+
   @Override
   public boolean supports(Class<?> clazz) {
     return User.class.isAssignableFrom(clazz);
@@ -40,7 +44,6 @@ public class UserValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    // TODO: unit test
     User user = (User) target;
     validateUsername(errors, user.getUsername(), user.getAcceptTerms());
     validatePassword(errors, user.getPassword(), user.getConfirmPassword());
@@ -66,10 +69,10 @@ public class UserValidator implements Validator {
     } else if (!StringUtils.isAlphanumeric(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username can only contain alphanumeric characters.");
-    } else if (acceptTerms && bannedWordService.doesStringContainBannedWord(username)) {
+    } else if (!acceptTerms || bannedWordService.doesStringContainBannedWord(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username contains a banned word.");
-    } else if (acceptTerms || userService.doesUsernameExist(username)) {
+    } else if (userService.doesUsernameExist(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username already exists, please chose another.");
     }
