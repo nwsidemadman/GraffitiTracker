@@ -28,7 +28,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateAcceptTermsHappyPath() {
+  public void testValidateAcceptTermsHappyPath() throws Exception {
     User userValidAcceptTerms = new User();
     userValidAcceptTerms.setAcceptTerms(true);
     Errors errors = new BeanPropertyBindingResult(userValidAcceptTerms, "userValidAcceptTerms");
@@ -37,7 +37,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateAcceptTermsSadPath() {
+  public void testValidateAcceptTermsSadPath() throws Exception {
     User userInvalidAcceptTerms = new User();
     userInvalidAcceptTerms.setAcceptTerms(false);
     Errors errors = new BeanPropertyBindingResult(userInvalidAcceptTerms, "userInvalidAcceptTerms");
@@ -47,7 +47,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_Empty() {
+  public void testValidateEmail_Empty() throws Exception {
     User userInvalidEmail = new User();
     userInvalidEmail.setEmail(StringUtils.EMPTY);
     Errors errors = new BeanPropertyBindingResult(userInvalidEmail, "userInvalidEmail");
@@ -57,7 +57,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_Null() {
+  public void testValidateEmail_Null() throws Exception {
     User userInvalidEmail = new User();
     userInvalidEmail.setEmail(null);
     Errors errors = new BeanPropertyBindingResult(userInvalidEmail, "userInvalidEmail");
@@ -67,7 +67,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_tooLong() {
+  public void testValidateEmail_tooLong() throws Exception {
     User userInvalidEmail = new User();
     userInvalidEmail.setEmail("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
     Errors errors = new BeanPropertyBindingResult(userInvalidEmail, "userInvalidEmail");
@@ -77,7 +77,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_invalidAddress() {
+  public void testValidateEmail_invalidAddress() throws Exception {
     User userInvalidEmail = new User();
     userInvalidEmail.setEmail("test@test");
     Errors errors = new BeanPropertyBindingResult(userInvalidEmail, "userInvalidEmail");
@@ -87,7 +87,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_acceptTermsFalse() {
+  public void testValidateEmail_acceptTermsFalse() throws Exception {
     User userInvalidEmail = new User();
     userInvalidEmail.setEmail("test@test.com");
     Errors errors = new BeanPropertyBindingResult(userInvalidEmail, "userInvalidEmail");
@@ -97,7 +97,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_EmailAlreadyExists() {
+  public void testValidateEmail_EmailAlreadyExists() throws Exception {
     UserService userServiceMock = mock(UserService.class);
     User userInvalidEmail = new User();
     userInvalidEmail.setEmail("test@test.com");
@@ -112,7 +112,7 @@ public class UserValidatorTest {
   }
 
   @Test
-  public void testValidateEmail_HappyPath() {
+  public void testValidateEmail_HappyPath() throws Exception {
     UserService userServiceMock = mock(UserService.class);
     User userValidEmail = new User();
     userValidEmail.setEmail("test@test.com");
@@ -123,5 +123,73 @@ public class UserValidatorTest {
     userValidator.validateEmail(errors, userValidEmail.getEmail(), userValidEmail.getAcceptTerms());
     assertFalse(errors.hasErrors());
     verify(userServiceMock).doesEmailExist(userValidEmail.getEmail());
+  }
+
+  @Test
+  public void testValidatePassword_Empty() throws Exception {
+    User userInvalidPassword = new User();
+    userInvalidPassword.setPassword(StringUtils.EMPTY);
+    userInvalidPassword.setConfirmPassword(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userInvalidPassword, "userInvalidPassword");
+    userValidator.validatePassword(errors, userInvalidPassword.getPassword(), userInvalidPassword.getConfirmPassword());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("password"));
+    assertNotNull(errors.getFieldError("confirmPassword"));
+  }
+
+  @Test
+  public void testValidatePassword_Null() throws Exception {
+    User userInvalidPassword = new User();
+    userInvalidPassword.setPassword(null);
+    userInvalidPassword.setConfirmPassword(null);
+    Errors errors = new BeanPropertyBindingResult(userInvalidPassword, "userInvalidPassword");
+    userValidator.validatePassword(errors, userInvalidPassword.getPassword(), userInvalidPassword.getConfirmPassword());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("password"));
+    assertNotNull(errors.getFieldError("confirmPassword"));
+  }
+
+  @Test
+  public void testValidatePassword_TooShort() throws Exception {
+    User userInvalidPassword = new User();
+    userInvalidPassword.setPassword("123");
+    userInvalidPassword.setConfirmPassword("somePassword");
+    Errors errors = new BeanPropertyBindingResult(userInvalidPassword, "userInvalidPassword");
+    userValidator.validatePassword(errors, userInvalidPassword.getPassword(), userInvalidPassword.getConfirmPassword());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("password"));
+  }
+
+  @Test
+  public void testValidatePassword_TooLong() throws Exception {
+    User userInvalidPassword = new User();
+    userInvalidPassword.setPassword("12345678901234567890123456789012345678901234567890123456789012345");
+    userInvalidPassword.setConfirmPassword("somePassword");
+    Errors errors = new BeanPropertyBindingResult(userInvalidPassword, "userInvalidPassword");
+    userValidator.validatePassword(errors, userInvalidPassword.getPassword(), userInvalidPassword.getConfirmPassword());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("password"));
+  }
+
+  @Test
+  public void testValidatePassword_ConfirmPasswordNoMatch() throws Exception {
+    User userInvalidPassword = new User();
+    userInvalidPassword.setPassword("SomeValidPassword");
+    userInvalidPassword.setConfirmPassword("SomeValidPassword2");
+    Errors errors = new BeanPropertyBindingResult(userInvalidPassword, "userInvalidPassword");
+    userValidator.validatePassword(errors, userInvalidPassword.getPassword(), userInvalidPassword.getConfirmPassword());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("password"));
+    assertNotNull(errors.getFieldError("confirmPassword"));
+  }
+
+  @Test
+  public void testValidatePassword_HappyPath() throws Exception {
+    User userInvalidPassword = new User();
+    userInvalidPassword.setPassword("SomeValidPassword");
+    userInvalidPassword.setConfirmPassword("SomeValidPassword");
+    Errors errors = new BeanPropertyBindingResult(userInvalidPassword, "userInvalidPassword");
+    userValidator.validatePassword(errors, userInvalidPassword.getPassword(), userInvalidPassword.getConfirmPassword());
+    assertFalse(errors.hasErrors());
   }
 }
