@@ -24,11 +24,21 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public boolean doesUsernameExist(String username) {
-    return userDao.doesUsernameExist(username);
+    int count = userDao.getCountUsernames(username);
+    if (count == 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @Override
   public boolean doesEmailExist(String email) {
-    return userDao.doesEmailExist(email);
+    int count = userDao.getCountEmails(email);
+    if (count == 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

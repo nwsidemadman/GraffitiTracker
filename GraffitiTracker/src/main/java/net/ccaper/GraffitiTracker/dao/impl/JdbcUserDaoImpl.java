@@ -86,10 +86,10 @@ UserDao {
       return role;
     }
   };
-  
-  @Autowired 
+
+  @Autowired
   public void setDs(DataSource dataSource) {
-      setDataSource(dataSource);
+    setDataSource(dataSource);
   }
 
   @Override
@@ -119,26 +119,18 @@ UserDao {
   }
 
   @Override
-  public boolean doesUsernameExist(String username) {
+  public int getCountUsernames(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(USERNAME_COL, username);
-    Integer count = getNamedParameterJdbcTemplate().queryForObject(
+    return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_USERNAME, userParamMap, countRowMapper);
-    if (count == 0) {
-      return false;
-    }
-    return true;
   }
 
   @Override
-  public boolean doesEmailExist(String email) {
+  public int getCountEmails(String email) {
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(EMAIL_COL, email);
-    Integer count = getNamedParameterJdbcTemplate().queryForObject(
+    return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_EMAIL, userParamMap, countRowMapper);
-    if (count == 0) {
-      return false;
-    }
-    return true;
   }
 }
