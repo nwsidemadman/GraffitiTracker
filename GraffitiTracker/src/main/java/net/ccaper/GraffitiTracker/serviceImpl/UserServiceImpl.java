@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
-  // TODO: unit test
   @Autowired
   UserDao userDao;
 
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public boolean doesUsernameExist(String username) {
-    int count = userDao.getCountUsernames(username);
+    int count = getCountUsernames(username);
     if (count == 0) {
       return false;
     } else {
@@ -33,13 +32,23 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  // visible for testing
+  int getCountUsernames(String username) {
+    return userDao.getCountUsernames(username);
+  }
+
   @Override
   public boolean doesEmailExist(String email) {
-    int count = userDao.getCountEmails(email);
+    int count = getCountEmails(email);
     if (count == 0) {
       return false;
     } else {
       return true;
     }
+  }
+
+  // visible for testing
+  int getCountEmails(String email) {
+    return userDao.getCountEmails(email);
   }
 }
