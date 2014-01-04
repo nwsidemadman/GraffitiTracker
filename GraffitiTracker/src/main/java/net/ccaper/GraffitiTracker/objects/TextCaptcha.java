@@ -28,6 +28,37 @@ public class TextCaptcha {
   public void setAnswers(String... answers) {
     this.answers = new HashSet<String>(Arrays.asList(answers));
   }
+  
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((answers == null) ? 0 : answers.hashCode());
+    result = prime * result + ((question == null) ? 0 : question.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TextCaptcha other = (TextCaptcha) obj;
+    if (answers == null) {
+      if (other.answers != null)
+        return false;
+    } else if (!answers.equals(other.answers))
+      return false;
+    if (question == null) {
+      if (other.question != null)
+        return false;
+    } else if (!question.equals(other.question))
+      return false;
+    return true;
+  }
 
   @Override
   public String toString() {

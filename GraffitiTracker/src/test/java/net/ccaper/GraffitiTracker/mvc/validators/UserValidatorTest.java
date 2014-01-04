@@ -406,4 +406,22 @@ public class UserValidatorTest {
         userValid.getUsername());
     verify(userServiceMock).doesUsernameExist(userValid.getUsername());
   }
+  
+  @Test
+  public void testValidate_SadPath() throws Exception {
+    User userInvalid = new User();
+    userInvalid.setUsername("one");
+    userInvalid.setPassword("one");
+    userInvalid.setConfirmPassword("one");
+    userInvalid.setEmail("test@test");
+    userInvalid.setAcceptTerms(false);
+    Errors errors = new BeanPropertyBindingResult(userInvalid,
+        "userInvalid");
+    userValidator.validate(userInvalid, errors);
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("username"));
+    assertNotNull(errors.getFieldError("password"));
+    assertNotNull(errors.getFieldError("email"));
+    assertNotNull(errors.getFieldError("acceptTerms"));
+  }
 }
