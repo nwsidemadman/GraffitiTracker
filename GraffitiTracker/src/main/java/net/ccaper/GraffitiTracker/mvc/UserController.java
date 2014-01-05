@@ -36,6 +36,14 @@ public class UserController {
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
   }
+  
+  public void setUserValidator(UserValidator userValidator) {
+    this.userValidator = userValidator;
+  }
+  
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
   @RequestMapping(method = RequestMethod.GET, params = "new")
   public String createUserProfile(Model model, HttpSession session) {
