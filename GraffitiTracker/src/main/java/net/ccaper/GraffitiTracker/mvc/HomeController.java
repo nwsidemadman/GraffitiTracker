@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class HomeController {
-  // TODO: unit test
   private static final Logger logger = LoggerFactory
       .getLogger(HomeController.class);
   @Autowired
   UserService userService;
+
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
 
   /**
    * Simply selects the home view to render by returning its name.
@@ -33,15 +36,24 @@ public class HomeController {
   public String showHomePage(Map<String, Object> model) {
     logger.info("Welcome home!");
 
-    AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
-    if (!authenticationTrustResolver.isAnonymous(SecurityContextHolder
-        .getContext().getAuthentication())) {
-      String username = SecurityContextHolder.getContext().getAuthentication()
-          .getName();
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
       User user = userService.getUser(username);
       model.put("user", user);
     }
 
     return "home";
+  }
+
+  // visible for testing
+  String getUsernameFromSecurity() {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
+  }
+
+  // visible for testing
+  boolean isUserAnonymous() {
+    AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+    return authenticationTrustResolver.isAnonymous(SecurityContextHolder
+        .getContext().getAuthentication());
   }
 }
