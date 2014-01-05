@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RequestMapping("/users")
 @SessionAttributes("textCaptcha")
 public class UserController {
-  // TODO: unit test
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
   @Autowired
