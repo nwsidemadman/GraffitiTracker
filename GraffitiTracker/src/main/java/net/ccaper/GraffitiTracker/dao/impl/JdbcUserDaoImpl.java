@@ -27,13 +27,14 @@ UserDao {
   private static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
   private static final String IS_ACTIVE_COL = "is_active";
-  private static final String REGISTER_DATE_COL = "register_date";
+  private static final String REGISTER_TIMESTAMP_COL = "register_timestamp";
   private static final String PASSWORD_COL = "password";
-  private static final String LAST_LOGIN_COL = "last_login";
+  private static final String CURRENT_LOGIN_TIMESTAMP_COL = "current_login_timestamp";
+  private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
-      USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_DATE_COL, PASSWORD_COL,
-      LAST_LOGIN_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
+      USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_TIMESTAMP_COL, PASSWORD_COL,
+      PREVIOUS_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
@@ -63,9 +64,9 @@ UserDao {
       user.setUsername(rs.getString(USERNAME_COL));
       user.setEmail(rs.getString(EMAIL_COL));
       user.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
-      user.setRegisterDate(rs.getTimestamp(REGISTER_DATE_COL));
+      user.setRegisterTimestamp(rs.getTimestamp(REGISTER_TIMESTAMP_COL));
       user.setPassword(rs.getString(PASSWORD_COL));
-      user.setLastLogin(rs.getTimestamp(LAST_LOGIN_COL));
+      user.setCurrentLoginTimestamp(rs.getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
       return user;
     }
   };

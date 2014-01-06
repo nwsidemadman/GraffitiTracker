@@ -59,12 +59,12 @@
     <sec:authentication property="authorities" var="roles" />
     <p>Username: ${user.getUsername()} (ID: ${user.getUserId()})</p>
     <p>Is Active: ${user.getIsActive()}</p>
-    <p>Register Date: <fmt:formatDate value="${user.getRegisterDate()}" pattern="yyyy-MM-d" /></p>
-    <p>Last Login: <fmt:formatDate value="${user.getLastLogin()}" pattern="yyyy-MM-d" /></p>
+    <p>Register Date: <fmt:formatDate value="${user.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></p>
+    <p>Last Login: <fmt:formatDate value="${user.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd hh:mm:ss" /></p>
     <p>Roles:</p>
     <c:forEach var="role" items="${user.getRoles()}">
       <p>
-        <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-d" var="grantedDate"/>
+        <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-dd" var="grantedDate"/>
         <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" />
       </p>
     </c:forEach>

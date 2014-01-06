@@ -8,9 +8,10 @@ public class User {
   private String username;
   private String email;
   private boolean isActive;
-  private Timestamp registerDate;
+  private Timestamp registerTimestamp;
   private String password;
-  private Timestamp lastLogin;
+  private Timestamp currentLoginTimestamp;
+  private Timestamp previousLoginTimestamp;
   private Set<Role> roles;
 
   public int getUserId() {
@@ -45,12 +46,12 @@ public class User {
     this.isActive = isActive;
   }
 
-  public Timestamp getRegisterDate() {
-    return registerDate;
+  public Timestamp getRegisterTimestamp() {
+    return registerTimestamp;
   }
 
-  public void setRegisterDate(Timestamp registerDate) {
-    this.registerDate = registerDate;
+  public void setRegisterTimestamp(Timestamp registerTimestamp) {
+    this.registerTimestamp = registerTimestamp;
   }
 
   public String getPassword() {
@@ -61,12 +62,20 @@ public class User {
     this.password = password;
   }
 
-  public Timestamp getLastLogin() {
-    return lastLogin;
+  public Timestamp getCurrentLoginTimestamp() {
+    return currentLoginTimestamp;
   }
 
-  public void setLastLogin(Timestamp lastLogin) {
-    this.lastLogin = lastLogin;
+  public void setCurrentLoginTimestamp(Timestamp currentLoginTimestamp) {
+    this.currentLoginTimestamp = currentLoginTimestamp;
+  }
+  
+  public Timestamp getPreviousLoginTimestamp() {
+    return previousLoginTimestamp;
+  }
+
+  public void setPreviousLoginTimestamp(Timestamp previousLoginTimestamp) {
+    this.previousLoginTimestamp = previousLoginTimestamp;
   }
 
   public Set<Role> getRoles() {
