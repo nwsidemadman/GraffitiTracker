@@ -68,5 +68,6 @@
         <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" />
       </p>
     </c:forEach>
+    <p>Number Of Logins: ${appUser.getLoginCount()}</p>
   </div>
 </sec:authorize>

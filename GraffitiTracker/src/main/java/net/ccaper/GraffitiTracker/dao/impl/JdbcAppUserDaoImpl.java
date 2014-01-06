@@ -31,11 +31,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String PASSWORD_COL = "password";
   private static final String CURRENT_LOGIN_TIMESTAMP_COL = "current_login_timestamp";
   private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
+  private static final String LOGIN_COUNT_COL = "login_count";
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
-      "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
-      USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_TIMESTAMP_COL,
-      PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL,
-      USERNAME_COL).toLowerCase();
+      "SELECT %s, %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s",
+      USER_ID_COL, USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL,
+      REGISTER_TIMESTAMP_COL, PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL,
+      LOGIN_COUNT_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
@@ -48,10 +49,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
       .format(
-          "update %s set %s = (select %s from (select * from %s) as c1 where c1.%s = :%s), %s = current_timestamp where %s = :%s",
+          "update %s set %s = (select %s from (select * from %s) as c1 where c1.%s = :%s), %s = current_timestamp, %s = %s + 1 where %s = :%s",
           USERS_TABLE, PREVIOUS_LOGIN_TIMESTAMP_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
-          CURRENT_LOGIN_TIMESTAMP_COL, USERNAME_COL, USERNAME_COL);
+          CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, LOGIN_COUNT_COL,
+          USERNAME_COL, USERNAME_COL);
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -75,6 +77,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       appUser.setPassword(rs.getString(PASSWORD_COL));
       appUser.setPreviousLoginTimestamp(rs
           .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
+      appUser.setLoginCount(rs.getInt(LOGIN_COUNT_COL));
       return appUser;
     }
   };
@@ -147,6 +150,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   public void updateLoginTimestamps(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(USERNAME_COL, username);
-    getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_TIMESTAMPS, userParamMap);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_TIMESTAMPS,
+        userParamMap);
   }
 }

@@ -13,6 +13,7 @@ public class AppUser {
   private Timestamp currentLoginTimestamp;
   private Timestamp previousLoginTimestamp;
   private Set<Role> roles;
+  private int loginCount;
 
   public int getUserId() {
     return userId;
@@ -76,6 +77,14 @@ public class AppUser {
 
   public void setPreviousLoginTimestamp(Timestamp previousLoginTimestamp) {
     this.previousLoginTimestamp = previousLoginTimestamp;
+  }
+  
+  public int getLoginCount() {
+    return loginCount;
+  }
+  
+  public void setLoginCount(int loginCount) {
+    this.loginCount = loginCount;
   }
 
   public Set<Role> getRoles() {
