@@ -11,12 +11,12 @@ import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpSession;
 
-import net.ccaper.GraffitiTracker.mvc.validators.UserValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
-import net.ccaper.GraffitiTracker.service.UserService;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
 
 import org.junit.After;
@@ -56,7 +56,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testAddUserFromForm_HappyPath() throws Exception {
+  public void testAddAppUserFromForm_HappyPath() throws Exception {
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     UserForm userForm = new UserForm();
@@ -66,34 +66,34 @@ public class UserControllerTest {
     userForm.setEmail("test@test.com");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("Chris");
-    UserService userServiceMock = mock(UserService.class);
-    when(userServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
-    when(userServiceMock.doesUsernameExist(userForm.getUsername())).thenReturn(
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
+    when(appUserServiceMock.doesUsernameExist(userForm.getUsername())).thenReturn(
         false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(bannedWordServiceMock.doesStringContainBannedWord(userForm.getUsername()))
         .thenReturn(false);
     CaptchaService captchaService = new TextCaptchaServiceImpl();
-    UserValidator userValidator = new UserValidator();
-    userValidator.setUserService(userServiceMock);
-    userValidator.setBannedWordService(bannedWordServiceMock);
+    FormUserValidator formUserValidator = new FormUserValidator();
+    formUserValidator.setAppUserService(appUserServiceMock);
+    formUserValidator.setBannedWordService(bannedWordServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserController controller = new UserController();
-    controller.setUserService(userServiceMock);
-    controller.setUserValidator(userValidator);
+    controller.setAppUserService(appUserServiceMock);
+    controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaService);
     BindingResult result = new BeanPropertyBindingResult(userForm, "userForm");
     assertEquals("redirect:/home",
-        controller.addUserFromForm(session, userForm, result));
-    verify(userServiceMock).doesEmailExist(userForm.getEmail());
-    verify(userServiceMock).doesUsernameExist(userForm.getUsername());
+        controller.addAppUserFromForm(session, userForm, result));
+    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
+    verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
   }
 
   @Test
-  public void testAddUserFromForm_InvalidUser() throws Exception {
+  public void testAddAppUserFromForm_InvalidUser() throws Exception {
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     TextCaptcha invalidUserCaptcha = new TextCaptcha(
@@ -106,21 +106,21 @@ public class UserControllerTest {
     userForm.setEmail("test@test.com");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("Chris");
-    UserService userServiceMock = mock(UserService.class);
-    when(userServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(invalidUserCaptcha);
-    UserValidator userValidator = new UserValidator();
-    userValidator.setUserService(userServiceMock);
+    FormUserValidator formUserValidator = new FormUserValidator();
+    formUserValidator.setAppUserService(appUserServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserController controller = new UserController();
-    controller.setUserService(userServiceMock);
-    controller.setUserValidator(userValidator);
+    controller.setAppUserService(appUserServiceMock);
+    controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     assertEquals("users/edit",
-        controller.addUserFromForm(session, userForm, result));
+        controller.addAppUserFromForm(session, userForm, result));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
         invalidUserCaptcha.getQuestion());
@@ -129,12 +129,12 @@ public class UserControllerTest {
         .getAttribute("textCaptcha")));
     assertEquals(invalidUserCaptcha,
         (TextCaptcha) session.getAttribute("textCaptcha"));
-    verify(userServiceMock).doesEmailExist(userForm.getEmail());
+    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(captchaServiceMock).getTextCaptcha();
   }
   
   @Test
-  public void testAddUserFromForm_IncorrectCaptchaAnswer() throws Exception {
+  public void testAddAppUserFromForm_IncorrectCaptchaAnswer() throws Exception {
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     TextCaptcha incorrectAnswerCaptcha = new TextCaptcha(
@@ -147,27 +147,27 @@ public class UserControllerTest {
     userForm.setEmail("test@test.com");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("badAnswer");
-    UserService userServiceMock = mock(UserService.class);
-    when(userServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
-    when(userServiceMock.doesUsernameExist(userForm.getUsername())).thenReturn(
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
+    when(appUserServiceMock.doesUsernameExist(userForm.getUsername())).thenReturn(
         false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(bannedWordServiceMock.doesStringContainBannedWord(userForm.getUsername()))
         .thenReturn(false);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(incorrectAnswerCaptcha);
-    UserValidator userValidator = new UserValidator();
-    userValidator.setUserService(userServiceMock);
-    userValidator.setBannedWordService(bannedWordServiceMock);
+    FormUserValidator formUserValidator = new FormUserValidator();
+    formUserValidator.setAppUserService(appUserServiceMock);
+    formUserValidator.setBannedWordService(bannedWordServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserController controller = new UserController();
-    controller.setUserService(userServiceMock);
-    controller.setUserValidator(userValidator);
+    controller.setAppUserService(appUserServiceMock);
+    controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     assertEquals("users/edit",
-        controller.addUserFromForm(session, userForm, result));
+        controller.addAppUserFromForm(session, userForm, result));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
         incorrectAnswerCaptcha.getQuestion());
@@ -178,8 +178,8 @@ public class UserControllerTest {
         (TextCaptcha) session.getAttribute("textCaptcha"));
     assertTrue(result.hasErrors());
     assertNotNull(result.getFieldError("captchaAnswer"));
-    verify(userServiceMock).doesEmailExist(userForm.getEmail());
-    verify(userServiceMock).doesUsernameExist(userForm.getUsername());
+    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
+    verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
     verify(captchaServiceMock).getTextCaptcha();

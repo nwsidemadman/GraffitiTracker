@@ -1,25 +1,25 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
-import net.ccaper.GraffitiTracker.dao.UserDao;
-import net.ccaper.GraffitiTracker.objects.User;
-import net.ccaper.GraffitiTracker.service.UserService;
+import net.ccaper.GraffitiTracker.dao.AppUserDao;
+import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("userService")
-public class UserServiceImpl implements UserService {
+@Service("appUserService")
+public class AppUserServiceImpl implements AppUserService {
   @Autowired
-  UserDao userDao;
+  AppUserDao appUserDao;
 
   @Override
-  public User getUser(String username) {
-    return userDao.getUserByUsername(username);
+  public AppUser getUser(String username) {
+    return appUserDao.getAppUserByUsername(username);
   }
 
   @Override
-  public void addUser(User user) {
-    userDao.addUser(user);
+  public void addAppUser(AppUser appUser) {
+    appUserDao.addAppUser(appUser);
   }
 
   @Override
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
   // visible for testing
   int getCountUsernames(String username) {
-    return userDao.getCountUsernames(username);
+    return appUserDao.getCountUsernames(username);
   }
 
   @Override
@@ -49,6 +49,11 @@ public class UserServiceImpl implements UserService {
 
   // visible for testing
   int getCountEmails(String email) {
-    return userDao.getCountEmails(email);
+    return appUserDao.getCountEmails(email);
+  }
+
+  @Override
+  public void updateLoginTimestamps(String username) {
+    appUserDao.updateLoginTimestamps(username);
   }
 }

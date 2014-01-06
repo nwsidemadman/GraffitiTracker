@@ -19,53 +19,53 @@ public class UserServiceImplTest {
 
   @Test
   public void testUsernameExists() throws Exception {
-    class UserServiceImplMock extends UserServiceImpl {
+    class AppUserServiceImplMock extends AppUserServiceImpl {
       @Override
       int getCountUsernames(String username) {
         return 1;
       }
     }
 
-    UserServiceImpl userServiceImplMock = new UserServiceImplMock();
-    assertTrue(userServiceImplMock.doesUsernameExist("testUsername"));
+    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
+    assertTrue(appUserServiceImplMock.doesUsernameExist("testUsername"));
   }
 
   @Test
   public void testUsernameDoesNotExist() throws Exception {
-    class UserServiceImplMock extends UserServiceImpl {
+    class AppUserServiceImplMock extends AppUserServiceImpl {
       @Override
       int getCountUsernames(String username) {
         return 0;
       }
     }
 
-    UserServiceImpl userServiceImplMock = new UserServiceImplMock();
-    assertFalse(userServiceImplMock.doesUsernameExist("testUsername"));
+    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
+    assertFalse(appUserServiceImplMock.doesUsernameExist("testUsername"));
   }
 
   @Test
   public void testEmailExists() throws Exception {
-    class UserServiceImplMock extends UserServiceImpl {
+    class AppUserServiceImplMock extends AppUserServiceImpl {
       @Override
       int getCountEmails(String email) {
         return 1;
       }
     }
 
-    UserServiceImpl userServiceImplMock = new UserServiceImplMock();
-    assertTrue(userServiceImplMock.doesEmailExist("test@test.com"));
+    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
+    assertTrue(appUserServiceImplMock.doesEmailExist("test@test.com"));
   }
 
   @Test
   public void testEmailDoesNotExist() throws Exception {
-    class UserServiceImplMock extends UserServiceImpl {
+    class AppUserServiceImplMock extends AppUserServiceImpl {
       @Override
       int getCountEmails(String email) {
         return 0;
       }
     }
 
-    UserServiceImpl userServiceImplMock = new UserServiceImplMock();
-    assertFalse(userServiceImplMock.doesEmailExist("test@test.com"));
+    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
+    assertFalse(appUserServiceImplMock.doesEmailExist("test@test.com"));
   }
 }

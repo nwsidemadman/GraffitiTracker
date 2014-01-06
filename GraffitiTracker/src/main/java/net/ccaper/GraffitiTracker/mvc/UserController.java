@@ -2,11 +2,11 @@ package net.ccaper.GraffitiTracker.mvc;
 
 import javax.servlet.http.HttpSession;
 
-import net.ccaper.GraffitiTracker.mvc.validators.UserValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
-import net.ccaper.GraffitiTracker.service.UserService;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,22 +26,22 @@ public class UserController {
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
   @Autowired
-  UserService userService;
+  AppUserService appUserService;
   @Autowired
   CaptchaService captchaService;
   @Autowired
-  UserValidator userValidator;
+  FormUserValidator formUserValidator;
   
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
   }
   
-  public void setUserValidator(UserValidator userValidator) {
-    this.userValidator = userValidator;
+  public void setFormUserValidator(FormUserValidator formUserValidator) {
+    this.formUserValidator = formUserValidator;
   }
   
-  public void setUserService(UserService userService) {
-    this.userService = userService;
+  public void setAppUserService(AppUserService appUserService) {
+    this.appUserService = appUserService;
   }
 
   @RequestMapping(method = RequestMethod.GET, params = "new")
@@ -55,9 +55,9 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public String addUserFromForm(HttpSession session, UserForm userForm,
+  public String addAppUserFromForm(HttpSession session, UserForm userForm,
       BindingResult bindingResult) {
-    userValidator.validate(userForm, bindingResult);
+    formUserValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
       TextCaptcha captcha = captchaService.getTextCaptcha();
       session.setAttribute("textCaptcha", captcha);
@@ -76,7 +76,7 @@ public class UserController {
           "Incorrect captcha answer.");
       return "users/edit";
     }
-    userService.addUser(userForm.createUserFromUserForm());
+    appUserService.addAppUser(userForm.createAppUserFromUserForm());
     return "redirect:/home";
   }
 }

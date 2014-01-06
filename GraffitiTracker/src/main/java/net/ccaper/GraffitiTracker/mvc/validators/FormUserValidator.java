@@ -1,9 +1,9 @@
 package net.ccaper.GraffitiTracker.mvc.validators;
 
-import net.ccaper.GraffitiTracker.objects.User;
+import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
-import net.ccaper.GraffitiTracker.service.UserService;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -15,9 +15,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class UserValidator implements Validator {
+public class FormUserValidator implements Validator {
   private static final Logger logger = LoggerFactory
-      .getLogger(UserValidator.class);
+      .getLogger(FormUserValidator.class);
   static private final int MIN_USERNAME_LENGTH = 6;
   static private final int MAX_USERNAME_LENGTH = 20;
   static private final int MIN_PASSWORD_LENGTH = 6;
@@ -26,12 +26,12 @@ public class UserValidator implements Validator {
   static private EmailValidator EMAIL_VALIDATOR = EmailValidator
       .getInstance(false);
   @Autowired
-  private UserService userService;
+  private AppUserService appUserService;
   @Autowired
   private BannedWordService bannedWordService;
 
-  public void setUserService(UserService userService) {
-    this.userService = userService;
+  public void setAppUserService(AppUserService appUserService) {
+    this.appUserService = appUserService;
   }
 
   public void setBannedWordService(BannedWordService bannedWordService) {
@@ -40,7 +40,7 @@ public class UserValidator implements Validator {
 
   @Override
   public boolean supports(Class<?> clazz) {
-    return User.class.isAssignableFrom(clazz);
+    return AppUser.class.isAssignableFrom(clazz);
   }
 
   @Override
@@ -73,7 +73,7 @@ public class UserValidator implements Validator {
     } else if (!acceptTerms || bannedWordService.doesStringContainBannedWord(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username contains a banned word.");
-    } else if (userService.doesUsernameExist(username)) {
+    } else if (appUserService.doesUsernameExist(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username already exists, please chose another.");
     }
@@ -112,7 +112,7 @@ public class UserValidator implements Validator {
           "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
     } else if (!EMAIL_VALIDATOR.isValid(email)) {
       errors.rejectValue("email", "invalidemail", "Email is not valid.");
-    } else if (!acceptTerms || userService.doesEmailExist(email)) {
+    } else if (!acceptTerms || appUserService.doesEmailExist(email)) {
       errors.rejectValue("email", "invalidEmail",
           "Email already exists, one email per user.");
     }

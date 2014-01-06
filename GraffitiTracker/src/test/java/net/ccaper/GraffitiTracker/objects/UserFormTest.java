@@ -46,9 +46,9 @@ public class UserFormTest {
     userForm.setUsername("testUsername");
     userForm.setPassword("testPassword");
     userForm.setEmail("test@test.com");
-    User user = userForm.createUserFromUserForm();
-    assertEquals(userForm.getUsername(), user.getUsername());
-    assertEquals(userForm.getEmail(), user.getEmail());
-    assertFalse(userForm.getPassword().equals(user.getPassword()));
+    AppUser appUser = userForm.createAppUserFromUserForm();
+    assertEquals(userForm.getUsername(), appUser.getUsername());
+    assertEquals(userForm.getEmail(), appUser.getEmail());
+    assertFalse(userForm.getPassword().equals(appUser.getPassword()));
   }
 }

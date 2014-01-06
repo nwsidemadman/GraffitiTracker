@@ -2,8 +2,8 @@ package net.ccaper.GraffitiTracker.mvc;
 
 import java.util.Map;
 
-import net.ccaper.GraffitiTracker.objects.User;
-import net.ccaper.GraffitiTracker.service.UserService;
+import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +23,10 @@ public class HomeController {
   private static final Logger logger = LoggerFactory
       .getLogger(HomeController.class);
   @Autowired
-  UserService userService;
+  AppUserService appUserService;
 
-  public void setUserService(UserService userService) {
-    this.userService = userService;
+  public void setAppUserService(AppUserService appUserService) {
+    this.appUserService = appUserService;
   }
 
   /**
@@ -38,8 +38,8 @@ public class HomeController {
 
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      User user = userService.getUser(username);
-      model.put("user", user);
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
     }
 
     return "home";

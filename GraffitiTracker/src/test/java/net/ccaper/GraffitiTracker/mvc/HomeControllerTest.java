@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.ccaper.GraffitiTracker.mvc.HomeController;
-import net.ccaper.GraffitiTracker.objects.User;
-import net.ccaper.GraffitiTracker.service.UserService;
+import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class HomeControllerTest {
     HomeController controllerMock = new HomeControllerMock();
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("home", controllerMock.showHomePage(model));
-    assertFalse(model.containsKey("user"));
+    assertFalse(model.containsKey("appUser"));
   }
   
   @Test
@@ -66,17 +66,17 @@ public class HomeControllerTest {
       }
     }
     
-    User user = new User();
-    user.setUsername(username);
-    UserService userServiceMock = mock(UserService.class);
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUser(username))
-    .thenReturn(user);
+    .thenReturn(appUser);
     HomeController controllerMock = new HomeControllerMock();
-    controllerMock.setUserService(userServiceMock);
+    controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("home", controllerMock.showHomePage(model));
-    assertTrue(model.containsKey("user"));
-    assertEquals(username, ((User) model.get("user")).getUsername());
+    assertTrue(model.containsKey("appUser"));
+    assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUser(username);
   }
 }

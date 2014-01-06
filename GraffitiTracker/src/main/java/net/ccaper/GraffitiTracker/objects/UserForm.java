@@ -79,11 +79,11 @@ public class UserForm {
     this.textCaptchaQuestion = textCaptchaQuestion;
   }
   
-  public User createUserFromUserForm() {
-    User user = new User();
-    user.setUsername(username);
-    user.setEmail(email);
-    user.setPassword(encodePassword());
-    return user;
+  public AppUser createAppUserFromUserForm() {
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    appUser.setEmail(email);
+    appUser.setPassword(encodePassword());
+    return appUser;
   }
 }

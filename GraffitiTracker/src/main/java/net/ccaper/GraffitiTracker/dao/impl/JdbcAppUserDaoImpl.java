@@ -9,19 +9,19 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import net.ccaper.GraffitiTracker.dao.UserDao;
+import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.Role;
-import net.ccaper.GraffitiTracker.objects.User;
+import net.ccaper.GraffitiTracker.objects.AppUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
-@Repository("userDao")
-public class JdbcUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-UserDao {
+@Repository("appUserDao")
+public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
+    AppUserDao {
   private static final String USERS_TABLE = "users";
   private static final String USER_ID_COL = "user_id";
   private static final String USERNAME_COL = "username";
@@ -33,8 +33,9 @@ UserDao {
   private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
-      USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_TIMESTAMP_COL, PASSWORD_COL,
-      PREVIOUS_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
+      USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTER_TIMESTAMP_COL,
+      PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL,
+      USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
       USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
@@ -45,6 +46,12 @@ UserDao {
   private static final String SQL_SELECT_COUNT_EMAIL = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
       EMAIL_COL, EMAIL_COL).toLowerCase();
+  private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
+      .format(
+          "update %s set %s = (%s from (select * from %s) as c1 where c1.%s = :%s), %s = current_timestamp where %s = :%s",
+          USERS_TABLE, PREVIOUS_LOGIN_TIMESTAMP_COL,
+          CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
+          CURRENT_LOGIN_TIMESTAMP_COL, USERNAME_COL, USERNAME_COL);
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -56,18 +63,19 @@ UserDao {
       ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
       USERNAME_COL).toLowerCase();
 
-  RowMapper<User> userRowMapper = new RowMapper<User>() {
+  RowMapper<AppUser> appUserRowMapper = new RowMapper<AppUser>() {
     @Override
-    public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-      User user = new User();
-      user.setUserId(rs.getInt(USER_ID_COL));
-      user.setUsername(rs.getString(USERNAME_COL));
-      user.setEmail(rs.getString(EMAIL_COL));
-      user.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
-      user.setRegisterTimestamp(rs.getTimestamp(REGISTER_TIMESTAMP_COL));
-      user.setPassword(rs.getString(PASSWORD_COL));
-      user.setCurrentLoginTimestamp(rs.getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
-      return user;
+    public AppUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+      AppUser appUser = new AppUser();
+      appUser.setUserId(rs.getInt(USER_ID_COL));
+      appUser.setUsername(rs.getString(USERNAME_COL));
+      appUser.setEmail(rs.getString(EMAIL_COL));
+      appUser.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
+      appUser.setRegisterTimestamp(rs.getTimestamp(REGISTER_TIMESTAMP_COL));
+      appUser.setPassword(rs.getString(PASSWORD_COL));
+      appUser.setCurrentLoginTimestamp(rs
+          .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
+      return appUser;
     }
   };
 
@@ -94,28 +102,28 @@ UserDao {
   }
 
   @Override
-  public User getUserByUsername(String username) {
+  public AppUser getAppUserByUsername(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(USERNAME_COL, username);
-    User user = getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_USER_BY_USERNAME, userParamMap, userRowMapper);
+    AppUser appUser = getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USER_BY_USERNAME, userParamMap, appUserRowMapper);
     Map<String, Integer> rolesParamMap = new HashMap<String, Integer>();
-    rolesParamMap.put(USER_ID_COL, user.getUserId());
+    rolesParamMap.put(USER_ID_COL, appUser.getUserId());
     List<Role> roles = getNamedParameterJdbcTemplate().query(
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
-    user.setRoles(new HashSet<Role>(roles));
-    return user;
+    appUser.setRoles(new HashSet<Role>(roles));
+    return appUser;
   }
 
   @Override
-  public void addUser(User user) {
+  public void addAppUser(AppUser appUser) {
     Map<String, String> userParamMap = new HashMap<String, String>();
-    userParamMap.put(USERNAME_COL, user.getUsername());
-    userParamMap.put(EMAIL_COL, user.getEmail());
-    userParamMap.put(PASSWORD_COL, user.getPassword());
+    userParamMap.put(USERNAME_COL, appUser.getUsername());
+    userParamMap.put(EMAIL_COL, appUser.getEmail());
+    userParamMap.put(PASSWORD_COL, appUser.getPassword());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_USER, userParamMap);
     Map<String, String> roleParamMap = new HashMap<String, String>();
-    roleParamMap.put(USERNAME_COL, user.getUsername());
+    roleParamMap.put(USERNAME_COL, appUser.getUsername());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_ROLE, roleParamMap);
   }
 
@@ -133,5 +141,12 @@ UserDao {
     userParamMap.put(EMAIL_COL, email);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_EMAIL, userParamMap, countRowMapper);
+  }
+
+  @Override
+  public void updateLoginTimestamps(String username) {
+    Map<String, String> userParamMap = new HashMap<String, String>();
+    userParamMap.put(USERNAME_COL, username);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_TIMESTAMPS, userParamMap);
   }
 }

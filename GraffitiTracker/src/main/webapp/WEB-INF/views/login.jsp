@@ -57,12 +57,12 @@
       <a href="${unauthUrl}">Logout</a>
     </p>
     <sec:authentication property="authorities" var="roles" />
-    <p>Username: ${user.getUsername()} (ID: ${user.getUserId()})</p>
-    <p>Is Active: ${user.getIsActive()}</p>
-    <p>Register Date: <fmt:formatDate value="${user.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></p>
-    <p>Last Login: <fmt:formatDate value="${user.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd hh:mm:ss" /></p>
+    <p>Username: ${appUser.getUsername()} (ID: ${appUser.getUserId()})</p>
+    <p>Is Active: ${appUser.getIsActive()}</p>
+    <p>Register Date: <fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></p>
+    <p>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd hh:mm:ss" /></p>
     <p>Roles:</p>
-    <c:forEach var="role" items="${user.getRoles()}">
+    <c:forEach var="role" items="${appUser.getRoles()}">
       <p>
         <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-dd" var="grantedDate"/>
         <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" />

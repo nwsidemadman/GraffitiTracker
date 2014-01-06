@@ -27,5 +27,5 @@
   <beans:bean class="org.springframework.web.servlet.view.tiles3.TilesViewResolver" />
 
   <context:component-scan base-package="net.ccaper.GraffitiTracker" />
-
+  
 </beans:beans>

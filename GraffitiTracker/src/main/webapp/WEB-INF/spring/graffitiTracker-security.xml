@@ -41,6 +41,7 @@
   </authentication-manager>
   <!--<end id="authentication_manager"/> -->
   
-  <beans:bean id="authenticationListener" class="net.ccaper.GraffitiTracker.mvc.listeners.AuthenticationListener"/>
-
+  <beans:bean id="authenticationListener" class="net.ccaper.GraffitiTracker.mvc.listeners.AuthenticationListener" >
+  </beans:bean>
+  
 </beans:beans>

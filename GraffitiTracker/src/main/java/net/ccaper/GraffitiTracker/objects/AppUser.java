@@ -3,7 +3,7 @@ package net.ccaper.GraffitiTracker.objects;
 import java.sql.Timestamp;
 import java.util.Set;
 
-public class User {
+public class AppUser {
   private int userId;
   private String username;
   private String email;
@@ -103,7 +103,7 @@ public class User {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    User other = (User) obj;
+    AppUser other = (AppUser) obj;
     if (userId != other.userId)
       return false;
     if (username == null) {
