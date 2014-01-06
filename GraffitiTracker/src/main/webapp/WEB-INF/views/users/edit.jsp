@@ -8,7 +8,7 @@
   <div>
     <h2>Create a Graffiti Tracker Account</h2>
 
-    <sf:form method="POST" modelAttribute="user" >
+    <sf:form method="POST" modelAttribute="userForm" >
       <fieldset> 
         <p>
           <sf:errors path="username" cssClass="error" /><br/>
@@ -39,7 +39,7 @@
         </p>
         <p>
           <sf:errors path="captchaAnswer" cssClass="error" /><br/>
-          <sf:label path="captchaAnswer"><c:out value="${user.getTextCaptchaQuestion()}" /></sf:label>
+          <sf:label path="captchaAnswer"><c:out value="${userForm.getTextCaptchaQuestion()}" /></sf:label>
           <sf:input path="captchaAnswer" size="10" maxlength="20"/>
         </p>
         <p>

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import net.ccaper.GraffitiTracker.objects.User;
+import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.UserService;
 
@@ -30,84 +30,84 @@ public class UserValidatorTest {
 
   @Test
   public void testValidateAcceptTermsHappyPath() throws Exception {
-    User userValidAcceptTerms = new User();
-    userValidAcceptTerms.setAcceptTerms(true);
-    Errors errors = new BeanPropertyBindingResult(userValidAcceptTerms,
+    UserForm userFormValidAcceptTerms = new UserForm();
+    userFormValidAcceptTerms.setAcceptTerms(true);
+    Errors errors = new BeanPropertyBindingResult(userFormValidAcceptTerms,
         "userValidAcceptTerms");
     userValidator.validateAcceptTerms(errors,
-        userValidAcceptTerms.getAcceptTerms());
+        userFormValidAcceptTerms.getAcceptTerms());
     assertFalse(errors.hasErrors());
   }
 
   @Test
   public void testValidateAcceptTermsSadPath() throws Exception {
-    User userInvalidAcceptTerms = new User();
-    userInvalidAcceptTerms.setAcceptTerms(false);
-    Errors errors = new BeanPropertyBindingResult(userInvalidAcceptTerms,
+    UserForm userFormInvalidAcceptTerms = new UserForm();
+    userFormInvalidAcceptTerms.setAcceptTerms(false);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidAcceptTerms,
         "userInvalidAcceptTerms");
     userValidator.validateAcceptTerms(errors,
-        userInvalidAcceptTerms.getAcceptTerms());
+        userFormInvalidAcceptTerms.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("acceptTerms"));
   }
 
   @Test
   public void testValidateEmail_Empty() throws Exception {
-    User userInvalidEmail = new User();
-    userInvalidEmail.setEmail(StringUtils.EMPTY);
-    Errors errors = new BeanPropertyBindingResult(userInvalidEmail,
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
         "userInvalidEmail");
-    userValidator.validateEmail(errors, userInvalidEmail.getEmail(),
-        userInvalidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormInvalidEmail.getEmail(),
+        userFormInvalidEmail.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("email"));
   }
 
   @Test
   public void testValidateEmail_Null() throws Exception {
-    User userInvalidEmail = new User();
-    userInvalidEmail.setEmail(null);
-    Errors errors = new BeanPropertyBindingResult(userInvalidEmail,
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail(null);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
         "userInvalidEmail");
-    userValidator.validateEmail(errors, userInvalidEmail.getEmail(),
-        userInvalidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormInvalidEmail.getEmail(),
+        userFormInvalidEmail.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("email"));
   }
 
   @Test
   public void testValidateEmail_TooLong() throws Exception {
-    User userInvalidEmail = new User();
-    userInvalidEmail
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail
     .setEmail("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
-    Errors errors = new BeanPropertyBindingResult(userInvalidEmail,
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
         "userInvalidEmail");
-    userValidator.validateEmail(errors, userInvalidEmail.getEmail(),
-        userInvalidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormInvalidEmail.getEmail(),
+        userFormInvalidEmail.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("email"));
   }
 
   @Test
   public void testValidateEmail_InvalidAddress() throws Exception {
-    User userInvalidEmail = new User();
-    userInvalidEmail.setEmail("test@test");
-    Errors errors = new BeanPropertyBindingResult(userInvalidEmail,
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail("test@test");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
         "userInvalidEmail");
-    userValidator.validateEmail(errors, userInvalidEmail.getEmail(),
-        userInvalidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormInvalidEmail.getEmail(),
+        userFormInvalidEmail.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("email"));
   }
 
   @Test
   public void testValidateEmail_AcceptTermsFalse() throws Exception {
-    User userInvalidEmail = new User();
-    userInvalidEmail.setEmail("test@test.com");
-    Errors errors = new BeanPropertyBindingResult(userInvalidEmail,
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail("test@test.com");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
         "userInvalidEmail");
-    userValidator.validateEmail(errors, userInvalidEmail.getEmail(),
-        userInvalidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormInvalidEmail.getEmail(),
+        userFormInvalidEmail.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("email"));
   }
@@ -115,47 +115,47 @@ public class UserValidatorTest {
   @Test
   public void testValidateEmail_EmailAlreadyExists() throws Exception {
     UserService userServiceMock = mock(UserService.class);
-    User userInvalidEmail = new User();
-    userInvalidEmail.setEmail("test@test.com");
-    userInvalidEmail.setAcceptTerms(true);
-    when(userServiceMock.doesEmailExist(userInvalidEmail.getEmail()))
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail("test@test.com");
+    userFormInvalidEmail.setAcceptTerms(true);
+    when(userServiceMock.doesEmailExist(userFormInvalidEmail.getEmail()))
     .thenReturn(true);
     userValidator.setUserService(userServiceMock);
-    Errors errors = new BeanPropertyBindingResult(userInvalidEmail,
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
         "userInvalidEmail");
-    userValidator.validateEmail(errors, userInvalidEmail.getEmail(),
-        userInvalidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormInvalidEmail.getEmail(),
+        userFormInvalidEmail.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("email"));
-    verify(userServiceMock).doesEmailExist(userInvalidEmail.getEmail());
+    verify(userServiceMock).doesEmailExist(userFormInvalidEmail.getEmail());
   }
 
   @Test
   public void testValidateEmail_HappyPath() throws Exception {
     UserService userServiceMock = mock(UserService.class);
-    User userValidEmail = new User();
-    userValidEmail.setEmail("test@test.com");
-    userValidEmail.setAcceptTerms(true);
-    when(userServiceMock.doesEmailExist(userValidEmail.getEmail())).thenReturn(
+    UserForm userFormValidEmail = new UserForm();
+    userFormValidEmail.setEmail("test@test.com");
+    userFormValidEmail.setAcceptTerms(true);
+    when(userServiceMock.doesEmailExist(userFormValidEmail.getEmail())).thenReturn(
         false);
     userValidator.setUserService(userServiceMock);
-    Errors errors = new BeanPropertyBindingResult(userValidEmail,
+    Errors errors = new BeanPropertyBindingResult(userFormValidEmail,
         "userValidEmail");
-    userValidator.validateEmail(errors, userValidEmail.getEmail(),
-        userValidEmail.getAcceptTerms());
+    userValidator.validateEmail(errors, userFormValidEmail.getEmail(),
+        userFormValidEmail.getAcceptTerms());
     assertFalse(errors.hasErrors());
-    verify(userServiceMock).doesEmailExist(userValidEmail.getEmail());
+    verify(userServiceMock).doesEmailExist(userFormValidEmail.getEmail());
   }
 
   @Test
   public void testValidatePassword_Empty() throws Exception {
-    User userInvalidPassword = new User();
-    userInvalidPassword.setPassword(StringUtils.EMPTY);
-    userInvalidPassword.setConfirmPassword(StringUtils.EMPTY);
-    Errors errors = new BeanPropertyBindingResult(userInvalidPassword,
+    UserForm userFormInvalidPassword = new UserForm();
+    userFormInvalidPassword.setPassword(StringUtils.EMPTY);
+    userFormInvalidPassword.setConfirmPassword(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
         "userInvalidPassword");
-    userValidator.validatePassword(errors, userInvalidPassword.getPassword(),
-        userInvalidPassword.getConfirmPassword());
+    userValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
+        userFormInvalidPassword.getConfirmPassword());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("password"));
     assertNotNull(errors.getFieldError("confirmPassword"));
@@ -163,13 +163,13 @@ public class UserValidatorTest {
 
   @Test
   public void testValidatePassword_Null() throws Exception {
-    User userInvalidPassword = new User();
-    userInvalidPassword.setPassword(null);
-    userInvalidPassword.setConfirmPassword(null);
-    Errors errors = new BeanPropertyBindingResult(userInvalidPassword,
+    UserForm userFormInvalidPassword = new UserForm();
+    userFormInvalidPassword.setPassword(null);
+    userFormInvalidPassword.setConfirmPassword(null);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
         "userInvalidPassword");
-    userValidator.validatePassword(errors, userInvalidPassword.getPassword(),
-        userInvalidPassword.getConfirmPassword());
+    userValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
+        userFormInvalidPassword.getConfirmPassword());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("password"));
     assertNotNull(errors.getFieldError("confirmPassword"));
@@ -177,40 +177,40 @@ public class UserValidatorTest {
 
   @Test
   public void testValidatePassword_TooShort() throws Exception {
-    User userInvalidPassword = new User();
-    userInvalidPassword.setPassword("123");
-    userInvalidPassword.setConfirmPassword("somePassword");
-    Errors errors = new BeanPropertyBindingResult(userInvalidPassword,
+    UserForm userFormInvalidPassword = new UserForm();
+    userFormInvalidPassword.setPassword("123");
+    userFormInvalidPassword.setConfirmPassword("somePassword");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
         "userInvalidPassword");
-    userValidator.validatePassword(errors, userInvalidPassword.getPassword(),
-        userInvalidPassword.getConfirmPassword());
+    userValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
+        userFormInvalidPassword.getConfirmPassword());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("password"));
   }
 
   @Test
   public void testValidatePassword_TooLong() throws Exception {
-    User userInvalidPassword = new User();
-    userInvalidPassword
+    UserForm userFormInvalidPassword = new UserForm();
+    userFormInvalidPassword
     .setPassword("12345678901234567890123456789012345678901234567890123456789012345");
-    userInvalidPassword.setConfirmPassword("somePassword");
-    Errors errors = new BeanPropertyBindingResult(userInvalidPassword,
+    userFormInvalidPassword.setConfirmPassword("somePassword");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
         "userInvalidPassword");
-    userValidator.validatePassword(errors, userInvalidPassword.getPassword(),
-        userInvalidPassword.getConfirmPassword());
+    userValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
+        userFormInvalidPassword.getConfirmPassword());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("password"));
   }
 
   @Test
   public void testValidatePassword_ConfirmPasswordNoMatch() throws Exception {
-    User userInvalidPassword = new User();
-    userInvalidPassword.setPassword("SomeValidPassword");
-    userInvalidPassword.setConfirmPassword("SomeValidPassword2");
-    Errors errors = new BeanPropertyBindingResult(userInvalidPassword,
+    UserForm userFormInvalidPassword = new UserForm();
+    userFormInvalidPassword.setPassword("SomeValidPassword");
+    userFormInvalidPassword.setConfirmPassword("SomeValidPassword2");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
         "userInvalidPassword");
-    userValidator.validatePassword(errors, userInvalidPassword.getPassword(),
-        userInvalidPassword.getConfirmPassword());
+    userValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
+        userFormInvalidPassword.getConfirmPassword());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("password"));
     assertNotNull(errors.getFieldError("confirmPassword"));
@@ -218,96 +218,96 @@ public class UserValidatorTest {
 
   @Test
   public void testValidatePassword_HappyPath() throws Exception {
-    User userValidPassword = new User();
-    userValidPassword.setPassword("SomeValidPassword");
-    userValidPassword.setConfirmPassword("SomeValidPassword");
-    Errors errors = new BeanPropertyBindingResult(userValidPassword,
+    UserForm userFormValidPassword = new UserForm();
+    userFormValidPassword.setPassword("SomeValidPassword");
+    userFormValidPassword.setConfirmPassword("SomeValidPassword");
+    Errors errors = new BeanPropertyBindingResult(userFormValidPassword,
         "userValidPassword");
-    userValidator.validatePassword(errors, userValidPassword.getPassword(),
-        userValidPassword.getConfirmPassword());
+    userValidator.validatePassword(errors, userFormValidPassword.getPassword(),
+        userFormValidPassword.getConfirmPassword());
     assertFalse(errors.hasErrors());
   }
 
   @Test
   public void testValidateUsername_Empty() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername(StringUtils.EMPTY);
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
 
   @Test
   public void testValidateUsername_Null() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername(null);
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername(null);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
 
   @Test
   public void testValidateUsername_TooShort() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("123");
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("123");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
 
   @Test
   public void testValidateUsername_TooLong() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("123456789012345678901");
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("123456789012345678901");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
 
   @Test
   public void testValidateUsername_ContainsWhitespace() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("Some Username");
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("Some Username");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
 
   @Test
   public void testValidateUsername_NonAlphaNumeric() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("Some$Username");
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("Some$Username");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
 
   @Test
   public void testValidateUsername_AcceptTermsFalse() throws Exception {
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("ValidUsername");
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("ValidUsername");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
   }
@@ -315,109 +315,109 @@ public class UserValidatorTest {
   @Test
   public void testValidateUsername_BannedWord() throws Exception {
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("bannedWord");
-    userInvalidUsername.setAcceptTerms(true);
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("bannedWord");
+    userFormInvalidUsername.setAcceptTerms(true);
     when(
-        bannedWordServiceMock.doesStringContainBannedWord(userInvalidUsername
+        bannedWordServiceMock.doesStringContainBannedWord(userFormInvalidUsername
             .getUsername())).thenReturn(true);
     userValidator.setBannedWordService(bannedWordServiceMock);
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
     verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userInvalidUsername.getUsername());
+        userFormInvalidUsername.getUsername());
   }
 
   @Test
   public void testValidateUsername_UsernameAlreadyExists() throws Exception {
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     UserService userServiceMock = mock(UserService.class);
-    User userInvalidUsername = new User();
-    userInvalidUsername.setUsername("alreadyExists");
-    userInvalidUsername.setAcceptTerms(true);
+    UserForm userFormInvalidUsername = new UserForm();
+    userFormInvalidUsername.setUsername("alreadyExists");
+    userFormInvalidUsername.setAcceptTerms(true);
     when(
-        bannedWordServiceMock.doesStringContainBannedWord(userInvalidUsername
+        bannedWordServiceMock.doesStringContainBannedWord(userFormInvalidUsername
             .getUsername())).thenReturn(false);
-    when(userServiceMock.doesUsernameExist(userInvalidUsername.getUsername()))
+    when(userServiceMock.doesUsernameExist(userFormInvalidUsername.getUsername()))
     .thenReturn(true);
     userValidator.setBannedWordService(bannedWordServiceMock);
     userValidator.setUserService(userServiceMock);
-    Errors errors = new BeanPropertyBindingResult(userInvalidUsername,
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidUsername,
         "userInvalidUsername");
-    userValidator.validateUsername(errors, userInvalidUsername.getUsername(),
-        userInvalidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormInvalidUsername.getUsername(),
+        userFormInvalidUsername.getAcceptTerms());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
     verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userInvalidUsername.getUsername());
-    verify(userServiceMock).doesUsernameExist(userInvalidUsername.getUsername());
+        userFormInvalidUsername.getUsername());
+    verify(userServiceMock).doesUsernameExist(userFormInvalidUsername.getUsername());
   }
 
   @Test
   public void testValidateUsername_HappyPath() throws Exception {
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     UserService userServiceMock = mock(UserService.class);
-    User userValidUsername = new User();
-    userValidUsername.setUsername("validUsername");
-    userValidUsername.setAcceptTerms(true);
+    UserForm userFormValidUsername = new UserForm();
+    userFormValidUsername.setUsername("validUsername");
+    userFormValidUsername.setAcceptTerms(true);
     when(
-        bannedWordServiceMock.doesStringContainBannedWord(userValidUsername
+        bannedWordServiceMock.doesStringContainBannedWord(userFormValidUsername
             .getUsername())).thenReturn(false);
-    when(userServiceMock.doesUsernameExist(userValidUsername.getUsername()))
+    when(userServiceMock.doesUsernameExist(userFormValidUsername.getUsername()))
     .thenReturn(false);
     userValidator.setBannedWordService(bannedWordServiceMock);
     userValidator.setUserService(userServiceMock);
-    Errors errors = new BeanPropertyBindingResult(userValidUsername,
+    Errors errors = new BeanPropertyBindingResult(userFormValidUsername,
         "userValidUsername");
-    userValidator.validateUsername(errors, userValidUsername.getUsername(),
-        userValidUsername.getAcceptTerms());
+    userValidator.validateUsername(errors, userFormValidUsername.getUsername(),
+        userFormValidUsername.getAcceptTerms());
     assertFalse(errors.hasErrors());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userValidUsername.getUsername());
-    verify(userServiceMock).doesUsernameExist(userValidUsername.getUsername());
+        userFormValidUsername.getUsername());
+    verify(userServiceMock).doesUsernameExist(userFormValidUsername.getUsername());
   }
 
   @Test
   public void testValidate_HappyPath() throws Exception {
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     UserService userServiceMock = mock(UserService.class);
-    User userValid = new User();
-    userValid.setUsername("validUsername");
-    userValid.setPassword("validPassword");
-    userValid.setConfirmPassword("validPassword");
-    userValid.setEmail("test@test.com");
-    userValid.setAcceptTerms(true);
+    UserForm userFormValid = new UserForm();
+    userFormValid.setUsername("validUsername");
+    userFormValid.setPassword("validPassword");
+    userFormValid.setConfirmPassword("validPassword");
+    userFormValid.setEmail("test@test.com");
+    userFormValid.setAcceptTerms(true);
     when(
-        bannedWordServiceMock.doesStringContainBannedWord(userValid
+        bannedWordServiceMock.doesStringContainBannedWord(userFormValid
             .getUsername())).thenReturn(false);
-    when(userServiceMock.doesUsernameExist(userValid.getUsername()))
+    when(userServiceMock.doesUsernameExist(userFormValid.getUsername()))
     .thenReturn(false);
     userValidator.setBannedWordService(bannedWordServiceMock);
     userValidator.setUserService(userServiceMock);
-    Errors errors = new BeanPropertyBindingResult(userValid,
+    Errors errors = new BeanPropertyBindingResult(userFormValid,
         "userValid");
-    userValidator.validate(userValid, errors);
+    userValidator.validate(userFormValid, errors);
     assertFalse(errors.hasErrors());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userValid.getUsername());
-    verify(userServiceMock).doesUsernameExist(userValid.getUsername());
+        userFormValid.getUsername());
+    verify(userServiceMock).doesUsernameExist(userFormValid.getUsername());
   }
   
   @Test
   public void testValidate_SadPath() throws Exception {
-    User userInvalid = new User();
-    userInvalid.setUsername("one");
-    userInvalid.setPassword("one");
-    userInvalid.setConfirmPassword("one");
-    userInvalid.setEmail("test@test");
-    userInvalid.setAcceptTerms(false);
-    Errors errors = new BeanPropertyBindingResult(userInvalid,
+    UserForm userFormInvalid = new UserForm();
+    userFormInvalid.setUsername("one");
+    userFormInvalid.setPassword("one");
+    userFormInvalid.setConfirmPassword("one");
+    userFormInvalid.setEmail("test@test");
+    userFormInvalid.setAcceptTerms(false);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalid,
         "userInvalid");
-    userValidator.validate(userInvalid, errors);
+    userValidator.validate(userFormInvalid, errors);
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("username"));
     assertNotNull(errors.getFieldError("password"));

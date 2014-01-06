@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc.validators;
 
 import net.ccaper.GraffitiTracker.objects.User;
+import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.UserService;
 
@@ -44,11 +45,11 @@ public class UserValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    User user = (User) target;
-    validateUsername(errors, user.getUsername(), user.getAcceptTerms());
-    validatePassword(errors, user.getPassword(), user.getConfirmPassword());
-    validateEmail(errors, user.getEmail(), user.getAcceptTerms());
-    validateAcceptTerms(errors, user.getAcceptTerms());
+    UserForm userForm = (UserForm) target;
+    validateUsername(errors, userForm.getUsername(), userForm.getAcceptTerms());
+    validatePassword(errors, userForm.getPassword(), userForm.getConfirmPassword());
+    validateEmail(errors, userForm.getEmail(), userForm.getAcceptTerms());
+    validateAcceptTerms(errors, userForm.getAcceptTerms());
   }
 
   // visible for testing

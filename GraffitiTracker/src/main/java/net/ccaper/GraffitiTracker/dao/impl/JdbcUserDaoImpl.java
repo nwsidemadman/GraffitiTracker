@@ -64,7 +64,7 @@ UserDao {
       user.setEmail(rs.getString(EMAIL_COL));
       user.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
       user.setRegisterDate(rs.getTimestamp(REGISTER_DATE_COL));
-      user.setPasswordEncoded(rs.getString(PASSWORD_COL));
+      user.setPassword(rs.getString(PASSWORD_COL));
       user.setLastLogin(rs.getTimestamp(LAST_LOGIN_COL));
       return user;
     }
@@ -111,7 +111,7 @@ UserDao {
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(USERNAME_COL, user.getUsername());
     userParamMap.put(EMAIL_COL, user.getEmail());
-    userParamMap.put(PASSWORD_COL, user.getPasswordEncoded());
+    userParamMap.put(PASSWORD_COL, user.getPassword());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_USER, userParamMap);
     Map<String, String> roleParamMap = new HashMap<String, String>();
     roleParamMap.put(USERNAME_COL, user.getUsername());

@@ -4,7 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.UserValidator;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
-import net.ccaper.GraffitiTracker.objects.User;
+import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.UserService;
 
@@ -48,36 +48,35 @@ public class UserController {
   public String createUserProfile(Model model, HttpSession session) {
     TextCaptcha captcha = captchaService.getTextCaptcha();
     session.setAttribute("textCaptcha", captcha);
-    User user = new User();
-    user.setTextCaptchaQuestion(captcha.getQuestion());
-    model.addAttribute(user);
+    UserForm userForm = new UserForm();
+    userForm.setTextCaptchaQuestion(captcha.getQuestion());
+    model.addAttribute(userForm);
     return "users/edit";
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public String addUserFromForm(HttpSession session, User user,
+  public String addUserFromForm(HttpSession session, UserForm userForm,
       BindingResult bindingResult) {
-    userValidator.validate(user, bindingResult);
+    userValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
       TextCaptcha captcha = captchaService.getTextCaptcha();
       session.setAttribute("textCaptcha", captcha);
-      user.setTextCaptchaQuestion(captcha.getQuestion());
-      user.setCaptchaAnswer(null);
+      userForm.setTextCaptchaQuestion(captcha.getQuestion());
+      userForm.setCaptchaAnswer(null);
       return "users/edit";
     }
     TextCaptcha captcha = (TextCaptcha) session.getAttribute("textCaptcha");
     if (!captchaService.isCaptchaAnswerCorrect(captcha,
-        StringUtils.trimToEmpty(user.getCaptchaAnswer()))) {
+        StringUtils.trimToEmpty(userForm.getCaptchaAnswer()))) {
       TextCaptcha newCaptcha = captchaService.getTextCaptcha();
       session.setAttribute("textCaptcha", newCaptcha);
-      user.setTextCaptchaQuestion(newCaptcha.getQuestion());
-      user.setCaptchaAnswer(null);
+      userForm.setTextCaptchaQuestion(newCaptcha.getQuestion());
+      userForm.setCaptchaAnswer(null);
       bindingResult.rejectValue("captchaAnswer", "incorrectCaptchaAnswer",
           "Incorrect captcha answer.");
       return "users/edit";
     }
-    user.encodePassword();
-    userService.addUser(user);
+    userService.addUser(userForm.createUserFromUserForm());
     return "redirect:/home";
   }
 }

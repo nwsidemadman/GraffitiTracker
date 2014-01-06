@@ -3,8 +3,6 @@ package net.ccaper.GraffitiTracker.objects;
 import java.sql.Timestamp;
 import java.util.Set;
 
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-
 public class User {
   private int userId;
   private String username;
@@ -12,13 +10,8 @@ public class User {
   private boolean isActive;
   private Timestamp registerDate;
   private String password;
-  private String confirmPassword;
-  private String passwordEncoded;
   private Timestamp lastLogin;
   private Set<Role> roles;
-  private boolean acceptTerms;
-  private String captchaAnswer;
-  private String textCaptchaQuestion;
 
   public int getUserId() {
     return userId;
@@ -68,35 +61,6 @@ public class User {
     this.password = password;
   }
 
-  public String getConfirmPassword() {
-    return confirmPassword;
-  }
-
-  public void setConfirmPassword(String confirmPassword) {
-    this.confirmPassword = confirmPassword;
-  }
-
-  public void setPasswordEncoded(String passwordEncoded) {
-    this.passwordEncoded = passwordEncoded;
-  }
-
-  public String getPasswordEncoded() {
-    return passwordEncoded;
-  }
-
-  public void encodePassword() {
-    if (username == null) {
-      throw new IllegalStateException("Username needed for salting is null.");
-    }
-    if (password == null) {
-      throw new IllegalStateException("Password is null.");
-    }
-    ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder(256);
-    passwordEncoded = passwordEncoder.encodePassword(password, username);
-    password = null;
-    confirmPassword = null;
-  }
-
   public Timestamp getLastLogin() {
     return lastLogin;
   }
@@ -113,42 +77,10 @@ public class User {
     this.roles = roles;
   }
 
-  public boolean getAcceptTerms() {
-    return acceptTerms;
-  }
-
-  public void setAcceptTerms(boolean acceptTerms) {
-    this.acceptTerms = acceptTerms;
-  }
-
-  public String getCaptchaAnswer() {
-    return captchaAnswer;
-  }
-
-  public void setCaptchaAnswer(String captchaAnswer) {
-    this.captchaAnswer = captchaAnswer;
-  }
-
-  public String getTextCaptchaQuestion() {
-    return textCaptchaQuestion;
-  }
-
-  public void setTextCaptchaQuestion(String textCaptchaQuestion) {
-    this.textCaptchaQuestion = textCaptchaQuestion;
-  }
-
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((email == null) ? 0 : email.hashCode());
-    result = prime * result + (isActive ? 1231 : 1237);
-    result = prime * result + ((lastLogin == null) ? 0 : lastLogin.hashCode());
-    result = prime * result
-        + ((passwordEncoded == null) ? 0 : passwordEncoded.hashCode());
-    result = prime * result
-        + ((registerDate == null) ? 0 : registerDate.hashCode());
-    result = prime * result + ((roles == null) ? 0 : roles.hashCode());
     result = prime * result + userId;
     result = prime * result + ((username == null) ? 0 : username.hashCode());
     return result;
@@ -163,33 +95,6 @@ public class User {
     if (getClass() != obj.getClass())
       return false;
     User other = (User) obj;
-    if (email == null) {
-      if (other.email != null)
-        return false;
-    } else if (!email.equals(other.email))
-      return false;
-    if (isActive != other.isActive)
-      return false;
-    if (lastLogin == null) {
-      if (other.lastLogin != null)
-        return false;
-    } else if (!lastLogin.equals(other.lastLogin))
-      return false;
-    if (passwordEncoded == null) {
-      if (other.passwordEncoded != null)
-        return false;
-    } else if (!passwordEncoded.equals(other.passwordEncoded))
-      return false;
-    if (registerDate == null) {
-      if (other.registerDate != null)
-        return false;
-    } else if (!registerDate.equals(other.registerDate))
-      return false;
-    if (roles == null) {
-      if (other.roles != null)
-        return false;
-    } else if (!roles.equals(other.roles))
-      return false;
     if (userId != other.userId)
       return false;
     if (username == null) {
@@ -198,12 +103,5 @@ public class User {
     } else if (!username.equals(other.username))
       return false;
     return true;
-  }
-
-  @Override
-  public String toString() {
-    return "User [userId=" + userId + ", username=" + username + ", email="
-        + email + ", isActive=" + isActive + ", registerDate=" + registerDate
-        + ", lastLogin=" + lastLogin + ", role=" + roles + "]";
   }
 }
