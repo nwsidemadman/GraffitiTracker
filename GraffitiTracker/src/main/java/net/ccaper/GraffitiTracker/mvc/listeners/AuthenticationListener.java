@@ -24,6 +24,6 @@ public class AuthenticationListener implements
         .getName();
     logger.info(String
         .format("The user '%s' successfully logged in.", username));
-    //userService.updateLoginTimestamps(username);
+    userService.updateLoginTimestamps(username);
   }
 }

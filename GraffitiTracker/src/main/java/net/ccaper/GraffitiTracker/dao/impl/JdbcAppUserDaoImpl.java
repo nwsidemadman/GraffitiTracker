@@ -48,7 +48,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
       .format(
-          "update %s set %s = (%s from (select * from %s) as c1 where c1.%s = :%s), %s = current_timestamp where %s = :%s",
+          "update %s set %s = (select %s from (select * from %s) as c1 where c1.%s = :%s), %s = current_timestamp where %s = :%s",
           USERS_TABLE, PREVIOUS_LOGIN_TIMESTAMP_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, USERNAME_COL, USERNAME_COL);
@@ -73,7 +73,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       appUser.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
       appUser.setRegisterTimestamp(rs.getTimestamp(REGISTER_TIMESTAMP_COL));
       appUser.setPassword(rs.getString(PASSWORD_COL));
-      appUser.setCurrentLoginTimestamp(rs
+      appUser.setPreviousLoginTimestamp(rs
           .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
       return appUser;
     }
