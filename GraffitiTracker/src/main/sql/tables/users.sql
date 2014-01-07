@@ -1,4 +1,4 @@
-Drop table `graffiti_tracker`.`users`;
+Drop table `users`;
 
 CREATE TABLE `users` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -15,6 +15,3 @@ CREATE TABLE `users` (
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-
-
-INSERT INTO `graffiti_tracker`.`users` (`username`, `email`, `password`) VALUES ('ccaper', 'ccaper@gmail.com', 'test');

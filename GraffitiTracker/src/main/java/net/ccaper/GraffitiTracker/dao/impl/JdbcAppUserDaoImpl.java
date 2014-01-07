@@ -11,8 +11,8 @@ import javax.sql.DataSource;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
-import net.ccaper.GraffitiTracker.objects.Role;
 import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.objects.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-    AppUserDao {
+AppUserDao {
   private static final String USERS_TABLE = "users";
   private static final String USER_ID_COL = "user_id";
   private static final String USERNAME_COL = "username";
@@ -53,13 +53,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
           USERS_TABLE, PREVIOUS_LOGIN_TIMESTAMP_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, LOGIN_COUNT_COL,
-          USERNAME_COL, USERNAME_COL);
+          USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
       "SELECT %s, %s FROM %s where %s = :%s", ROLE_COL,
-      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL);
+      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
       ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
