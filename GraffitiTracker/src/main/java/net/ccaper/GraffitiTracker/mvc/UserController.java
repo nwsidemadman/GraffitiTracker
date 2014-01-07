@@ -77,6 +77,6 @@ public class UserController {
       return "users/edit";
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
-    return "redirect:/home";
+    return "redirect:/users/registered";
   }
 }

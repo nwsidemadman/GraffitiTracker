@@ -7,4 +7,8 @@
     <put-attribute name="content" 
                    value="/WEB-INF/views/users/edit.jsp" />
    </definition>
+   <definition name="users/registered" extends="template">
+    <put-attribute name="content" 
+                   value="/WEB-INF/views/users/registered.jsp" />
+   </definition>
 </tiles-definitions>
