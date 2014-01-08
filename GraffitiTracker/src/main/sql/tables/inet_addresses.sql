@@ -6,5 +6,5 @@ CREATE TABLE `login_addresses` (
   `number_visits` int(10) unsigned NOT NULL DEFAULT '0',
   `last_visit_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`,`inet_address`),
-  CONSTRAINT `user_id_login_addesses` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+  CONSTRAINT `user_id_login_addesses` FOREIGN KEY (`user_id`) REFERENCES `app_users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

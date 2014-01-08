@@ -1,6 +1,6 @@
-Drop table `users`;
+Drop table `app_users`;
 
-CREATE TABLE `users` (
+CREATE TABLE `app_users` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
