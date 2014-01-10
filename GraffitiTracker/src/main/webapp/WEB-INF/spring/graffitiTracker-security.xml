@@ -44,7 +44,8 @@
   <context:component-scan base-package="net.ccaper.GraffitiTracker.serviceImpl, net.ccaper.GraffitiTracker.dao.impl" />
   
   <beans:bean id="authenticationListener" class="net.ccaper.GraffitiTracker.mvc.listeners.AuthenticationListener" >
-    <beans:property name="userService" ref="appUserService"/>
+    <beans:property name="appUserService" ref="appUserService"/>
+    <beans:property name="loginAddressService" ref="loginAddressService"/>
   </beans:bean>
   
 </beans:beans>

@@ -22,9 +22,9 @@ import org.springframework.stereotype.Repository;
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 AppUserDao {
-  private static final String USERS_TABLE = "app_users";
-  private static final String USER_ID_COL = "user_id";
-  private static final String USERNAME_COL = "username";
+  static final String USERS_TABLE = "app_users";
+  static final String USER_ID_COL = "user_id";
+  static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
   private static final String IS_ACTIVE_COL = "is_active";
   private static final String REGISTER_TIMESTAMP_COL = "register_timestamp";

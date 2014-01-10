@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc.listeners;
 
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.LoginAddressService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,15 @@ public class AuthenticationListener implements
     ApplicationListener<InteractiveAuthenticationSuccessEvent> {
   private static final Logger logger = LoggerFactory
       .getLogger(AuthenticationListener.class);
-  AppUserService userService;
+  AppUserService appUserService;
+  LoginAddressService loginAddressService;
   
-  public void setUserService(AppUserService userService) {
-    this.userService = userService;
+  public void setAppUserService(AppUserService appUserService) {
+    this.appUserService = appUserService;
+  }
+  
+  public void setLoginAddressService(LoginAddressService loginAddressService) {
+    this.loginAddressService = loginAddressService;
   }
   
   @Override
@@ -24,6 +30,7 @@ public class AuthenticationListener implements
         .getName();
     logger.info(String
         .format("The user '%s' successfully logged in.", username));
-    userService.updateLoginTimestamps(username);
+    appUserService.updateLoginTimestamps(username);
+    //TODO: update ip address
   }
 }
