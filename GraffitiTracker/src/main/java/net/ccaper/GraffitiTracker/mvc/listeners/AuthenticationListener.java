@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 public class AuthenticationListener implements
     ApplicationListener<InteractiveAuthenticationSuccessEvent> {
@@ -15,15 +16,15 @@ public class AuthenticationListener implements
       .getLogger(AuthenticationListener.class);
   AppUserService appUserService;
   LoginAddressService loginAddressService;
-  
+
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
-  
+
   public void setLoginAddressService(LoginAddressService loginAddressService) {
     this.loginAddressService = loginAddressService;
   }
-  
+
   @Override
   public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
     String username = SecurityContextHolder.getContext().getAuthentication()
@@ -31,6 +32,8 @@ public class AuthenticationListener implements
     logger.info(String
         .format("The user '%s' successfully logged in.", username));
     appUserService.updateLoginTimestamps(username);
-    //TODO: update ip address
+    loginAddressService.updateLoginAddressByUsername(username,
+        ((WebAuthenticationDetails) event.getAuthentication().getDetails())
+            .getRemoteAddress());
   }
 }
