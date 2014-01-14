@@ -20,7 +20,6 @@
     <intercept-url pattern="/favicon.ico" access="permitAll" />
     <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/home" access="permitAll" />
-    <intercept-url pattern="/users/registered" access="permitAll" />
     <intercept-url pattern="*/**" access="isAuthenticated()" />
     <remember-me key="graffitiTrackerKey"
       token-validity-seconds="2419200" />
