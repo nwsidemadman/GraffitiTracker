@@ -1,5 +1,8 @@
 package net.ccaper.GraffitiTracker.mvc;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
@@ -78,9 +81,15 @@ public class UserController {
       return "users/edit";
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
-    // TODO: url encode email param
+    String emailUrlEncoded;
+    try {
+      emailUrlEncoded = URLEncoder.encode(userForm.getEmail(), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      emailUrlEncoded = userForm.getEmail();
+    }
     return String.format("redirect:/users/registered?username=%s&email=%s",
-        userForm.getUsername(), userForm.getEmail());
+        userForm.getUsername(), emailUrlEncoded);
+    // TODO: fix broken test
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
