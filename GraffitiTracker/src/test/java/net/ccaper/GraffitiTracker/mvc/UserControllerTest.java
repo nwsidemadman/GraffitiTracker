@@ -21,7 +21,6 @@ import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ExtendedModelMap;
@@ -57,7 +56,6 @@ public class UserControllerTest {
   }
 
   @Test
-  @Ignore
   public void testAddAppUserFromForm_HappyPath() throws Exception {
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
@@ -86,7 +84,7 @@ public class UserControllerTest {
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaService);
     BindingResult result = new BeanPropertyBindingResult(userForm, "userForm");
-    assertEquals("redirect:/home",
+    assertEquals("redirect:/users/registered",
         controller.addAppUserFromForm(session, userForm, result));
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
@@ -185,5 +183,11 @@ public class UserControllerTest {
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
     verify(captchaServiceMock).getTextCaptcha();
+  }
+
+  @Test
+  public void testShowRegisteredUser() throws Exception {
+    UserController controller = new UserController();
+    assertEquals("users/registered", controller.showRegisteredUser());
   }
 }

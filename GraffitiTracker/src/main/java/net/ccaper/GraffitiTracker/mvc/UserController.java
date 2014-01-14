@@ -1,8 +1,5 @@
 package net.ccaper.GraffitiTracker.mvc;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
@@ -20,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -81,24 +77,12 @@ public class UserController {
       return "users/edit";
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
-    String emailUrlEncoded;
-    try {
-      emailUrlEncoded = URLEncoder.encode(userForm.getEmail(), "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      emailUrlEncoded = userForm.getEmail();
-    }
-    return String.format("redirect:/users/registered?username=%s&email=%s",
-        userForm.getUsername(), emailUrlEncoded);
+    return "redirect:/users/registered";
     // TODO: fix broken test
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
-  public String showRegisteredUser(
-      @RequestParam(required = true) String username,
-      @RequestParam(required = true) String email) {
-    if (StringUtils.isEmpty(username) || StringUtils.isEmpty(email)) {
-      return "redirect:/home";
-    }
+  public String showRegisteredUser() {
     return "users/registered";
   }
 }
