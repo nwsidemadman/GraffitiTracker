@@ -5,10 +5,11 @@
 
 <sec:authorize access="isAnonymous()">
   <div>
-    <h2>User Registered</h2>
-    <p>Username: userForm.getUsername()</p>
-    <p>Email: userForm.getEmail()</p>
-    <p>Please sign in!</p>P
+    <h2>Thanks you for registering!</h2>
+    <p>You registered with the following information</p>
+    <p>Username: ${param.username}</p>
+    <p>Email: ${param.email}</p>
+    <p>Please sign in!</p>
   </div>
 </sec:authorize>
 
