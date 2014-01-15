@@ -5,9 +5,7 @@ public interface RegistrationConfirmationsDao {
 
   String getUniqueUrlParamByUsername(String username);
 
-  int getCountUniqueUrlParam(String uniqueUrlParam);
-
   void deleteRegistrationConfirmationByUniqueUrlParam(String uniqueUrlParam);
 
-  int getUseridByUniqueUrlParam(String uniqueUrlParam);
+  Integer getUseridByUniqueUrlParam(String uniqueUrlParam);
 }

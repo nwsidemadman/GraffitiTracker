@@ -5,10 +5,13 @@
 
 <sec:authorize access="isAnonymous()">
   <div>
-    <h2>Thank you for registering!</h2>
-    <p>You can not sign in until your registration is confirmed.</p>
-    <p>You will receive an email shortly that contains a registration confirmation link.</p>
-    <p>You MUST click on the link within 48 hours of registration to complete your registration.</p>
+    <c:if test="${confirmed == true}">
+      <h2>Your registration is now complete.</h2>
+      <p>Please sign in!</p>
+    </c:if>
+    <c:if test="${confirmed == false}">
+      <h2>This registration link has expired, please register again.</h2>
+    </c:if>
   </div>
 </sec:authorize>
 

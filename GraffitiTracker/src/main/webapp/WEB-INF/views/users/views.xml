@@ -11,4 +11,8 @@
     <put-attribute name="content" 
                    value="/WEB-INF/views/users/registered.jsp" />
    </definition>
+   <definition name="users/confirmed" extends="template">
+    <put-attribute name="content" 
+                   value="/WEB-INF/views/users/confirmed.jsp" />
+   </definition>
 </tiles-definitions>

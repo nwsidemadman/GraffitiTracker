@@ -160,7 +160,7 @@ AppUserDao {
   @Override
   public void updateAppUserAsActive(int userid) {
     Map<String, Integer> useridParamMap = new HashMap<String, Integer>();
-    useridParamMap.put(USERNAME_COL, userid);
+    useridParamMap.put(USER_ID_COL, userid);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE, useridParamMap);
   }
 }

@@ -1,5 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
@@ -78,13 +81,34 @@ public class UserController {
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
     appUserService.addRegistrationConfirmation(userForm.getUsername());
-    String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm.getUsername());
-    logger.info(String.format("Unique Url Param for User '%s' is '%s'", userForm.getUsername(), uniqueUrlParam));
+    String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
+        .getUsername());
+    logger.info(String.format("Unique Url Param for User '%s' is '%s'",
+        userForm.getUsername(), uniqueUrlParam));
     return "redirect:/users/registered";
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
   public String showRegisteredUser() {
     return "users/registered";
+  }
+
+  @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
+  public String showConfirmedUser(
+      @RequestParam(required = true) String uniqueUrlParam,
+      Map<String, Object> model) {
+    Integer userid = appUserService.getUseridByUniqueUrlParam(uniqueUrlParam);
+    if (userid == null) {
+      model.put("confirmed", "false");
+    } else {
+      appUserService.updateAppUserAsActive(userid);
+      appUserService
+      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+      // TODO: unit test
+      // TODO: generate complete url
+      String link = "users/confirmed?uniqueUrlParam=" + uniqueUrlParam;
+      model.put("confirmed", "true");
+    }
+    return "users/confirmed";
   }
 }

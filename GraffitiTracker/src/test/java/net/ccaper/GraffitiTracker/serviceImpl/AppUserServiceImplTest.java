@@ -68,30 +68,4 @@ public class AppUserServiceImplTest {
     AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
     assertFalse(appUserServiceImplMock.doesEmailExist("test@test.com"));
   }
-
-  @Test
-  public void testUniqueUrlParamExists() throws Exception {
-    class AppUserServiceImplMock extends AppUserServiceImpl {
-      @Override
-      int getCountUniqueUrlParams(String uniqueUrlParam) {
-        return 1;
-      }
-    }
-
-    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
-    assertTrue(appUserServiceImplMock.doesUniqueUrlParamExist("test"));
-  }
-
-  @Test
-  public void testUniqueUrlParamDoesNotExist() throws Exception {
-    class AppUserServiceImplMock extends AppUserServiceImpl {
-      @Override
-      int getCountUniqueUrlParams(String uniqueUrlParam) {
-        return 0;
-      }
-    }
-
-    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
-    assertFalse(appUserServiceImplMock.doesUniqueUrlParamExist("test"));
-  }
 }

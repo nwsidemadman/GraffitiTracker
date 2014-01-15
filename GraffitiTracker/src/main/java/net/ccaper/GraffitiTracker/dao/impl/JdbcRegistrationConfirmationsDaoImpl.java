@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -34,16 +35,13 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
           UNIQUE_URL_PARAM_COL, USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE,
           USERS_TABLE, USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE,
           USER_ID_COL, USERNAME_COL, USERNAME_COL).toLowerCase();
-  private static final String SQL_SELECT_COUNT_UNIQUE_URL_PARAM = (String
-      .format("SELECT count(%s) FROM %s WHERE %s = :%s", UNIQUE_URL_PARAM_COL,
-          REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL,
-          UNIQUE_URL_PARAM_COL)).toLowerCase();
   private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
-      "DELETE FROM %s WHERE %s = :%s",
-      REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
-  private static final String SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s",
-      USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+      "DELETE FROM %s WHERE %s = :%s", REGISTRATION_CONFIRMATIONS_TABLE,
+      UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+  private static final String SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM = String
+      .format("SELECT %s FROM %s WHERE %s = :%s", USER_ID_COL,
+          REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL,
+          UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -90,26 +88,24 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   }
 
   @Override
-  public int getCountUniqueUrlParam(String uniqueUrlParam) {
-    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
-    uniqueUrlParamParamMap.put(USERNAME_COL, uniqueUrlParam);
-    return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_COUNT_UNIQUE_URL_PARAM, uniqueUrlParamParamMap, countRowMapper);
-  }
-
-  @Override
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
-    uniqueUrlParamParamMap.put(USERNAME_COL, uniqueUrlParam);
-    getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap);
+    uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM,
+        uniqueUrlParamParamMap);
   }
 
   @Override
-  public int getUseridByUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
-    uniqueUrlParamParamMap.put(USERNAME_COL, uniqueUrlParam);
-    return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap, useridRowMapper);
+    uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
+    try {
+      return getNamedParameterJdbcTemplate().queryForObject(
+          SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
+          useridRowMapper);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 }

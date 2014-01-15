@@ -72,28 +72,13 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public boolean doesUniqueUrlParamExist(String uniqueUrlParam) {
-    int count = getCountUniqueUrlParams(uniqueUrlParam);
-    if (count == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  // visible for testing
-  int getCountUniqueUrlParams(String uniqueUrlParam) {
-    return registrationConfirmationsDao.getCountUniqueUrlParam(uniqueUrlParam);
-  }
-
-  @Override
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
     registrationConfirmationsDao.deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override
-  public int getUseridByUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
     return registrationConfirmationsDao.getUseridByUniqueUrlParam(uniqueUrlParam);
   }
 
