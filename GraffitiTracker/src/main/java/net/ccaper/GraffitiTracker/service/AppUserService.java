@@ -16,4 +16,6 @@ public interface AppUserService {
   void addRegistrationConfirmation(String username);
 
   String getUniqueUrlParam(String username);
+
+  boolean doesUniqueUrlParamExist(String uniqueUrlParam);
 }
