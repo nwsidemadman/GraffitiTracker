@@ -57,7 +57,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   }
 
   @Override
-  public String getUniqueUrlParam(String username) {
+  public String getUniqueUrlParamByUsername(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>();
     userParamMap.put(USERNAME_COL, username);
     return getNamedParameterJdbcTemplate().queryForObject(
