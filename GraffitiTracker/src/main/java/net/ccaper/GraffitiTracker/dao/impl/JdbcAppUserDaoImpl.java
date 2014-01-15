@@ -49,11 +49,14 @@ AppUserDao {
       EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
       .format(
-          "update %s set %s = (select %s from (select * from %s) as c1 where c1.%s = :%s), %s = current_timestamp, %s = %s + 1 where %s = :%s",
+          "UPDATE %s SET %s = (SELECT %s FROM (SELECT * FROM %s) AS c1 WHERE c1.%s = :%s), %s = current_timestamp, %s = %s + 1 WHERE %s = :%s",
           USERS_TABLE, PREVIOUS_LOGIN_TIMESTAMP_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, LOGIN_COUNT_COL,
           USERNAME_COL, USERNAME_COL).toLowerCase();
+  private static final String SQL_UPDATE_APPUSER_AS_ACTIVE = String.format(
+      "UPDATE %s SET %S = 1 WHERE %s = :%s",
+      USERS_TABLE, IS_ACTIVE_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -152,5 +155,12 @@ AppUserDao {
     userParamMap.put(USERNAME_COL, username);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_TIMESTAMPS,
         userParamMap);
+  }
+
+  @Override
+  public void updateAppUserAsActive(int userid) {
+    Map<String, Integer> useridParamMap = new HashMap<String, Integer>();
+    useridParamMap.put(USERNAME_COL, userid);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE, useridParamMap);
   }
 }

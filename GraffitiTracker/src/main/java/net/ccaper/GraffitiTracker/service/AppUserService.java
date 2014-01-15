@@ -18,4 +18,10 @@ public interface AppUserService {
   String getUniqueUrlParam(String username);
 
   boolean doesUniqueUrlParamExist(String uniqueUrlParam);
+
+  void deleteRegistrationConfirmationByUniqueUrlParam(String uniqueUrlParam);
+
+  int getUseridByUniqueUrlParam(String uniqueUrlParam);
+
+  void updateAppUserAsActive(int userid);
 }

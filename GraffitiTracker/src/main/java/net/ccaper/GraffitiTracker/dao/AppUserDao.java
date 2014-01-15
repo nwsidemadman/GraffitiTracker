@@ -10,6 +10,8 @@ public interface AppUserDao {
   int getCountUsernames(String username);
 
   int getCountEmails(String email);
-  
+
   void updateLoginTimestamps(String username);
+
+  void updateAppUserAsActive(int userid);
 }

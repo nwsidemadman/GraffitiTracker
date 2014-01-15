@@ -38,6 +38,12 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
       .format("SELECT count(%s) FROM %s WHERE %s = :%s", UNIQUE_URL_PARAM_COL,
           REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL,
           UNIQUE_URL_PARAM_COL)).toLowerCase();
+  private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
+      "DELETE FROM %s WHERE %s = :%s",
+      REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+  private static final String SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM = String.format(
+      "SELECT %s FROM %s WHERE %s = :%s",
+      USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -50,6 +56,13 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
     @Override
     public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new Integer(rs.getInt(1));
+    }
+  };
+
+  RowMapper<Integer> useridRowMapper = new RowMapper<Integer>() {
+    @Override
+    public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return new Integer(rs.getInt(USER_ID_COL));
     }
   };
 
@@ -82,5 +95,21 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
     uniqueUrlParamParamMap.put(USERNAME_COL, uniqueUrlParam);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_UNIQUE_URL_PARAM, uniqueUrlParamParamMap, countRowMapper);
+  }
+
+  @Override
+  public void deleteRegistrationConfirmationByUniqueUrlParam(
+      String uniqueUrlParam) {
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    uniqueUrlParamParamMap.put(USERNAME_COL, uniqueUrlParam);
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap);
+  }
+
+  @Override
+  public int getUseridByUniqueUrlParam(String uniqueUrlParam) {
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    uniqueUrlParamParamMap.put(USERNAME_COL, uniqueUrlParam);
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap, useridRowMapper);
   }
 }
