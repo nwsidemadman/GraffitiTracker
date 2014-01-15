@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
+import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 public class AppUserServiceImpl implements AppUserService {
   @Autowired
   AppUserDao appUserDao;
+  @Autowired
+  RegistrationConfirmationsDao registrationConfirmationsDao;
 
   @Override
   public AppUser getUser(String username) {
@@ -55,5 +58,15 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public void updateLoginTimestamps(String username) {
     appUserDao.updateLoginTimestamps(username);
+  }
+
+  @Override
+  public void addRegistrationConfirmation(String username) {
+    registrationConfirmationsDao.addRegistrationConfirmationByUsername(username);
+  }
+
+  @Override
+  public String getUniqueUrlParam(String username) {
+    return registrationConfirmationsDao.getUniqueUrlParam(username);
   }
 }

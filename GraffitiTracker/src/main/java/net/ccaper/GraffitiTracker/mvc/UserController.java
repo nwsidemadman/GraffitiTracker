@@ -77,8 +77,10 @@ public class UserController {
       return "users/edit";
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
+    appUserService.addRegistrationConfirmation(userForm.getUsername());
+    String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm.getUsername());
+    logger.info(String.format("Unique Url Param for User '%s' is '%s'", userForm.getUsername(), uniqueUrlParam));
     return "redirect:/users/registered";
-    // TODO: fix broken test
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
