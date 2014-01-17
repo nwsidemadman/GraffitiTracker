@@ -9,6 +9,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
@@ -189,5 +193,52 @@ public class UserControllerTest {
   public void testShowRegisteredUser() throws Exception {
     UserController controller = new UserController();
     assertEquals("users/registered", controller.showRegisteredUser());
+  }
+
+  @Test
+  public void testGenerateEmailLink() throws Exception {
+    String protocolDomanPortServlet = "http://domain:8080/Servlet";
+    String oldServletPath = "/oldServletPathLevel1/oldServletPathLevel2";
+    String newServletPath = "/oldServletPathLevel1/oldServletPathLevel2";
+    UserController userController = new UserController();
+    assertEquals(protocolDomanPortServlet + newServletPath, userController.generateEmailLink(protocolDomanPortServlet + oldServletPath, oldServletPath, newServletPath));
+  }
+
+  @Test
+  public void testShowConfirmedUser_HappyPath() throws Exception {
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    Map<String, Object> model = new HashMap<String, Object>();
+    String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
+    String url = "http://domain:8080/Servlet/oldServletPathLevel1/oldServletPathLevel2";
+    StringBuffer stringBufferUrl = new StringBuffer(url);
+    when(requestMock.getRequestURL()).thenReturn(stringBufferUrl);
+    when(requestMock.getServletPath()).thenReturn("oldServletPathLevel1/oldServletPathLevel2");
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam)).thenReturn(1);
+    UserController userController = new UserController();
+    userController.setAppUserService(appUserServiceMock);
+    assertEquals("users/confirmed", userController.showConfirmedUser(uniqueUrlParam, model, requestMock));
+    assertTrue(model.containsKey("confirmed"));
+    assertEquals(true, model.get("confirmed"));
+    verify(requestMock).getRequestURL();
+    verify(requestMock).getServletPath();
+    verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).updateAppUserAsActive(1);
+    verify(appUserServiceMock).deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+  }
+
+  @Test
+  public void testShowConfirmedUser_UniqueUrlParamDoesNotExist() throws Exception {
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    Map<String, Object> model = new HashMap<String, Object>();
+    String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
+    UserController userController = new UserController();
+    userController.setAppUserService(appUserServiceMock);
+    assertEquals("users/confirmed", userController.showConfirmedUser(uniqueUrlParam, model, requestMock));
+    assertTrue(model.containsKey("confirmed"));
+    assertEquals(false, model.get("confirmed"));
+    verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);
   }
 }

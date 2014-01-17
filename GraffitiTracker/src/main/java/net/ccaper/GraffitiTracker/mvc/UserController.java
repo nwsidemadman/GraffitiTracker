@@ -2,6 +2,7 @@ package net.ccaper.GraffitiTracker.mvc;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
@@ -96,19 +97,26 @@ public class UserController {
   @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
   public String showConfirmedUser(
       @RequestParam(required = true) String uniqueUrlParam,
-      Map<String, Object> model) {
+      Map<String, Object> model, HttpServletRequest request) {
     Integer userid = appUserService.getUseridByUniqueUrlParam(uniqueUrlParam);
     if (userid == null) {
-      model.put("confirmed", "false");
+      model.put("confirmed", false);
     } else {
       appUserService.updateAppUserAsActive(userid);
       appUserService
       .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
-      // TODO: unit test
-      // TODO: generate complete url
-      String link = "users/confirmed?uniqueUrlParam=" + uniqueUrlParam;
-      model.put("confirmed", "true");
+      String link = generateEmailLink(request.getRequestURL().toString(),
+          request.getServletPath(), "/users/confirmed?uniqueUrlParam="
+              + uniqueUrlParam);
+      logger.info("link: " + link);
+      model.put("confirmed", true);
     }
     return "users/confirmed";
+  }
+
+  // visible for testing
+  String generateEmailLink(String url, String oldServletPath,
+      String newServletPath) {
+    return url.replace(oldServletPath, newServletPath);
   }
 }
