@@ -1,4 +1,4 @@
-ROP TABLE `registration_confirmations`;
+DROP TABLE `registration_confirmations`;
 
 CREATE TABLE `registration_confirmations` (
   `user_id` int(10) unsigned NOT NULL,
