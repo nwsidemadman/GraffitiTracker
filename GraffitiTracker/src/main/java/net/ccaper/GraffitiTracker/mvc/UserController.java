@@ -92,8 +92,6 @@ public class UserController {
     appUserService.addRegistrationConfirmation(userForm.getUsername());
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
-    logger.info(String.format("Unique Url Param for User '%s' is '%s'",
-        userForm.getUsername(), uniqueUrlParam));
     String link = getEmailLink(request.getRequestURL().toString(),
         request.getServletPath(), "/users/confirmed?uniqueUrlParam="
             + uniqueUrlParam);
