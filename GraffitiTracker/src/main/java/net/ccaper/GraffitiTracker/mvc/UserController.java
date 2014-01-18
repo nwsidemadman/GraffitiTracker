@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +37,8 @@ public class UserController {
   CaptchaService captchaService;
   @Autowired
   FormUserValidator formUserValidator;
+  @Autowired
+  MailSender mailSender;
 
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
@@ -48,6 +52,10 @@ public class UserController {
     this.appUserService = appUserService;
   }
 
+  public void setMailSender(MailSender mailSender) {
+    this.mailSender = mailSender;
+  }
+
   @RequestMapping(method = RequestMethod.GET, params = "new")
   public String createUserProfile(Model model, HttpSession session) {
     TextCaptcha captcha = captchaService.getTextCaptcha();
@@ -59,7 +67,7 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public String addAppUserFromForm(HttpSession session, UserForm userForm,
+  public String addAppUserFromForm(HttpServletRequest request, HttpSession session, UserForm userForm,
       BindingResult bindingResult) {
     formUserValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
@@ -86,6 +94,10 @@ public class UserController {
         .getUsername());
     logger.info(String.format("Unique Url Param for User '%s' is '%s'",
         userForm.getUsername(), uniqueUrlParam));
+    String link = getEmailLink(request.getRequestURL().toString(),
+        request.getServletPath(), "/users/confirmed?uniqueUrlParam="
+            + uniqueUrlParam);
+    mailSender.send(getMailMessage(userForm.getEmail(), link));
     return "redirect:/users/registered";
   }
 
@@ -97,7 +109,7 @@ public class UserController {
   @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
   public String showConfirmedUser(
       @RequestParam(required = true) String uniqueUrlParam,
-      Map<String, Object> model, HttpServletRequest request) {
+      Map<String, Object> model) {
     Integer userid = appUserService.getUseridByUniqueUrlParam(uniqueUrlParam);
     if (userid == null) {
       model.put("confirmed", false);
@@ -105,18 +117,24 @@ public class UserController {
       appUserService.updateAppUserAsActive(userid);
       appUserService
       .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
-      String link = generateEmailLink(request.getRequestURL().toString(),
-          request.getServletPath(), "/users/confirmed?uniqueUrlParam="
-              + uniqueUrlParam);
-      logger.info("link: " + link);
       model.put("confirmed", true);
     }
     return "users/confirmed";
   }
 
   // visible for testing
-  String generateEmailLink(String url, String oldServletPath,
-      String newServletPath) {
+  String getEmailLink(String url, String oldServletPath, String newServletPath) {
     return url.replace(oldServletPath, newServletPath);
+  }
+
+  // visible for testing
+  // TODO: make pretty
+  SimpleMailMessage getMailMessage(String toEmail, String link) {
+    SimpleMailMessage message = new SimpleMailMessage();
+
+    message.setTo(toEmail);
+    message.setSubject("GraffitiTracker Registration Confirmation");
+    message.setText("link: " + link);
+    return message;
   }
 }

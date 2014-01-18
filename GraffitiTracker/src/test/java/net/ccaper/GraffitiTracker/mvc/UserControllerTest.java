@@ -26,6 +26,7 @@ import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mail.MailSender;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -77,6 +78,11 @@ public class UserControllerTest {
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(bannedWordServiceMock.doesStringContainBannedWord(userForm.getUsername()))
     .thenReturn(false);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    String servletPath = "/Servlet/servletPath1/servletPath2";
+    when(requestMock.getRequestURL()).thenReturn(new StringBuffer("http:domain:port" + servletPath));
+    when(requestMock.getServletPath()).thenReturn(servletPath);
+    MailSender mailSenderMock = mock(MailSender.class);
     CaptchaService captchaService = new TextCaptchaServiceImpl();
     FormUserValidator formUserValidator = new FormUserValidator();
     formUserValidator.setAppUserService(appUserServiceMock);
@@ -87,13 +93,16 @@ public class UserControllerTest {
     controller.setAppUserService(appUserServiceMock);
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaService);
+    controller.setMailSender(mailSenderMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "userForm");
     assertEquals("redirect:/users/registered",
-        controller.addAppUserFromForm(session, userForm, result));
+        controller.addAppUserFromForm(requestMock, session, userForm, result));
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
+    verify(requestMock).getRequestURL();
+    verify(requestMock).getServletPath();
   }
 
   @Test
@@ -114,6 +123,7 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(false);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(invalidUserCaptcha);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
     FormUserValidator formUserValidator = new FormUserValidator();
     formUserValidator.setAppUserService(appUserServiceMock);
     HttpSession session = new MockHttpSession();
@@ -124,7 +134,7 @@ public class UserControllerTest {
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     assertEquals("users/edit",
-        controller.addAppUserFromForm(session, userForm, result));
+        controller.addAppUserFromForm(requestMock, session, userForm, result));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
         invalidUserCaptcha.getQuestion());
@@ -158,6 +168,7 @@ public class UserControllerTest {
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(bannedWordServiceMock.doesStringContainBannedWord(userForm.getUsername()))
     .thenReturn(false);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(incorrectAnswerCaptcha);
     FormUserValidator formUserValidator = new FormUserValidator();
@@ -171,7 +182,7 @@ public class UserControllerTest {
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     assertEquals("users/edit",
-        controller.addAppUserFromForm(session, userForm, result));
+        controller.addAppUserFromForm(requestMock, session, userForm, result));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
         incorrectAnswerCaptcha.getQuestion());
@@ -201,27 +212,20 @@ public class UserControllerTest {
     String oldServletPath = "/oldServletPathLevel1/oldServletPathLevel2";
     String newServletPath = "/oldServletPathLevel1/oldServletPathLevel2";
     UserController userController = new UserController();
-    assertEquals(protocolDomanPortServlet + newServletPath, userController.generateEmailLink(protocolDomanPortServlet + oldServletPath, oldServletPath, newServletPath));
+    assertEquals(protocolDomanPortServlet + newServletPath, userController.getEmailLink(protocolDomanPortServlet + oldServletPath, oldServletPath, newServletPath));
   }
 
   @Test
   public void testShowConfirmedUser_HappyPath() throws Exception {
-    HttpServletRequest requestMock = mock(HttpServletRequest.class);
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
-    String url = "http://domain:8080/Servlet/oldServletPathLevel1/oldServletPathLevel2";
-    StringBuffer stringBufferUrl = new StringBuffer(url);
-    when(requestMock.getRequestURL()).thenReturn(stringBufferUrl);
-    when(requestMock.getServletPath()).thenReturn("oldServletPathLevel1/oldServletPathLevel2");
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam)).thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
-    assertEquals("users/confirmed", userController.showConfirmedUser(uniqueUrlParam, model, requestMock));
+    assertEquals("users/confirmed", userController.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(true, model.get("confirmed"));
-    verify(requestMock).getRequestURL();
-    verify(requestMock).getServletPath();
     verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);
     verify(appUserServiceMock).updateAppUserAsActive(1);
     verify(appUserServiceMock).deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
@@ -229,14 +233,13 @@ public class UserControllerTest {
 
   @Test
   public void testShowConfirmedUser_UniqueUrlParamDoesNotExist() throws Exception {
-    HttpServletRequest requestMock = mock(HttpServletRequest.class);
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
-    assertEquals("users/confirmed", userController.showConfirmedUser(uniqueUrlParam, model, requestMock));
+    assertEquals("users/confirmed", userController.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
     verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);

@@ -1,5 +1,7 @@
 package net.ccaper.GraffitiTracker.spring;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -8,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 @PropertySource("classpath:/net/ccaper/GraffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker.properties")
@@ -38,5 +42,22 @@ public class AppConfig {
   public Integer maxNumberCaptchaFetchRetries() {
     return Integer.parseInt(properties
         .getProperty("captcha.maxNumberFetchRetries"));
+  }
+
+  @Bean(name = "mailSender")
+  public MailSender mailSender() {
+    // TODO: create GraffitiTracker gmail account, switch to that
+    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    mailSender.setHost(properties.getProperty("mailserver.host"));
+    mailSender.setPort(Integer.parseInt(properties.getProperty("mailserver.port")));
+    mailSender.setUsername(properties.getProperty("mailserver.username"));
+    mailSender.setPassword(properties.getProperty("mailserver.password"));
+    Properties javaMailProperties = new Properties();
+    javaMailProperties.setProperty("mail.smtp.auth", "true");
+    javaMailProperties.setProperty("mail.smtp.starttls.enable", "true");
+    javaMailProperties.setProperty("mail.smtp.quitwait", "false");
+    javaMailProperties.setProperty("mail.smtp.starttls.enable", "true");
+    mailSender.setJavaMailProperties(javaMailProperties);
+    return mailSender;
   }
 }
