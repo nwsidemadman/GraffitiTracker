@@ -46,7 +46,6 @@ public class AppConfig {
 
   @Bean(name = "mailSender")
   public MailSender mailSender() {
-    // TODO: create GraffitiTracker gmail account, switch to that
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     mailSender.setHost(properties.getProperty("mailserver.host"));
     mailSender.setPort(Integer.parseInt(properties.getProperty("mailserver.port")));

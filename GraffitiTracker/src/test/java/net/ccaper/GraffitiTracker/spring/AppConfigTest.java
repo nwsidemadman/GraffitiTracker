@@ -30,5 +30,6 @@ public class AppConfigTest {
     assertNotNull(context.getBean("dataSource"));
     assertNotNull(context.getBean("captchaKey"));
     assertNotNull(context.getBean("maxNumberCaptchaFetchRetries"));
+    assertNotNull(context.getBean("mailSender"));
   }
 }

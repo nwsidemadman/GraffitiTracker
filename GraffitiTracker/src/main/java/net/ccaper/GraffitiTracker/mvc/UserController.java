@@ -1,5 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +12,12 @@ import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
+import net.ccaper.GraffitiTracker.service.MailService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,14 +32,16 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class UserController {
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
+  // visible for testing
+  static final String EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?uniqueUrlParam=";
   @Autowired
   AppUserService appUserService;
   @Autowired
   CaptchaService captchaService;
   @Autowired
-  FormUserValidator formUserValidator;
+  MailService mailService;
   @Autowired
-  MailSender mailSender;
+  FormUserValidator formUserValidator;
 
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
@@ -52,8 +55,8 @@ public class UserController {
     this.appUserService = appUserService;
   }
 
-  public void setMailSender(MailSender mailSender) {
-    this.mailSender = mailSender;
+  public void setMailService(MailService mailService) {
+    this.mailService = mailService;
   }
 
   @RequestMapping(method = RequestMethod.GET, params = "new")
@@ -67,8 +70,8 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public String addAppUserFromForm(HttpServletRequest request, HttpSession session, UserForm userForm,
-      BindingResult bindingResult) {
+  public String addAppUserFromForm(HttpServletRequest request,
+      HttpSession session, UserForm userForm, BindingResult bindingResult) {
     formUserValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
       TextCaptcha captcha = captchaService.getTextCaptcha();
@@ -92,10 +95,15 @@ public class UserController {
     appUserService.addRegistrationConfirmation(userForm.getUsername());
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
-    String link = getEmailLink(request.getRequestURL().toString(),
-        request.getServletPath(), "/users/confirmed?uniqueUrlParam="
-            + uniqueUrlParam);
-    mailSender.send(getMailMessage(userForm.getEmail(), link));
+    List<String> recipients = new ArrayList<String>(1);
+    recipients.add(userForm.getEmail());
+    mailService.sendEmail(
+        recipients,
+        "GraffitiTracker Registration Confirmation",
+        String.format(
+            "link: %s",
+            getEmailLink(request.getRequestURL().toString(),
+                request.getServletPath(), uniqueUrlParam)));
     return "redirect:/users/registered";
   }
 
@@ -114,25 +122,15 @@ public class UserController {
     } else {
       appUserService.updateAppUserAsActive(userid);
       appUserService
-      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+          .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";
   }
 
   // visible for testing
-  String getEmailLink(String url, String oldServletPath, String newServletPath) {
-    return url.replace(oldServletPath, newServletPath);
-  }
-
-  // visible for testing
-  // TODO: make pretty
-  SimpleMailMessage getMailMessage(String toEmail, String link) {
-    SimpleMailMessage message = new SimpleMailMessage();
-
-    message.setTo(toEmail);
-    message.setSubject("GraffitiTracker Registration Confirmation");
-    message.setText("link: " + link);
-    return message;
+  String getEmailLink(String url, String oldServletPath, String uniqeUrlParam) {
+    return url.replace(oldServletPath, EMAIL_LINK_SERVLET_PATH_WITH_PARAM
+        + uniqeUrlParam);
   }
 }
