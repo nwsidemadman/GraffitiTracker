@@ -19,7 +19,7 @@ public class MailServiceMailSenderImpl implements MailService {
   }
 
   @Override
-  public void sendEmail(List<String> recipients, String subject, String content) {
+  public void sendSimpleEmail(List<String> recipients, String subject, String content) {
     mailSender.send(getSimpleMailMessage(
         recipients.toArray(new String[recipients.size()]), subject, content));
   }

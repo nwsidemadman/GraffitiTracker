@@ -97,7 +97,7 @@ public class UserController {
         .getUsername());
     List<String> recipients = new ArrayList<String>(1);
     recipients.add(userForm.getEmail());
-    mailService.sendEmail(
+    mailService.sendSimpleEmail(
         recipients,
         "GraffitiTracker Registration Confirmation",
         String.format(
