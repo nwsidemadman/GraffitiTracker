@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
@@ -45,7 +45,7 @@ public class AppConfig {
   }
 
   @Bean(name = "mailSender")
-  public MailSender mailSender() {
+  public JavaMailSender mailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     mailSender.setHost(properties.getProperty("mailserver.host"));
     mailSender.setPort(Integer.parseInt(properties.getProperty("mailserver.port")));

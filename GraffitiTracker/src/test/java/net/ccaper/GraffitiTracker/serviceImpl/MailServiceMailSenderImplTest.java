@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import javax.mail.internet.MimeMessage;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +24,7 @@ public class MailServiceMailSenderImplTest {
 
   @Test
   public void testGetSimpleMailMessage() throws Exception {
-    MailServiceMailSenderImpl mailService = new MailServiceMailSenderImpl();
+    MailServiceJavaMailSenderImpl mailService = new MailServiceJavaMailSenderImpl();
     String[] recipients = new String[]{"test@test.com"};
     String subject = "testSubject";
     String content = "testContent";

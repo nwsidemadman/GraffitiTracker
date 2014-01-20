@@ -97,13 +97,20 @@ public class UserController {
         .getUsername());
     List<String> recipients = new ArrayList<String>(1);
     recipients.add(userForm.getEmail());
-    mailService.sendSimpleEmail(
-        recipients,
-        "GraffitiTracker Registration Confirmation",
-        String.format(
-            "link: %s",
-            getEmailLink(request.getRequestURL().toString(),
-                request.getServletPath(), uniqueUrlParam)));
+    String link = getEmailLink(request.getRequestURL().toString(),
+        request.getServletPath(), uniqueUrlParam);
+    mailService
+        .sendRichEmail(
+            recipients,
+            "GraffitiTracker Registration Confirmation",
+            String
+                .format(
+                    "<div>"
+                    + "<p>Thank you for registering at GraffitiTracker.</p>"
+                    + "<p>To complete your registration, please click the following link with 48 hours of receiving this email.</p>"
+                    + "<p><a href='%s'>%s</a></p>"
+                    + "</div>",
+                    link, link));
     return "redirect:/users/registered";
   }
 
