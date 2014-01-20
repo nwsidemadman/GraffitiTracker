@@ -173,4 +173,10 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE,
         useridParamMap);
   }
+
+  @Override
+  public void deleteAppUsersWhenRegistrationExpired() {
+    getNamedParameterJdbcTemplate().update(
+        SQL_DELETE_EXPIRED_REGISTRATION_USERS, new HashMap<String, String>());
+  }
 }

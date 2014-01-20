@@ -14,4 +14,6 @@ public interface AppUserDao {
   void updateLoginTimestamps(String username);
 
   void updateAppUserAsActive(int userid);
+  
+  void deleteAppUsersWhenRegistrationExpired();
 }

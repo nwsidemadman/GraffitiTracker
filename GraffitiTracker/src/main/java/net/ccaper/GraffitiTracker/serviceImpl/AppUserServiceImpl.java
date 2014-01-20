@@ -5,11 +5,16 @@ import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service("appUserService")
 public class AppUserServiceImpl implements AppUserService {
+  private static final Logger logger = LoggerFactory
+      .getLogger(AppUserServiceImpl.class);
   @Autowired
   AppUserDao appUserDao;
   @Autowired
@@ -85,5 +90,12 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public void updateAppUserAsActive(int userid) {
     appUserDao.updateAppUserAsActive(userid);
+  }
+
+  @Override
+  @Scheduled(fixedDelay=86400000)
+  public void deleteAppUsersWhenRegistrationExpired() {
+    logger.info("Deleting app users where registration expired.");
+    appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 }
