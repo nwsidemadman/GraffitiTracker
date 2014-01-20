@@ -5,7 +5,7 @@ CREATE TABLE `app_users` (
   `username` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
   `is_active` bit(1) NOT NULL DEFAULT b'0',
-  `register_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `registration_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `password` varchar(64) NOT NULL,
   `current_login_timestamp` timestamp NULL DEFAULT NULL,
   `previous_login_timestamp` timestamp NULL DEFAULT NULL,

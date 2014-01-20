@@ -18,10 +18,9 @@ import org.springframework.stereotype.Repository;
 @Repository("registrationConfirmationsDao")
 public class JdbcRegistrationConfirmationsDaoImpl extends
 NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
-  private static final String REGISTRATION_CONFIRMATIONS_TABLE = "registration_confirmations";
+  static final String REGISTRATION_CONFIRMATIONS_TABLE = "registration_confirmations";
   private static final String USER_ID_COL = JdbcAppUserDaoImpl.USER_ID_COL;
   private static final String UNIQUE_URL_PARAM_COL = "unique_url_param";
-  private static final String REGISTRATION_TIMESTAMP_COL = "registration_timestamp";
   private static final String USERS_TABLE = JdbcAppUserDaoImpl.USERS_TABLE;
   private static final String USERNAME_COL = JdbcAppUserDaoImpl.USERNAME_COL;
   private static final String SQL_INSERT_REGISTRATION_CONFIRMATION_BY_USERNAME = String

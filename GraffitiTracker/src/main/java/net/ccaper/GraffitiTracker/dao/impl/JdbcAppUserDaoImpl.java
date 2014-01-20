@@ -21,21 +21,22 @@ import org.springframework.stereotype.Repository;
 
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-AppUserDao {
+    AppUserDao {
   static final String USERS_TABLE = "app_users";
   static final String USER_ID_COL = "user_id";
   static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
   private static final String IS_ACTIVE_COL = "is_active";
-  private static final String REGISTER_TIMESTAMP_COL = "register_timestamp";
+  private static final String REGISTRATION_TIMESTAMP_COL = "registration_timestamp";
   private static final String PASSWORD_COL = "password";
   private static final String CURRENT_LOGIN_TIMESTAMP_COL = "current_login_timestamp";
   private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
   private static final String LOGIN_COUNT_COL = "login_count";
+  private static final String REGISTRATION_CONFIRMATIONS_TABLE = JdbcRegistrationConfirmationsDaoImpl.REGISTRATION_CONFIRMATIONS_TABLE;
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s",
       USER_ID_COL, USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL,
-      REGISTER_TIMESTAMP_COL, PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL,
+      REGISTRATION_TIMESTAMP_COL, PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL,
       LOGIN_COUNT_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
@@ -55,14 +56,22 @@ AppUserDao {
           CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, LOGIN_COUNT_COL,
           USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_UPDATE_APPUSER_AS_ACTIVE = String.format(
-      "UPDATE %s SET %S = 1 WHERE %s = :%s",
-      USERS_TABLE, IS_ACTIVE_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+      "UPDATE %s SET %S = 1 WHERE %s = :%s", USERS_TABLE, IS_ACTIVE_COL,
+      USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_DELETE_EXPIRED_REGISTRATION_USERS = String
+      .format(
+          "DELETE %s FROM %s INNER JOIN %s ON %s.%s = %s.%s WHERE %s.%s = 0 AND %s.%s < (NOW() - INTERVAL 2 day)",
+          USERS_TABLE, USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE,
+          USERS_TABLE, USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE,
+          USER_ID_COL, USERS_TABLE, IS_ACTIVE_COL, USERS_TABLE,
+          REGISTRATION_TIMESTAMP_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
       "SELECT %s, %s FROM %s where %s = :%s", ROLE_COL,
-      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL).toLowerCase();
+      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL)
+      .toLowerCase();
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
       ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
@@ -76,7 +85,7 @@ AppUserDao {
       appUser.setUsername(rs.getString(USERNAME_COL));
       appUser.setEmail(rs.getString(EMAIL_COL));
       appUser.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
-      appUser.setRegisterTimestamp(rs.getTimestamp(REGISTER_TIMESTAMP_COL));
+      appUser.setRegisterTimestamp(rs.getTimestamp(REGISTRATION_TIMESTAMP_COL));
       appUser.setPassword(rs.getString(PASSWORD_COL));
       appUser.setPreviousLoginTimestamp(rs
           .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
@@ -161,6 +170,7 @@ AppUserDao {
   public void updateAppUserAsActive(int userid) {
     Map<String, Integer> useridParamMap = new HashMap<String, Integer>();
     useridParamMap.put(USER_ID_COL, userid);
-    getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE, useridParamMap);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE,
+        useridParamMap);
   }
 }
