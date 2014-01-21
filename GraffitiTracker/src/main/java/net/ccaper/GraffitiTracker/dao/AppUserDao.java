@@ -1,5 +1,7 @@
 package net.ccaper.GraffitiTracker.dao;
 
+import java.util.List;
+
 import net.ccaper.GraffitiTracker.objects.AppUser;
 
 public interface AppUserDao {
@@ -14,12 +16,14 @@ public interface AppUserDao {
   void updateLoginTimestamps(String username);
 
   void updateAppUserAsActive(int userid);
-  
+
   void deleteAppUsersWhenRegistrationExpired();
-  
+
   int getCountNewUsers(int numberOfDays);
-  
+
   int getCountLogins(int numberOfDays);
-  
+
   int getCountUnconfirmedUsers(int numberOfDays);
+
+  List<String> getSuperAdminEmails();
 }

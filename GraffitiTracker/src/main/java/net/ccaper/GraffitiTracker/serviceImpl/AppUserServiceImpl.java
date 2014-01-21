@@ -1,12 +1,12 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
+import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.MailService;
@@ -76,7 +76,7 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public void addRegistrationConfirmation(String username) {
     registrationConfirmationsDao
-        .addRegistrationConfirmationByUsername(username);
+    .addRegistrationConfirmationByUsername(username);
   }
 
   @Override
@@ -88,7 +88,7 @@ public class AppUserServiceImpl implements AppUserService {
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
     registrationConfirmationsDao
-        .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+    .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override
@@ -103,20 +103,17 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  @Scheduled(fixedDelay = 86400000)
+  @Scheduled(cron = "0 0 6 * * ?")
   public void deleteAppUsersWhenRegistrationExpired() {
     logger.info("Deleting app users where registration expired.");
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 
   @Override
-  @Scheduled(cron = "0 0 6 * * ?")
+  @Scheduled(cron = "0 30 5 * * ?")
   public void emailAdminStatsDaily() {
     logger.info("Sending daily stats to super admins.");
-    // TODO: get recipients from super admins
-    List<String> recipients = new ArrayList<String>();
-    recipients.add("ccaper@gmail.com");
-    // TODO: add environment to subject
+    List<String> recipients = appUserDao.getSuperAdminEmails();
     String content = "";
     int numberOfDays = 1;
     content += String.format("New Users Last Day: %s\n",
@@ -126,7 +123,10 @@ public class AppUserServiceImpl implements AppUserService {
     content += String.format("Logins Last Day: %s\n",
         appUserDao.getCountLogins(numberOfDays));
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-    mailService.sendSimpleEmail(recipients, "GraffitiTracker Daily Stats "
-        + dateFormat.format(new Date()), content);
+    mailService.sendSimpleEmail(recipients, String.format(
+        "%s GraffitiTracker Daily Stats %s",
+        EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
+            System.getProperty("GRAFFITI_TRACKER_ENV")).getDisplayString(),
+            dateFormat.format(new Date())), content);
   }
 }

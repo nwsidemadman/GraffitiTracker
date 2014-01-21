@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-    AppUserDao {
+AppUserDao {
   static final String USERS_TABLE = "app_users";
   static final String USER_ID_COL = "user_id";
   static final String USERNAME_COL = "username";
@@ -93,6 +93,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
       ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
       USERNAME_COL).toLowerCase();
+  private static final String SQL_SELECT_SUPERADMIN_EMAILS = String.format(
+      "SELECT %s FROM %s INNER JOIN %S ON %s.%s = %s.%s WHERE %s.%s = '%s'",
+      EMAIL_COL, USERS_TABLE, ROLES_TABLE, USERS_TABLE, USER_ID_COL,
+      ROLES_TABLE, USER_ID_COL, ROLES_TABLE, ROLE_COL,
+      RoleEnum.SUPERADMIN.getDbString()).toLowerCase();
 
   RowMapper<AppUser> appUserRowMapper = new RowMapper<AppUser>() {
     @Override
@@ -125,6 +130,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       role.setRole(RoleEnum.getRoleEnumFromDbString(rs.getString(ROLE_COL)));
       role.setGrantedTimestamp(rs.getTimestamp(ROLE_GRANTED_TIMESTAMP_COL));
       return role;
+    }
+  };
+
+  RowMapper<String> emailRowMapper = new RowMapper<String>() {
+    @Override
+    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getString(EMAIL_COL);
     }
   };
 
@@ -220,7 +232,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>();
     numberOfDaysParamMap.put(NUMBER_OF_DAYS, numberOfDays);
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_COUNT_UNCONFIRMED_USERS_IN_LAST_X_DAYS, numberOfDaysParamMap,
-        countRowMapper);
+        SQL_SELECT_COUNT_UNCONFIRMED_USERS_IN_LAST_X_DAYS,
+        numberOfDaysParamMap, countRowMapper);
+  }
+
+  @Override
+  public List<String> getSuperAdminEmails() {
+    return getNamedParameterJdbcTemplate().query(SQL_SELECT_SUPERADMIN_EMAILS, emailRowMapper);
   }
 }
