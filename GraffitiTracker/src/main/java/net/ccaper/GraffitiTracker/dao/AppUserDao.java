@@ -18,4 +18,8 @@ public interface AppUserDao {
   void deleteAppUsersWhenRegistrationExpired();
   
   int getCountNewUsers(int numberOfDays);
+  
+  int getCountLogins(int numberOfDays);
+  
+  int getCountUnconfirmedUsers(int numberOfDays);
 }

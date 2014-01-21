@@ -1,6 +1,8 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
@@ -74,7 +76,7 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public void addRegistrationConfirmation(String username) {
     registrationConfirmationsDao
-    .addRegistrationConfirmationByUsername(username);
+        .addRegistrationConfirmationByUsername(username);
   }
 
   @Override
@@ -85,12 +87,14 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
-    registrationConfirmationsDao.deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+    registrationConfirmationsDao
+        .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override
   public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
-    return registrationConfirmationsDao.getUseridByUniqueUrlParam(uniqueUrlParam);
+    return registrationConfirmationsDao
+        .getUseridByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override
@@ -99,21 +103,30 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  @Scheduled(fixedDelay=86400000)
+  @Scheduled(fixedDelay = 86400000)
   public void deleteAppUsersWhenRegistrationExpired() {
     logger.info("Deleting app users where registration expired.");
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 
   @Override
-  @Scheduled(cron="0 0 6 * * ?")
+  @Scheduled(cron = "0 0 6 * * ?")
   public void emailAdminStatsDaily() {
+    logger.info("Sending daily stats to super admins.");
     // TODO: get recipients from super admins
     List<String> recipients = new ArrayList<String>();
     recipients.add("ccaper@gmail.com");
     // TODO: add environment to subject
     String content = "";
-    content += String.format("New Users Last Day: %s\n", appUserDao.getCountNewUsers(1));
-    mailService.sendSimpleEmail(recipients, "GraffitiTracker Daily Stats", content);
+    int numberOfDays = 1;
+    content += String.format("New Users Last Day: %s\n",
+        appUserDao.getCountNewUsers(numberOfDays));
+    content += String.format("Unconfirmed Users Last Day: %s\n",
+        appUserDao.getCountUnconfirmedUsers(numberOfDays));
+    content += String.format("Logins Last Day: %s\n",
+        appUserDao.getCountLogins(numberOfDays));
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    mailService.sendSimpleEmail(recipients, "GraffitiTracker Daily Stats "
+        + dateFormat.format(new Date()), content);
   }
 }
