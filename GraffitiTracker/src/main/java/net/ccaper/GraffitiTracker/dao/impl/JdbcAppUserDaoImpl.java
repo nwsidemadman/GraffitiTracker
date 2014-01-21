@@ -32,6 +32,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String CURRENT_LOGIN_TIMESTAMP_COL = "current_login_timestamp";
   private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
   private static final String LOGIN_COUNT_COL = "login_count";
+  private static final String NUMBER_OF_DAYS = "numberOfDays";
   private static final String REGISTRATION_CONFIRMATIONS_TABLE = JdbcRegistrationConfirmationsDaoImpl.REGISTRATION_CONFIRMATIONS_TABLE;
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s",
@@ -65,6 +66,9 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
           USERS_TABLE, USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE,
           USER_ID_COL, USERS_TABLE, IS_ACTIVE_COL, USERS_TABLE,
           REGISTRATION_TIMESTAMP_COL).toLowerCase();
+  private static final String SQL_SELECT_COUNT_NEW_USERS_IN_LAST_DAY = String.format(
+      "SELECT COUNT(*) FROM %s WHERE %s = 1 AND %s > (NOW() - INTERVAL :%s day)",
+      USERS_TABLE, IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL, NUMBER_OF_DAYS);
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -178,5 +182,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   public void deleteAppUsersWhenRegistrationExpired() {
     getNamedParameterJdbcTemplate().update(
         SQL_DELETE_EXPIRED_REGISTRATION_USERS, new HashMap<String, String>());
+  }
+
+  @Override
+  public int getCountNewUsers(int numberOfDays) {
+    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>();
+    numberOfDaysParamMap.put(NUMBER_OF_DAYS, numberOfDays);
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_COUNT_NEW_USERS_IN_LAST_DAY, numberOfDaysParamMap, countRowMapper);
   }
 }

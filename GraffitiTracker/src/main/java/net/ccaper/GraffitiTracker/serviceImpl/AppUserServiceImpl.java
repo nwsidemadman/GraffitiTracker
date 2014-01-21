@@ -1,9 +1,13 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.MailService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +23,8 @@ public class AppUserServiceImpl implements AppUserService {
   AppUserDao appUserDao;
   @Autowired
   RegistrationConfirmationsDao registrationConfirmationsDao;
+  @Autowired
+  MailService mailService;
 
   @Override
   public AppUser getUser(String username) {
@@ -97,5 +103,17 @@ public class AppUserServiceImpl implements AppUserService {
   public void deleteAppUsersWhenRegistrationExpired() {
     logger.info("Deleting app users where registration expired.");
     appUserDao.deleteAppUsersWhenRegistrationExpired();
+  }
+
+  @Override
+  @Scheduled(cron="0 0 6 * * ?")
+  public void emailAdminStatsDaily() {
+    // TODO: get recipients from super admins
+    List<String> recipients = new ArrayList<String>();
+    recipients.add("ccaper@gmail.com");
+    // TODO: add environment to subject
+    String content = "";
+    content += String.format("New Users Last Day: %s\n", appUserDao.getCountNewUsers(1));
+    mailService.sendSimpleEmail(recipients, "GraffitiTracker Daily Stats", content);
   }
 }

@@ -24,4 +24,6 @@ public interface AppUserService {
   void updateAppUserAsActive(int userid);
   
   void deleteAppUsersWhenRegistrationExpired();
+  
+  void emailAdminStatsDaily();
 }

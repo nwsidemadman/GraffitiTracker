@@ -16,4 +16,6 @@ public interface AppUserDao {
   void updateAppUserAsActive(int userid);
   
   void deleteAppUsersWhenRegistrationExpired();
+  
+  int getCountNewUsers(int numberOfDays);
 }
