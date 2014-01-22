@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
+import net.ccaper.GraffitiTracker.utils.DateFormats;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
@@ -128,8 +130,7 @@ public class UserController {
   String generateEmailBodyWithVelocityEngine(UserForm userForm,
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
-    // TODO: get year dynamically
-    model.put("copyrightYear", "2014");
+    model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
     model

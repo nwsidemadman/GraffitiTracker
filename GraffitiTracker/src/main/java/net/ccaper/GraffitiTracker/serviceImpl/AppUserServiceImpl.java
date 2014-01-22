@@ -1,6 +1,5 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.MailService;
+import net.ccaper.GraffitiTracker.utils.DateFormats;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,11 +122,11 @@ public class AppUserServiceImpl implements AppUserService {
         appUserDao.getCountUnconfirmedUsers(numberOfDays));
     content += String.format("Logins Last Day: %s\n",
         appUserDao.getCountLogins(numberOfDays));
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
     mailService.sendSimpleEmail(recipients, String.format(
         "%s GraffitiTracker Daily Stats %s",
         EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
             System.getProperty("GRAFFITI_TRACKER_ENV")).getDisplayString(),
-            dateFormat.format(new Date())), content);
+            DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT.format(new Date())),
+            content);
   }
 }
