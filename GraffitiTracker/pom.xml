@@ -203,6 +203,13 @@
       <version>1.4</version>
     </dependency>
 
+    <!--  Apache Velocity -->
+    <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.7</version>
+    </dependency>
+
     <!-- Test -->
     <dependency>
       <groupId>junit</groupId>

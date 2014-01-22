@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.mvc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +16,13 @@ import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +45,8 @@ public class UserController {
   MailService mailService;
   @Autowired
   FormUserValidator formUserValidator;
+  @Autowired
+  VelocityEngine velocityEngine;
 
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
@@ -70,6 +75,8 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
+  // TODO: refactor, method too long
+  // TODO: fix broken happy path test
   public String addAppUserFromForm(HttpServletRequest request,
       HttpSession session, UserForm userForm, BindingResult bindingResult) {
     formUserValidator.validate(userForm, bindingResult);
@@ -97,19 +104,21 @@ public class UserController {
         .getUsername());
     List<String> recipients = new ArrayList<String>(1);
     recipients.add(userForm.getEmail());
-    mailService
-    .sendRichEmail(
-        recipients,
-        "GraffitiTracker Registration Confirmation",
-        String
+    Map<String, Object> model = new HashMap<String, Object>();
+    // TODO: get year dynamically
+    model.put("copyrightYear", "2014");
+    String content = String
         .format(
-            "<div>"
-                + "<p>Thank you for registering at GraffitiTracker.</p>"
+            "<p>Thank you for registering at GraffitiTracker.</p>"
                 + "<p>To complete your registration, please click the following link with 48 hours of receiving this email:</p>"
-                + "<p><a href='%s'>Confirm Registration</a></p>"
-                + "</div>",
+                + "<p><a href='%s'>Confirm Registration</a></p>" + "</div>",
                 getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(), uniqueUrlParam)));
+                    request.getServletPath(), uniqueUrlParam));
+    model.put("content", content);
+    String emailText = VelocityEngineUtils.mergeTemplateIntoString(
+        velocityEngine, "emailTemplate.vm", "UTF-8", model);
+    mailService.sendVelocityEmail(recipients,
+        "GraffitiTracker Registration Confirmation", emailText);
     return "redirect:/users/registered";
   }
 

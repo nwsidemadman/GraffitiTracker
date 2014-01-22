@@ -5,6 +5,8 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import net.ccaper.GraffitiTracker.service.MailService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +17,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import net.ccaper.GraffitiTracker.service.MailService;
 
 @Service
 public class MailServiceJavaMailSenderImpl implements MailService {
@@ -79,7 +79,38 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     helper.setSubject(subject);
     helper.setText(
         "<html><body><div><img src='cid:graffitiTrackerLogo'/></div>" + content
-            + "</body></html>", true);
+        + "</body></html>", true);
+    ClassPathResource logo = new ClassPathResource("../../resources/images/graffiti_tracker_logo.png");
+    helper.addInline("graffitiTrackerLogo", logo);
+    return message;
+  }
+
+  @Override
+  public void sendVelocityEmail(List<String> recipients, String subject,
+      String content) {
+    try {
+      mailSender.send(getVelocityMimeMessage(
+          recipients.toArray(new String[recipients.size()]), subject, content));
+    } catch (MailException e) {
+      logger.error(String.format(
+          "Error sending rich email, to='%s', subject='%s, content='%s'",
+          StringUtils.join(recipients, ", "), subject, content), e);
+    } catch (MessagingException e) {
+      logger.error(String.format(
+          "Error sending rich email, to='%s', subject='%s, content='%s'",
+          StringUtils.join(recipients, ", "), subject, content), e);
+    }
+  }
+
+  MimeMessage getVelocityMimeMessage(String[] recipients, String subject, String content)
+      throws MessagingException {
+    MimeMessage message = mailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    helper.setReplyTo(REPLY_TO);
+    helper.setTo(recipients);
+    helper.setSubject(subject);
+    helper.setText(
+        content, true);
     ClassPathResource logo = new ClassPathResource("../../resources/images/graffiti_tracker_logo.png");
     helper.addInline("graffitiTrackerLogo", logo);
     return message;

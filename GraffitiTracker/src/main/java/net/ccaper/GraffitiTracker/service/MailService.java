@@ -6,4 +6,6 @@ public interface MailService {
   void sendSimpleEmail(List<String> recipients, String subject, String content);
 
   void sendRichEmail(List<String> recipients, String subject, String content);
+
+  void sendVelocityEmail(List<String> recipients, String subject, String content);
 }

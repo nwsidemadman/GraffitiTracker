@@ -13,7 +13,7 @@
 
   <!-- Enables the Spring MVC @Controller programming model -->
   <annotation-driven />
-  <task:annotation-driven/>
+  <task:annotation-driven />
 
   <!-- Handles HTTP GET requests for /resources/** by efficiently serving 
     up static resources in the ${webappRoot}/resources directory -->
@@ -27,8 +27,20 @@
       </beans:list>
     </beans:property>
   </beans:bean>
+  
   <beans:bean
     class="org.springframework.web.servlet.view.tiles3.TilesViewResolver" />
+    
+  <beans:bean id="velocityEngine"
+    class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <beans:property name="velocityProperties">
+      <beans:value>
+        resource.loader=class
+        class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+      </beans:value>
+    </beans:property>
+  </beans:bean>
+
 
   <context:component-scan base-package="net.ccaper.GraffitiTracker" />
 
