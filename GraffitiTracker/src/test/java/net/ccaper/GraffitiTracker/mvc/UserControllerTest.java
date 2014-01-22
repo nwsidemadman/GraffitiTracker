@@ -62,6 +62,14 @@ public class UserControllerTest {
 
   @Test
   public void testAddAppUserFromForm_HappyPath() throws Exception {
+    class UserControllerMock extends UserController {
+      @Override
+      String generateEmailBodyWithVelocityEngine(UserForm userForm,
+          HttpServletRequest request) {
+        return "test";
+      }
+    }
+
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     UserForm userForm = new UserForm();
@@ -75,16 +83,12 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
+    .thenReturn(false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
             .getUsername())).thenReturn(false);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
-    String servletPath = "/Servlet/servletPath1/servletPath2";
-    when(requestMock.getRequestURL()).thenReturn(
-        new StringBuffer("http:domain:port" + servletPath));
-    when(requestMock.getServletPath()).thenReturn(servletPath);
     MailService mailServiceMock = mock(MailService.class);
     CaptchaService captchaService = new TextCaptchaServiceImpl();
     FormUserValidator formUserValidator = new FormUserValidator();
@@ -92,7 +96,7 @@ public class UserControllerTest {
     formUserValidator.setBannedWordService(bannedWordServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
-    UserController controller = new UserController();
+    UserControllerMock controller = new UserControllerMock();
     controller.setAppUserService(appUserServiceMock);
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaService);
@@ -104,8 +108,6 @@ public class UserControllerTest {
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
-    verify(requestMock).getRequestURL();
-    verify(requestMock).getServletPath();
   }
 
   @Test
@@ -167,7 +169,7 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
+    .thenReturn(false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
@@ -175,7 +177,7 @@ public class UserControllerTest {
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha())
-        .thenReturn(incorrectAnswerCaptcha);
+    .thenReturn(incorrectAnswerCaptcha);
     FormUserValidator formUserValidator = new FormUserValidator();
     formUserValidator.setAppUserService(appUserServiceMock);
     formUserValidator.setBannedWordService(bannedWordServiceMock);
@@ -227,7 +229,7 @@ public class UserControllerTest {
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
-        .thenReturn(1);
+    .thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
@@ -247,7 +249,7 @@ public class UserControllerTest {
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
-        .thenReturn(null);
+    .thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",

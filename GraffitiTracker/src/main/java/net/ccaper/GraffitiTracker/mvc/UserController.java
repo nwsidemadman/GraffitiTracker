@@ -64,6 +64,10 @@ public class UserController {
     this.mailService = mailService;
   }
 
+  public void setVelocityEngine(VelocityEngine velocityEngine) {
+    this.velocityEngine = velocityEngine;
+  }
+
   @RequestMapping(method = RequestMethod.GET, params = "new")
   public String createUserProfile(Model model, HttpSession session) {
     TextCaptcha captcha = captchaService.getTextCaptcha();
@@ -75,51 +79,71 @@ public class UserController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  // TODO: refactor, method too long
-  // TODO: fix broken happy path test
   public String addAppUserFromForm(HttpServletRequest request,
       HttpSession session, UserForm userForm, BindingResult bindingResult) {
     formUserValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
-      TextCaptcha captcha = captchaService.getTextCaptcha();
-      session.setAttribute("textCaptcha", captcha);
-      userForm.setTextCaptchaQuestion(captcha.getQuestion());
-      userForm.setCaptchaAnswer(null);
-      return "users/edit";
+      return handleUserFormErrors(session, userForm);
     }
     TextCaptcha captcha = (TextCaptcha) session.getAttribute("textCaptcha");
     if (!captchaService.isCaptchaAnswerCorrect(captcha,
         StringUtils.trimToEmpty(userForm.getCaptchaAnswer()))) {
-      TextCaptcha newCaptcha = captchaService.getTextCaptcha();
-      session.setAttribute("textCaptcha", newCaptcha);
-      userForm.setTextCaptchaQuestion(newCaptcha.getQuestion());
-      userForm.setCaptchaAnswer(null);
-      bindingResult.rejectValue("captchaAnswer", "incorrectCaptchaAnswer",
-          "Incorrect captcha answer.");
-      return "users/edit";
+      return handleIncorrectCaptchaAnswer(session, userForm, bindingResult);
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
+    handleSendingConfirmationEmail(userForm, request);
+    return "redirect:/users/registered";
+  }
+
+  private String handleUserFormErrors(HttpSession session, UserForm userForm) {
+    TextCaptcha captcha = captchaService.getTextCaptcha();
+    session.setAttribute("textCaptcha", captcha);
+    userForm.setTextCaptchaQuestion(captcha.getQuestion());
+    userForm.setCaptchaAnswer(null);
+    return "users/edit";
+  }
+
+  private String handleIncorrectCaptchaAnswer(HttpSession session,
+      UserForm userForm, BindingResult bindingResult) {
+    TextCaptcha newCaptcha = captchaService.getTextCaptcha();
+    session.setAttribute("textCaptcha", newCaptcha);
+    userForm.setTextCaptchaQuestion(newCaptcha.getQuestion());
+    userForm.setCaptchaAnswer(null);
+    bindingResult.rejectValue("captchaAnswer", "incorrectCaptchaAnswer",
+        "Incorrect captcha answer.");
+    return "users/edit";
+  }
+
+  private void handleSendingConfirmationEmail(UserForm userForm,
+      HttpServletRequest request) {
     appUserService.addRegistrationConfirmation(userForm.getUsername());
-    String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
-        .getUsername());
     List<String> recipients = new ArrayList<String>(1);
     recipients.add(userForm.getEmail());
+    mailService.sendVelocityEmail(recipients,
+        "GraffitiTracker Registration Confirmation",
+        generateEmailBodyWithVelocityEngine(userForm, request));
+  }
+
+  // visible for testing
+  String generateEmailBodyWithVelocityEngine(UserForm userForm,
+      HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
     // TODO: get year dynamically
     model.put("copyrightYear", "2014");
-    String content = String
+    String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
+        .getUsername());
+    model
+    .put(
+        "content",
+        String
         .format(
             "<p>Thank you for registering at GraffitiTracker.</p>"
                 + "<p>To complete your registration, please click the following link with 48 hours of receiving this email:</p>"
-                + "<p><a href='%s'>Confirm Registration</a></p>" + "</div>",
+                + "<p><a href='%s'>Confirm Registration</a></p>",
                 getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(), uniqueUrlParam));
-    model.put("content", content);
-    String emailText = VelocityEngineUtils.mergeTemplateIntoString(
-        velocityEngine, "emailTemplate.vm", "UTF-8", model);
-    mailService.sendVelocityEmail(recipients,
-        "GraffitiTracker Registration Confirmation", emailText);
-    return "redirect:/users/registered";
+                    request.getServletPath(), uniqueUrlParam)));
+    return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+        "emailTemplate.vm", "UTF-8", model);
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
