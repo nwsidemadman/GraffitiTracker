@@ -54,38 +54,6 @@ public class MailServiceJavaMailSenderImpl implements MailService {
   }
 
   @Override
-  public void sendRichEmail(List<String> recipients, String subject,
-      String content) {
-    try {
-      mailSender.send(getMimeMessage(
-          recipients.toArray(new String[recipients.size()]), subject, content));
-    } catch (MailException e) {
-      logger.error(String.format(
-          "Error sending rich email, to='%s', subject='%s, content='%s'",
-          StringUtils.join(recipients, ", "), subject, content), e);
-    } catch (MessagingException e) {
-      logger.error(String.format(
-          "Error sending rich email, to='%s', subject='%s, content='%s'",
-          StringUtils.join(recipients, ", "), subject, content), e);
-    }
-  }
-
-  MimeMessage getMimeMessage(String[] recipients, String subject, String content)
-      throws MessagingException {
-    MimeMessage message = mailSender.createMimeMessage();
-    MimeMessageHelper helper = new MimeMessageHelper(message, true);
-    helper.setReplyTo(REPLY_TO);
-    helper.setTo(recipients);
-    helper.setSubject(subject);
-    helper.setText(
-        "<html><body><div><img src='cid:graffitiTrackerLogo'/></div>" + content
-        + "</body></html>", true);
-    ClassPathResource logo = new ClassPathResource("../../resources/images/graffiti_tracker_logo.png");
-    helper.addInline("graffitiTrackerLogo", logo);
-    return message;
-  }
-
-  @Override
   public void sendVelocityEmail(List<String> recipients, String subject,
       String content) {
     try {
