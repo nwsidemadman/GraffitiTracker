@@ -94,6 +94,8 @@ public class UserController {
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
     handleSendingConfirmationEmail(userForm, request);
+    session.removeAttribute("textCaptcha");
+    // TODO: 2nd attempt to register fails on non matching captcha, fix
     return "redirect:/users/registered";
   }
 
@@ -144,7 +146,7 @@ public class UserController {
                 getEmailLink(request.getRequestURL().toString(),
                     request.getServletPath(), uniqueUrlParam)));
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
-        "emailTemplate.vm", "UTF-8", model);
+        "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)

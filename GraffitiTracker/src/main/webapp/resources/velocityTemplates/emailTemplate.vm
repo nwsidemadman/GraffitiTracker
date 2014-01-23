@@ -1,0 +1,39 @@
+<html>
+  <body>
+    <table bgcolor="#000000" width="100%" border="0" cellspacing="0" cellpadding="">
+      <tr>
+        <td width="15%"></td>
+        <td width="70%" bgcolor="#ffffff"><center><img src="cid:graffitiTrackerLogo" border="0"/></center></td>
+        <td width="15%"></td>
+      </tr>
+      <tr>
+        <td width="15%"></td>
+        <td width="70%" bgcolor="#ffffff">
+          <table border="0" cellspacing="0" cellpadding="15">
+            <tr>
+              <td height="300" valign="top">
+                ${content}
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td width="10%"></td>
+      </tr>
+      <tr>
+        <td width="15%"></td>
+        <td width="70%" bgcolor="#000000" style="border-top:4px solid #986F33">
+          <center>
+            <table border="0" cellspacing="0" cellpadding="3">
+              <tr>
+                <td>
+                  <font size="-1" color="#ffffff">Copyright &copy; ${copyrightYear} <b>Whalecopter Productions</b></font>
+                </td>
+              </tr>
+            </table>
+          </center>
+        </td>
+        <td width="15%"></td>
+      </tr>
+    </table>
+  </body>
+</html>
