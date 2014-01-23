@@ -141,7 +141,7 @@ public class UserController {
         String
         .format(
             "<p>Thank you for registering at GraffitiTracker.</p>"
-                + "<p>To complete your registration, please click the following link with 48 hours of receiving this email:</p>"
+                + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
                 + "<p><a href='%s'>Confirm Registration</a></p>",
                 getEmailLink(request.getRequestURL().toString(),
                     request.getServletPath(), uniqueUrlParam)));
