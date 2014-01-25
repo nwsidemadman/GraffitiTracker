@@ -7,7 +7,7 @@
   <p>
     <script type="text/javascript">
       var d = new Date();
-      document.write("Copyright &copy; " + d.getFullYear());
+      document.write("&copy; " + d.getFullYear());
     </script>
     <span id="company_name">Whalecopter Productions</span>
   </p>
