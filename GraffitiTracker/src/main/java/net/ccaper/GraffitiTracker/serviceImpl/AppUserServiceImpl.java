@@ -114,6 +114,10 @@ public class AppUserServiceImpl implements AppUserService {
   public void emailAdminStatsDaily() {
     logger.info("Sending daily stats to super admins.");
     List<String> recipients = appUserDao.getSuperAdminEmails();
+    if (recipients.size() == 0) {
+      logger.error("There are no users with super admin role to deliver daily stats.");
+      return;
+    }
     String content = "";
     int numberOfDays = 1;
     content += String.format("New Users Last Day: %s\n",
