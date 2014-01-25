@@ -80,10 +80,6 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     helper.setSubject(subject);
     helper.setText(
         content, true);
-    // TODO: consider small logo for emails so it shows inline on email
-    // TODO: make copyright line smaller, for emails
-    ClassPathResource logo = new ClassPathResource("../../resources/images/graffiti_tracker_logo.png");
-    helper.addInline("graffitiTrackerLogo", logo);
     return message;
   }
 }
