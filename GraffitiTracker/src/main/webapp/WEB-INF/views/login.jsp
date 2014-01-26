@@ -43,6 +43,8 @@
     </form>
     
     <p><a href="<s:url value="/users?new"/>">Sign up</a></p>
+    
+    <p><a href="<s:url value="/users?forgotUsername"/>">Forgot Username</a></p>
 
     <script type="text/javascript">
           document.getElementById('username_or_email').focus();

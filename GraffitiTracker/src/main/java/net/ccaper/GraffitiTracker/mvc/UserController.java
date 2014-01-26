@@ -184,4 +184,11 @@ public class UserController {
   String getHomeLink(String url, String oldServletPath) {
     return url.replace(oldServletPath, HOME_LINK);
   }
+  
+  @RequestMapping(method = RequestMethod.GET, params = "forgotUsername")
+  public String forgotUsername(Model model) {
+    UserForm userForm = new UserForm();
+    model.addAttribute(userForm);
+    return "users/forgotUsername";
+  }
 }
