@@ -22,6 +22,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
@@ -29,11 +30,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
 @RequestMapping("/users")
-@SessionAttributes("textCaptcha")
+@Scope("session")
 public class UserController {
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
@@ -94,8 +94,6 @@ public class UserController {
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
     handleSendingConfirmationEmail(userForm, request);
-    session.removeAttribute("textCaptcha");
-    // TODO: 2nd attempt to register fails on non matching captcha, fix
     return "redirect:/users/registered";
   }
 
