@@ -83,7 +83,7 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-    .thenReturn(false);
+        .thenReturn(false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
@@ -169,7 +169,7 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-    .thenReturn(false);
+        .thenReturn(false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
@@ -177,7 +177,7 @@ public class UserControllerTest {
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha())
-    .thenReturn(incorrectAnswerCaptcha);
+        .thenReturn(incorrectAnswerCaptcha);
     FormUserValidator formUserValidator = new FormUserValidator();
     formUserValidator.setAppUserService(appUserServiceMock);
     formUserValidator.setBannedWordService(bannedWordServiceMock);
@@ -212,7 +212,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testGenerateEmailLink() throws Exception {
+  public void testGetEmailLink() throws Exception {
     String protocolDomainPortServlet = "http://domain:8080/Servlet";
     String oldServletPath = "/oldServletPathLevel1/oldServletPathLevel2";
     String uniqueUrlParam = "test";
@@ -224,12 +224,22 @@ public class UserControllerTest {
   }
 
   @Test
+  public void testGetHomeLink() throws Exception {
+    String protocolDomainPortServlet = "http://domain:8080/Servlet";
+    String oldServletPath = "/oldServletPathLevel1/oldServletPathLevel2";
+    UserController userController = new UserController();
+    assertEquals(protocolDomainPortServlet + UserController.HOME_LINK,
+        userController.getHomeLink(protocolDomainPortServlet + oldServletPath,
+            oldServletPath));
+  }
+
+  @Test
   public void testShowConfirmedUser_HappyPath() throws Exception {
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
-    .thenReturn(1);
+        .thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
@@ -249,7 +259,7 @@ public class UserControllerTest {
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
-    .thenReturn(null);
+        .thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",

@@ -39,6 +39,8 @@ public class UserController {
       .getLogger(UserController.class);
   // visible for testing
   static final String EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?uniqueUrlParam=";
+  // visible for testing
+  static final String HOME_LINK = "/home";
   @Autowired
   AppUserService appUserService;
   @Autowired
@@ -134,15 +136,19 @@ public class UserController {
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
     model
-    .put(
-        "content",
-        String
-        .format(
-            "<p>Thank you for registering at GraffitiTracker.</p>"
-                + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
-                + "<p><a href='%s'>Confirm Registration</a></p>",
-                getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(), uniqueUrlParam)));
+        .put(
+            "content",
+            String
+                .format(
+                    "<p>Thank you for registering at GraffitiTracker.</p>"
+                        + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
+                        + "<p><a href='%s'>Confirm Registration</a></p>",
+                    getEmailLink(request.getRequestURL().toString(),
+                        request.getServletPath(), uniqueUrlParam)));
+    model.put(
+        "home_link",
+        getHomeLink(request.getRequestURL().toString(),
+            request.getServletPath()));
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
         "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
   }
@@ -162,7 +168,7 @@ public class UserController {
     } else {
       appUserService.updateAppUserAsActive(userid);
       appUserService
-      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+          .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";
@@ -172,5 +178,10 @@ public class UserController {
   String getEmailLink(String url, String oldServletPath, String uniqeUrlParam) {
     return url.replace(oldServletPath, EMAIL_LINK_SERVLET_PATH_WITH_PARAM
         + uniqeUrlParam);
+  }
+
+  // visible for testing
+  String getHomeLink(String url, String oldServletPath) {
+    return url.replace(oldServletPath, HOME_LINK);
   }
 }

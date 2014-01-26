@@ -3,7 +3,7 @@
     <table bgcolor="#000000" width="100%" border="0" cellspacing="0" cellpadding="" style="font-family: 'Lucida Grande', sans-serif; font-size: 11px">
       <tr>
         <td width="15%"></td>
-        <td width="70%" bgcolor="#ffffff"><center><img src="https://s3-us-west-2.amazonaws.com/graffiti-tracker/images/graffiti_tracker_logo.png" border="0"/></center></td>
+        <td width="70%" bgcolor="#ffffff"><center><a href="${home_link}"><img src="https://s3-us-west-2.amazonaws.com/graffiti-tracker/images/graffiti_tracker_logo.png" border="0"/></a></center></td>
         <td width="15%"></td>
       </tr>
       <tr>
