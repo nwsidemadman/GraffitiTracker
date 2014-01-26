@@ -5,6 +5,7 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.service.MailService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -76,8 +77,8 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     MimeMessageHelper helper = new MimeMessageHelper(message, true);
     helper.setReplyTo(REPLY_TO);
     helper.setTo(recipients);
-    // TODO: prepend env to subject
-    helper.setSubject(subject);
+    helper.setSubject(String.format("%s %s", EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
+        System.getProperty("GRAFFITI_TRACKER_ENV")).getDisplayString(), subject));
     helper.setText(
         content, true);
     return message;
