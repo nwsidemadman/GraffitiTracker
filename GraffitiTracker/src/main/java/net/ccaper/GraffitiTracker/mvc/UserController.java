@@ -215,11 +215,10 @@ public class UserController {
     return "users/forgotUsername";
   }
 
-  @RequestMapping(value = "/forgotUsername", method = RequestMethod.POST)
+  @RequestMapping(params = "recover", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request) {
     // TODO: unit test
-    // TODO: BUG, second validation error yields 404, MUST FIX!!!!
     formEmailValidator.validate(emailForm, bindingResult);
     if (bindingResult.hasErrors()) {
       return "users/forgotUsername";

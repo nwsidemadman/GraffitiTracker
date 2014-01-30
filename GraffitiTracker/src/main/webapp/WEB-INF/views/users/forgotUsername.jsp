@@ -8,12 +8,13 @@
   <div>
     <h2>Forgot Username</h2>
 
-    <sf:form method="POST" modelAttribute="emailForm" action="users/forgotUsername">
+    <sf:form method="POST" modelAttribute="emailForm" >
       <fieldset> 
         <p>
           <sf:errors path="email" cssClass="error" /><br/>
           <sf:label path="email">Email address used on account registration:</sf:label>
           <sf:input path="email" size="30" maxlength="100"/> 
+          <sf:hidden path="recover" value="true" />
         </p>
         <p>
           <input name="commit" type="submit" 
