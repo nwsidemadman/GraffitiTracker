@@ -8,7 +8,7 @@
   <div>
     <h2>Forgot Username</h2>
 
-    <sf:form method="POST" modelAttribute="userForm" >
+    <sf:form method="POST" modelAttribute="emailForm" action="users/forgotUsername">
       <fieldset> 
         <p>
           <sf:errors path="email" cssClass="error" /><br/>

@@ -26,4 +26,6 @@ public interface AppUserDao {
   int getCountUnconfirmedUsers(int numberOfDays);
 
   List<String> getSuperAdminEmails();
+
+  String getUsernameByEmail(String email);
 }

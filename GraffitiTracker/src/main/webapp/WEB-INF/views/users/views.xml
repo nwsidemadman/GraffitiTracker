@@ -2,21 +2,24 @@
       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 
-<tiles-definitions>  
-   <definition name="users/edit" extends="template">
-    <put-attribute name="content" 
-                   value="/WEB-INF/views/users/edit.jsp" />
-   </definition>
-   <definition name="users/registered" extends="template">
-    <put-attribute name="content" 
-                   value="/WEB-INF/views/users/registered.jsp" />
-   </definition>
-   <definition name="users/confirmed" extends="template">
-    <put-attribute name="content" 
-                   value="/WEB-INF/views/users/confirmed.jsp" />
-   </definition>
-   <definition name="users/forgotUsername" extends="template">
-    <put-attribute name="content" 
-                   value="/WEB-INF/views/users/forgotUsername.jsp" />
-   </definition>
+<tiles-definitions>
+  <definition name="users/edit" extends="template">
+    <put-attribute name="content" value="/WEB-INF/views/users/edit.jsp" />
+  </definition>
+  <definition name="users/registered" extends="template">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/registered.jsp" />
+  </definition>
+  <definition name="users/confirmed" extends="template">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/confirmed.jsp" />
+  </definition>
+  <definition name="users/forgotUsername" extends="template">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/forgotUsername.jsp" />
+  </definition>
+  <definition name="users/sentUsername" extends="template">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/sentUsername.jsp" />
+  </definition>
 </tiles-definitions>

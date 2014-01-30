@@ -64,7 +64,7 @@ public class UserControllerTest {
   public void testAddAppUserFromForm_HappyPath() throws Exception {
     class UserControllerMock extends UserController {
       @Override
-      String generateEmailBodyWithVelocityEngine(UserForm userForm,
+      String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
           HttpServletRequest request) {
         return "test";
       }

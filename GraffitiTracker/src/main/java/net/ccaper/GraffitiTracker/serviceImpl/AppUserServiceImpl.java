@@ -133,4 +133,10 @@ public class AppUserServiceImpl implements AppUserService {
             DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT.format(new Date())),
             content);
   }
+
+  @Override
+  public String getUsernameByEmail(String email) {
+    // TODO: unit test
+    return appUserDao.getUsernameByEmail(email);
+  }
 }

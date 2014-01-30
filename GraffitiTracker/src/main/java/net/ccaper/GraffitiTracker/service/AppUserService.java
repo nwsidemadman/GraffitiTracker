@@ -22,8 +22,10 @@ public interface AppUserService {
   Integer getUseridByUniqueUrlParam(String uniqueUrlParam);
 
   void updateAppUserAsActive(int userid);
-  
+
   void deleteAppUsersWhenRegistrationExpired();
-  
+
   void emailAdminStatsDaily();
+
+  String getUsernameByEmail(String email);
 }

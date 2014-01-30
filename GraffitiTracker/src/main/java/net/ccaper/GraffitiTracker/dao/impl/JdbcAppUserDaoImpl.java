@@ -15,6 +15,7 @@ import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -49,6 +50,9 @@ AppUserDao {
   private static final String SQL_SELECT_COUNT_EMAIL = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
       EMAIL_COL, EMAIL_COL).toLowerCase();
+  private static final String SQL_SELECT_USERNAME_BY_EMAIL = String.format(
+      "SELECT %s FROM %s WHERE %s = :%s;",
+      USERNAME_COL, USERS_TABLE, EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
       .format(
           "UPDATE %s SET %s = (SELECT %s FROM (SELECT * FROM %s) AS c1 WHERE c1.%s = :%s), %s = current_timestamp, %s = %s + 1 WHERE %s = :%s",
@@ -137,6 +141,13 @@ AppUserDao {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getString(EMAIL_COL);
+    }
+  };
+
+  RowMapper<String> usernameRowMapper = new RowMapper<String>() {
+    @Override
+    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getString(USERNAME_COL);
     }
   };
 
@@ -239,5 +250,19 @@ AppUserDao {
   @Override
   public List<String> getSuperAdminEmails() {
     return getNamedParameterJdbcTemplate().query(SQL_SELECT_SUPERADMIN_EMAILS, emailRowMapper);
+  }
+
+  @Override
+  public String getUsernameByEmail(String email) {
+    // TODO: unit test
+    Map<String, String> emailParamMap = new HashMap<String, String>();
+    emailParamMap.put(EMAIL_COL, email);
+    try {
+      return getNamedParameterJdbcTemplate().queryForObject(
+          SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap,
+          usernameRowMapper);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 }

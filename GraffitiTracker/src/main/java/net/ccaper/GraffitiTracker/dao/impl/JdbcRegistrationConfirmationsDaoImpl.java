@@ -97,6 +97,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
 
   @Override
   public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
+    // TODO: unit test?
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {

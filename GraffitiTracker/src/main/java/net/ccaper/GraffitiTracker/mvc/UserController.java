@@ -9,7 +9,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
+import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
@@ -49,6 +51,9 @@ public class UserController {
   MailService mailService;
   @Autowired
   FormUserValidator formUserValidator;
+  @Autowired
+  FormEmailValidator formEmailValidator;
+
   @Autowired
   VelocityEngine velocityEngine;
 
@@ -125,26 +130,43 @@ public class UserController {
     recipients.add(userForm.getEmail());
     mailService.sendVelocityEmail(recipients,
         "GraffitiTracker Registration Confirmation",
-        generateEmailBodyWithVelocityEngine(userForm, request));
+        generateConfirmationEmailBodyWithVelocityEngine(userForm, request));
   }
 
   // visible for testing
-  String generateEmailBodyWithVelocityEngine(UserForm userForm,
+  String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
     model
-        .put(
-            "content",
-            String
-                .format(
-                    "<p>Thank you for registering at GraffitiTracker.</p>"
-                        + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
-                        + "<p><a href='%s'>Confirm Registration</a></p>",
-                    getEmailLink(request.getRequestURL().toString(),
-                        request.getServletPath(), uniqueUrlParam)));
+    .put(
+        "content",
+        String
+        .format(
+            "<p>Thank you for registering at GraffitiTracker.</p>"
+                + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
+                + "<p><a href='%s'>Confirm Registration</a></p>",
+                getEmailLink(request.getRequestURL().toString(),
+                    request.getServletPath(), uniqueUrlParam)));
+    model.put(
+        "home_link",
+        getHomeLink(request.getRequestURL().toString(),
+            request.getServletPath()));
+    return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+        "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
+  }
+
+  // visible for testing
+  String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
+      HttpServletRequest request) {
+    // TODO: unit test
+    Map<String, Object> model = new HashMap<String, Object>();
+    model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
+    model.put("content", String.format(
+        "<p>You requested to recover your username.</p>"
+            + "<p>Your username is:</p>" + "<p>%s</p>", username));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -155,6 +177,7 @@ public class UserController {
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
   public String showRegisteredUser() {
+    // TODO: can this be static?
     return "users/registered";
   }
 
@@ -168,7 +191,7 @@ public class UserController {
     } else {
       appUserService.updateAppUserAsActive(userid);
       appUserService
-          .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";
@@ -184,11 +207,36 @@ public class UserController {
   String getHomeLink(String url, String oldServletPath) {
     return url.replace(oldServletPath, HOME_LINK);
   }
-  
+
   @RequestMapping(method = RequestMethod.GET, params = "forgotUsername")
   public String forgotUsername(Model model) {
-    UserForm userForm = new UserForm();
-    model.addAttribute(userForm);
+    EmailForm emailForm = new EmailForm();
+    model.addAttribute(emailForm);
     return "users/forgotUsername";
+  }
+
+  @RequestMapping(value = "/forgotUsername", method = RequestMethod.POST)
+  public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
+      HttpServletRequest request) {
+    // TODO: unit test
+    // TODO: BUG, second validation error yields 404, MUST FIX!!!!
+    formEmailValidator.validate(emailForm, bindingResult);
+    if (bindingResult.hasErrors()) {
+      return "users/forgotUsername";
+    }
+    String username = appUserService.getUsernameByEmail(emailForm.getEmail());
+    if (username != null) {
+      List<String> recipients = new ArrayList<String>(1);
+      recipients.add(emailForm.getEmail());
+      mailService.sendVelocityEmail(recipients, "Recover Username",
+          generateForgotUsernameEmailBodyWithVelocityEngine(username, request));
+    }
+    return "redirect:/users/sentUsername";
+  }
+
+  @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
+  public String sentUsername() {
+    // TODO: can this be static?
+    return "users/sentUsername";
   }
 }
