@@ -2,7 +2,7 @@ package net.ccaper.GraffitiTracker.objects;
 
 public class EmailForm {
   private String email;
-  private boolean recover;
+  private boolean recoverUsername;
 
   public String getEmail() {
     return email;
@@ -12,11 +12,11 @@ public class EmailForm {
     this.email = email;
   }
 
-  public boolean isRecover() {
-    return recover;
+  public boolean isRecoverUsername() {
+    return recoverUsername;
   }
 
-  public void setRecover(boolean recover) {
-    this.recover = recover;
+  public void setRecoverUsername(boolean recoverUsername) {
+    this.recoverUsername = recoverUsername;
   }
 }

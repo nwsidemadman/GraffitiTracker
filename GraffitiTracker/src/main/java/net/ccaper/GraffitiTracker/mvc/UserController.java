@@ -215,7 +215,7 @@ public class UserController {
     return "users/forgotUsername";
   }
 
-  @RequestMapping(params = "recover", method = RequestMethod.POST)
+  @RequestMapping(params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request) {
     // TODO: unit test
