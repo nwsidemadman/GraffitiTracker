@@ -254,15 +254,19 @@ AppUserDao {
 
   @Override
   public String getUsernameByEmail(String email) {
-    // TODO: unit test
     Map<String, String> emailParamMap = new HashMap<String, String>();
     emailParamMap.put(EMAIL_COL, email);
     try {
-      return getNamedParameterJdbcTemplate().queryForObject(
-          SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap,
-          usernameRowMapper);
+      return getUsernameByEmail(emailParamMap);
     } catch (EmptyResultDataAccessException e) {
       return null;
     }
+  }
+
+  // visible for testing
+  String getUsernameByEmail(Map<String, String> emailParamMap) {
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap,
+        usernameRowMapper);
   }
 }

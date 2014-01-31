@@ -21,7 +21,6 @@ public class FormEmailValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    // TODO: unit test
     EmailForm emailForm = (EmailForm) target;
     if (StringUtils.isEmpty(emailForm.getEmail())) {
       errors.rejectValue("email", "invalidEmail", "Email can not be empty.");

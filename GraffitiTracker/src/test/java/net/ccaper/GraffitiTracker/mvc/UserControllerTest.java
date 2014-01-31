@@ -9,13 +9,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
+import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
@@ -83,7 +87,7 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
+    .thenReturn(false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
@@ -169,7 +173,7 @@ public class UserControllerTest {
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
+    .thenReturn(false);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
@@ -177,7 +181,7 @@ public class UserControllerTest {
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha())
-        .thenReturn(incorrectAnswerCaptcha);
+    .thenReturn(incorrectAnswerCaptcha);
     FormUserValidator formUserValidator = new FormUserValidator();
     formUserValidator.setAppUserService(appUserServiceMock);
     formUserValidator.setBannedWordService(bannedWordServiceMock);
@@ -239,7 +243,7 @@ public class UserControllerTest {
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
-        .thenReturn(1);
+    .thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
@@ -259,7 +263,7 @@ public class UserControllerTest {
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
-        .thenReturn(null);
+    .thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
@@ -267,5 +271,69 @@ public class UserControllerTest {
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
     verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);
+  }
+
+  @Test
+  public void testSendUsername_InvalidEmail() throws Exception {
+    EmailForm emailForm = new EmailForm();
+    emailForm.setEmail("test");
+    BindingResult result = new BeanPropertyBindingResult(emailForm, "email");
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    FormEmailValidator formEmailValidator = new FormEmailValidator();
+    UserController controller = new UserController();
+    controller.setFormEmailValidator(formEmailValidator);
+    assertEquals("users/forgotUsername",
+        controller.sendUsername(emailForm, result, requestMock));
+  }
+
+  @Test
+  public void testSendUsername_UserDoesNotExist() throws Exception {
+    EmailForm emailForm = new EmailForm();
+    String email = "test@test.com";
+    emailForm.setEmail(email);
+    BindingResult result = new BeanPropertyBindingResult(emailForm, "email");
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    FormEmailValidator formEmailValidator = new FormEmailValidator();
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(null);
+    UserController controller = new UserController();
+    controller.setAppUserService(appUserServiceMock);
+    controller.setFormEmailValidator(formEmailValidator);
+    assertEquals("redirect:/users/sentUsername",
+        controller.sendUsername(emailForm, result, requestMock));
+    verify(appUserServiceMock).getUsernameByEmail(email);
+  }
+
+  @Test
+  public void testSendUsername_HappyPath() throws Exception {
+    class UserControllerMock extends UserController {
+      @Override
+      String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
+          HttpServletRequest request) {
+        return "test";
+      }
+    }
+
+    EmailForm emailForm = new EmailForm();
+    String email = "test@test.com";
+    String username = "test";
+    emailForm.setEmail(email);
+    BindingResult result = new BeanPropertyBindingResult(emailForm, "email");
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    FormEmailValidator formEmailValidator = new FormEmailValidator();
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(
+        username);
+    MailService mailServiceMock = mock(MailService.class);
+    UserController controllerMock = new UserControllerMock();
+    controllerMock.setAppUserService(appUserServiceMock);
+    controllerMock.setFormEmailValidator(formEmailValidator);
+    controllerMock.setMailService(mailServiceMock);
+    assertEquals("redirect:/users/sentUsername",
+        controllerMock.sendUsername(emailForm, result, requestMock));
+    verify(appUserServiceMock).getUsernameByEmail(email);
+    List<String> recipients = new ArrayList<String>();
+    recipients.add(email);
+    verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Username", "test");
   }
 }

@@ -97,15 +97,19 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
 
   @Override
   public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
-    // TODO: unit test?
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
-      return getNamedParameterJdbcTemplate().queryForObject(
-          SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
-          useridRowMapper);
+      return getUseridByUniqueUrlParam(uniqueUrlParamParamMap);
     } catch (EmptyResultDataAccessException e) {
       return null;
     }
+  }
+
+  // visible for testing
+  Integer getUseridByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
+        useridRowMapper);
   }
 }

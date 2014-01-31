@@ -136,7 +136,6 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public String getUsernameByEmail(String email) {
-    // TODO: unit test
     return appUserDao.getUsernameByEmail(email);
   }
 }
