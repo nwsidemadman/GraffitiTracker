@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-AppUserDao {
+    AppUserDao {
   static final String USERS_TABLE = "app_users";
   static final String USER_ID_COL = "user_id";
   static final String USERNAME_COL = "username";
@@ -33,6 +33,8 @@ AppUserDao {
   private static final String CURRENT_LOGIN_TIMESTAMP_COL = "current_login_timestamp";
   private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
   private static final String LOGIN_COUNT_COL = "login_count";
+  private static final String SECURITY_QUESTION_COL = "security_question";
+  private static final String SECURITY_ANSWER_COL = "security_answer";
   private static final String NUMBER_OF_DAYS = "number_of_days";
   private static final String REGISTRATION_CONFIRMATIONS_TABLE = JdbcRegistrationConfirmationsDaoImpl.REGISTRATION_CONFIRMATIONS_TABLE;
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
@@ -41,9 +43,10 @@ AppUserDao {
       REGISTRATION_TIMESTAMP_COL, PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL,
       LOGIN_COUNT_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
-      "INSERT INTO %s (%s, %s, %s) VALUES (:%s, :%s, :%s)", USERS_TABLE,
-      USERNAME_COL, EMAIL_COL, PASSWORD_COL, USERNAME_COL, EMAIL_COL,
-      PASSWORD_COL).toLowerCase();
+      "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (:%s, :%s, :%s, :%s, :%s)",
+      USERS_TABLE, USERNAME_COL, EMAIL_COL, PASSWORD_COL,
+      SECURITY_QUESTION_COL, SECURITY_ANSWER_COL, USERNAME_COL, EMAIL_COL,
+      PASSWORD_COL, SECURITY_QUESTION_COL, SECURITY_ANSWER_COL).toLowerCase();
   private static final String SQL_SELECT_COUNT_USERNAME = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
       USERNAME_COL, USERNAME_COL).toLowerCase();
@@ -51,8 +54,8 @@ AppUserDao {
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
       EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_SELECT_USERNAME_BY_EMAIL = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s;",
-      USERNAME_COL, USERS_TABLE, EMAIL_COL, EMAIL_COL).toLowerCase();
+      "SELECT %s FROM %s WHERE %s = :%s;", USERNAME_COL, USERS_TABLE,
+      EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
       .format(
           "UPDATE %s SET %s = (SELECT %s FROM (SELECT * FROM %s) AS c1 WHERE c1.%s = :%s), %s = current_timestamp, %s = %s + 1 WHERE %s = :%s",
@@ -176,6 +179,8 @@ AppUserDao {
     userParamMap.put(USERNAME_COL, appUser.getUsername());
     userParamMap.put(EMAIL_COL, appUser.getEmail());
     userParamMap.put(PASSWORD_COL, appUser.getPassword());
+    userParamMap.put(SECURITY_QUESTION_COL, appUser.getSecurityQuestion());
+    userParamMap.put(SECURITY_ANSWER_COL, appUser.getSecurityAnswer());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_USER, userParamMap);
     Map<String, String> roleParamMap = new HashMap<String, String>();
     roleParamMap.put(USERNAME_COL, appUser.getUsername());
@@ -249,7 +254,8 @@ AppUserDao {
 
   @Override
   public List<String> getSuperAdminEmails() {
-    return getNamedParameterJdbcTemplate().query(SQL_SELECT_SUPERADMIN_EMAILS, emailRowMapper);
+    return getNamedParameterJdbcTemplate().query(SQL_SELECT_SUPERADMIN_EMAILS,
+        emailRowMapper);
   }
 
   @Override
@@ -266,7 +272,6 @@ AppUserDao {
   // visible for testing
   String getUsernameByEmail(Map<String, String> emailParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap,
-        usernameRowMapper);
+        SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap, usernameRowMapper);
   }
 }

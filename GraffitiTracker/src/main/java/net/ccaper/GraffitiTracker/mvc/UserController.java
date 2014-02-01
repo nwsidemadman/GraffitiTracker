@@ -145,15 +145,15 @@ public class UserController {
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
     model
-    .put(
-        "content",
-        String
-        .format(
-            "<p>Thank you for registering at GraffitiTracker.</p>"
-                + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
-                + "<p><a href='%s'>Confirm Registration</a></p>",
-                getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(), uniqueUrlParam)));
+        .put(
+            "content",
+            String
+                .format(
+                    "<p>Thank you for registering at GraffitiTracker.</p>"
+                        + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
+                        + "<p><a href='%s'>Confirm Registration</a></p>",
+                    getEmailLink(request.getRequestURL().toString(),
+                        request.getServletPath(), uniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -198,7 +198,7 @@ public class UserController {
     } else {
       appUserService.updateAppUserAsActive(userid);
       appUserService
-      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+          .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";

@@ -14,6 +14,8 @@ public class AppUser {
   private Timestamp previousLoginTimestamp;
   private Set<Role> roles;
   private int loginCount;
+  private String securityQuestion;
+  private String securityAnswer;
 
   public int getUserId() {
     return userId;
@@ -70,7 +72,7 @@ public class AppUser {
   public void setCurrentLoginTimestamp(Timestamp currentLoginTimestamp) {
     this.currentLoginTimestamp = currentLoginTimestamp;
   }
-  
+
   public Timestamp getPreviousLoginTimestamp() {
     return previousLoginTimestamp;
   }
@@ -78,11 +80,11 @@ public class AppUser {
   public void setPreviousLoginTimestamp(Timestamp previousLoginTimestamp) {
     this.previousLoginTimestamp = previousLoginTimestamp;
   }
-  
+
   public int getLoginCount() {
     return loginCount;
   }
-  
+
   public void setLoginCount(int loginCount) {
     this.loginCount = loginCount;
   }
@@ -93,6 +95,22 @@ public class AppUser {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public String getSecurityQuestion() {
+    return securityQuestion;
+  }
+
+  public void setSecurityQuestion(String securityQuestion) {
+    this.securityQuestion = securityQuestion;
+  }
+
+  public String getSecurityAnswer() {
+    return securityAnswer;
+  }
+
+  public void setSecurityAnswer(String securityAnswer) {
+    this.securityAnswer = securityAnswer;
   }
 
   @Override

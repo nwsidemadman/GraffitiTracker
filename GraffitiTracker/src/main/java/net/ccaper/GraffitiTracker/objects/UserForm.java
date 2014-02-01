@@ -10,6 +10,8 @@ public class UserForm {
   private boolean acceptTerms;
   private String captchaAnswer;
   private String textCaptchaQuestion;
+  private String securityQuestion;
+  private String securityAnswer;
 
   public String getUsername() {
     return username;
@@ -79,11 +81,29 @@ public class UserForm {
     this.textCaptchaQuestion = textCaptchaQuestion;
   }
   
+  public String getSecurityQuestion() {
+    return securityQuestion;
+  }
+
+  public void setSecurityQuestion(String securityQuestion) {
+    this.securityQuestion = securityQuestion;
+  }
+
+  public String getSecurityAnswer() {
+    return securityAnswer;
+  }
+
+  public void setSecurityAnswer(String securityAnswer) {
+    this.securityAnswer = securityAnswer;
+  }
+
   public AppUser createAppUserFromUserForm() {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     appUser.setEmail(email);
     appUser.setPassword(encodePassword());
+    appUser.setSecurityQuestion(securityQuestion);
+    appUser.setSecurityAnswer(securityAnswer);
     return appUser;
   }
 }

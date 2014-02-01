@@ -10,6 +10,8 @@ CREATE TABLE `app_users` (
   `current_login_timestamp` timestamp NULL DEFAULT NULL,
   `previous_login_timestamp` timestamp NULL DEFAULT NULL,
   `login_count` int(10) unsigned NOT NULL DEFAULT '0',
+  `security_question` varchar(75) NOT NULL,
+  `security_answer` varchar(40) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `userId_UNIQUE` (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
