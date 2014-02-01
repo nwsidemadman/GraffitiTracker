@@ -336,4 +336,18 @@ public class UserControllerTest {
     recipients.add(email);
     verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Username", "test");
   }
+
+  @Test
+  public void testSentUsername() {
+    UserController controller = new UserController();
+    assertEquals("users/sentUsername", controller.sentUsername());
+  }
+
+  @Test
+  public void testForgotUsername() {
+    Model model = new ExtendedModelMap();
+    UserController controller = new UserController();
+    assertEquals("users/forgotUsername", controller.forgotUsername(model));
+    assertTrue(model.containsAttribute("emailForm"));
+  }
 }

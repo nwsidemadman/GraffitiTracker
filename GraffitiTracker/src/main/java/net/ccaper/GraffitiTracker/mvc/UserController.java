@@ -140,7 +140,6 @@ public class UserController {
   // visible for testing
   String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
       HttpServletRequest request) {
-    // TODO: unit test
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
@@ -159,14 +158,12 @@ public class UserController {
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
             request.getServletPath()));
-    return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
-        "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
+    return generateHtmlFromVelocityTemplate(model);
   }
 
   // visible for testing
   String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
       HttpServletRequest request) {
-    // TODO: unit test
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     model.put("content", String.format(
@@ -176,6 +173,11 @@ public class UserController {
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
             request.getServletPath()));
+    return generateHtmlFromVelocityTemplate(model);
+  }
+
+  // visible for mocking
+  String generateHtmlFromVelocityTemplate(Map<String, Object> model) {
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
         "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
   }
@@ -215,7 +217,6 @@ public class UserController {
 
   @RequestMapping(method = RequestMethod.GET, params = "forgotUsername")
   public String forgotUsername(Model model) {
-    // TODO: unit test
     EmailForm emailForm = new EmailForm();
     model.addAttribute(emailForm);
     return "users/forgotUsername";
@@ -240,7 +241,6 @@ public class UserController {
 
   @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
   public String sentUsername() {
-    // TODO: unit test
     // TODO: can this be static?
     return "users/sentUsername";
   }
