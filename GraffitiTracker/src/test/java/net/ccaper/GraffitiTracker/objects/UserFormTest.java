@@ -46,9 +46,13 @@ public class UserFormTest {
     userForm.setUsername("testUsername");
     userForm.setPassword("testPassword");
     userForm.setEmail("test@test.com");
+    userForm.setCaptchaAnswer("testAnswer");
+    userForm.setSecurityQuestion("testQuestion");
     AppUser appUser = userForm.createAppUserFromUserForm();
     assertEquals(userForm.getUsername(), appUser.getUsername());
     assertEquals(userForm.getEmail(), appUser.getEmail());
     assertFalse(userForm.getPassword().equals(appUser.getPassword()));
+    assertEquals(userForm.getSecurityAnswer(), appUser.getSecurityAnswer());
+    assertEquals(userForm.getSecurityQuestion(), appUser.getSecurityQuestion());
   }
 }
