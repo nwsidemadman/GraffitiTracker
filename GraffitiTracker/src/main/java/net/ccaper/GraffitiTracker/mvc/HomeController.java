@@ -45,12 +45,12 @@ public class HomeController {
     return "home";
   }
 
-  // visible for testing
+  // visible for mocking
   String getUsernameFromSecurity() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
-  // visible for testing
+  // visible for mocking
   boolean isUserAnonymous() {
     AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
     return authenticationTrustResolver.isAnonymous(SecurityContextHolder
