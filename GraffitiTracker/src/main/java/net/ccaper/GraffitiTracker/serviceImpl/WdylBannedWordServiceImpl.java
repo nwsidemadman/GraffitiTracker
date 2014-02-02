@@ -47,7 +47,7 @@ public class WdylBannedWordServiceImpl implements BannedWordService {
     }
   }
 
-  // visible for testing
+  // visible for mocking
   WDYLResponse getWdylResponse(URL url) throws JsonParseException,
   JsonMappingException, IOException {
     ObjectMapper mapper = new ObjectMapper();
