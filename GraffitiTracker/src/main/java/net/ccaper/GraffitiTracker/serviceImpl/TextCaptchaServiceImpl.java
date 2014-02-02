@@ -76,7 +76,7 @@ public class TextCaptchaServiceImpl implements CaptchaService {
     return generateRandomDefaultCaptcha();
   }
 
-  // visible for testing
+  // visible for mocking
   Document getDocumentFromUrl(URL url) throws ParserConfigurationException,
       SAXException, IOException {
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
