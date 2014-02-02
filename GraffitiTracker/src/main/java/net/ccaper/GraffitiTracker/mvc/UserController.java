@@ -11,9 +11,11 @@ import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
+import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
@@ -53,7 +55,8 @@ public class UserController {
   FormUserValidator formUserValidator;
   @Autowired
   FormEmailValidator formEmailValidator;
-
+  @Autowired
+  FormUsernameValidator formUsernameValidator;
   @Autowired
   VelocityEngine velocityEngine;
 
@@ -67,6 +70,11 @@ public class UserController {
 
   public void setFormEmailValidator(FormEmailValidator formEmailValidator) {
     this.formEmailValidator = formEmailValidator;
+  }
+
+  public void setFormUsernamelValidator(
+      FormUsernameValidator formUsernameValidator) {
+    this.formUsernameValidator = formUsernameValidator;
   }
 
   public void setAppUserService(AppUserService appUserService) {
@@ -177,6 +185,29 @@ public class UserController {
   }
 
   // visible for mocking
+  String generateForgotPasswordEmailBodyWithVelocityEngine(String uniqueUrlParam,
+      HttpServletRequest request) {
+    Map<String, Object> model = new HashMap<String, Object>();
+    model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
+    // TODO: get proper link, getEmailLink will need to be renamed
+    model
+        .put(
+            "content",
+            String
+                .format(
+                    "<p>You requested to reset your password.</p>"
+                        + "<p>To reset your password, please click the following link within 24 hours of receiving this email:</p>"
+                        + "<p><a href='%s'>ResetPassword</a></p>",
+                    getEmailLink(request.getRequestURL().toString(),
+                        request.getServletPath(), uniqueUrlParam)));
+    model.put(
+        "home_link",
+        getHomeLink(request.getRequestURL().toString(),
+            request.getServletPath()));
+    return generateHtmlFromVelocityTemplate(model);
+  }
+
+  // visible for mocking
   String generateHtmlFromVelocityTemplate(Map<String, Object> model) {
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
         "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
@@ -243,5 +274,40 @@ public class UserController {
   public String sentUsername() {
     // TODO: can this be static?
     return "users/sentUsername";
+  }
+
+  @RequestMapping(method = RequestMethod.GET, params = "forgotPassword")
+  public String forgotPassword(Model model) {
+    UsernameForm usernameForm = new UsernameForm();
+    model.addAttribute(usernameForm);
+    return "users/forgotPassword";
+  }
+
+  @RequestMapping(params = "recoverPassword", method = RequestMethod.POST)
+  public String sendPasswordLink(UsernameForm usernameForm,
+      BindingResult bindingResult, HttpServletRequest request) {
+    // TODO: unit test
+    formUsernameValidator.validate(usernameForm, bindingResult);
+    if (bindingResult.hasErrors()) {
+      return "users/forgotPassword";
+    }
+    // TODO: add unique url to table and return it
+    String uniqueUrlParam = "blah";
+    String email = appUserService
+        .getEmailByUsername(usernameForm.getUsername());
+    if (email != null) {
+      List<String> recipients = new ArrayList<String>(1);
+      recipients.add(email);
+      mailService.sendVelocityEmail(recipients, "Recover Password",
+          generateForgotPasswordEmailBodyWithVelocityEngine(uniqueUrlParam, request));
+    }
+    return "redirect:/users/sentPassword";
+  }
+  
+  @RequestMapping(value = "/sentPassword", method = RequestMethod.GET)
+  public String sentPassword() {
+    // TODO: unit test
+    // TODO: can this be static?
+    return "users/sentPassword";
   }
 }

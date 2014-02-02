@@ -28,4 +28,6 @@ public interface AppUserService {
   void emailAdminStatsDaily();
 
   String getUsernameByEmail(String email);
+  
+  String getEmailByUsername(String username);
 }

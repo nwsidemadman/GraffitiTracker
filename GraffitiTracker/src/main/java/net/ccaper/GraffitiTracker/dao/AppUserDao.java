@@ -28,4 +28,6 @@ public interface AppUserDao {
   List<String> getSuperAdminEmails();
 
   String getUsernameByEmail(String email);
+  
+  String getEmailByUsername(String username);
 }

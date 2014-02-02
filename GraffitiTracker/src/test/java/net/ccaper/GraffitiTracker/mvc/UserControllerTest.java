@@ -352,4 +352,12 @@ public class UserControllerTest {
     assertEquals("users/forgotUsername", controller.forgotUsername(model));
     assertTrue(model.containsAttribute("emailForm"));
   }
+  
+  @Test
+  public void testForgotPassword() {
+    Model model = new ExtendedModelMap();
+    UserController controller = new UserController();
+    assertEquals("users/forgotPassword", controller.forgotPassword(model));
+    assertTrue(model.containsAttribute("usernameForm"));
+  }
 }

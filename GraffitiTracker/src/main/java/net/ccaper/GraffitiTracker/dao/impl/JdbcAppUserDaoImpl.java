@@ -54,8 +54,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
       EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_SELECT_USERNAME_BY_EMAIL = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s;", USERNAME_COL, USERS_TABLE,
-      EMAIL_COL, EMAIL_COL).toLowerCase();
+      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", USERNAME_COL, USERS_TABLE,
+      EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL).toLowerCase();
+  private static final String SQL_SELECT_EMAIL_BY_USERNAME = String.format(
+      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", EMAIL_COL, USERS_TABLE,
+      USERNAME_COL, USERNAME_COL, IS_ACTIVE_COL).toLowerCase();
   private static final String SQL_UPDATE_LOGIN_TIMESTAMPS = String
       .format(
           "UPDATE %s SET %s = (SELECT %s FROM (SELECT * FROM %s) AS c1 WHERE c1.%s = :%s), %s = current_timestamp, %s = %s + 1 WHERE %s = :%s",
@@ -269,9 +272,26 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   }
 
-  // visible for testing
+  // visible for mocking
   String getUsernameByEmail(Map<String, String> emailParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap, usernameRowMapper);
+  }
+  
+  @Override
+  public String getEmailByUsername(String username) {
+    Map<String, String> usernameParamMap = new HashMap<String, String>();
+    usernameParamMap.put(USERNAME_COL, username);
+    try {
+      return getEmailByUsername(usernameParamMap);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+  }
+
+  // visible for mocking
+  String getEmailByUsername(Map<String, String> usernameParamMap) {
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_EMAIL_BY_USERNAME, usernameParamMap, emailRowMapper);
   }
 }

@@ -48,4 +48,32 @@ public class JdbcAppUserDaoImplTest {
     AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
     assertEquals(null, jdbcAppUserMock.getUsernameByEmail("test@test.com"));
   }
+  
+  @Test
+  public void testGetEmailByUsername_HappyPath() {
+    final String email = "test@test.com";
+
+    class JdbcAppUserDaoImplMock extends JdbcAppUserDaoImpl {
+      @Override
+      String getEmailByUsername(Map<String, String> usernameParamMap) {
+        return email;
+      }
+    }
+
+    AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
+    assertEquals(email, jdbcAppUserMock.getEmailByUsername("test@test.com"));
+  }
+  
+  @Test
+  public void testGetEmailByUsername_EmptyResults() {
+    class JdbcAppUserDaoImplMock extends JdbcAppUserDaoImpl {
+      @Override
+      String getEmailByUsername(Map<String, String> usernameParamMap) {
+        throw new EmptyResultDataAccessException("test", 0);
+      }
+    }
+
+    AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
+    assertEquals(null, jdbcAppUserMock.getEmailByUsername("testUsername"));
+  }
 }

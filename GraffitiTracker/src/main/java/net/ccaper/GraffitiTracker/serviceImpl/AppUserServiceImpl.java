@@ -138,4 +138,9 @@ public class AppUserServiceImpl implements AppUserService {
   public String getUsernameByEmail(String email) {
     return appUserDao.getUsernameByEmail(email);
   }
+  
+  @Override
+  public String getEmailByUsername(String username) {
+    return appUserDao.getEmailByUsername(username);
+  }
 }
