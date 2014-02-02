@@ -137,7 +137,7 @@ public class UserController {
         generateConfirmationEmailBodyWithVelocityEngine(userForm, request));
   }
 
-  // visible for testing
+  // visible for mocking
   String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
@@ -161,7 +161,7 @@ public class UserController {
     return generateHtmlFromVelocityTemplate(model);
   }
 
-  // visible for testing
+  // visible for mocking
   String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
