@@ -83,6 +83,7 @@ public class UserControllerTest {
     userForm.setEmail("test@test.com");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("Chris");
+    userForm.setSecurityAnswer("testAnswer");
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
@@ -169,6 +170,7 @@ public class UserControllerTest {
     userForm.setEmail("test@test.com");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("badAnswer");
+    userForm.setSecurityAnswer("testAnswer");
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);

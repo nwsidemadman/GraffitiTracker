@@ -390,6 +390,7 @@ public class UserValidatorTest {
     userFormValid.setPassword("validPassword");
     userFormValid.setConfirmPassword("validPassword");
     userFormValid.setEmail("test@test.com");
+    userFormValid.setSecurityAnswer("testAnswer");
     userFormValid.setAcceptTerms(true);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userFormValid
@@ -423,5 +424,48 @@ public class UserValidatorTest {
     assertNotNull(errors.getFieldError("password"));
     assertNotNull(errors.getFieldError("email"));
     assertNotNull(errors.getFieldError("acceptTerms"));
+  }
+  
+  @Test
+  public void testValidateSecurityAnswer_Empty() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    formUserValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityAnswer"));
+  }
+  
+  @Test
+  public void testValidateSecurityAnswer_Null() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer(null);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    formUserValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityAnswer"));
+  }
+  
+  @Test
+  public void testValidateSecurityAnswer_TooLong() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer("12345678901234567890123456789012345678901");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    formUserValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityAnswer"));
+  }
+  
+  @Test
+  public void testValidateSecurityAnswer_HappyPath() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer("testAnswer");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    formUserValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertFalse(errors.hasErrors());
   }
 }

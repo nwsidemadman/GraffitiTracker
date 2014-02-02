@@ -123,7 +123,6 @@ public class FormUserValidator implements Validator {
   
 //visible for testing
  void validateSecurityAnswer(Errors errors, String securityAnswer) {
-   // TODO: unit test
    if (StringUtils.isEmpty(securityAnswer)) {
      errors.rejectValue("securityAnswer", "invalidSecurityAnswer", "Security answer can not be empty.");
    } else if (securityAnswer.length() > MAX_SECURITY_ANSWER_LENGTH) {
