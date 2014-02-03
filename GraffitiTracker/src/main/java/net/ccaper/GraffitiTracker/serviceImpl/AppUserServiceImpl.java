@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
+import net.ccaper.GraffitiTracker.dao.ResetPasswordDao;
 import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
@@ -25,6 +26,8 @@ public class AppUserServiceImpl implements AppUserService {
   AppUserDao appUserDao;
   @Autowired
   RegistrationConfirmationsDao registrationConfirmationsDao;
+  @Autowired
+  ResetPasswordDao resetPasswordDao;
   @Autowired
   MailService mailService;
 
@@ -138,9 +141,14 @@ public class AppUserServiceImpl implements AppUserService {
   public String getUsernameByEmail(String email) {
     return appUserDao.getUsernameByEmail(email);
   }
-  
+
   @Override
   public String getEmailByUsername(String username) {
     return appUserDao.getEmailByUsername(username);
+  }
+
+  @Override
+  public void addResetPassword(String username) {
+    // TODO: make call to resetPasswordDao here to insert reset password
   }
 }

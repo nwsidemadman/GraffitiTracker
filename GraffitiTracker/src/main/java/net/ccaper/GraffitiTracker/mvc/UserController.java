@@ -153,15 +153,15 @@ public class UserController {
     String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
         .getUsername());
     model
-        .put(
-            "content",
-            String
-                .format(
-                    "<p>Thank you for registering at GraffitiTracker.</p>"
-                        + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
-                        + "<p><a href='%s'>Confirm Registration</a></p>",
-                    getEmailLink(request.getRequestURL().toString(),
-                        request.getServletPath(), uniqueUrlParam)));
+    .put(
+        "content",
+        String
+        .format(
+            "<p>Thank you for registering at GraffitiTracker.</p>"
+                + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
+                + "<p><a href='%s'>Confirm Registration</a></p>",
+                getEmailLink(request.getRequestURL().toString(),
+                    request.getServletPath(), uniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -191,15 +191,15 @@ public class UserController {
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     // TODO: get proper link, getEmailLink will need to be renamed
     model
-        .put(
-            "content",
-            String
-                .format(
-                    "<p>You requested to reset your password.</p>"
-                        + "<p>To reset your password, please click the following link within 24 hours of receiving this email:</p>"
-                        + "<p><a href='%s'>ResetPassword</a></p>",
-                    getEmailLink(request.getRequestURL().toString(),
-                        request.getServletPath(), uniqueUrlParam)));
+    .put(
+        "content",
+        String
+        .format(
+            "<p>You requested to reset your password.</p>"
+                + "<p>To reset your password, please click the following link within 24 hours of receiving this email:</p>"
+                + "<p><a href='%s'>ResetPassword</a></p>",
+                getEmailLink(request.getRequestURL().toString(),
+                    request.getServletPath(), uniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -229,7 +229,7 @@ public class UserController {
     } else {
       appUserService.updateAppUserAsActive(userid);
       appUserService
-          .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";
@@ -298,12 +298,13 @@ public class UserController {
     if (email != null) {
       List<String> recipients = new ArrayList<String>(1);
       recipients.add(email);
+      appUserService.addResetPassword(usernameForm.getUsername());
       mailService.sendVelocityEmail(recipients, "Recover Password",
           generateForgotPasswordEmailBodyWithVelocityEngine(uniqueUrlParam, request));
     }
     return "redirect:/users/sentPassword";
   }
-  
+
   @RequestMapping(value = "/sentPassword", method = RequestMethod.GET)
   public String sentPassword() {
     // TODO: unit test
