@@ -15,11 +15,11 @@ public interface AppUserService {
 
   void addRegistrationConfirmation(String username);
 
-  String getUniqueUrlParam(String username);
+  String getRegistrationConfirmationUniqueUrlParamByUsername(String username);
 
   void deleteRegistrationConfirmationByUniqueUrlParam(String uniqueUrlParam);
 
-  Integer getUseridByUniqueUrlParam(String uniqueUrlParam);
+  Integer getUseridByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam);
 
   void updateAppUserAsActive(int userid);
 
@@ -32,4 +32,6 @@ public interface AppUserService {
   String getEmailByUsername(String username);
 
   void addResetPassword(String username);
+
+  String getResetPasswordUniqueUrlParamByUsername(String username);
 }

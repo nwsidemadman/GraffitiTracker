@@ -42,7 +42,10 @@ public class UserController {
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
   // visible for testing
-  static final String EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?uniqueUrlParam=";
+  static final String CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?uniqueUrlParam=";
+  // visible for testing
+  // TODO: fix link
+  static final String RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/resetPassword?uniqueUrlParam=";
   // visible for testing
   static final String HOME_LINK = "/home";
   @Autowired
@@ -150,8 +153,9 @@ public class UserController {
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
-    String uniqueUrlParam = appUserService.getUniqueUrlParam(userForm
-        .getUsername());
+    String uniqueUrlParam = appUserService
+        .getRegistrationConfirmationUniqueUrlParamByUsername(userForm
+            .getUsername());
     model
     .put(
         "content",
@@ -161,7 +165,9 @@ public class UserController {
                 + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
                 + "<p><a href='%s'>Confirm Registration</a></p>",
                 getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(), uniqueUrlParam)));
+                    request.getServletPath(),
+                    CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
+                    uniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -185,11 +191,10 @@ public class UserController {
   }
 
   // visible for mocking
-  String generateForgotPasswordEmailBodyWithVelocityEngine(String uniqueUrlParam,
-      HttpServletRequest request) {
+  String generateForgotPasswordEmailBodyWithVelocityEngine(
+      String uniqueUrlParam, HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
-    // TODO: get proper link, getEmailLink will need to be renamed
     model
     .put(
         "content",
@@ -199,7 +204,9 @@ public class UserController {
                 + "<p>To reset your password, please click the following link within 24 hours of receiving this email:</p>"
                 + "<p><a href='%s'>ResetPassword</a></p>",
                 getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(), uniqueUrlParam)));
+                    request.getServletPath(),
+                    RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
+                    uniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -223,7 +230,8 @@ public class UserController {
   public String showConfirmedUser(
       @RequestParam(required = true) String uniqueUrlParam,
       Map<String, Object> model) {
-    Integer userid = appUserService.getUseridByUniqueUrlParam(uniqueUrlParam);
+    Integer userid = appUserService
+        .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
     if (userid == null) {
       model.put("confirmed", false);
     } else {
@@ -236,9 +244,9 @@ public class UserController {
   }
 
   // visible for testing
-  String getEmailLink(String url, String oldServletPath, String uniqeUrlParam) {
-    return url.replace(oldServletPath, EMAIL_LINK_SERVLET_PATH_WITH_PARAM
-        + uniqeUrlParam);
+  String getEmailLink(String url, String oldServletPath, String newServletPath,
+      String uniqeUrlParam) {
+    return url.replace(oldServletPath, newServletPath + uniqeUrlParam);
   }
 
   // visible for testing
@@ -292,15 +300,18 @@ public class UserController {
       return "users/forgotPassword";
     }
     // TODO: add unique url to table and return it
-    String uniqueUrlParam = "blah";
     String email = appUserService
         .getEmailByUsername(usernameForm.getUsername());
     if (email != null) {
       List<String> recipients = new ArrayList<String>(1);
       recipients.add(email);
       appUserService.addResetPassword(usernameForm.getUsername());
-      mailService.sendVelocityEmail(recipients, "Recover Password",
-          generateForgotPasswordEmailBodyWithVelocityEngine(uniqueUrlParam, request));
+      mailService.sendVelocityEmail(
+          recipients,
+          "Recover Password",
+          generateForgotPasswordEmailBodyWithVelocityEngine(appUserService
+              .getResetPasswordUniqueUrlParamByUsername(usernameForm
+                  .getUsername()), request));
     }
     return "redirect:/users/sentPassword";
   }

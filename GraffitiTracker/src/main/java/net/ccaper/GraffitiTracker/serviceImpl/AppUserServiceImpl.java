@@ -83,7 +83,7 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public String getUniqueUrlParam(String username) {
+  public String getRegistrationConfirmationUniqueUrlParamByUsername(String username) {
     return registrationConfirmationsDao.getUniqueUrlParamByUsername(username);
   }
 
@@ -95,7 +95,7 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUseridByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam) {
     return registrationConfirmationsDao
         .getUseridByUniqueUrlParam(uniqueUrlParam);
   }
@@ -111,6 +111,8 @@ public class AppUserServiceImpl implements AppUserService {
     logger.info("Deleting app users where registration expired.");
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
+
+  // TODO: delete reset passwords when expired
 
   @Override
   @Scheduled(cron = "0 30 5 * * ?")
@@ -149,6 +151,11 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public void addResetPassword(String username) {
-    // TODO: make call to resetPasswordDao here to insert reset password
+    resetPasswordDao.addResetPassword(username);
+  }
+
+  @Override
+  public String getResetPasswordUniqueUrlParamByUsername(String username) {
+    return resetPasswordDao.getUniqueUrlParamByUsername(username);
   }
 }

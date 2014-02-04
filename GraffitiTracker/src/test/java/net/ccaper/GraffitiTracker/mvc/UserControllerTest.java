@@ -224,9 +224,9 @@ public class UserControllerTest {
     String uniqueUrlParam = "test";
     UserController userController = new UserController();
     assertEquals(protocolDomainPortServlet
-        + UserController.EMAIL_LINK_SERVLET_PATH_WITH_PARAM + uniqueUrlParam,
+        + UserController.CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM + uniqueUrlParam,
         userController.getEmailLink(protocolDomainPortServlet + oldServletPath,
-            oldServletPath, uniqueUrlParam));
+            oldServletPath, UserController.CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM, uniqueUrlParam));
   }
 
   @Test
@@ -244,7 +244,7 @@ public class UserControllerTest {
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
+    when(appUserServiceMock.getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
     .thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
@@ -252,7 +252,7 @@ public class UserControllerTest {
         userController.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(true, model.get("confirmed"));
-    verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
     verify(appUserServiceMock).updateAppUserAsActive(1);
     verify(appUserServiceMock).deleteRegistrationConfirmationByUniqueUrlParam(
         uniqueUrlParam);
@@ -264,7 +264,7 @@ public class UserControllerTest {
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUseridByUniqueUrlParam(uniqueUrlParam))
+    when(appUserServiceMock.getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
     .thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
@@ -272,7 +272,7 @@ public class UserControllerTest {
         userController.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
-    verify(appUserServiceMock).getUseridByUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
@@ -352,7 +352,7 @@ public class UserControllerTest {
     assertEquals("users/forgotUsername", controller.forgotUsername(model));
     assertTrue(model.containsAttribute("emailForm"));
   }
-  
+
   @Test
   public void testForgotPassword() {
     Model model = new ExtendedModelMap();
