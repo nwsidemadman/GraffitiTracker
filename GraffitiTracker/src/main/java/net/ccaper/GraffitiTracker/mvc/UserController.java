@@ -299,7 +299,6 @@ public class UserController {
     if (bindingResult.hasErrors()) {
       return "users/forgotPassword";
     }
-    // TODO: add unique url to table and return it
     String email = appUserService
         .getEmailByUsername(usernameForm.getUsername());
     if (email != null) {
