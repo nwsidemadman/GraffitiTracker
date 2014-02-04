@@ -294,7 +294,6 @@ public class UserController {
   @RequestMapping(params = "recoverPassword", method = RequestMethod.POST)
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request) {
-    // TODO: unit test
     formUsernameValidator.validate(usernameForm, bindingResult);
     if (bindingResult.hasErrors()) {
       return "users/forgotPassword";
@@ -317,7 +316,6 @@ public class UserController {
 
   @RequestMapping(value = "/sentPassword", method = RequestMethod.GET)
   public String sentPassword() {
-    // TODO: unit test
     // TODO: can this be static?
     return "users/sentPassword";
   }

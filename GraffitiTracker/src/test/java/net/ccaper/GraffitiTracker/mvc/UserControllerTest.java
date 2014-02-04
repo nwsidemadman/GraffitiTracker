@@ -19,9 +19,11 @@ import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
+import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
@@ -224,9 +226,11 @@ public class UserControllerTest {
     String uniqueUrlParam = "test";
     UserController userController = new UserController();
     assertEquals(protocolDomainPortServlet
-        + UserController.CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM + uniqueUrlParam,
-        userController.getEmailLink(protocolDomainPortServlet + oldServletPath,
-            oldServletPath, UserController.CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM, uniqueUrlParam));
+        + UserController.CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM
+        + uniqueUrlParam, userController.getEmailLink(protocolDomainPortServlet
+            + oldServletPath, oldServletPath,
+            UserController.CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
+            uniqueUrlParam));
   }
 
   @Test
@@ -244,15 +248,18 @@ public class UserControllerTest {
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
-    .thenReturn(1);
+    when(
+        appUserServiceMock
+        .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
+        .thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
         userController.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(true, model.get("confirmed"));
-    verify(appUserServiceMock).getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock)
+    .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
     verify(appUserServiceMock).updateAppUserAsActive(1);
     verify(appUserServiceMock).deleteRegistrationConfirmationByUniqueUrlParam(
         uniqueUrlParam);
@@ -264,15 +271,18 @@ public class UserControllerTest {
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
-    .thenReturn(null);
+    when(
+        appUserServiceMock
+        .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
+        .thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
         userController.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
-    verify(appUserServiceMock).getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock)
+    .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
@@ -324,8 +334,7 @@ public class UserControllerTest {
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     FormEmailValidator formEmailValidator = new FormEmailValidator();
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(
-        username);
+    when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(username);
     MailService mailServiceMock = mock(MailService.class);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
@@ -336,7 +345,8 @@ public class UserControllerTest {
     verify(appUserServiceMock).getUsernameByEmail(email);
     List<String> recipients = new ArrayList<String>();
     recipients.add(email);
-    verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Username", "test");
+    verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Username",
+        "test");
   }
 
   @Test
@@ -359,5 +369,77 @@ public class UserControllerTest {
     UserController controller = new UserController();
     assertEquals("users/forgotPassword", controller.forgotPassword(model));
     assertTrue(model.containsAttribute("usernameForm"));
+  }
+
+  @Test
+  public void testSendPasswordLink_invalidUsername() throws Exception {
+    UsernameForm usernameForm = new UsernameForm();
+    BindingResult result = new BeanPropertyBindingResult(usernameForm,
+        "username");
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    UserController controller = new UserController();
+    FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
+    controller.setFormUsernamelValidator(formUsernameValidator);
+    assertEquals("users/forgotPassword",
+        controller.sendPasswordLink(usernameForm, result, requestMock));
+  }
+
+  @Test
+  public void testSendPasswordLink_usernameDoesNotExist() throws Exception {
+    UsernameForm usernameForm = new UsernameForm();
+    usernameForm.setUsername("testUsername");
+    BindingResult result = new BeanPropertyBindingResult(usernameForm,
+        "username");
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    UserController controller = new UserController();
+    FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
+    controller.setFormUsernamelValidator(formUsernameValidator);
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername())).thenReturn(null);
+    controller.setAppUserService(appUserServiceMock);
+    assertEquals("redirect:/users/sentPassword",
+        controller.sendPasswordLink(usernameForm, result, requestMock));
+    verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
+  }
+
+  @Test
+  public void testSendPasswordLink_HappyPath() throws Exception {
+    final String emailBody = "test";
+
+    class UserControllerMock extends UserController {
+      @Override
+      String generateForgotPasswordEmailBodyWithVelocityEngine(String username,
+          HttpServletRequest request) {
+        return emailBody;
+      }
+    }
+
+    UsernameForm usernameForm = new UsernameForm();
+    usernameForm.setUsername("testUsername");
+    BindingResult result = new BeanPropertyBindingResult(usernameForm,
+        "username");
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    UserController controllerMock = new UserControllerMock();
+    FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
+    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    String userEmail = "test@test.com";
+    when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername())).thenReturn(userEmail);
+    controllerMock.setAppUserService(appUserServiceMock);
+    MailService mailServiceMock = mock(MailService.class);
+    controllerMock.setMailService(mailServiceMock);
+    assertEquals("redirect:/users/sentPassword",
+        controllerMock.sendPasswordLink(usernameForm, result, requestMock));
+    verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
+    verify(appUserServiceMock).addResetPassword(usernameForm.getUsername());
+    List<String> recipients = new ArrayList<String>(1);
+    recipients.add(userEmail);
+    verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Password", emailBody);
+  }
+
+  @Test
+  public void testSentPassword() throws Exception {
+    UserController controller = new UserController();
+    assertEquals("users/sentPassword", controller.sentPassword());
   }
 }
