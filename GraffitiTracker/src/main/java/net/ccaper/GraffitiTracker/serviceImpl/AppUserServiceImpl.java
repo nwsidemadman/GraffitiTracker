@@ -97,7 +97,7 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public Integer getUseridByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam) {
     return registrationConfirmationsDao
-        .getUseridByUniqueUrlParam(uniqueUrlParam);
+        .getUserIdByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override

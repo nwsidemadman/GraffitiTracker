@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import net.ccaper.GraffitiTracker.dao.ResetPasswordDao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -38,11 +39,23 @@ implements ResetPasswordDao {
               RESET_PASSWORD_TIMESTAMP_COL, RESET_PASSWORD_TIMESTAMP_COL,
               RESET_PASSWORD_TABLE, USERS_TABLE, USERNAME_COL, USERNAME_COL)
               .toLowerCase();
+  private static final String SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM = String
+      .format("SELECT %s FROM %s INNER JOIN %s ON %s.%s = %s.%s WHERE %s = :%s",
+          USER_ID_COL, RESET_PASSWORD_TABLE, USERS_TABLE, RESET_PASSWORD_TABLE,
+          USER_ID_COL, USERS_TABLE, USER_ID_COL, UNIQUE_URL_PARAM_COL,
+          UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new String(rs.getString(UNIQUE_URL_PARAM_COL));
+    }
+  };
+
+  RowMapper<Integer> useridRowMapper = new RowMapper<Integer>() {
+    @Override
+    public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return new Integer(rs.getInt(USER_ID_COL));
     }
   };
 
@@ -66,5 +79,23 @@ implements ResetPasswordDao {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_UNIQUE_PARAM_BY_USERNAME, usernameParamMap,
         uniqueUrlParamRowMapper);
+  }
+
+  @Override
+  public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam) {
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
+    try {
+      return getUserIdByUniqueUrlParam(uniqueUrlParamParamMap);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
+  }
+
+  // visible for mocking
+  Integer getUserIdByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
+        useridRowMapper);
   }
 }

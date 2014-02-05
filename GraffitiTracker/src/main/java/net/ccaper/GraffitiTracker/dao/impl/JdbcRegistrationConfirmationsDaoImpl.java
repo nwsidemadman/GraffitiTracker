@@ -37,7 +37,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
       "DELETE FROM %s WHERE %s = :%s", REGISTRATION_CONFIRMATIONS_TABLE,
       UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
-  private static final String SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM = String
+  private static final String SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM = String
       .format("SELECT %s FROM %s WHERE %s = :%s", USER_ID_COL,
           REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL,
           UNIQUE_URL_PARAM_COL).toLowerCase();
@@ -96,20 +96,20 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   }
 
   @Override
-  public Integer getUseridByUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
-      return getUseridByUniqueUrlParam(uniqueUrlParamParamMap);
+      return getUserIdByUniqueUrlParam(uniqueUrlParamParamMap);
     } catch (EmptyResultDataAccessException e) {
       return null;
     }
   }
 
-  // visible for testing
-  Integer getUseridByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+  // visible for mocking
+  Integer getUserIdByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_USERID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
+        SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
         useridRowMapper);
   }
 }

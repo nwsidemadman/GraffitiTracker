@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.dao.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Map;
 
@@ -22,30 +23,30 @@ public class JdbcRegistrationConfirmationsDaoImplTest {
   }
 
   @Test
-  public void testGetUsernameByEmail_HappyPath() {
-    final Integer userid = 1;
+  public void testGetUserIdByUniqueUrlParam_HappyPath() throws Exception {
+    final Integer userId = 1;
 
     class JdbcRegistrationConfirmationsDaoImplMock extends JdbcRegistrationConfirmationsDaoImpl {
       @Override
-      Integer getUseridByUniqueUrlParam(Map<String, String> getUseridByUniqueUrlParam) {
-        return userid;
+      Integer getUserIdByUniqueUrlParam(Map<String, String> getUseridByUniqueUrlParam) {
+        return userId;
       }
     }
 
     RegistrationConfirmationsDao registrationConfirmationsDaoMock = new JdbcRegistrationConfirmationsDaoImplMock();
-    assertEquals(userid, registrationConfirmationsDaoMock.getUseridByUniqueUrlParam("test"));
+    assertEquals(userId, registrationConfirmationsDaoMock.getUserIdByUniqueUrlParam("test"));
   }
 
   @Test
-  public void testGetUsernameByEmail_EmptyResults() {
+  public void testGetUserIdByUniqueUrlParam_EmptyResults() throws Exception {
     class JdbcRegistrationConfirmationsDaoImplMock extends JdbcRegistrationConfirmationsDaoImpl {
       @Override
-      Integer getUseridByUniqueUrlParam(Map<String, String> getUseridByUniqueUrlParam) {
+      Integer getUserIdByUniqueUrlParam(Map<String, String> getUseridByUniqueUrlParam) {
         throw new EmptyResultDataAccessException("test", 0);
       }
     }
 
     RegistrationConfirmationsDao registrationConfirmationsDaoMock = new JdbcRegistrationConfirmationsDaoImplMock();
-    assertEquals(null, registrationConfirmationsDaoMock.getUseridByUniqueUrlParam("test"));
+    assertNull(registrationConfirmationsDaoMock.getUserIdByUniqueUrlParam("test"));
   }
 }
