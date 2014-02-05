@@ -319,4 +319,12 @@ public class UserController {
     // TODO: can this be static?
     return "users/sentPassword";
   }
+
+  @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+  public String resetPassword(@RequestParam(required = true) String uniqueUrlParam,
+      Map<String, Object> model) {
+    // TODO: unit test
+    // TODO: check if uniqueUrlParam exists, set flag on model, delete unique url param
+    return "users/resetPassword";
+  }
 }
