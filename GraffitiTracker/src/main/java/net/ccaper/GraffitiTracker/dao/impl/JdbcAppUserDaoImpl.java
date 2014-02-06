@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-    AppUserDao {
+AppUserDao {
   static final String USERS_TABLE = "app_users";
   static final String USER_ID_COL = "user_id";
   static final String USERNAME_COL = "username";
@@ -33,7 +33,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String CURRENT_LOGIN_TIMESTAMP_COL = "current_login_timestamp";
   private static final String PREVIOUS_LOGIN_TIMESTAMP_COL = "previous_login_timestamp";
   private static final String LOGIN_COUNT_COL = "login_count";
-  private static final String SECURITY_QUESTION_COL = "security_question";
+  static final String SECURITY_QUESTION_COL = "security_question";
   private static final String SECURITY_ANSWER_COL = "security_answer";
   private static final String NUMBER_OF_DAYS = "number_of_days";
   private static final String REGISTRATION_CONFIRMATIONS_TABLE = JdbcRegistrationConfirmationsDaoImpl.REGISTRATION_CONFIRMATIONS_TABLE;
@@ -277,7 +277,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap, usernameRowMapper);
   }
-  
+
   @Override
   public String getEmailByUsername(String username) {
     Map<String, String> usernameParamMap = new HashMap<String, String>();

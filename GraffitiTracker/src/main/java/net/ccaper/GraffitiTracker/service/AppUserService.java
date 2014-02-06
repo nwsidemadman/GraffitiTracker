@@ -35,5 +35,5 @@ public interface AppUserService {
 
   String getResetPasswordUniqueUrlParamByUsername(String username);
 
-  Integer getUserIdByResetPasswordUniqueUrlParam(String uniqueUrlParam);
+  String getSecurityQuestionByResetPasswordUniqueUrlParam(String uniqueUrlParam);
 }

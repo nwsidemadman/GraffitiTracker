@@ -160,7 +160,7 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public Integer getUserIdByResetPasswordUniqueUrlParam(String uniqueUrlParam) {
-    return resetPasswordDao.getUserIdByUniqueUrlParam(uniqueUrlParam);
+  public String getSecurityQuestionByResetPasswordUniqueUrlParam(String uniqueUrlParam) {
+    return resetPasswordDao.getSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
   }
 }

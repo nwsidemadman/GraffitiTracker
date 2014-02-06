@@ -5,5 +5,5 @@ public interface ResetPasswordDao {
 
   String getUniqueUrlParamByUsername(String username);
 
-  Integer getUserIdByUniqueUrlParam(String uniqueUrlParam);
+  String getSecurityQuestionByUniqueUrlParam(String uniqueUrlParam);
 }

@@ -24,29 +24,29 @@ public class JdbcResetPasswordDaoImplTest {
 
   @Test
   public void testGetUserIdByUniqueUrlParam_HappyPath() throws Exception {
-    final Integer userId = 1;
+    final String securityQuestion = "test question";
 
     class JdbcResetPasswordDaoImplMock extends JdbcResetPasswordDaoImpl {
       @Override
-      Integer getUserIdByUniqueUrlParam(Map<String, String> getUserIdByUniqueUrlParam) {
-        return userId;
+      String getSecurityQuestionByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+        return securityQuestion;
       }
     }
 
     ResetPasswordDao resetPasswordDaoMock = new JdbcResetPasswordDaoImplMock();
-    assertEquals(userId, resetPasswordDaoMock.getUserIdByUniqueUrlParam("test"));
+    assertEquals(securityQuestion, resetPasswordDaoMock.getSecurityQuestionByUniqueUrlParam("test"));
   }
 
   @Test
   public void testGetUserIdByUniqueUrlParam() throws Exception {
     class JdbcResetPasswordDaoImplMock extends JdbcResetPasswordDaoImpl {
       @Override
-      Integer getUserIdByUniqueUrlParam(Map<String, String> getUserIdByUniqueUrlParam) {
+      String getSecurityQuestionByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
         throw new EmptyResultDataAccessException("test", 0);
       }
     }
 
     ResetPasswordDao resetPasswordDaoMock = new JdbcResetPasswordDaoImplMock();
-    assertNull(resetPasswordDaoMock.getUserIdByUniqueUrlParam("test"));
+    assertNull(resetPasswordDaoMock.getSecurityQuestionByUniqueUrlParam("test"));
   }
 }

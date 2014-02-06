@@ -447,25 +447,25 @@ public class UserControllerTest {
   public void testRestPassword_UniqueUrlParamExists() throws Exception {
     String uniqueUrlParam = "test";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(1);
+    when(appUserServiceMock.getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn("test question");
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
     assertTrue((Boolean) model.get("exists"));
-    verify(appUserServiceMock).getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamNotExists() throws Exception {
     String uniqueUrlParam = "test";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
+    when(appUserServiceMock.getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
     assertFalse((Boolean) model.get("exists"));
-    verify(appUserServiceMock).getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 }

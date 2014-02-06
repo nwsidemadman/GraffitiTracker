@@ -325,9 +325,9 @@ public class UserController {
       @RequestParam(required = true) String uniqueUrlParam,
       Map<String, Object> model) {
     // TODO: unit test
-    Integer userId = appUserService
-        .getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam);
-    if (userId == null) {
+    String securityQuestion = appUserService
+        .getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    if (securityQuestion == null) {
       model.put("exists", false);
     } else {
       model.put("exists", true);

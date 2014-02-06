@@ -24,6 +24,7 @@ implements ResetPasswordDao {
   private static final String RESET_PASSWORD_TIMESTAMP_COL = "reset_password_timestamp";
   private static final String USERS_TABLE = JdbcAppUserDaoImpl.USERS_TABLE;
   private static final String USERNAME_COL = JdbcAppUserDaoImpl.USERNAME_COL;
+  private static final String SECURITY_QUESTION_COL = JdbcAppUserDaoImpl.SECURITY_QUESTION_COL;
   private static final String SQL_INSERT_RESET_PASSWORD_BY_USERNAME = String
       .format(
           "INSERT INTO %s (%s, %s) VALUES ((SELECT %s FROM %s WHERE %s = :%s), UUID())",
@@ -39,10 +40,13 @@ implements ResetPasswordDao {
               RESET_PASSWORD_TIMESTAMP_COL, RESET_PASSWORD_TIMESTAMP_COL,
               RESET_PASSWORD_TABLE, USERS_TABLE, USERNAME_COL, USERNAME_COL)
               .toLowerCase();
-  private static final String SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM = String
-      .format("SELECT %s FROM %s WHERE %s = :%s",
-          USER_ID_COL, RESET_PASSWORD_TABLE, UNIQUE_URL_PARAM_COL,
-          UNIQUE_URL_PARAM_COL).toLowerCase();
+  // TODO: fix sql
+  private static final String SQL_SELECT_SECURITY_QUESTION_BY_UNIQUE_URL_PARAM = String
+      .format(
+          "SELECT %s FROM %s INNER JOIN %s on %s.%s = %s.%s WHERE %s = :%s",
+          SECURITY_QUESTION_COL, RESET_PASSWORD_TABLE, USERS_TABLE,
+          RESET_PASSWORD_TABLE, USER_ID_COL, USERS_TABLE, USER_ID_COL,
+          UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -51,10 +55,10 @@ implements ResetPasswordDao {
     }
   };
 
-  RowMapper<Integer> useridRowMapper = new RowMapper<Integer>() {
+  RowMapper<String> securityQuestionRowMapper = new RowMapper<String>() {
     @Override
-    public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new Integer(rs.getInt(USER_ID_COL));
+    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getString(SECURITY_QUESTION_COL);
     }
   };
 
@@ -81,20 +85,21 @@ implements ResetPasswordDao {
   }
 
   @Override
-  public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam) {
+  public String getSecurityQuestionByUniqueUrlParam(String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
-      return getUserIdByUniqueUrlParam(uniqueUrlParamParamMap);
+      return getSecurityQuestionByUniqueUrlParam(uniqueUrlParamParamMap);
     } catch (EmptyResultDataAccessException e) {
       return null;
     }
   }
 
   // visible for mocking
-  Integer getUserIdByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+  String getSecurityQuestionByUniqueUrlParam(
+      Map<String, String> uniqueUrlParamParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,
-        useridRowMapper);
+        SQL_SELECT_SECURITY_QUESTION_BY_UNIQUE_URL_PARAM,
+        uniqueUrlParamParamMap, securityQuestionRowMapper);
   }
 }
