@@ -19,7 +19,7 @@ public interface AppUserService {
 
   void deleteRegistrationConfirmationByUniqueUrlParam(String uniqueUrlParam);
 
-  Integer getUseridByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam);
+  Integer getUserIdByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam);
 
   void updateAppUserAsActive(int userid);
 
@@ -34,4 +34,6 @@ public interface AppUserService {
   void addResetPassword(String username);
 
   String getResetPasswordUniqueUrlParamByUsername(String username);
+
+  Integer getUserIdByResetPasswordUniqueUrlParam(String uniqueUrlParam);
 }

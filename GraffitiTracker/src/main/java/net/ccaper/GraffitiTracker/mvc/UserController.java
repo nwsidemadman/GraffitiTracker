@@ -230,12 +230,12 @@ public class UserController {
   public String showConfirmedUser(
       @RequestParam(required = true) String uniqueUrlParam,
       Map<String, Object> model) {
-    Integer userid = appUserService
-        .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
-    if (userid == null) {
+    Integer userId = appUserService
+        .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    if (userId == null) {
       model.put("confirmed", false);
     } else {
-      appUserService.updateAppUserAsActive(userid);
+      appUserService.updateAppUserAsActive(userId);
       appUserService
       .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
       model.put("confirmed", true);
@@ -321,10 +321,18 @@ public class UserController {
   }
 
   @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
-  public String resetPassword(@RequestParam(required = true) String uniqueUrlParam,
+  public String resetPassword(
+      @RequestParam(required = true) String uniqueUrlParam,
       Map<String, Object> model) {
     // TODO: unit test
-    // TODO: check if uniqueUrlParam exists, set flag on model, delete unique url param
+    Integer userId = appUserService
+        .getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    if (userId == null) {
+      model.put("exists", false);
+    } else {
+      model.put("exists", true);
+      // TODO: create security form, put on model, update test
+    }
     return "users/resetPassword";
   }
 }

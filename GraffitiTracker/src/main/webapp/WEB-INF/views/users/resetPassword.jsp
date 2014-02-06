@@ -5,7 +5,12 @@
 
 <sec:authorize access="isAnonymous()">
   <div>
-    <p>Resetting password will go here.</p>
+    <c:if test="${exists == true}">
+      <h2>Resetting password will go here.</h2>
+    </c:if>
+    <c:if test="${exists == false}">
+      <h2>This reset password link has expired, please register again.</h2>
+    </c:if>
   </div>
 </sec:authorize>
 

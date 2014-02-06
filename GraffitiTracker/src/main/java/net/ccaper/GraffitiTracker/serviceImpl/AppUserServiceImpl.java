@@ -95,7 +95,7 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public Integer getUseridByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUserIdByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam) {
     return registrationConfirmationsDao
         .getUserIdByUniqueUrlParam(uniqueUrlParam);
   }
@@ -157,5 +157,10 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public String getResetPasswordUniqueUrlParamByUsername(String username) {
     return resetPasswordDao.getUniqueUrlParamByUsername(username);
+  }
+
+  @Override
+  public Integer getUserIdByResetPasswordUniqueUrlParam(String uniqueUrlParam) {
+    return resetPasswordDao.getUserIdByUniqueUrlParam(uniqueUrlParam);
   }
 }

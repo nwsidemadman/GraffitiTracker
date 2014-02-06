@@ -250,7 +250,7 @@ public class UserControllerTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
         appUserServiceMock
-        .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
+        .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(1);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
@@ -259,7 +259,7 @@ public class UserControllerTest {
     assertTrue(model.containsKey("confirmed"));
     assertEquals(true, model.get("confirmed"));
     verify(appUserServiceMock)
-    .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
     verify(appUserServiceMock).updateAppUserAsActive(1);
     verify(appUserServiceMock).deleteRegistrationConfirmationByUniqueUrlParam(
         uniqueUrlParam);
@@ -273,7 +273,7 @@ public class UserControllerTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
         appUserServiceMock
-        .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
+        .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
     UserController userController = new UserController();
     userController.setAppUserService(appUserServiceMock);
@@ -282,7 +282,7 @@ public class UserControllerTest {
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
     verify(appUserServiceMock)
-    .getUseridByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
@@ -441,5 +441,29 @@ public class UserControllerTest {
   public void testSentPassword() throws Exception {
     UserController controller = new UserController();
     assertEquals("users/sentPassword", controller.sentPassword());
+  }
+
+  @Test
+  public void testRestPassword_UniqueUrlParamExists() throws Exception {
+    String uniqueUrlParam = "test";
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(1);
+    UserController controller = new UserController();
+    controller.setAppUserService(appUserServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
+    assertTrue((Boolean) model.get("exists"));
+  }
+
+  @Test
+  public void testRestPassword_UniqueUrlParamNotExists() throws Exception {
+    String uniqueUrlParam = "test";
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    when(appUserServiceMock.getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
+    UserController controller = new UserController();
+    controller.setAppUserService(appUserServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
+    assertFalse((Boolean) model.get("exists"));
   }
 }

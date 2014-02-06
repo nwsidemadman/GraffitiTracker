@@ -40,9 +40,8 @@ implements ResetPasswordDao {
               RESET_PASSWORD_TABLE, USERS_TABLE, USERNAME_COL, USERNAME_COL)
               .toLowerCase();
   private static final String SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM = String
-      .format("SELECT %s FROM %s INNER JOIN %s ON %s.%s = %s.%s WHERE %s = :%s",
-          USER_ID_COL, RESET_PASSWORD_TABLE, USERS_TABLE, RESET_PASSWORD_TABLE,
-          USER_ID_COL, USERS_TABLE, USER_ID_COL, UNIQUE_URL_PARAM_COL,
+      .format("SELECT %s FROM %s WHERE %s = :%s",
+          USER_ID_COL, RESET_PASSWORD_TABLE, UNIQUE_URL_PARAM_COL,
           UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
