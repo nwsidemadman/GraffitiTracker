@@ -40,7 +40,6 @@ implements ResetPasswordDao {
               RESET_PASSWORD_TIMESTAMP_COL, RESET_PASSWORD_TIMESTAMP_COL,
               RESET_PASSWORD_TABLE, USERS_TABLE, USERNAME_COL, USERNAME_COL)
               .toLowerCase();
-  // TODO: fix sql
   private static final String SQL_SELECT_SECURITY_QUESTION_BY_UNIQUE_URL_PARAM = String
       .format(
           "SELECT %s FROM %s INNER JOIN %s on %s.%s = %s.%s WHERE %s = :%s",
