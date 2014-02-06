@@ -453,6 +453,7 @@ public class UserControllerTest {
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
     assertTrue((Boolean) model.get("exists"));
+    verify(appUserServiceMock).getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
@@ -465,5 +466,6 @@ public class UserControllerTest {
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
     assertFalse((Boolean) model.get("exists"));
+    verify(appUserServiceMock).getUserIdByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 }
