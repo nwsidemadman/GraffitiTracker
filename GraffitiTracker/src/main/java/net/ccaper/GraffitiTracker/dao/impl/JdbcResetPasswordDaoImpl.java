@@ -43,13 +43,14 @@ implements ResetPasswordDao {
               .toLowerCase();
   private static final String SQL_SELECT_USER_ID_AND_SECURITY_QUESTION_BY_UNIQUE_URL_PARAM = String
       .format(
-          "SELECT %s, %s FROM %s INNER JOIN %s on %s.%s = %s.%s WHERE %s = :%s",
-          USER_ID_COL, SECURITY_QUESTION_COL, RESET_PASSWORD_TABLE, USERS_TABLE,
-          RESET_PASSWORD_TABLE, USER_ID_COL, USERS_TABLE, USER_ID_COL,
-          UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+          "SELECT %s.%s, %s FROM %s INNER JOIN %s on %s.%s = %s.%s WHERE %s = :%s",
+          USERS_TABLE, USER_ID_COL, SECURITY_QUESTION_COL,
+          RESET_PASSWORD_TABLE, USERS_TABLE, RESET_PASSWORD_TABLE, USER_ID_COL,
+          USERS_TABLE, USER_ID_COL, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL)
+          .toLowerCase();
   private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
-      "DELETE FROM %s WHERE %s = :%s",
-      RESET_PASSWORD_TABLE, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+      "DELETE FROM %s WHERE %s = :%s", RESET_PASSWORD_TABLE,
+      UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -60,10 +61,12 @@ implements ResetPasswordDao {
 
   RowMapper<UserSecurityQuestion> securityQuestionRowMapper = new RowMapper<UserSecurityQuestion>() {
     @Override
-    public UserSecurityQuestion mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public UserSecurityQuestion mapRow(ResultSet rs, int rowNum)
+        throws SQLException {
       UserSecurityQuestion userSecurityQuestion = new UserSecurityQuestion();
       userSecurityQuestion.setUserid(rs.getInt(USER_ID_COL));
-      userSecurityQuestion.setSecurityQuestion(rs.getString(UNIQUE_URL_PARAM_COL));
+      userSecurityQuestion.setSecurityQuestion(rs
+          .getString(SECURITY_QUESTION_COL));
       return userSecurityQuestion;
     }
   };
@@ -91,7 +94,8 @@ implements ResetPasswordDao {
   }
 
   @Override
-  public UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(String uniqueUrlParam) {
+  public UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
+      String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
