@@ -23,6 +23,7 @@ import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
+import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
@@ -445,27 +446,30 @@ public class UserControllerTest {
 
   @Test
   public void testRestPassword_UniqueUrlParamExists() throws Exception {
-    String uniqueUrlParam = "test";
+    UserSecurityQuestion userSecurityQuestion = new UserSecurityQuestion();
+    userSecurityQuestion.setUserid(1);
+    userSecurityQuestion.setSecurityQuestion("test question");
+    String uniqueUrlParam = "testUniqueUrlParam";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn("test question");
+    when(appUserServiceMock.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(userSecurityQuestion);
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
     assertTrue((Boolean) model.get("exists"));
-    verify(appUserServiceMock).getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamNotExists() throws Exception {
     String uniqueUrlParam = "test";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
+    when(appUserServiceMock.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
     assertFalse((Boolean) model.get("exists"));
-    verify(appUserServiceMock).getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock).getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 }

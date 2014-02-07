@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.service;
 
 import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 
 public interface AppUserService {
   AppUser getUser(String username);
@@ -35,7 +36,7 @@ public interface AppUserService {
 
   String getResetPasswordUniqueUrlParamByUsername(String username);
 
-  String getSecurityQuestionByResetPasswordUniqueUrlParam(String uniqueUrlParam);
+  UserSecurityQuestion getUserSecurityQuestionByResetPasswordUniqueUrlParam(String uniqueUrlParam);
 
   void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam);
 }

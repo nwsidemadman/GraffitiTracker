@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import java.util.Map;
 
 import net.ccaper.GraffitiTracker.dao.ResetPasswordDao;
+import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,29 +25,31 @@ public class JdbcResetPasswordDaoImplTest {
 
   @Test
   public void testGetUserIdByUniqueUrlParam_HappyPath() throws Exception {
-    final String securityQuestion = "test question";
+    final UserSecurityQuestion userSecurityQuestion = new UserSecurityQuestion();
+    userSecurityQuestion.setUserid(1);
+    userSecurityQuestion.setSecurityQuestion("test question");
 
     class JdbcResetPasswordDaoImplMock extends JdbcResetPasswordDaoImpl {
       @Override
-      String getSecurityQuestionByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
-        return securityQuestion;
+      UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+        return userSecurityQuestion;
       }
     }
 
     ResetPasswordDao resetPasswordDaoMock = new JdbcResetPasswordDaoImplMock();
-    assertEquals(securityQuestion, resetPasswordDaoMock.getSecurityQuestionByUniqueUrlParam("test"));
+    assertEquals(userSecurityQuestion, resetPasswordDaoMock.getUserSecurityQuestionByUniqueUrlParam("test"));
   }
 
   @Test
   public void testGetUserIdByUniqueUrlParam() throws Exception {
     class JdbcResetPasswordDaoImplMock extends JdbcResetPasswordDaoImpl {
       @Override
-      String getSecurityQuestionByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
+      UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
         throw new EmptyResultDataAccessException("test", 0);
       }
     }
 
     ResetPasswordDao resetPasswordDaoMock = new JdbcResetPasswordDaoImplMock();
-    assertNull(resetPasswordDaoMock.getSecurityQuestionByUniqueUrlParam("test"));
+    assertNull(resetPasswordDaoMock.getUserSecurityQuestionByUniqueUrlParam("test"));
   }
 }

@@ -16,6 +16,7 @@ import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
+import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
@@ -325,9 +326,9 @@ public class UserController {
   public String resetPassword(
       @RequestParam(required = true) String resetPasswordUniqueUrlParam,
       Map<String, Object> model) {
-    String securityQuestion = appUserService
-        .getSecurityQuestionByResetPasswordUniqueUrlParam(resetPasswordUniqueUrlParam);
-    if (securityQuestion == null) {
+    UserSecurityQuestion userSecurityQuestion = appUserService
+        .getUserSecurityQuestionByResetPasswordUniqueUrlParam(resetPasswordUniqueUrlParam);
+    if (userSecurityQuestion == null) {
       model.put("exists", false);
     } else {
       // TODO: uncomment line once bug fixed
@@ -335,7 +336,10 @@ public class UserController {
       model.put("exists", true);
       // TODO: create security form, put on model, update test
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-      passwordSecurityForm.setSecurityQuestion(securityQuestion);
+      passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
+      passwordSecurityForm.setSecurityQuestion(userSecurityQuestion.getSecurityQuestion());
+      // TODO: mimic this line on other methods and don't set value in jsp
+      passwordSecurityForm.setResetPassword(true);
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
     // TODO: this will need to direct to https

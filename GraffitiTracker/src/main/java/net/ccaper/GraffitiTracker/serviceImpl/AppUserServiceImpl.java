@@ -8,6 +8,7 @@ import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 import net.ccaper.GraffitiTracker.dao.ResetPasswordDao;
 import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.utils.DateFormats;
@@ -161,9 +162,9 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public String getSecurityQuestionByResetPasswordUniqueUrlParam(
+  public UserSecurityQuestion getUserSecurityQuestionByResetPasswordUniqueUrlParam(
       String uniqueUrlParam) {
-    return resetPasswordDao.getSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
+    return resetPasswordDao.getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override

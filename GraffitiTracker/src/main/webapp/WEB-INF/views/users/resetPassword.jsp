@@ -10,11 +10,12 @@
       <h2>Reset Password</h2>
       <sf:form method="POST" modelAttribute="passwordSecurityForm">
         <fieldset>
+          <sf:hidden path="resetPassword" />
+          <sf:hidden path="userId" />
           <p>
             <sf:errors path="securityAnswer" cssClass="error" />
             <sf:label path="securityAnswer"><c:out value="${passwordSecurityForm.getSecurityQuestion()}" /></sf:label>
             <sf:input path="securityAnswer" size="40" maxlength="40" />
-            <sf:hidden path="resetPassword" value="true" />
           </p>
           <p>
             <sf:errors path="password" cssClass="error" /><br/>
