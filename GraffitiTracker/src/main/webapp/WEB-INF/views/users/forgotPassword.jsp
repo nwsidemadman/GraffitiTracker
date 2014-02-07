@@ -14,7 +14,7 @@
           <sf:errors path="username" cssClass="error" /><br/>
           <sf:label path="username">Username:</sf:label>
           <sf:input path="username" size="6" maxlength="20"/> 
-          <sf:hidden path="recoverPassword" value="true" />
+          <sf:hidden path="recoverPassword" />
         </p>
         <p>
           <input name="commit" type="submit" 

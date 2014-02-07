@@ -259,6 +259,7 @@ public class UserController {
   @RequestMapping(method = RequestMethod.GET, params = "forgotUsername")
   public String forgotUsername(Model model) {
     EmailForm emailForm = new EmailForm();
+    emailForm.setRecoverUsername(true);
     model.addAttribute(emailForm);
     return "users/forgotUsername";
   }
@@ -289,6 +290,7 @@ public class UserController {
   @RequestMapping(method = RequestMethod.GET, params = "forgotPassword")
   public String forgotPassword(Model model) {
     UsernameForm usernameForm = new UsernameForm();
+    usernameForm.setRecoverPassword(true);
     model.addAttribute(usernameForm);
     return "users/forgotPassword";
   }

@@ -14,7 +14,7 @@
           <sf:errors path="email" cssClass="error" /><br/>
           <sf:label path="email">Email address used on account registration:</sf:label>
           <sf:input path="email" size="30" maxlength="100"/> 
-          <sf:hidden path="recoverUsername" value="true" />
+          <sf:hidden path="recoverUsername" />
         </p>
         <p>
           <input name="commit" type="submit" 
