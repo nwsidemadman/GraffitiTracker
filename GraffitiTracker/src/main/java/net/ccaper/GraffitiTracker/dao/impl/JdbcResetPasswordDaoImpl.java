@@ -46,6 +46,9 @@ implements ResetPasswordDao {
           SECURITY_QUESTION_COL, RESET_PASSWORD_TABLE, USERS_TABLE,
           RESET_PASSWORD_TABLE, USER_ID_COL, USERS_TABLE, USER_ID_COL,
           UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+  private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
+      "DELETE FROM %s WHERE %s = :%s",
+      RESET_PASSWORD_TABLE, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -100,5 +103,13 @@ implements ResetPasswordDao {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_SECURITY_QUESTION_BY_UNIQUE_URL_PARAM,
         uniqueUrlParamParamMap, securityQuestionRowMapper);
+  }
+
+  @Override
+  public void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam) {
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM,
+        uniqueUrlParamParamMap);
   }
 }

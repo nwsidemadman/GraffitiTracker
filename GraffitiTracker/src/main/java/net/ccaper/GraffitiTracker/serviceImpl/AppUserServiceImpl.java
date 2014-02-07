@@ -83,7 +83,8 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public String getRegistrationConfirmationUniqueUrlParamByUsername(String username) {
+  public String getRegistrationConfirmationUniqueUrlParamByUsername(
+      String username) {
     return registrationConfirmationsDao.getUniqueUrlParamByUsername(username);
   }
 
@@ -95,7 +96,8 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public Integer getUserIdByRegistrationConfirmationUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUserIdByRegistrationConfirmationUniqueUrlParam(
+      String uniqueUrlParam) {
     return registrationConfirmationsDao
         .getUserIdByUniqueUrlParam(uniqueUrlParam);
   }
@@ -112,15 +114,14 @@ public class AppUserServiceImpl implements AppUserService {
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 
-  // TODO: delete reset passwords when expired
-
   @Override
   @Scheduled(cron = "0 30 5 * * ?")
   public void emailAdminStatsDaily() {
     logger.info("Sending daily stats to super admins.");
     List<String> recipients = appUserDao.getSuperAdminEmails();
     if (recipients.size() == 0) {
-      logger.error("There are no users with super admin role to deliver daily stats.");
+      logger
+      .error("There are no users with super admin role to deliver daily stats.");
       return;
     }
     String content = "";
@@ -160,7 +161,15 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public String getSecurityQuestionByResetPasswordUniqueUrlParam(String uniqueUrlParam) {
+  public String getSecurityQuestionByResetPasswordUniqueUrlParam(
+      String uniqueUrlParam) {
     return resetPasswordDao.getSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
   }
+
+  @Override
+  public void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam) {
+    resetPasswordDao.deleteResetPasswordByUniqueUrlParam(uniqueUrlParam);
+  }
+
+  // TODO: delete reset passwords when expired
 }

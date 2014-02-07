@@ -5,13 +5,7 @@
 
 <sec:authorize access="isAnonymous()">
   <div>
-    <c:if test="${confirmed == true}">
-      <h2>Your registration is now complete.</h2>
-      <p>Please sign in!</p>
-    </c:if>
-    <c:if test="${confirmed == false}">
-      <p>This registration link has expired, please register again.</p>
-    </c:if>
+    <p>Your password has been updated, please sign in.</p>
   </div>
 </sec:authorize>
 

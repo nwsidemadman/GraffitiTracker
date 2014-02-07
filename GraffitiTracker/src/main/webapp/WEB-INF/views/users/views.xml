@@ -34,4 +34,8 @@
     <put-attribute name="content"
       value="/WEB-INF/views/users/resetPassword.jsp" />
   </definition>
+  <definition name="users/passwordUpdated" extends="template">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/passwordUpdated.jsp" />
+  </definition>
 </tiles-definitions>

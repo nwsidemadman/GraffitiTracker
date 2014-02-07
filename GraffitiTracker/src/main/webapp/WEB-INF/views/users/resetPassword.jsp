@@ -1,15 +1,41 @@
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
   <div>
     <c:if test="${exists == true}">
-      <h2>Resetting password will go here.</h2>
+      <h2>Reset Password</h2>
+      <sf:form method="POST" modelAttribute="passwordSecurityForm">
+        <fieldset>
+          <p>
+            <sf:errors path="securityAnswer" cssClass="error" />
+            <sf:label path="securityAnswer"><c:out value="${passwordSecurityForm.getSecurityQuestion()}" /></sf:label>
+            <sf:input path="securityAnswer" size="40" maxlength="40" />
+            <sf:hidden path="resetPassword" value="true" />
+          </p>
+          <p>
+            <sf:errors path="password" cssClass="error" /><br/>
+            <sf:label path="password">Password:</sf:label>
+            <sf:password path="password" size="30" showPassword="false" maxlength="64"/> 
+            <small>6 characters or more</small><br/>
+          </p>
+          <p>
+            <sf:errors path="confirmPassword" cssClass="error" /><br/>
+            <sf:label path="confirmPassword">Confirm Password:</sf:label>
+            <sf:password path="confirmPassword" size="30" showPassword="false" maxlength="64"/> 
+          </p>
+          <p>
+            <input name="commit" type="submit" value="Reset Password" />
+          </p>
+        </fieldset>
+      </sf:form>
     </c:if>
     <c:if test="${exists == false}">
-      <h2>This reset password link has expired, please register again.</h2>
+      <p>This reset password link has expired, please register
+        again.</p>
     </c:if>
   </div>
 </sec:authorize>

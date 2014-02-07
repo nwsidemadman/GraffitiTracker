@@ -13,6 +13,7 @@ import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
+import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.objects.UsernameForm;
@@ -42,10 +43,10 @@ public class UserController {
   private static final Logger logger = LoggerFactory
       .getLogger(UserController.class);
   // visible for testing
-  static final String CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?uniqueUrlParam=";
+  static final String CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?registrationConfirmationUniqueUrlParam=";
   // visible for testing
   // TODO: fix link
-  static final String RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/resetPassword?uniqueUrlParam=";
+  static final String RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/resetPassword?resetPasswordUniqueUrlParam=";
   // visible for testing
   static final String HOME_LINK = "/home";
   @Autowired
@@ -153,7 +154,7 @@ public class UserController {
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
-    String uniqueUrlParam = appUserService
+    String registrationConfirmationUniqueUrlParam = appUserService
         .getRegistrationConfirmationUniqueUrlParamByUsername(userForm
             .getUsername());
     model
@@ -167,7 +168,7 @@ public class UserController {
                 getEmailLink(request.getRequestURL().toString(),
                     request.getServletPath(),
                     CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
-                    uniqueUrlParam)));
+                    registrationConfirmationUniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -192,7 +193,7 @@ public class UserController {
 
   // visible for mocking
   String generateForgotPasswordEmailBodyWithVelocityEngine(
-      String uniqueUrlParam, HttpServletRequest request) {
+      String resetPassowrdUniqueUrlParam, HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>();
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     model
@@ -206,7 +207,7 @@ public class UserController {
                 getEmailLink(request.getRequestURL().toString(),
                     request.getServletPath(),
                     RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
-                    uniqueUrlParam)));
+                    resetPassowrdUniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -228,16 +229,16 @@ public class UserController {
 
   @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
   public String showConfirmedUser(
-      @RequestParam(required = true) String uniqueUrlParam,
+      @RequestParam(required = true) String registrationConfirmationUniqueUrlParam,
       Map<String, Object> model) {
     Integer userId = appUserService
-        .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+        .getUserIdByRegistrationConfirmationUniqueUrlParam(registrationConfirmationUniqueUrlParam);
     if (userId == null) {
       model.put("confirmed", false);
     } else {
       appUserService.updateAppUserAsActive(userId);
       appUserService
-      .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+      .deleteRegistrationConfirmationByUniqueUrlParam(registrationConfirmationUniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";
@@ -322,17 +323,32 @@ public class UserController {
 
   @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
   public String resetPassword(
-      @RequestParam(required = true) String uniqueUrlParam,
+      @RequestParam(required = true) String resetPasswordUniqueUrlParam,
       Map<String, Object> model) {
-    // TODO: unit test
     String securityQuestion = appUserService
-        .getSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+        .getSecurityQuestionByResetPasswordUniqueUrlParam(resetPasswordUniqueUrlParam);
     if (securityQuestion == null) {
       model.put("exists", false);
     } else {
+      // TODO: uncomment line once bug fixed
+      //appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
       // TODO: create security form, put on model, update test
+      PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
+      passwordSecurityForm.setSecurityQuestion(securityQuestion);
+      model.put("passwordSecurityForm", passwordSecurityForm);
     }
+    // TODO: this will need to direct to https
     return "users/resetPassword";
+  }
+
+  @RequestMapping(params = "resetPassword", method = RequestMethod.POST)
+  public String updatePassword(PasswordSecurityForm passwordSecurityForm,
+      BindingResult bindingResult, HttpServletRequest request) {
+    logger.info("updatePassword hit");
+    // TODO: unit test
+    // TODO: validate
+    // TODO: update password
+    return "redirect:/users/passwordUpdated";
   }
 }
