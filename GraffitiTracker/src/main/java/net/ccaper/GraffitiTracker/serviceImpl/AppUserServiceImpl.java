@@ -164,7 +164,8 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public UserSecurityQuestion getUserSecurityQuestionByResetPasswordUniqueUrlParam(
       String uniqueUrlParam) {
-    return resetPasswordDao.getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
+    return resetPasswordDao
+        .getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override
@@ -173,4 +174,9 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   // TODO: delete reset passwords when expired
+
+  @Override
+  public String getSecurityAnswerByUserId(int userId) {
+    return appUserDao.getSecurityAnswerByUserId(userId);
+  }
 }

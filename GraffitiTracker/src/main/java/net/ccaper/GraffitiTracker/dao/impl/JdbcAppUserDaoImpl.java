@@ -92,6 +92,9 @@ AppUserDao {
           USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE, USERS_TABLE,
           USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE, USER_ID_COL,
           IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL, NUMBER_OF_DAYS);
+  private static final String SQL_SELECT_SECURITY_ANSWER_BY_USER_ID = String.format(
+      "SELECT %s FROM %s WHERE %s = :%s",
+      SECURITY_ANSWER_COL, USERS_TABLE, USER_ID_COL , USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -154,6 +157,13 @@ AppUserDao {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getString(USERNAME_COL);
+    }
+  };
+
+  RowMapper<String> securityAnswerRowMapper = new RowMapper<String>() {
+    @Override
+    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getString(SECURITY_ANSWER_COL);
     }
   };
 
@@ -293,5 +303,13 @@ AppUserDao {
   String getEmailByUsername(Map<String, String> usernameParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_EMAIL_BY_USERNAME, usernameParamMap, emailRowMapper);
+  }
+
+  @Override
+  public String getSecurityAnswerByUserId(int userId) {
+    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
+    userIdParamMap.put(USER_ID_COL, userId);
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_SECURITY_ANSWER_BY_USER_ID, userIdParamMap, securityAnswerRowMapper);
   }
 }

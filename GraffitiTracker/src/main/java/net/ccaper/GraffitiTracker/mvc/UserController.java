@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
@@ -63,6 +64,8 @@ public class UserController {
   @Autowired
   FormUsernameValidator formUsernameValidator;
   @Autowired
+  FormPasswordSecurityValidator formPasswordSecurityValidator;
+  @Autowired
   VelocityEngine velocityEngine;
 
   public void setCaptchaService(CaptchaService captchaService) {
@@ -80,6 +83,11 @@ public class UserController {
   public void setFormUsernamelValidator(
       FormUsernameValidator formUsernameValidator) {
     this.formUsernameValidator = formUsernameValidator;
+  }
+
+  public void setFormPasswordSecuritylValidator(
+      FormPasswordSecurityValidator formPasswordSecurityValidator) {
+    this.formPasswordSecurityValidator = formPasswordSecurityValidator;
   }
 
   public void setAppUserService(AppUserService appUserService) {
@@ -351,7 +359,10 @@ public class UserController {
       BindingResult bindingResult, HttpServletRequest request) {
     logger.info("updatePassword hit");
     // TODO: unit test
-    // TODO: validate
+    formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
+    if (bindingResult.hasErrors()) {
+      return "users/resetPassword";
+    }
     // TODO: update password
     return "redirect:/users/passwordUpdated";
   }
