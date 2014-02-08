@@ -336,12 +336,10 @@ public class UserController {
       // TODO: uncomment line once bug fixed
       // appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
-      // TODO: create security form, put on model, update test
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
       passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
       passwordSecurityForm.setSecurityQuestion(userSecurityQuestion
           .getSecurityQuestion());
-      // TODO: mimic this line on other methods and don't set value in jsp
       passwordSecurityForm.setResetPassword(true);
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
