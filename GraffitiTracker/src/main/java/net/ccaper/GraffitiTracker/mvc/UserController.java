@@ -334,12 +334,13 @@ public class UserController {
       model.put("exists", false);
     } else {
       // TODO: uncomment line once bug fixed
-      //appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
+      // appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
       // TODO: create security form, put on model, update test
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
       passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
-      passwordSecurityForm.setSecurityQuestion(userSecurityQuestion.getSecurityQuestion());
+      passwordSecurityForm.setSecurityQuestion(userSecurityQuestion
+          .getSecurityQuestion());
       // TODO: mimic this line on other methods and don't set value in jsp
       passwordSecurityForm.setResetPassword(true);
       model.put("passwordSecurityForm", passwordSecurityForm);
@@ -356,5 +357,11 @@ public class UserController {
     // TODO: validate
     // TODO: update password
     return "redirect:/users/passwordUpdated";
+  }
+
+  @RequestMapping(value = "/passwordUpdated", method = RequestMethod.GET)
+  public String passwordUpdated() {
+    // TODO: can this be static?
+    return "users/passwordUpdated";
   }
 }

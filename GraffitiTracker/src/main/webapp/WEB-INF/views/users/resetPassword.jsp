@@ -8,7 +8,7 @@
   <div>
     <c:if test="${exists == true}">
       <h2>Reset Password</h2>
-      <sf:form method="POST" modelAttribute="passwordSecurityForm">
+      <sf:form method="POST" modelAttribute="passwordSecurityForm" action="/GraffitiTracker/users">
         <fieldset>
           <sf:hidden path="resetPassword" />
           <sf:hidden path="userId" />
