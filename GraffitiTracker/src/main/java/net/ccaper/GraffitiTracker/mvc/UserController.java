@@ -333,8 +333,7 @@ public class UserController {
     if (userSecurityQuestion == null) {
       model.put("exists", false);
     } else {
-      // TODO: uncomment line once bug fixed
-      // appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
+      appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
       passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
@@ -359,6 +358,7 @@ public class UserController {
 
   @RequestMapping(value = "/passwordUpdated", method = RequestMethod.GET)
   public String passwordUpdated() {
+    // TODO: unit test
     // TODO: can this be static?
     return "users/passwordUpdated";
   }
