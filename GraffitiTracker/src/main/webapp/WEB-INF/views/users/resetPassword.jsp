@@ -12,8 +12,9 @@
         <fieldset>
           <sf:hidden path="resetPassword" />
           <sf:hidden path="userId" />
+          <sf:hidden path="securityQuestion" />
           <p>
-            <sf:errors path="securityAnswer" cssClass="error" />
+            <sf:errors path="securityAnswer" cssClass="error" /><br/>
             <sf:label path="securityAnswer"><c:out value="${passwordSecurityForm.getSecurityQuestion()}" /></sf:label>
             <sf:input path="securityAnswer" size="40" maxlength="40" />
           </p>

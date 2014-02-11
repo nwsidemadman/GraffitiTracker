@@ -179,4 +179,14 @@ public class AppUserServiceImpl implements AppUserService {
   public String getSecurityAnswerByUserId(int userId) {
     return appUserDao.getSecurityAnswerByUserId(userId);
   }
+
+  @Override
+  public String getUsernameByUserId(int userId) {
+    return appUserDao.getUsernameByUserId(userId);
+  }
+
+  @Override
+  public void updatePasswordByUserid(int userId, String passwordEncoded) {
+    appUserDao.updatePasswordByUserId(userId, passwordEncoded);
+  }
 }

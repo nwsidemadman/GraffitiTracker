@@ -23,6 +23,7 @@ import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.utils.DateFormats;
+import net.ccaper.GraffitiTracker.utils.Encoder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
@@ -47,7 +48,6 @@ public class UserController {
   // visible for testing
   static final String CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?registrationConfirmationUniqueUrlParam=";
   // visible for testing
-  // TODO: fix link
   static final String RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/resetPassword?resetPasswordUniqueUrlParam=";
   // visible for testing
   static final String HOME_LINK = "/home";
@@ -341,7 +341,8 @@ public class UserController {
     if (userSecurityQuestion == null) {
       model.put("exists", false);
     } else {
-      appUserService.deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
+      appUserService
+      .deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
       passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
@@ -356,14 +357,20 @@ public class UserController {
 
   @RequestMapping(params = "resetPassword", method = RequestMethod.POST)
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
-      BindingResult bindingResult, HttpServletRequest request) {
-    logger.info("updatePassword hit");
+      BindingResult bindingResult, HttpServletRequest request,
+      Map<String, Object> model) {
     // TODO: unit test
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
     if (bindingResult.hasErrors()) {
+      // TODO: make collection size 1, here, and everywhere
+      model.put("exists", true);
+      model.put("passwordSecurityForm", passwordSecurityForm);
       return "users/resetPassword";
     }
-    // TODO: update password
+    appUserService.updatePasswordByUserid(passwordSecurityForm.getUserId(),
+        Encoder.encodeString(appUserService
+            .getUsernameByUserId(passwordSecurityForm.getUserId()),
+            passwordSecurityForm.getPassword()));
     return "redirect:/users/passwordUpdated";
   }
 

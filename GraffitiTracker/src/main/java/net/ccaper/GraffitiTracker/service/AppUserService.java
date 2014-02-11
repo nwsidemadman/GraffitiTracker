@@ -41,4 +41,8 @@ public interface AppUserService {
   void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam);
 
   String getSecurityAnswerByUserId(int userId);
+
+  String getUsernameByUserId(int userId);
+
+  void updatePasswordByUserid(int userId, String passwordEncoded);
 }

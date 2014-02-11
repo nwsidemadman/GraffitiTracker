@@ -95,6 +95,12 @@ AppUserDao {
   private static final String SQL_SELECT_SECURITY_ANSWER_BY_USER_ID = String.format(
       "SELECT %s FROM %s WHERE %s = :%s",
       SECURITY_ANSWER_COL, USERS_TABLE, USER_ID_COL , USER_ID_COL).toLowerCase();
+  private static final String SQL_SELECT_USERNAME_BY_USER_ID = String.format(
+      "SELECT %s FROM %s WHERE %s = :%s",
+      USERNAME_COL, USERS_TABLE, USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_PASSWORD_BY_USER_ID = String.format(
+      "UPDATE %s SET %s = :%s WHERE %s = :%s",
+      USERS_TABLE, PASSWORD_COL, PASSWORD_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -226,10 +232,10 @@ AppUserDao {
 
   @Override
   public void updateAppUserAsActive(int userid) {
-    Map<String, Integer> useridParamMap = new HashMap<String, Integer>();
-    useridParamMap.put(USER_ID_COL, userid);
+    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
+    userIdParamMap.put(USER_ID_COL, userid);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE,
-        useridParamMap);
+        userIdParamMap);
   }
 
   @Override
@@ -311,5 +317,22 @@ AppUserDao {
     userIdParamMap.put(USER_ID_COL, userId);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_SECURITY_ANSWER_BY_USER_ID, userIdParamMap, securityAnswerRowMapper);
+  }
+
+  @Override
+  public String getUsernameByUserId(int userId) {
+    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
+    userIdParamMap.put(USER_ID_COL, userId);
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USERNAME_BY_USER_ID, userIdParamMap, usernameRowMapper);
+  }
+
+  @Override
+  public void updatePasswordByUserId(int userId, String passwordEncoded) {
+    Map<String, Object> paramMap = new HashMap<String, Object>();
+    paramMap.put(USER_ID_COL, userId);
+    paramMap.put(PASSWORD_COL, passwordEncoded);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_PASSWORD_BY_USER_ID,
+        paramMap);
   }
 }

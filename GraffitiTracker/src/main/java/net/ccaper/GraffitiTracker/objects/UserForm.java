@@ -1,6 +1,6 @@
 package net.ccaper.GraffitiTracker.objects;
 
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
+import net.ccaper.GraffitiTracker.utils.Encoder;
 
 public class UserForm {
   private String username;
@@ -53,8 +53,7 @@ public class UserForm {
     if (password == null) {
       throw new IllegalStateException("Password is null.");
     }
-    ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder(256);
-    return passwordEncoder.encodePassword(password, username);
+    return Encoder.encodeString(username, password);
   }
 
   public boolean getAcceptTerms() {
@@ -80,7 +79,7 @@ public class UserForm {
   public void setTextCaptchaQuestion(String textCaptchaQuestion) {
     this.textCaptchaQuestion = textCaptchaQuestion;
   }
-  
+
   public String getSecurityQuestion() {
     return securityQuestion;
   }

@@ -55,6 +55,7 @@ public class FormPasswordSecurityValidator implements Validator {
   }
 
   // visible for testing
+  // TODO: this is dupe code from UserFormValidator, fix
   void validatePassword(Errors errors, String password, String confirmPassword) {
     // TODO: unit test
     if (StringUtils.isEmpty(password)) {
