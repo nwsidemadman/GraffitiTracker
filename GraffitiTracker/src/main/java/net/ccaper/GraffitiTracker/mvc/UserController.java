@@ -161,7 +161,7 @@ public class UserController {
   // visible for mocking
   String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
       HttpServletRequest request) {
-    Map<String, Object> model = new HashMap<String, Object>();
+    Map<String, Object> model = new HashMap<String, Object>(3);
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     String registrationConfirmationUniqueUrlParam = appUserService
         .getRegistrationConfirmationUniqueUrlParamByUsername(userForm
@@ -188,7 +188,7 @@ public class UserController {
   // visible for mocking
   String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
       HttpServletRequest request) {
-    Map<String, Object> model = new HashMap<String, Object>();
+    Map<String, Object> model = new HashMap<String, Object>(3);
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     model.put("content", String.format(
         "<p>You requested to recover your username.</p>"
@@ -203,7 +203,7 @@ public class UserController {
   // visible for mocking
   String generateForgotPasswordEmailBodyWithVelocityEngine(
       String resetPassowrdUniqueUrlParam, HttpServletRequest request) {
-    Map<String, Object> model = new HashMap<String, Object>();
+    Map<String, Object> model = new HashMap<String, Object>(3);
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     model
     .put(
@@ -362,7 +362,6 @@ public class UserController {
     // TODO: unit test
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
     if (bindingResult.hasErrors()) {
-      // TODO: make collection size 1, here, and everywhere
       model.put("exists", true);
       model.put("passwordSecurityForm", passwordSecurityForm);
       return "users/resetPassword";
