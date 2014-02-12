@@ -27,7 +27,6 @@ public class FormPasswordSecurityValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    // TODO: unit test
     PasswordSecurityForm passwordSecurityForm = (PasswordSecurityForm) target;
     validateSecurityAnswer(errors, passwordSecurityForm.getSecurityAnswer(),
         passwordSecurityForm.getUserId());
@@ -37,7 +36,6 @@ public class FormPasswordSecurityValidator implements Validator {
 
   // visible for testing
   void validateSecurityAnswer(Errors errors, String securityAnswer, int userId) {
-    // TODO: unit test
     if (StringUtils.isEmpty(securityAnswer)) {
       errors.rejectValue("securityAnswer", "invalidSecurityAnswer",
           "Security answer can not be empty.");
