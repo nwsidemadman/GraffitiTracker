@@ -7,8 +7,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import net.ccaper.GraffitiTracker.objects.UserForm;
-import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.BannedWordService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
@@ -145,87 +145,6 @@ public class UserValidatorTest {
         userFormValidEmail.getAcceptTerms());
     assertFalse(errors.hasErrors());
     verify(appUserServiceMock).doesEmailExist(userFormValidEmail.getEmail());
-  }
-
-  @Test
-  public void testValidatePassword_Empty() throws Exception {
-    UserForm userFormInvalidPassword = new UserForm();
-    userFormInvalidPassword.setPassword(StringUtils.EMPTY);
-    userFormInvalidPassword.setConfirmPassword(StringUtils.EMPTY);
-    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
-        "userInvalidPassword");
-    formUserValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
-        userFormInvalidPassword.getConfirmPassword());
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("password"));
-    assertNotNull(errors.getFieldError("confirmPassword"));
-  }
-
-  @Test
-  public void testValidatePassword_Null() throws Exception {
-    UserForm userFormInvalidPassword = new UserForm();
-    userFormInvalidPassword.setPassword(null);
-    userFormInvalidPassword.setConfirmPassword(null);
-    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
-        "userInvalidPassword");
-    formUserValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
-        userFormInvalidPassword.getConfirmPassword());
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("password"));
-    assertNotNull(errors.getFieldError("confirmPassword"));
-  }
-
-  @Test
-  public void testValidatePassword_TooShort() throws Exception {
-    UserForm userFormInvalidPassword = new UserForm();
-    userFormInvalidPassword.setPassword("123");
-    userFormInvalidPassword.setConfirmPassword("somePassword");
-    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
-        "userInvalidPassword");
-    formUserValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
-        userFormInvalidPassword.getConfirmPassword());
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("password"));
-  }
-
-  @Test
-  public void testValidatePassword_TooLong() throws Exception {
-    UserForm userFormInvalidPassword = new UserForm();
-    userFormInvalidPassword
-    .setPassword("12345678901234567890123456789012345678901234567890123456789012345");
-    userFormInvalidPassword.setConfirmPassword("somePassword");
-    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
-        "userInvalidPassword");
-    formUserValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
-        userFormInvalidPassword.getConfirmPassword());
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("password"));
-  }
-
-  @Test
-  public void testValidatePassword_ConfirmPasswordNoMatch() throws Exception {
-    UserForm userFormInvalidPassword = new UserForm();
-    userFormInvalidPassword.setPassword("SomeValidPassword");
-    userFormInvalidPassword.setConfirmPassword("SomeValidPassword2");
-    Errors errors = new BeanPropertyBindingResult(userFormInvalidPassword,
-        "userInvalidPassword");
-    formUserValidator.validatePassword(errors, userFormInvalidPassword.getPassword(),
-        userFormInvalidPassword.getConfirmPassword());
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("password"));
-    assertNotNull(errors.getFieldError("confirmPassword"));
-  }
-
-  @Test
-  public void testValidatePassword_HappyPath() throws Exception {
-    UserForm userFormValidPassword = new UserForm();
-    userFormValidPassword.setPassword("SomeValidPassword");
-    userFormValidPassword.setConfirmPassword("SomeValidPassword");
-    Errors errors = new BeanPropertyBindingResult(userFormValidPassword,
-        "userValidPassword");
-    formUserValidator.validatePassword(errors, userFormValidPassword.getPassword(),
-        userFormValidPassword.getConfirmPassword());
-    assertFalse(errors.hasErrors());
   }
 
   @Test
@@ -407,7 +326,7 @@ public class UserValidatorTest {
         userFormValid.getUsername());
     verify(appUserServiceMock).doesUsernameExist(userFormValid.getUsername());
   }
-  
+
   @Test
   public void testValidate_SadPath() throws Exception {
     UserForm userFormInvalid = new UserForm();
@@ -425,7 +344,7 @@ public class UserValidatorTest {
     assertNotNull(errors.getFieldError("email"));
     assertNotNull(errors.getFieldError("acceptTerms"));
   }
-  
+
   @Test
   public void testValidateSecurityAnswer_Empty() throws Exception {
     UserForm userFormInvalidSecurityAnswer = new UserForm();
@@ -436,7 +355,7 @@ public class UserValidatorTest {
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
   }
-  
+
   @Test
   public void testValidateSecurityAnswer_Null() throws Exception {
     UserForm userFormInvalidSecurityAnswer = new UserForm();
@@ -447,7 +366,7 @@ public class UserValidatorTest {
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
   }
-  
+
   @Test
   public void testValidateSecurityAnswer_TooLong() throws Exception {
     UserForm userFormInvalidSecurityAnswer = new UserForm();
@@ -458,7 +377,7 @@ public class UserValidatorTest {
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
   }
-  
+
   @Test
   public void testValidateSecurityAnswer_HappyPath() throws Exception {
     UserForm userFormInvalidSecurityAnswer = new UserForm();
