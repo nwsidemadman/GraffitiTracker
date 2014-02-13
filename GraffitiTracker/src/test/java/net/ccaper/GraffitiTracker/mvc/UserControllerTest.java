@@ -545,4 +545,10 @@ public class UserControllerTest {
         passwordSecurityForm.getUserId(),
         Encoder.encodeString(username, passwordSecurityForm.getPassword()));
   }
+
+  @Test
+  public void testPasswordUpdated() throws Exception {
+    UserController controller = new UserController();
+    assertEquals("users/passwordUpdated", controller.passwordUpdated());
+  }
 }

@@ -374,7 +374,6 @@ public class UserController {
 
   @RequestMapping(value = "/passwordUpdated", method = RequestMethod.GET)
   public String passwordUpdated() {
-    // TODO: unit test
     // TODO: can this be static?
     return "users/passwordUpdated";
   }
