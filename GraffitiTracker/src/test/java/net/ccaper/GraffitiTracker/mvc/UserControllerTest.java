@@ -18,9 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
+import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
@@ -30,7 +32,9 @@ import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
+import net.ccaper.GraffitiTracker.utils.Encoder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -396,7 +400,8 @@ public class UserControllerTest {
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
     controller.setFormUsernamelValidator(formUsernameValidator);
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername())).thenReturn(null);
+    when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
+    .thenReturn(null);
     controller.setAppUserService(appUserServiceMock);
     assertEquals("redirect:/users/sentPassword",
         controller.sendPasswordLink(usernameForm, result, requestMock));
@@ -425,7 +430,8 @@ public class UserControllerTest {
     controllerMock.setFormUsernamelValidator(formUsernameValidator);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     String userEmail = "test@test.com";
-    when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername())).thenReturn(userEmail);
+    when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
+    .thenReturn(userEmail);
     controllerMock.setAppUserService(appUserServiceMock);
     MailService mailServiceMock = mock(MailService.class);
     controllerMock.setMailService(mailServiceMock);
@@ -435,7 +441,8 @@ public class UserControllerTest {
     verify(appUserServiceMock).addResetPassword(usernameForm.getUsername());
     List<String> recipients = new ArrayList<String>(1);
     recipients.add(userEmail);
-    verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Password", emailBody);
+    verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Password",
+        emailBody);
   }
 
   @Test
@@ -451,25 +458,91 @@ public class UserControllerTest {
     userSecurityQuestion.setSecurityQuestion("test question");
     String uniqueUrlParam = "testUniqueUrlParam";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(userSecurityQuestion);
+    when(
+        appUserServiceMock
+        .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
+        .thenReturn(userSecurityQuestion);
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
+    assertEquals("users/resetPassword",
+        controller.resetPassword(uniqueUrlParam, model));
     assertTrue((Boolean) model.get("exists"));
-    verify(appUserServiceMock).getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock)
+    .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamNotExists() throws Exception {
     String uniqueUrlParam = "test";
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam)).thenReturn(null);
+    when(
+        appUserServiceMock
+        .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
+        .thenReturn(null);
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/resetPassword", controller.resetPassword(uniqueUrlParam, model));
+    assertEquals("users/resetPassword",
+        controller.resetPassword(uniqueUrlParam, model));
     assertFalse((Boolean) model.get("exists"));
-    verify(appUserServiceMock).getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(appUserServiceMock)
+    .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+  }
+
+  @Test
+  public void testUpdatePassword_InvalidPasswordSecurity() throws Exception {
+    PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
+    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setSecurityAnswer(StringUtils.EMPTY);
+    passwordSecurityForm.setPassword(null);
+    passwordSecurityForm.setConfirmPassword(null);
+    FormPasswordSecurityValidator formPasswordSecurityValidator = new FormPasswordSecurityValidator();
+    UserController controller = new UserController();
+    controller.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
+        "paswordSecurityForm");
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/resetPassword", controller.updatePassword(
+        passwordSecurityForm, result, requestMock, model));
+    assertTrue((Boolean) model.get("exists"));
+    assertEquals(passwordSecurityForm, model.get("passwordSecurityForm"));
+  }
+
+  @Test
+  public void testUpdatePassword_HappyPath() throws Exception {
+    PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
+    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setSecurityAnswer("testAnswer");
+    String password = "testPassword";
+    passwordSecurityForm.setPassword(password);
+    passwordSecurityForm.setConfirmPassword(password);
+    FormPasswordSecurityValidator formPasswordSecurityValidator = new FormPasswordSecurityValidator();
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    String username = "testUsername";
+    when(
+        appUserServiceMock.getSecurityAnswerByUserId(passwordSecurityForm
+            .getUserId())).thenReturn(passwordSecurityForm.getSecurityAnswer());
+    when(
+        appUserServiceMock.getUsernameByUserId(passwordSecurityForm.getUserId()))
+        .thenReturn(username);
+    formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
+    UserController controller = new UserController();
+    controller.setAppUserService(appUserServiceMock);
+    controller.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
+        "paswordSecurityForm");
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("redirect:/users/passwordUpdated", controller.updatePassword(
+        passwordSecurityForm, result, requestMock, model));
+    verify(appUserServiceMock).getSecurityAnswerByUserId(
+        passwordSecurityForm.getUserId());
+    verify(appUserServiceMock).getUsernameByUserId(
+        passwordSecurityForm.getUserId());
+    verify(appUserServiceMock).updatePasswordByUserid(
+        passwordSecurityForm.getUserId(),
+        Encoder.encodeString(username, passwordSecurityForm.getPassword()));
   }
 }

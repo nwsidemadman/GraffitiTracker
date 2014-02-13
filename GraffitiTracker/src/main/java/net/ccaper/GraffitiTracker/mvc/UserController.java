@@ -359,7 +359,6 @@ public class UserController {
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
-    // TODO: unit test
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
     if (bindingResult.hasErrors()) {
       model.put("exists", true);
