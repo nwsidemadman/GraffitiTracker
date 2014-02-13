@@ -10,4 +10,6 @@ public interface ResetPasswordDao {
   UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(String uniqueUrlParam);
 
   void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam);
+
+  void deleteResetPasswordWhereTimestampExpired();
 }

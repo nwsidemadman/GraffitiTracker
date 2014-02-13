@@ -51,6 +51,9 @@ implements ResetPasswordDao {
   private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
       "DELETE FROM %s WHERE %s = :%s", RESET_PASSWORD_TABLE,
       UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
+  private static final String SQL_DELETE_EXPIRED_RESET_PASSWORDS = String.format(
+      "DELETE %s FROM %s WHERE %s < (NOW() - INTERVAL 1 day)",
+      RESET_PASSWORD_TABLE, RESET_PASSWORD_TABLE, RESET_PASSWORD_TIMESTAMP_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -119,5 +122,10 @@ implements ResetPasswordDao {
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM,
         uniqueUrlParamParamMap);
+  }
+
+  @Override
+  public void deleteResetPasswordWhereTimestampExpired() {
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_EXPIRED_RESET_PASSWORDS, new HashMap<String, String>());
   }
 }

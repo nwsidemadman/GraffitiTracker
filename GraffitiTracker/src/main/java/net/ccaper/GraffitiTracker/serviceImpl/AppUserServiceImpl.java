@@ -173,8 +173,6 @@ public class AppUserServiceImpl implements AppUserService {
     resetPasswordDao.deleteResetPasswordByUniqueUrlParam(uniqueUrlParam);
   }
 
-  // TODO: delete reset passwords when expired
-
   @Override
   public String getSecurityAnswerByUserId(int userId) {
     return appUserDao.getSecurityAnswerByUserId(userId);
