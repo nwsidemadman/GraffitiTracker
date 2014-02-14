@@ -20,6 +20,7 @@ import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.BannedInetsService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.utils.DateFormats;
@@ -57,6 +58,8 @@ public class UserController {
   CaptchaService captchaService;
   @Autowired
   MailService mailService;
+  @Autowired
+  BannedInetsService bannedInetsService;
   @Autowired
   FormUserValidator formUserValidator;
   @Autowired
@@ -98,12 +101,22 @@ public class UserController {
     this.mailService = mailService;
   }
 
+  public void setBannedInetsService(BannedInetsService bannedInetsService) {
+    this.bannedInetsService = bannedInetsService;
+  }
+
   public void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
   }
 
   @RequestMapping(method = RequestMethod.GET, params = "new")
-  public String createUserProfile(Model model, HttpSession session) {
+  public String createUserProfile(Model model, HttpSession session,
+      HttpServletRequest request) {
+    String userInet = request.getRemoteAddr();
+    if (bannedInetsService.isInetBanned(userInet)) {
+      bannedInetsService.updateNumberRegistrationAttemptsInetInRange(userInet);
+      return "users/banned";
+    }
     TextCaptcha captcha = captchaService.getTextCaptcha();
     session.setAttribute("textCaptcha", captcha);
     UserForm userForm = new UserForm();

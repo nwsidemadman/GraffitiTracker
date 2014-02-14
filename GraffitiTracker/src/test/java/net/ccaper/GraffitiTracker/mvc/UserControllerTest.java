@@ -28,6 +28,7 @@ import net.ccaper.GraffitiTracker.objects.UserForm;
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.BannedInetsService;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.MailService;
@@ -55,20 +56,44 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testCreateUserProfile() {
+  public void testCreateUserProfile_HappyPath() {
+    String inet = "127.0.0.1";
     TextCaptcha captcha = new TextCaptcha("Some quesiton", "answer");
     CaptchaService captchaServiceMock = mock(CaptchaService.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(captcha);
+    BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
+    when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(false);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    when(requestMock.getRemoteAddr()).thenReturn(inet);
     UserController controller = new UserController();
+    controller.setBannedInetsService(banndedInetsServiceMock);
     controller.setCaptchaService(captchaServiceMock);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
-    assertEquals("users/edit", controller.createUserProfile(model, session));
+    assertEquals("users/edit", controller.createUserProfile(model, session, requestMock));
     UserForm userForm = (UserForm) model.asMap().get("userForm");
     assertNull(userForm.getUsername());
     assertEquals(captcha.getQuestion(), userForm.getTextCaptchaQuestion());
     assertEquals(captcha, session.getAttribute("textCaptcha"));
     verify(captchaServiceMock).getTextCaptcha();
+    verify(banndedInetsServiceMock).isInetBanned(inet);
+    verify(requestMock).getRemoteAddr();
+  }
+
+  @Test
+  public void testCreateUserProfile_InetBanned() {
+    String inet = "127.0.0.1";
+    BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
+    when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(true);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    when(requestMock.getRemoteAddr()).thenReturn(inet);
+    UserController controller = new UserController();
+    controller.setBannedInetsService(banndedInetsServiceMock);
+    Model model = new ExtendedModelMap();
+    HttpSession session = new MockHttpSession();
+    assertEquals("users/banned", controller.createUserProfile(model, session, requestMock));
+    verify(banndedInetsServiceMock).isInetBanned(inet);
+    verify(requestMock).getRemoteAddr();
   }
 
   @Test
