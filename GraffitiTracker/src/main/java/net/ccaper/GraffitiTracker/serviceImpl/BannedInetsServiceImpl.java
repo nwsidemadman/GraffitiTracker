@@ -11,14 +11,21 @@ public class BannedInetsServiceImpl implements BannedInetsService {
   @Autowired
   BannedInetsDao bannedInetsDao;
 
+  public void setBannedInetsDao(BannedInetsDao bannedInetsDao) {
+    this.bannedInetsDao = bannedInetsDao;
+  }
+
   @Override
-  public int getCountInetInRange(String inet) {
-    return bannedInetsDao.selectCountInetInRange(inet);
+  public boolean isInetBanned(String inet) {
+    if (bannedInetsDao.selectCountInetInRange(inet) == 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @Override
   public void updateNumberRegistrationAttemptsInetInRange(String inet) {
     bannedInetsDao.updateNumberRegistrationAttemptsInetInRange(inet);
   }
-
 }

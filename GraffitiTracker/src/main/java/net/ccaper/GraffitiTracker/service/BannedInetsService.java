@@ -1,7 +1,7 @@
 package net.ccaper.GraffitiTracker.service;
 
 public interface BannedInetsService {
-  int getCountInetInRange(String inet);
+  boolean isInetBanned(String inet);
 
   void updateNumberRegistrationAttemptsInetInRange(String inet);
 }

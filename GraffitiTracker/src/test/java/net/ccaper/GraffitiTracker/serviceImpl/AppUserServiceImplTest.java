@@ -2,6 +2,10 @@ package net.ccaper.GraffitiTracker.serviceImpl;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import net.ccaper.GraffitiTracker.dao.AppUserDao;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,53 +23,45 @@ public class AppUserServiceImplTest {
 
   @Test
   public void testUsernameExists() throws Exception {
-    class AppUserServiceImplMock extends AppUserServiceImpl {
-      @Override
-      int getCountUsernames(String username) {
-        return 1;
-      }
-    }
-
-    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
-    assertTrue(appUserServiceImplMock.doesUsernameExist("testUsername"));
+    AppUserDao appUserDaoMock = mock(AppUserDao.class);
+    String username = "testUsername";
+    when(appUserDaoMock.getCountUsernames(username)).thenReturn(1);
+    AppUserServiceImpl appUserServiceImpl = new AppUserServiceImpl();
+    appUserServiceImpl.setAppUserDao(appUserDaoMock);
+    assertTrue(appUserServiceImpl.doesUsernameExist(username));
+    verify(appUserDaoMock).getCountUsernames(username);
   }
 
   @Test
   public void testUsernameDoesNotExist() throws Exception {
-    class AppUserServiceImplMock extends AppUserServiceImpl {
-      @Override
-      int getCountUsernames(String username) {
-        return 0;
-      }
-    }
-
-    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
-    assertFalse(appUserServiceImplMock.doesUsernameExist("testUsername"));
+    AppUserDao appUserDaoMock = mock(AppUserDao.class);
+    String username = "testUsername";
+    when(appUserDaoMock.getCountUsernames(username)).thenReturn(0);
+    AppUserServiceImpl appUserServiceImpl = new AppUserServiceImpl();
+    appUserServiceImpl.setAppUserDao(appUserDaoMock);
+    assertFalse(appUserServiceImpl.doesUsernameExist(username));
+    verify(appUserDaoMock).getCountUsernames(username);
   }
 
   @Test
   public void testEmailExists() throws Exception {
-    class AppUserServiceImplMock extends AppUserServiceImpl {
-      @Override
-      int getCountEmails(String email) {
-        return 1;
-      }
-    }
-
-    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
-    assertTrue(appUserServiceImplMock.doesEmailExist("test@test.com"));
+    AppUserDao appUserDaoMock = mock(AppUserDao.class);
+    String email = "test@test.com";
+    when(appUserDaoMock.getCountEmails(email)).thenReturn(1);
+    AppUserServiceImpl appUserServiceImpl = new AppUserServiceImpl();
+    appUserServiceImpl.setAppUserDao(appUserDaoMock);
+    assertTrue(appUserServiceImpl.doesEmailExist(email));
+    verify(appUserDaoMock).getCountEmails(email);
   }
 
   @Test
   public void testEmailDoesNotExist() throws Exception {
-    class AppUserServiceImplMock extends AppUserServiceImpl {
-      @Override
-      int getCountEmails(String email) {
-        return 0;
-      }
-    }
-
-    AppUserServiceImpl appUserServiceImplMock = new AppUserServiceImplMock();
-    assertFalse(appUserServiceImplMock.doesEmailExist("test@test.com"));
+    AppUserDao appUserDaoMock = mock(AppUserDao.class);
+    String email = "test@test.com";
+    when(appUserDaoMock.getCountEmails(email)).thenReturn(0);
+    AppUserServiceImpl appUserServiceImpl = new AppUserServiceImpl();
+    appUserServiceImpl.setAppUserDao(appUserDaoMock);
+    assertFalse(appUserServiceImpl.doesEmailExist(email));
+    verify(appUserDaoMock).getCountEmails(email);
   }
 }

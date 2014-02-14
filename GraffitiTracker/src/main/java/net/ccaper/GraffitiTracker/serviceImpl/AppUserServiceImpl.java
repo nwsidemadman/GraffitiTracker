@@ -32,6 +32,10 @@ public class AppUserServiceImpl implements AppUserService {
   @Autowired
   MailService mailService;
 
+  public void setAppUserDao(AppUserDao appUserDao) {
+    this.appUserDao = appUserDao;
+  }
+
   @Override
   public AppUser getUser(String username) {
     return appUserDao.getAppUserByUsername(username);
@@ -44,32 +48,20 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public boolean doesUsernameExist(String username) {
-    int count = getCountUsernames(username);
-    if (count == 0) {
+    if (appUserDao.getCountUsernames(username) == 0) {
       return false;
     } else {
       return true;
     }
-  }
-
-  // visible for testing
-  int getCountUsernames(String username) {
-    return appUserDao.getCountUsernames(username);
   }
 
   @Override
   public boolean doesEmailExist(String email) {
-    int count = getCountEmails(email);
-    if (count == 0) {
+    if (appUserDao.getCountEmails(email) == 0) {
       return false;
     } else {
       return true;
     }
-  }
-
-  // visible for testing
-  int getCountEmails(String email) {
-    return appUserDao.getCountEmails(email);
   }
 
   @Override
