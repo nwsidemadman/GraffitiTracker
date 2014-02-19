@@ -70,7 +70,7 @@ public class UserControllerTest {
     controller.setCaptchaService(captchaServiceMock);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
-    assertEquals("users/edit", controller.createUserProfile(model, session, requestMock));
+    assertEquals("users/create", controller.createUserProfile(model, session, requestMock));
     UserForm userForm = (UserForm) model.asMap().get("userForm");
     assertNull(userForm.getUsername());
     assertEquals(captcha.getQuestion(), userForm.getTextCaptchaQuestion());
@@ -176,7 +176,7 @@ public class UserControllerTest {
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
-    assertEquals("users/edit",
+    assertEquals("users/create",
         controller.addAppUserFromForm(requestMock, session, userForm, result));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
@@ -226,7 +226,7 @@ public class UserControllerTest {
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
-    assertEquals("users/edit",
+    assertEquals("users/create",
         controller.addAppUserFromForm(requestMock, session, userForm, result));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),

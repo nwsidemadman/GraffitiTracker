@@ -4,7 +4,7 @@
 
 <tiles-definitions>
   <definition name="users/create" extends="template">
-    <put-attribute name="content" value="/WEB-INF/views/users/edit.jsp" />
+    <put-attribute name="content" value="/WEB-INF/views/users/create.jsp" />
   </definition>
   <definition name="users/registered" extends="template">
     <put-attribute name="content"

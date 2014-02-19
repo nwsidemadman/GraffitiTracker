@@ -147,7 +147,7 @@ public class UserController {
     session.setAttribute("textCaptcha", captcha);
     userForm.setTextCaptchaQuestion(captcha.getQuestion());
     userForm.setCaptchaAnswer(null);
-    return "users/edit";
+    return "users/create";
   }
 
   private String handleIncorrectCaptchaAnswer(HttpSession session,
@@ -158,7 +158,7 @@ public class UserController {
     userForm.setCaptchaAnswer(null);
     bindingResult.rejectValue("captchaAnswer", "incorrectCaptchaAnswer",
         "Incorrect captcha answer.");
-    return "users/edit";
+    return "users/create";
   }
 
   private void handleSendingConfirmationEmail(UserForm userForm,
