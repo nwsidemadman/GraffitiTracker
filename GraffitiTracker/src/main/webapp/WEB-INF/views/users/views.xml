@@ -3,7 +3,7 @@
       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 
 <tiles-definitions>
-  <definition name="users/edit" extends="template">
+  <definition name="users/create" extends="template">
     <put-attribute name="content" value="/WEB-INF/views/users/edit.jsp" />
   </definition>
   <definition name="users/registered" extends="template">

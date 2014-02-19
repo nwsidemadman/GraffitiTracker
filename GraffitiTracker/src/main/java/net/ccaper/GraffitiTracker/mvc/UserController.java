@@ -122,7 +122,7 @@ public class UserController {
     UserForm userForm = new UserForm();
     userForm.setTextCaptchaQuestion(captcha.getQuestion());
     model.addAttribute(userForm);
-    return "users/edit";
+    return "users/create";
   }
 
   @RequestMapping(method = RequestMethod.POST)
