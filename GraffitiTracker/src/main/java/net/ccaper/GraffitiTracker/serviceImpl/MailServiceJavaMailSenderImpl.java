@@ -77,7 +77,7 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     helper.setReplyTo(REPLY_TO);
     helper.setTo(recipients);
     helper.setSubject(String.format("%s %s", EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
-        System.getProperty("GRAFFITI_TRACKER_ENV")).getDisplayString(), subject));
+        System.getProperty("CLASSPATH_PROP_ENV")).getDisplayString(), subject));
     helper.setText(
         content, true);
     return message;

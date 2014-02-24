@@ -3,8 +3,8 @@ package net.ccaper.GraffitiTracker.enums;
 import org.apache.commons.lang3.StringUtils;
 
 public enum EnvironmentEnum {
-  LOCAL("", "Local"), DEV("DEV", "Development"), STAGE("STAGE", "Stage"), PROD(
-      "PROD", "");
+  LOCAL("", "Local"), DEV("dev", "Development"), STAGE("stage", "Stage"), PROD(
+      "prod", "");
 
   private String environmentPropertyString;
   private String displayString;
@@ -36,7 +36,7 @@ public enum EnvironmentEnum {
     throw new IllegalArgumentException(
         String
         .format(
-            "The environment property string  %s does not map to a valid EnvironmentEnum.",
+            "The environment property string '%s' does not map to a valid EnvironmentEnum.",
             environmentPropertyString));
   }
 }
