@@ -348,7 +348,7 @@ public class UserController {
   @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
   public String resetPassword(
       @RequestParam(required = true) String resetPasswordUniqueUrlParam,
-      Map<String, Object> model) {
+      Map<String, Object> model, HttpServletRequest request) {
     UserSecurityQuestion userSecurityQuestion = appUserService
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(resetPasswordUniqueUrlParam);
     if (userSecurityQuestion == null) {
@@ -364,6 +364,7 @@ public class UserController {
       passwordSecurityForm.setResetPassword(true);
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
+    model.put("contextPath",request.getContextPath());
     // TODO: this will need to direct to https
     return "users/resetPassword";
   }

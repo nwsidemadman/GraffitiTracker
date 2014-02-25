@@ -5,10 +5,11 @@
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
+  <c:set var="actionValue" value="${contextPath}/users" />
   <div>
     <c:if test="${exists == true}">
       <h2>Reset Password</h2>
-      <sf:form method="POST" modelAttribute="passwordSecurityForm" action="/GraffitiTracker/users">
+      <sf:form method="POST" modelAttribute="passwordSecurityForm" action="${actionValue}">
         <fieldset>
           <sf:hidden path="resetPassword" />
           <sf:hidden path="userId" />

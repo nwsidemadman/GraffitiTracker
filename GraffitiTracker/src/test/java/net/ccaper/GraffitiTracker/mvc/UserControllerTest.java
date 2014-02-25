@@ -490,11 +490,16 @@ public class UserControllerTest {
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    String contextPath = "/test";
+    when(requestMock.getContextPath()).thenReturn(contextPath);
     assertEquals("users/resetPassword",
-        controller.resetPassword(uniqueUrlParam, model));
+        controller.resetPassword(uniqueUrlParam, model, requestMock));
     assertTrue((Boolean) model.get("exists"));
+    assertEquals(contextPath, model.get("contextPath"));
     verify(appUserServiceMock)
     .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(requestMock).getContextPath();
   }
 
   @Test
@@ -508,8 +513,9 @@ public class UserControllerTest {
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
     assertEquals("users/resetPassword",
-        controller.resetPassword(uniqueUrlParam, model));
+        controller.resetPassword(uniqueUrlParam, model, requestMock));
     assertFalse((Boolean) model.get("exists"));
     verify(appUserServiceMock)
     .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
