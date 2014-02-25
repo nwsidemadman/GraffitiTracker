@@ -101,14 +101,14 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  @Scheduled(cron = "0 0 6 * * ?")
+  @Scheduled(cron = "0 0 7 * * ?")
   public void deleteAppUsersWhenRegistrationExpired() {
     logger.info("Deleting app users where registration expired.");
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 
   @Override
-  @Scheduled(cron = "0 30 5 * * ?")
+  @Scheduled(cron = "0 01 6 * * ?")
   public void emailAdminStatsDaily() {
     logger.info("Sending daily stats to super admins.");
     List<String> recipients = appUserDao.getSuperAdminEmails();
@@ -128,7 +128,7 @@ public class AppUserServiceImpl implements AppUserService {
     mailService.sendSimpleEmail(recipients, String.format(
         "%s GraffitiTracker Daily Stats %s",
         EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
-            System.getProperty("GRAFFITI_TRACKER_ENV")).getDisplayString(),
+            System.getProperty("CLASSPATH_PROP_ENV")).getDisplayString(),
             DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT.format(new Date())),
             content);
   }

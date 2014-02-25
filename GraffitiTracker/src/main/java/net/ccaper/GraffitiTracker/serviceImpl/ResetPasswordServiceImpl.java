@@ -18,7 +18,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
   ResetPasswordDao resetPasswordDao;
 
   @Override
-  @Scheduled(cron = "0 0 6 * * ?")
+  @Scheduled(cron = "0 0 7 * * ?")
   public void deleteResetPasswordWhenTimestampExpired() {
     logger.info("Deleting reset passwords where timestamp expired.");
     resetPasswordDao.deleteResetPasswordWhereTimestampExpired();
