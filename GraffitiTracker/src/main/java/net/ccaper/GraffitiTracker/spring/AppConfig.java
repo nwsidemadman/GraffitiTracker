@@ -30,6 +30,7 @@ public class AppConfig {
         .getProperty("db.pool.initialSize")));
     dataSource.setMaxActive(Integer.parseInt(properties
         .getProperty("db.pool.maxActive")));
+    dataSource.setValidationQuery("SELECT 1");
     return dataSource;
   }
 
