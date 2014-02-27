@@ -63,7 +63,7 @@
     <sec:authentication property="authorities" var="roles" />
     <p>Username: ${appUser.getUsername()} (ID: ${appUser.getUserId()})</p>
     <p>Register Date: <fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></p>
-    <p>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd hh:mm:ss" /></p>
+    <p>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd hh:mm:ss a z" /></p>
     <p>Roles:</p>
     <c:forEach var="role" items="${appUser.getRoles()}">
       <p>
