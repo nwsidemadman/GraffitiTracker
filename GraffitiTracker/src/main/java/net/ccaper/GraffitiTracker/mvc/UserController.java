@@ -109,7 +109,7 @@ public class UserController {
     this.velocityEngine = velocityEngine;
   }
 
-  @RequestMapping(method = RequestMethod.GET, params = "new")
+  @RequestMapping(value = "/new", method = RequestMethod.GET)
   public String createUserProfile(Model model, HttpSession session,
       HttpServletRequest request) {
     String userInet = request.getRemoteAddr();

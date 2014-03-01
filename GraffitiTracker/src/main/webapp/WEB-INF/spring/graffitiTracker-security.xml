@@ -23,8 +23,7 @@
     <intercept-url pattern="/home/" access="permitAll" requires-channel="https" />
     <intercept-url pattern="*/**" access="isAuthenticated()" />
     <intercept-url pattern="/users/resetPassword" requires-channel="https" />
-    <!--  note this isn't catching the query param for security, FIX!!! -->
-    <intercept-url pattern="/users\?new" requires-channel="https" />
+    <intercept-url pattern="/users/new" requires-channel="https" />
     <remember-me key="graffitiTrackerKey"
       token-validity-seconds="2419200" />
   </http>
