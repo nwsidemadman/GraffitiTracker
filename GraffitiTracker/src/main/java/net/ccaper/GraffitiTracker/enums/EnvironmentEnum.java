@@ -3,7 +3,7 @@ package net.ccaper.GraffitiTracker.enums;
 import org.apache.commons.lang3.StringUtils;
 
 public enum EnvironmentEnum {
-  LOCAL("", "Local"), DEV("dev", "Development"), STAGE("stage", "Stage"), PROD(
+  LOCAL("", "Local"), DEV("dev", "Development"), STAGE("staging", "Staging"), PROD(
       "prod", "");
 
   private String environmentPropertyString;
