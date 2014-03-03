@@ -125,7 +125,7 @@ public class UserController {
     return "users/create";
   }
 
-  @RequestMapping(method = RequestMethod.POST)
+  @RequestMapping(value = "/new", method = RequestMethod.POST)
   public String addAppUserFromForm(HttpServletRequest request,
       HttpSession session, UserForm userForm, BindingResult bindingResult) {
     formUserValidator.validate(userForm, bindingResult);

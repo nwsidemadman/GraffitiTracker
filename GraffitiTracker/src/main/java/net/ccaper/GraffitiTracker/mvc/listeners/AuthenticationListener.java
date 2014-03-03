@@ -29,8 +29,6 @@ public class AuthenticationListener implements
   public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
     String username = SecurityContextHolder.getContext().getAuthentication()
         .getName();
-    logger.info(String
-        .format("The user '%s' successfully logged in.", username));
     appUserService.updateLoginTimestamps(username);
     loginAddressService.updateLoginAddressByUsername(username,
         ((WebAuthenticationDetails) event.getAuthentication().getDetails())

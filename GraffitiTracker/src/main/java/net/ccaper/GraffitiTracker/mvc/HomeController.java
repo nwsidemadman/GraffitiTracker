@@ -34,8 +34,6 @@ public class HomeController {
    */
   @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
   public String showHomePage(Map<String, Object> model) {
-    logger.info("Welcome home!");
-
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
