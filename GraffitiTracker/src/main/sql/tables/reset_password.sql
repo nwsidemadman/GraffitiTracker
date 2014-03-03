@@ -7,4 +7,4 @@ CREATE TABLE `reset_password` (
   PRIMARY KEY (`user_id`, `unique_url_param`),
   UNIQUE KEY `unique_url_path_UNIQUE` (`unique_url_param`),
   CONSTRAINT `user_id_reset_password` FOREIGN KEY (`user_id`) REFERENCES `app_users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
