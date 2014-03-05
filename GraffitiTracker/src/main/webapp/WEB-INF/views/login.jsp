@@ -6,8 +6,6 @@
 
 <sec:authorize access="isAnonymous()">
   <div>
-    <h2>Sign in to Graffiti Tracker</h2>
-    
     <c:if test="${not empty param.login_error}">
       <div class="error">
           Your login attempt was not successful, please try again.
@@ -42,7 +40,7 @@
       </fieldset>
     </form>
     
-    <p><a href="<s:url value="/users/new"/>">Sign up</a></p>
+    <p><a href="<s:url value="/users/new"/>">Register</a></p>
     
     <p><a href="<s:url value="/users?forgotUsername"/>">Forgot Username</a></p>
     

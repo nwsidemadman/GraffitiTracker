@@ -36,6 +36,8 @@
         <p>
           <sf:errors path="securityQuestion" cssClass="error" /><br/>
           <sf:label path="securityQuestion">Security Question:</sf:label>
+        </p>
+        <p>
           <sf:select path="securityQuestion" items="<%= SecurityQuestions.QUESTIONS %>" />
         </p>
         <p>
@@ -51,6 +53,8 @@
         <p>
           <sf:errors path="captchaAnswer" cssClass="error" /><br/>
           <sf:label path="captchaAnswer"><c:out value="${userForm.getTextCaptchaQuestion()}" /></sf:label>
+        </p>
+        <p>
           <sf:input path="captchaAnswer" size="10" maxlength="20"/>
         </p>
         <p>
