@@ -15,18 +15,17 @@ body {
 }
 
 #container {
+  min-height: 700px;
+  height: 91%;
   background: #FFFFFF;
-  height: 100%;
   margin: 0pt auto 0pt auto;
   padding: 0pt;
-  position: relative;
   text-align: left;
   width: 755px;
 }
 
 #header {
   background: #FFFFFF;
-  postition: relative;
   width: 755px;
   margin: 0px;
   padding: 0px;
@@ -37,7 +36,6 @@ body {
 }
 
 #content {
-  float: left;
   padding-bottom: 15px;
   width: 535px;
   background: #FFFFFF;
@@ -63,10 +61,10 @@ label {
 }
 
 #footer {
+  clear: both;
   background: #000000;
-  position: absolute;
-  bottom: 0px;
-  margin: 0px;
+  width: 755px;
+  margin: 0pt auto 0pt auto;
   padding: 0px;
 }
 
