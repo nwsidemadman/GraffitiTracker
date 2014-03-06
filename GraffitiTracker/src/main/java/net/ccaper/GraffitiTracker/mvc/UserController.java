@@ -365,7 +365,6 @@ public class UserController {
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
     model.put("contextPath",request.getContextPath());
-    // TODO: this will need to direct to https
     return "users/resetPassword";
   }
 
