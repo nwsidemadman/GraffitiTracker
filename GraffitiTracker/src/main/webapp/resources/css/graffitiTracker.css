@@ -216,7 +216,8 @@ h2 {
 
 span.error {
   color: red;
-  font-size: 8pt;
+  font-size: 1em;
+  line-height: 180%;
 }
 
 div.error {
