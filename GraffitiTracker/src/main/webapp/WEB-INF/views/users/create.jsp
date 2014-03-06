@@ -15,13 +15,13 @@
           <sf:errors path="username" cssClass="error" /><br/>
           <sf:label path="username">User name:</sf:label>
           <sf:input path="username" size="20" maxlength="20" />
-          <small id="username_msg">No spaces, please. 6 characters or more</small>
+          <small id="hint">No spaces, please. 6 characters or more</small>
         </p>
         <p>
           <sf:errors path="password" cssClass="error" /><br/>
           <sf:label path="password">Password:</sf:label>
           <sf:password path="password" size="30" showPassword="false" maxlength="64"/> 
-          <small>6 characters or more</small><br/>
+          <small id="hint">6 characters or more</small><br/>
         </p>
         <p>
           <sf:errors path="confirmPassword" cssClass="error" /><br/>

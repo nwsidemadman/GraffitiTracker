@@ -45,6 +45,10 @@ body {
   line-height: 10%;
 }
 
+#hint {
+  font-size: .8em;
+}
+
 #side {
   font-size: .8em;
   background: #E0E0E0;
