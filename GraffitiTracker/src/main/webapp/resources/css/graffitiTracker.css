@@ -111,43 +111,8 @@ fieldset small {
   font-size: .8em;
 }
 
-fieldset th {
-  font-weight: normal;
-  padding-top: 10px;
-  text-align: right;
-  width: 8em;
-}
-
-fieldset th,td {
-  padding: 7px 3px;
-  vertical-align: top;
-}
-
 a img,form,fieldset {
   border: 0pt none;
-}
-
-#side .signin #email,#side .signin #pass {
-  background: #FFFFFF none repeat scroll 0%;
-  border: 1px solid #86BC46;
-  display: block;
-  font-size: 0.92em;
-  padding: 4px 2px;
-  width: 158px;
-}
-
-#side .notify {
-  line-height: 1.5;
-  padding: 5px 0pt;
-  text-align: center;
-}
-
-#side .notify {
-  background: #FFFFFF none repeat scroll 0%;
-  border: 1px solid #87BC44;
-  font-weight: bold;
-  margin: 10px -3px;
-  padding: 2px 5px;
 }
 
 #content h2 {
@@ -161,34 +126,6 @@ h2 {
 
 * {
   padding: 0px;
-}
-
-.status-btn {
-  padding: 10px 10px;
-  cursor: default;
-  font-size: 12pt;
-}
-
-.submit {
-  background: transparent;
-  border-top: 0px;
-  border-left: 0px;
-  border-right: 0px;
-  border-bottom: 1px solid #00F;
-  color: #00F;
-  display: inline;
-  margin: 0;
-  padding: 0;
-}
-
-*:first-child+html .submit {
-  border-bottom: 0;
-  text-decoration: underline;
-}
-
-* html .submit {
-  border-bottom: 0;
-  text-decoration: underline;
 }
 
 span.error {
