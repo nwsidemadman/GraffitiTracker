@@ -45,10 +45,6 @@ body {
   line-height: 10%;
 }
 
-#hint {
-  font-size: .8em;
-}
-
 #side {
   font-size: .8em;
   background: #E0E0E0;
@@ -100,29 +96,6 @@ label {
   font-style: normal;
 }
 
-th label {
-  font-size: 0.75em;
-  font-weight: normal;
-}
-
-td label {
-  font-size: 0.75em;
-  font-weight: normal;
-}
-
-table.horizontalRuled td {
-  border-bottom: 1px solid #BBBBBB;
-}
-
-fieldset {
-  margin: 10px 0pt;
-}
-
-.spitItSubmitIt {
-  width: 100%;
-  text-align: right;
-}
-
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;
@@ -135,7 +108,7 @@ fieldset input[type="text"],input[type="password"] {
 
 fieldset small {
   color: #777777;
-  font-size: 0.7em;
+  font-size: .8em;
 }
 
 fieldset th {

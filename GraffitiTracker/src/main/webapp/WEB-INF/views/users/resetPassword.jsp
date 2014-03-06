@@ -23,7 +23,7 @@
             <sf:errors path="password" cssClass="error" /><br/>
             <sf:label path="password">Password:</sf:label>
             <sf:password path="password" size="30" showPassword="false" maxlength="64"/> 
-            <small id="hint">6 characters or more</small><br/>
+            <small>6 characters or more</small><br/>
           </p>
           <p>
             <sf:errors path="confirmPassword" cssClass="error" /><br/>
