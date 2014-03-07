@@ -13,7 +13,7 @@
       <fieldset> 
         <p>
           <sf:errors path="username" cssClass="error" /><br/>
-          <sf:label path="username">User name:</sf:label>
+          <sf:label path="username">Username:</sf:label>
           <sf:input path="username" size="20" maxlength="20" />
           <small>No spaces, please. 6 characters or more</small>
         </p>
