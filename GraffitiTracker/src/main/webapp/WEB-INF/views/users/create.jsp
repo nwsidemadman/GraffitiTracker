@@ -47,7 +47,7 @@
         </p>
         <p>
           <sf:errors path="acceptTerms" cssClass="error" /><br/>
-          <sf:label path="acceptTerms">Accept Terms & Conditions:</sf:label>
+          <sf:label path="acceptTerms"><a href="termsAndConditions" target="_blank">Accept Terms & Conditions</a>:</sf:label>
           <sf:checkbox path="acceptTerms"/>
         </p>
         <p>

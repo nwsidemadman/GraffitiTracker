@@ -582,4 +582,10 @@ public class UserControllerTest {
     UserController controller = new UserController();
     assertEquals("users/passwordUpdated", controller.passwordUpdated());
   }
+  
+  @Test
+  public void testTermsAndConditions() throws Exception {
+    UserController controller = new UserController();
+    assertEquals("users/termsAndConditions", controller.termsAndConditions());
+  }
 }

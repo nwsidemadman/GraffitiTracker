@@ -390,4 +390,10 @@ public class UserController {
     // TODO: can this be static?
     return "users/passwordUpdated";
   }
+  
+  @RequestMapping(value = "/termsAndConditions", method = RequestMethod.GET)
+  public String termsAndConditions() {
+    // TODO: can this be static?
+    return "users/termsAndConditions";
+  }
 }

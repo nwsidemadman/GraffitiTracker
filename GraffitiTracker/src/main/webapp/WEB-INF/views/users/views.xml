@@ -42,4 +42,8 @@
     <put-attribute name="content"
       value="/WEB-INF/views/users/banned.jsp" />
   </definition>
+  <definition name="users/termsAndConditions" extends="info">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/termsAndConditions.jsp" />
+  </definition>
 </tiles-definitions>
