@@ -26,6 +26,7 @@
     <intercept-url pattern="/users/new" />
     <remember-me key="graffitiTrackerKey"
       token-validity-seconds="2419200" />
+    <intercept-url pattern="/users/termsAndConditions" requires-channel="http" />
     <intercept-url pattern="/**" requires-channel="https" />
   </http>
   
