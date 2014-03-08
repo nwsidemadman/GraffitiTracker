@@ -116,6 +116,26 @@ label {
   font-style: normal;
 }
 
+#company_name a:link {
+  color:#FFFFFF;
+  text-decoration:none;
+}      /* unvisited link */
+
+#company_name a:visited {
+  color:#FFFFFF;
+  text-decoration:none;
+}  /* visited link */
+
+#company_name a:hover {
+  color:#FFFFFF;
+  text-decoration:none;
+}  /* mouse over link */
+
+#company_name a:active {
+  color:#FFFFFF;
+  text-decoration:none;
+}  /* selected link */ 
+
 #footer_link {
   line-height: 100%;
 }
