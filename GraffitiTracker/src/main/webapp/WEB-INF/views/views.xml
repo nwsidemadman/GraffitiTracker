@@ -20,5 +20,11 @@
     <put-attribute name="content" value="/WEB-INF/views/home.jsp" />
   </definition>
   <!--<end id="tile_home"/> -->
+  
+  <!--<start id="tile_home"/> -->
+  <definition name="contact" extends="template">
+    <put-attribute name="content" value="/WEB-INF/views/contact.jsp" />
+  </definition>
+  <!--<end id="tile_home"/> -->
 
 </tiles-definitions>

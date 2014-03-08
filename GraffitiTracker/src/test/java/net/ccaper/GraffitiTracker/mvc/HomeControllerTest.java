@@ -79,4 +79,10 @@ public class HomeControllerTest {
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUser(username);
   }
+  
+  @Test
+  public void testContact() throws Exception {
+    HomeController controller = new HomeController();
+    assertEquals("contact", controller.contact());
+  }
 }

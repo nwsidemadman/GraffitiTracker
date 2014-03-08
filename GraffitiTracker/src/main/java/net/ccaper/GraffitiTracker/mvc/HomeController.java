@@ -54,4 +54,10 @@ public class HomeController {
     return authenticationTrustResolver.isAnonymous(SecurityContextHolder
         .getContext().getAuthentication());
   }
+  
+  @RequestMapping(value = "/contact", method = RequestMethod.GET)
+  public String contact() {
+    // TODO: can this be static?
+    return "contact";
+  }
 }

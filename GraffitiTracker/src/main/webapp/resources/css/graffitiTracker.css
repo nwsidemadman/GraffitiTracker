@@ -82,6 +82,26 @@ label {
   line-height: .3;
 }
 
+#info a:link {
+  color:#986F33;
+  text-decoration:none;
+}      /* unvisited link */
+
+#info a:visited {
+  color:#986F33;
+  text-decoration:none;
+}  /* visited link */
+
+#info a:hover {
+  color:#986F33;
+  text-decoration:none;
+}  /* mouse over link */
+
+#info a:active {
+  color:#986F33;
+  text-decoration:none;
+}  /* selected link */ 
+
 #copyright {
   font-size: 0.9em;
   background: #000000;
@@ -94,6 +114,10 @@ label {
 #company_name {
   font-weight: bold;
   font-style: normal;
+}
+
+#footer_link {
+  line-height: 100%;
 }
 
 fieldset input[type="text"],input[type="password"],select,checkbox {

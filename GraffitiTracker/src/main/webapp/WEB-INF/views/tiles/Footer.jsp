@@ -1,6 +1,13 @@
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <div id="info">
   <p>
-    Contact &middot; About &middot; Legal &middot; Privacy
+    <a href="<s:url value="/contact" />" >Contact</a>
+    &middot;
+    About
+    &middot;
+    Legal
+    &middot;
+    Privacy
   </p>
 </div>
 <div id="copyright">
