@@ -60,4 +60,22 @@ public class HomeController {
     // TODO: can this be static?
     return "contact";
   }
+  
+  @RequestMapping(value = "/about", method = RequestMethod.GET)
+  public String about() {
+    // TODO: can this be static?
+    return "about";
+  }
+  
+  @RequestMapping(value = "/legal", method = RequestMethod.GET)
+  public String legal() {
+    // TODO: can this be static?
+    return "legal";
+  }
+  
+  @RequestMapping(value = "/privacy", method = RequestMethod.GET)
+  public String privacy() {
+    // TODO: can this be static?
+    return "privacy";
+  }
 }

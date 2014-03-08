@@ -85,4 +85,22 @@ public class HomeControllerTest {
     HomeController controller = new HomeController();
     assertEquals("contact", controller.contact());
   }
+  
+  @Test
+  public void testAbout() throws Exception {
+    HomeController controller = new HomeController();
+    assertEquals("about", controller.about());
+  }
+  
+  @Test
+  public void testLegal() throws Exception {
+    HomeController controller = new HomeController();
+    assertEquals("legal", controller.legal());
+  }
+  
+  @Test
+  public void testPrivacy() throws Exception {
+    HomeController controller = new HomeController();
+    assertEquals("privacy", controller.privacy());
+  }
 }

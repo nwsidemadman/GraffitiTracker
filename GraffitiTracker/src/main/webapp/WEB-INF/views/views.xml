@@ -21,10 +21,28 @@
   </definition>
   <!--<end id="tile_home"/> -->
   
-  <!--<start id="tile_home"/> -->
+  <!--<start id="tile_contact"/> -->
   <definition name="contact" extends="template">
     <put-attribute name="content" value="/WEB-INF/views/contact.jsp" />
   </definition>
-  <!--<end id="tile_home"/> -->
+  <!--<end id="tile_contact"/> -->
+  
+  <!--<start id="tile_about"/> -->
+  <definition name="about" extends="template">
+    <put-attribute name="content" value="/WEB-INF/views/about.jsp" />
+  </definition>
+  <!--<end id="tile_about"/> -->
+  
+  <!--<start id="tile_legal"/> -->
+  <definition name="legal" extends="template">
+    <put-attribute name="content" value="/WEB-INF/views/legal.jsp" />
+  </definition>
+  <!--<end id="tile_legal"/> -->
+  
+  <!--<start id="tile_privacy"/> -->
+  <definition name="privacy" extends="template">
+    <put-attribute name="content" value="/WEB-INF/views/privacy.jsp" />
+  </definition>
+  <!--<end id="tile_privacy"/> -->
 
 </tiles-definitions>

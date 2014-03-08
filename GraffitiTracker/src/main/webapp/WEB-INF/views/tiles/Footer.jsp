@@ -3,11 +3,11 @@
   <p>
     <a href="<s:url value="/contact" />" >Contact</a>
     &middot;
-    About
+    <a href="<s:url value="/about" />" >About</a>
     &middot;
-    Legal
+    <a href="<s:url value="/legal" />" >Legal</a>
     &middot;
-    Privacy
+    <a href="<s:url value="/privacy" />" >Privacy</a>
   </p>
 </div>
 <div id="copyright">
