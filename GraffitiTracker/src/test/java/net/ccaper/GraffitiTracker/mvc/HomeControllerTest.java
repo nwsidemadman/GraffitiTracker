@@ -30,17 +30,10 @@ public class HomeControllerTest {
 
   @Test
   public void homeReturnsCorrectViewAndModel_AnonymousUser() {
-    final String username = "testUser";
-
     class HomeControllerMock extends HomeController {
       @Override
       boolean isUserAnonymous() {
         return true;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
       }
     }
 
@@ -82,17 +75,10 @@ public class HomeControllerTest {
   @Test
   public void testContactReturnsCorrectViewAndModel_AnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
     class HomeControllerMock extends HomeController {
       @Override
       boolean isUserAnonymous() {
         return true;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
       }
     }
 
@@ -134,17 +120,10 @@ public class HomeControllerTest {
 
   @Test
   public void testAboutReturnsCorrectViewAndModel_AnonymousUser() throws Exception {
-    final String username = "testUser";
-
     class HomeControllerMock extends HomeController {
       @Override
       boolean isUserAnonymous() {
         return true;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
       }
     }
 
@@ -186,17 +165,10 @@ public class HomeControllerTest {
 
   @Test
   public void testLegalReturnsCorrectViewAndModel_AnonymousUser() throws Exception {
-    final String username = "testUser";
-
     class HomeControllerMock extends HomeController {
       @Override
       boolean isUserAnonymous() {
         return true;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
       }
     }
 
@@ -238,17 +210,10 @@ public class HomeControllerTest {
 
   @Test
   public void testPrivacyReturnsCorrectViewAndModel_AnonymousUser() throws Exception {
-    final String username = "testUser";
-
     class HomeControllerMock extends HomeController {
       @Override
       boolean isUserAnonymous() {
         return true;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
       }
     }
 

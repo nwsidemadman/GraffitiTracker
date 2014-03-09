@@ -4,13 +4,13 @@
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
-  <div>
+  <div id="simple_content_text">
     <p>An email was sent to your registered email address containing your username.</p>
   </div>
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
-  <div>
+  <div id="simple_content_text">
     <p>You are already a registered user.</p>
   </div>
 </sec:authorize>

@@ -4,13 +4,13 @@
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
-  <div>
+  <div id="simple_content_text">
     <p>Your password has been updated, please sign in.</p>
   </div>
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
-  <div>
+  <div id="simple_content_text">
     <p>You are already a registered user.</p>
   </div>
 </sec:authorize>

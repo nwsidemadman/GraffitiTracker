@@ -2,7 +2,7 @@
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
 <%@ page session="false"%>
-<div>
+<div id="simple_content_text">
   <h2>Welcome to GraffitiTracker</h2>
   <p>Options for non logged in users will go here</p>
 </div>

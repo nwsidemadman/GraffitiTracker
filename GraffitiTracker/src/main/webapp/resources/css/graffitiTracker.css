@@ -45,6 +45,10 @@ body {
   line-height: 10%;
 }
 
+#simple_content_text {
+  line-height: 100%;
+}
+
 #side {
   font-size: .8em;
   background: #E0E0E0;

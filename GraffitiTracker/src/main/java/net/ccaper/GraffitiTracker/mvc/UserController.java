@@ -13,6 +13,7 @@ import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
+import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
@@ -32,6 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
@@ -113,6 +117,11 @@ public class UserController {
   public String createUserProfile(Model model, HttpSession session,
       HttpServletRequest request) {
     String userInet = request.getRemoteAddr();
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.addAttribute("appUser", appUser);
+    }
     if (bannedInetsService.isInetBanned(userInet)) {
       bannedInetsService.updateNumberRegistrationAttemptsInetInRange(userInet);
       return "users/banned";
@@ -125,12 +134,25 @@ public class UserController {
     return "users/create";
   }
 
+  // visible for mocking
+  String getUsernameFromSecurity() {
+    return SecurityContextHolder.getContext().getAuthentication().getName();
+  }
+
+  // visible for mocking
+  boolean isUserAnonymous() {
+    AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
+    return authenticationTrustResolver.isAnonymous(SecurityContextHolder
+        .getContext().getAuthentication());
+  }
+
   @RequestMapping(value = "/new", method = RequestMethod.POST)
   public String addAppUserFromForm(HttpServletRequest request,
-      HttpSession session, UserForm userForm, BindingResult bindingResult) {
+      HttpSession session, UserForm userForm, BindingResult bindingResult,
+      Map<String, Object> model) {
     formUserValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
-      return handleUserFormErrors(session, userForm);
+      return handleUserFormErrors(session, userForm, model);
     }
     TextCaptcha captcha = (TextCaptcha) session.getAttribute("textCaptcha");
     if (!captchaService.isCaptchaAnswerCorrect(captcha,
@@ -139,14 +161,26 @@ public class UserController {
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
     handleSendingConfirmationEmail(userForm, request);
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "redirect:/users/registered";
   }
 
-  private String handleUserFormErrors(HttpSession session, UserForm userForm) {
+  private String handleUserFormErrors(HttpSession session, UserForm userForm,
+      Map<String, Object> model) {
     TextCaptcha captcha = captchaService.getTextCaptcha();
     session.setAttribute("textCaptcha", captcha);
     userForm.setTextCaptchaQuestion(captcha.getQuestion());
     userForm.setCaptchaAnswer(null);
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "users/create";
   }
 
@@ -180,17 +214,17 @@ public class UserController {
         .getRegistrationConfirmationUniqueUrlParamByUsername(userForm
             .getUsername());
     model
-    .put(
-        "content",
-        String
-        .format(
-            "<p>Thank you for registering at GraffitiTracker.</p>"
-                + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
-                + "<p><a href='%s'>Confirm Registration</a></p>",
-                getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(),
-                    CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
-                    registrationConfirmationUniqueUrlParam)));
+        .put(
+            "content",
+            String
+                .format(
+                    "<p>Thank you for registering at GraffitiTracker.</p>"
+                        + "<p>To complete your registration, please click the following link within 48 hours of receiving this email:</p>"
+                        + "<p><a href='%s'>Confirm Registration</a></p>",
+                    getEmailLink(request.getRequestURL().toString(),
+                        request.getServletPath(),
+                        CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
+                        registrationConfirmationUniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -219,17 +253,17 @@ public class UserController {
     Map<String, Object> model = new HashMap<String, Object>(3);
     model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
     model
-    .put(
-        "content",
-        String
-        .format(
-            "<p>You requested to reset your password.</p>"
-                + "<p>To reset your password, please click the following link within 24 hours of receiving this email:</p>"
-                + "<p><a href='%s'>ResetPassword</a></p>",
-                getEmailLink(request.getRequestURL().toString(),
-                    request.getServletPath(),
-                    RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
-                    resetPassowrdUniqueUrlParam)));
+        .put(
+            "content",
+            String
+                .format(
+                    "<p>You requested to reset your password.</p>"
+                        + "<p>To reset your password, please click the following link within 24 hours of receiving this email:</p>"
+                        + "<p><a href='%s'>ResetPassword</a></p>",
+                    getEmailLink(request.getRequestURL().toString(),
+                        request.getServletPath(),
+                        RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM,
+                        resetPassowrdUniqueUrlParam)));
     model.put(
         "home_link",
         getHomeLink(request.getRequestURL().toString(),
@@ -244,8 +278,12 @@ public class UserController {
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
-  public String showRegisteredUser() {
-    // TODO: can this be static?
+  public String showRegisteredUser(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "users/registered";
   }
 
@@ -255,12 +293,18 @@ public class UserController {
       Map<String, Object> model) {
     Integer userId = appUserService
         .getUserIdByRegistrationConfirmationUniqueUrlParam(registrationConfirmationUniqueUrlParam);
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     if (userId == null) {
       model.put("confirmed", false);
     } else {
       appUserService.updateAppUserAsActive(userId);
       appUserService
-      .deleteRegistrationConfirmationByUniqueUrlParam(registrationConfirmationUniqueUrlParam);
+          .deleteRegistrationConfirmationByUniqueUrlParam(registrationConfirmationUniqueUrlParam);
       model.put("confirmed", true);
     }
     return "users/confirmed";
@@ -282,12 +326,24 @@ public class UserController {
     EmailForm emailForm = new EmailForm();
     emailForm.setRecoverUsername(true);
     model.addAttribute(emailForm);
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.addAttribute("appUser", appUser);
+    }
     return "users/forgotUsername";
   }
 
   @RequestMapping(params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
-      HttpServletRequest request) {
+      HttpServletRequest request, Map<String, Object> model) {
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     formEmailValidator.validate(emailForm, bindingResult);
     if (bindingResult.hasErrors()) {
       return "users/forgotUsername";
@@ -303,8 +359,13 @@ public class UserController {
   }
 
   @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
-  public String sentUsername() {
-    // TODO: can this be static?
+  public String sentUsername(Map<String, Object> model) {
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "users/sentUsername";
   }
 
@@ -313,12 +374,25 @@ public class UserController {
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setRecoverPassword(true);
     model.addAttribute(usernameForm);
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.addAttribute("appUser", appUser);
+    }
     return "users/forgotPassword";
   }
 
   @RequestMapping(params = "recoverPassword", method = RequestMethod.POST)
   public String sendPasswordLink(UsernameForm usernameForm,
-      BindingResult bindingResult, HttpServletRequest request) {
+      BindingResult bindingResult, HttpServletRequest request,
+      Map<String, Object> model) {
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     formUsernameValidator.validate(usernameForm, bindingResult);
     if (bindingResult.hasErrors()) {
       return "users/forgotPassword";
@@ -340,8 +414,13 @@ public class UserController {
   }
 
   @RequestMapping(value = "/sentPassword", method = RequestMethod.GET)
-  public String sentPassword() {
-    // TODO: can this be static?
+  public String sentPassword(Map<String, Object> model) {
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "users/sentPassword";
   }
 
@@ -355,7 +434,7 @@ public class UserController {
       model.put("exists", false);
     } else {
       appUserService
-      .deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
+          .deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
       passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
@@ -364,7 +443,13 @@ public class UserController {
       passwordSecurityForm.setResetPassword(true);
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
-    model.put("contextPath",request.getContextPath());
+    model.put("contextPath", request.getContextPath());
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "users/resetPassword";
   }
 
@@ -372,6 +457,12 @@ public class UserController {
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
     if (bindingResult.hasErrors()) {
       model.put("exists", true);
@@ -386,11 +477,16 @@ public class UserController {
   }
 
   @RequestMapping(value = "/passwordUpdated", method = RequestMethod.GET)
-  public String passwordUpdated() {
-    // TODO: can this be static?
+  public String passwordUpdated(Map<String, Object> model) {
+    // TODO: unit test
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     return "users/passwordUpdated";
   }
-  
+
   @RequestMapping(value = "/termsAndConditions", method = RequestMethod.GET)
   public String termsAndConditions() {
     // TODO: can this be static?

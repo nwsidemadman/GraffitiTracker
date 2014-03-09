@@ -4,7 +4,7 @@
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
-  <div>
+  <div id="simple_content_text">
     <h2>Thank you for registering!</h2>
     <p>You can not sign in until your registration is confirmed.</p>
     <p>You will receive an email shortly that contains a registration confirmation link.</p>
@@ -13,7 +13,7 @@
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
-  <div>
+  <div id="simple_content_text">
     <p>You are already a registered user.</p>
   </div>
 </sec:authorize>

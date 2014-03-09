@@ -21,6 +21,7 @@ import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
+import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
@@ -81,17 +82,64 @@ public class UserControllerTest {
   }
 
   @Test
-  public void testCreateUserProfile_InetBanned() {
+  public void testCreateUserProfile_InetBanned_NotAnonymousUser() {
+    final String username = "testUser";
+
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return false;
+      }
+
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+    
     String inet = "127.0.0.1";
     BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
     when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(true);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     when(requestMock.getRemoteAddr()).thenReturn(inet);
-    UserController controller = new UserController();
-    controller.setBannedInetsService(banndedInetsServiceMock);
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    UserController controllerMock = new UserControllerMock();
+    controllerMock.setBannedInetsService(banndedInetsServiceMock);
+    controllerMock.setAppUserService(userServiceMock);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
-    assertEquals("users/banned", controller.createUserProfile(model, session, requestMock));
+    assertEquals("users/banned", controllerMock.createUserProfile(model, session, requestMock));
+    assertTrue(model.containsAttribute("appUser"));
+    Map<String, Object> modelMap = model.asMap();
+    assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
+    verify(banndedInetsServiceMock).isInetBanned(inet);
+    verify(requestMock).getRemoteAddr();
+    verify(userServiceMock).getUser(username);
+  }
+  
+  @Test
+  public void testCreateUserProfile_InetBanned_AnonymousUser() {
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return true;
+      }
+    }
+    
+    String inet = "127.0.0.1";
+    BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
+    when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(true);
+    HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    when(requestMock.getRemoteAddr()).thenReturn(inet);
+    UserController controllerMock = new UserControllerMock();
+    controllerMock.setBannedInetsService(banndedInetsServiceMock);
+    Model model = new ExtendedModelMap();
+    HttpSession session = new MockHttpSession();
+    assertEquals("users/banned", controllerMock.createUserProfile(model, session, requestMock));
+    assertFalse(model.containsAttribute("appUser"));
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
   }
@@ -139,8 +187,9 @@ public class UserControllerTest {
     controller.setCaptchaService(captchaService);
     controller.setMailService(mailServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "userForm");
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/registered",
-        controller.addAppUserFromForm(requestMock, session, userForm, result));
+        controller.addAppUserFromForm(requestMock, session, userForm, result, model));
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
@@ -176,8 +225,9 @@ public class UserControllerTest {
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/create",
-        controller.addAppUserFromForm(requestMock, session, userForm, result));
+        controller.addAppUserFromForm(requestMock, session, userForm, result, model));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
         invalidUserCaptcha.getQuestion());
@@ -226,8 +276,9 @@ public class UserControllerTest {
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/create",
-        controller.addAppUserFromForm(requestMock, session, userForm, result));
+        controller.addAppUserFromForm(requestMock, session, userForm, result, model));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
         incorrectAnswerCaptcha.getQuestion());
@@ -246,7 +297,8 @@ public class UserControllerTest {
   @Test
   public void testShowRegisteredUser() throws Exception {
     UserController controller = new UserController();
-    assertEquals("users/registered", controller.showRegisteredUser());
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/registered", controller.showRegisteredUser(model));
   }
 
   @Test
@@ -324,8 +376,9 @@ public class UserControllerTest {
     FormEmailValidator formEmailValidator = new FormEmailValidator();
     UserController controller = new UserController();
     controller.setFormEmailValidator(formEmailValidator);
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/forgotUsername",
-        controller.sendUsername(emailForm, result, requestMock));
+        controller.sendUsername(emailForm, result, requestMock, model));
   }
 
   @Test
@@ -341,8 +394,9 @@ public class UserControllerTest {
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
     controller.setFormEmailValidator(formEmailValidator);
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentUsername",
-        controller.sendUsername(emailForm, result, requestMock));
+        controller.sendUsername(emailForm, result, requestMock, model));
     verify(appUserServiceMock).getUsernameByEmail(email);
   }
 
@@ -370,8 +424,9 @@ public class UserControllerTest {
     controllerMock.setAppUserService(appUserServiceMock);
     controllerMock.setFormEmailValidator(formEmailValidator);
     controllerMock.setMailService(mailServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentUsername",
-        controllerMock.sendUsername(emailForm, result, requestMock));
+        controllerMock.sendUsername(emailForm, result, requestMock, model));
     verify(appUserServiceMock).getUsernameByEmail(email);
     List<String> recipients = new ArrayList<String>();
     recipients.add(email);
@@ -382,7 +437,8 @@ public class UserControllerTest {
   @Test
   public void testSentUsername() {
     UserController controller = new UserController();
-    assertEquals("users/sentUsername", controller.sentUsername());
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/sentUsername", controller.sentUsername(model));
   }
 
   @Test
@@ -410,8 +466,9 @@ public class UserControllerTest {
     UserController controller = new UserController();
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
     controller.setFormUsernamelValidator(formUsernameValidator);
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/forgotPassword",
-        controller.sendPasswordLink(usernameForm, result, requestMock));
+        controller.sendPasswordLink(usernameForm, result, requestMock, model));
   }
 
   @Test
@@ -428,8 +485,9 @@ public class UserControllerTest {
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
     .thenReturn(null);
     controller.setAppUserService(appUserServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentPassword",
-        controller.sendPasswordLink(usernameForm, result, requestMock));
+        controller.sendPasswordLink(usernameForm, result, requestMock, model));
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
   }
 
@@ -460,8 +518,9 @@ public class UserControllerTest {
     controllerMock.setAppUserService(appUserServiceMock);
     MailService mailServiceMock = mock(MailService.class);
     controllerMock.setMailService(mailServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentPassword",
-        controllerMock.sendPasswordLink(usernameForm, result, requestMock));
+        controllerMock.sendPasswordLink(usernameForm, result, requestMock, model));
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
     verify(appUserServiceMock).addResetPassword(usernameForm.getUsername());
     List<String> recipients = new ArrayList<String>(1);
@@ -473,7 +532,8 @@ public class UserControllerTest {
   @Test
   public void testSentPassword() throws Exception {
     UserController controller = new UserController();
-    assertEquals("users/sentPassword", controller.sentPassword());
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/sentPassword", controller.sentPassword(model));
   }
 
   @Test
@@ -580,7 +640,8 @@ public class UserControllerTest {
   @Test
   public void testPasswordUpdated() throws Exception {
     UserController controller = new UserController();
-    assertEquals("users/passwordUpdated", controller.passwordUpdated());
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/passwordUpdated", controller.passwordUpdated(model));
   }
   
   @Test

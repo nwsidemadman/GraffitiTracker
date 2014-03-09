@@ -62,7 +62,6 @@ public class HomeController {
       AppUser appUser = appUserService.getUser(username);
       model.put("appUser", appUser);
     }
-    // TODO: can this be static?
     return "contact";
   }
   
@@ -73,7 +72,6 @@ public class HomeController {
       AppUser appUser = appUserService.getUser(username);
       model.put("appUser", appUser);
     }
-    // TODO: can this be static?
     return "about";
   }
   
@@ -84,7 +82,6 @@ public class HomeController {
       AppUser appUser = appUserService.getUser(username);
       model.put("appUser", appUser);
     }
-    // TODO: can this be static?
     return "legal";
   }
   
@@ -95,7 +92,6 @@ public class HomeController {
       AppUser appUser = appUserService.getUser(username);
       model.put("appUser", appUser);
     }
-    // TODO: can this be static?
     return "privacy";
   }
 }

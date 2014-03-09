@@ -4,14 +4,14 @@
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
-  <div>
+  <div id="simple_content_text">
     <h2>Access Forbidden</h2>
     <p>You are attempting to register from a banned IP address. If you feel that you reached this page in error, please contact us.</p>
   </div>
 </sec:authorize>
 
 <sec:authorize access="isAuthenticated()">
-  <div>
+  <div id="simple_content_text">
     <p>You are already a registered user.</p>
   </div>
 </sec:authorize>
