@@ -56,25 +56,45 @@ public class HomeController {
   }
   
   @RequestMapping(value = "/contact", method = RequestMethod.GET)
-  public String contact() {
+  public String contact(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     // TODO: can this be static?
     return "contact";
   }
   
   @RequestMapping(value = "/about", method = RequestMethod.GET)
-  public String about() {
+  public String about(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     // TODO: can this be static?
     return "about";
   }
   
   @RequestMapping(value = "/legal", method = RequestMethod.GET)
-  public String legal() {
+  public String legal(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     // TODO: can this be static?
     return "legal";
   }
   
   @RequestMapping(value = "/privacy", method = RequestMethod.GET)
-  public String privacy() {
+  public String privacy(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
     // TODO: can this be static?
     return "privacy";
   }
