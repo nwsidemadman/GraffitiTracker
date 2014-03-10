@@ -457,6 +457,7 @@ public class UserController {
     if (bindingResult.hasErrors()) {
       model.put("exists", true);
       model.put("passwordSecurityForm", passwordSecurityForm);
+      model.put("contextPath", request.getContextPath());
       return "users/resetPassword";
     }
     appUserService.updatePasswordByUserid(passwordSecurityForm.getUserId(),

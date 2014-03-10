@@ -1526,12 +1526,15 @@ public class UserControllerTest {
     controllerMock.setAppUserService(userServiceMock);
     controllerMock.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    String contextPath = "/test";
+    when(requestMock.getContextPath()).thenReturn(contextPath);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controllerMock.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertTrue((Boolean) model.get("exists"));
+    assertEquals(contextPath, model.get("contextPath"));
     assertEquals(passwordSecurityForm, model.get("passwordSecurityForm"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
@@ -1556,12 +1559,15 @@ public class UserControllerTest {
     UserController controllerMock = new UserControllerMock();
     controllerMock.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    String contextPath = "/test";
+    when(requestMock.getContextPath()).thenReturn(contextPath);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/resetPassword", controllerMock.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertTrue((Boolean) model.get("exists"));
+    assertEquals(contextPath, model.get("contextPath"));
     assertEquals(passwordSecurityForm, model.get("passwordSecurityForm"));
     assertFalse(model.containsKey("appUser"));
   }
