@@ -161,7 +161,6 @@ public class UserController {
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
     handleSendingConfirmationEmail(userForm, request);
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -293,7 +292,6 @@ public class UserController {
       Map<String, Object> model) {
     Integer userId = appUserService
         .getUserIdByRegistrationConfirmationUniqueUrlParam(registrationConfirmationUniqueUrlParam);
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -326,7 +324,6 @@ public class UserController {
     EmailForm emailForm = new EmailForm();
     emailForm.setRecoverUsername(true);
     model.addAttribute(emailForm);
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -338,7 +335,6 @@ public class UserController {
   @RequestMapping(params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request, Map<String, Object> model) {
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -360,7 +356,6 @@ public class UserController {
 
   @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
   public String sentUsername(Map<String, Object> model) {
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -374,7 +369,6 @@ public class UserController {
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setRecoverPassword(true);
     model.addAttribute(usernameForm);
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -387,7 +381,6 @@ public class UserController {
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -415,7 +408,6 @@ public class UserController {
 
   @RequestMapping(value = "/sentPassword", method = RequestMethod.GET)
   public String sentPassword(Map<String, Object> model) {
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -444,7 +436,6 @@ public class UserController {
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
     model.put("contextPath", request.getContextPath());
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -457,7 +448,6 @@ public class UserController {
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -478,7 +468,6 @@ public class UserController {
 
   @RequestMapping(value = "/passwordUpdated", method = RequestMethod.GET)
   public String passwordUpdated(Map<String, Object> model) {
-    // TODO: unit test
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
