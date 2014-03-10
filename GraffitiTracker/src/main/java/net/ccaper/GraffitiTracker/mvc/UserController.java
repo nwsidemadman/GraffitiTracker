@@ -150,6 +150,8 @@ public class UserController {
   public String addAppUserFromForm(HttpServletRequest request,
       HttpSession session, UserForm userForm, BindingResult bindingResult,
       Map<String, Object> model) {
+    // TODO: remove
+    logger.info("username: " + userForm.getUsername());
     formUserValidator.validate(userForm, bindingResult);
     if (bindingResult.hasErrors()) {
       return handleUserFormErrors(session, userForm, model);

@@ -44,17 +44,17 @@ public class FormUserValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    // update unit test
     UserForm userForm = (UserForm) target;
-    validateUsername(errors, userForm.getUsername(), userForm.getAcceptTerms());
-    CommonValidator.validatePassword(errors, userForm.getPassword(), userForm.getConfirmPassword());
-    validateEmail(errors, userForm.getEmail(), userForm.getAcceptTerms());
+    validateUsername(errors, userForm.getUsername());
+    CommonValidator.validatePassword(errors, userForm.getPassword(),
+        userForm.getConfirmPassword());
+    validateEmail(errors, userForm.getEmail());
     validateSecurityAnswer(errors, userForm.getSecurityAnswer());
     validateAcceptTerms(errors, userForm.getAcceptTerms());
   }
 
   // visible for testing
-  void validateUsername(Errors errors, String username, boolean acceptTerms) {
+  void validateUsername(Errors errors, String username) {
     if (StringUtils.isEmpty(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username can not be empty.");
@@ -71,7 +71,7 @@ public class FormUserValidator implements Validator {
     } else if (!StringUtils.isAlphanumeric(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username can only contain alphanumeric characters.");
-    } else if (!acceptTerms || bannedWordService.doesStringContainBannedWord(username)) {
+    } else if (bannedWordService.doesStringContainBannedWord(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username contains a banned word.");
     } else if (appUserService.doesUsernameExist(username)) {
@@ -81,7 +81,7 @@ public class FormUserValidator implements Validator {
   }
 
   // visible for testing
-  void validateEmail(Errors errors, String email, boolean acceptTerms) {
+  void validateEmail(Errors errors, String email) {
     if (StringUtils.isEmpty(email)) {
       errors.rejectValue("email", "invalidEmail", "Email can not be empty.");
     } else if (email.length() > MAX_EMAIL_LENGTH) {
@@ -89,19 +89,21 @@ public class FormUserValidator implements Validator {
           "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
     } else if (!EMAIL_VALIDATOR.isValid(email)) {
       errors.rejectValue("email", "invalidemail", "Email is not valid.");
-    } else if (!acceptTerms || appUserService.doesEmailExist(email)) {
+    } else if (appUserService.doesEmailExist(email)) {
       errors.rejectValue("email", "invalidEmail",
           "Email already exists, one email per user.");
     }
   }
 
-  //visible for testing
+  // visible for testing
   void validateSecurityAnswer(Errors errors, String securityAnswer) {
     if (StringUtils.isEmpty(securityAnswer)) {
-      errors.rejectValue("securityAnswer", "invalidSecurityAnswer", "Security answer can not be empty.");
+      errors.rejectValue("securityAnswer", "invalidSecurityAnswer",
+          "Security answer can not be empty.");
     } else if (securityAnswer.length() > MAX_SECURITY_ANSWER_LENGTH) {
-      errors.rejectValue("securityAnswer", "invalidSecurityAnswer", String.format(
-          "Security answer must be no longer than %s characters.", MAX_SECURITY_ANSWER_LENGTH));
+      errors.rejectValue("securityAnswer", "invalidSecurityAnswer", String
+          .format("Security answer must be no longer than %s characters.",
+              MAX_SECURITY_ANSWER_LENGTH));
     }
   }
 
