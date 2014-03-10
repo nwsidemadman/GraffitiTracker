@@ -144,6 +144,10 @@ label {
   line-height: 100%;
 }
 
+#captcha_question {
+  line-height: 100%;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;

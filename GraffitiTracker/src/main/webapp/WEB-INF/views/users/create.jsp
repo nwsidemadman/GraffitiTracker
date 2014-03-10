@@ -50,7 +50,7 @@
           <sf:label path="acceptTerms"><a href="#" onclick="window.open('termsAndConditions', 'newwindow', 'width=275, height=135'); return false;">Accept Terms & Conditions</a>:</sf:label>
           <sf:checkbox path="acceptTerms"/>
         </p>
-        <p>
+        <p id="captcha_question">
           <sf:errors path="captchaAnswer" cssClass="error" /><br/>
           <sf:label path="captchaAnswer"><c:out value="${userForm.getTextCaptchaQuestion()}" /></sf:label>
         </p>
