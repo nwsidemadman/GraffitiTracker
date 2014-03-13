@@ -31,6 +31,7 @@ Feature/Infrastructure Overview
 -Password reset through answering user defined security answer and emailed unique URL link for security  
 -Daily email sent to super admin users containing basic site usage stats  
 -Application deployed with Amazon Relational Database Services and Amazon Elastic Beanstalk (auto-scaling web server)  
+-User inputs validated and errors displayed  
 
 To Build With Maven
 -------------------
