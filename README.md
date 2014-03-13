@@ -19,7 +19,7 @@ Feature/Infrastructure Overview
 -Spring IoC/DI with autowiring for service implementations, data source, and application configurations  
 -SHA-256 hashing of user passwords for data security (clear text passwords are never persisted)   
 -Apache Tiles for interface templating layout  
--Apache Velocity for templating layout of emails  
+-Apache Velocity for email templating layout  
 -Maven for build management  
 -SSL used for all logins to protect password transfer  
 -User registration timestamp, user last login timestamp, and login count persisted for statistics display upon login  
