@@ -49,6 +49,11 @@ body {
   line-height: 100%;
 }
 
+#roles {
+  list-style-type: disc;
+  padding-left: 15px;
+}
+
 #side {
   font-size: .8em;
   background: #E0E0E0;
