@@ -17,6 +17,9 @@
       <t:insertAttribute name="side" />
       <!--<co id="co_tile_side" />-->
     </div>
+    <div id="actions">
+      <t:insertAttribute name="actions" />
+    </div>
     <div id="content">
       <t:insertAttribute name="content" />
       <!--<co id="co_tile_content" />-->

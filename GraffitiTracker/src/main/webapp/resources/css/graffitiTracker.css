@@ -35,12 +35,23 @@ body {
   text-align: center;
 }
 
+#actions {
+  text-align: center;
+  background: #986F33;
+  color: #000000;
+  width: 515px;
+  margin-top: 24px;
+  margin-left: 10px;
+  padding: 0px 10px 0px 10px;
+  font-size: 1em;
+  line-height: 200%;
+}
+
 #content {
   padding-bottom: 15px;
   width: 535px;
   background: #FFFFFF;
-  margin-top: 6px;
-  padding: 10px;
+  padding: 1px 10px 10px 10px;
   font-size: 1em;
   line-height: 10%;
 }
