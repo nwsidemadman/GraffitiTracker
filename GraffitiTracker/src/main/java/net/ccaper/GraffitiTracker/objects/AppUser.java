@@ -1,7 +1,7 @@
 package net.ccaper.GraffitiTracker.objects;
 
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.List;
 
 public class AppUser {
   private int userId;
@@ -12,7 +12,7 @@ public class AppUser {
   private String password;
   private Timestamp currentLoginTimestamp;
   private Timestamp previousLoginTimestamp;
-  private Set<Role> roles;
+  private List<Role> roles;
   private int loginCount;
   private String securityQuestion;
   private String securityAnswer;
@@ -89,11 +89,11 @@ public class AppUser {
     this.loginCount = loginCount;
   }
 
-  public Set<Role> getRoles() {
+  public List<Role> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(List<Role> roles) {
     this.roles = roles;
   }
 

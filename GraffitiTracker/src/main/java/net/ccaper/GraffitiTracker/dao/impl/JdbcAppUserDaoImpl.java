@@ -2,6 +2,7 @@ package net.ccaper.GraffitiTracker.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -105,8 +106,8 @@ AppUserDao {
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
-      "SELECT %s, %s FROM %s where %s = :%s", ROLE_COL,
-      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL)
+      "SELECT %s, %s FROM %s where %s = :%s ORDER BY %S ASC", ROLE_COL,
+      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL, ROLE_COL)
       .toLowerCase();
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
@@ -188,7 +189,7 @@ AppUserDao {
     rolesParamMap.put(USER_ID_COL, appUser.getUserId());
     List<Role> roles = getNamedParameterJdbcTemplate().query(
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
-    appUser.setRoles(new HashSet<Role>(roles));
+    appUser.setRoles(new ArrayList<Role>(roles));
     return appUser;
   }
 
