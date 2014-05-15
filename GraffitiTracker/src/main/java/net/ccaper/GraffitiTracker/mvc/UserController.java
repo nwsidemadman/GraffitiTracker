@@ -482,4 +482,15 @@ public class UserController {
     // TODO: can this be static?
     return "users/termsAndConditions";
   }
+  
+  @RequestMapping(value = "/manageAccount", method = RequestMethod.GET)
+  // TODO(ccaper): unit test
+  public String manageAccount(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
+    return "users/manageAccount";
+  }
 }

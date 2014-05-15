@@ -39,10 +39,10 @@ AppUserDao {
   private static final String NUMBER_OF_DAYS = "number_of_days";
   private static final String REGISTRATION_CONFIRMATIONS_TABLE = JdbcRegistrationConfirmationsDaoImpl.REGISTRATION_CONFIRMATIONS_TABLE;
   private static final String SQL_SELECT_USER_BY_USERNAME = String.format(
-      "SELECT %s, %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s",
+      "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s",
       USER_ID_COL, USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL,
       REGISTRATION_TIMESTAMP_COL, PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL,
-      LOGIN_COUNT_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
+      LOGIN_COUNT_COL, SECURITY_QUESTION_COL, SECURITY_ANSWER_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (:%s, :%s, :%s, :%s, :%s)",
       USERS_TABLE, USERNAME_COL, EMAIL_COL, PASSWORD_COL,
@@ -132,6 +132,8 @@ AppUserDao {
       appUser.setPreviousLoginTimestamp(rs
           .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
       appUser.setLoginCount(rs.getInt(LOGIN_COUNT_COL));
+      appUser.setSecurityQuestion(rs.getString(SECURITY_QUESTION_COL));
+      appUser.setSecurityAnswer(rs.getString(SECURITY_ANSWER_COL));
       return appUser;
     }
   };

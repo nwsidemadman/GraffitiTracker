@@ -35,17 +35,38 @@ body {
   text-align: center;
 }
 
-#actions {
+#inner_actions {
   text-align: center;
-  background: #986F33;
+  background: #FFFFFF;
   color: #000000;
-  width: 515px;
+  width: 495px;
   margin-top: 24px;
-  margin-left: 10px;
+  margin-left: 20px;
   padding: 0px 10px 0px 10px;
   font-size: 1em;
-  line-height: 200%;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
 }
+
+#actions a:link {
+  color:#000000;
+  text-decoration:none;
+}      /* unvisited link */
+
+#actions a:visited {
+  color:#000000;
+  text-decoration:none;
+}  /* visited link */
+
+#actions a:hover {
+  color:#000000;
+  text-decoration:none;
+}  /* mouse over link */
+
+#actions a:active {
+  color:#000000;
+  text-decoration:none;
+}  /* selected link */ 
 
 #content {
   padding-bottom: 15px;
