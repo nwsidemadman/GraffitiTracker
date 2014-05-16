@@ -35,7 +35,7 @@
             me</label>
         </p>
         <p>
-          <input name="commit" type="submit" value="Sign In" />
+          <input name="commit" type="submit" value=" Sign In " />
         </p>
       </fieldset>
     </form>
@@ -56,7 +56,6 @@
   <div>
     <s:url var="unauthUrl" value="/static/j_spring_security_logout" />
     <p>
-      <a href="${unauthUrl}">Logout</a>
     </p>
     <sec:authentication property="authorities" var="roles" />
     <p>Username: ${appUser.getUsername()} (ID: ${appUser.getUserId()})</p>
@@ -72,5 +71,10 @@
     </c:forEach>
     </ol>
     <p>Number Of Logins: ${appUser.getLoginCount()}</p>
+    <p>
+      <FORM METHOD="LINK" ACTION="<s:url value="${unauthUrl}" />">
+        <INPUT TYPE="submit" VALUE=" Logout ">
+      </FORM>
+    </p>
   </div>
 </sec:authorize>
