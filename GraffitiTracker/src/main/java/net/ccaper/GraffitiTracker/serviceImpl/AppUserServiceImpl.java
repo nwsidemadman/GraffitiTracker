@@ -119,11 +119,11 @@ public class AppUserServiceImpl implements AppUserService {
     }
     String content = "";
     int numberOfDays = 1;
-    content += String.format("New Users Last Day: %s\n",
+    content += String.format("New Users Last Day: %d\n",
         appUserDao.getCountNewUsers(numberOfDays));
-    content += String.format("Unconfirmed Users Last Day: %s\n",
+    content += String.format("Unconfirmed Users Last Day: %d\n",
         appUserDao.getCountUnconfirmedUsers(numberOfDays));
-    content += String.format("Number Users Logged In Last Day: %s\n",
+    content += String.format("Number Users Logged In Last Day: %d\n",
         appUserDao.getCountLogins(numberOfDays));
     mailService.sendSimpleEmail(recipients, String.format(
         "%s GraffitiTracker Daily Stats %s",
