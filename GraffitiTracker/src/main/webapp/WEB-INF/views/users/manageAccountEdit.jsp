@@ -8,13 +8,10 @@
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
   <div id="simple_content_text">
-    <h2>Manage Account</h2>
+    <h2>Manage Account Edit</h2>
     <p>Email: ${appUser.getEmail()}</p>
     <p>Security Question: ${appUser.getSecurityQuestion()}</p>
     <p>Security Answer: ${appUser.getSecurityAnswer()}</p>
     <p>Password: *****</p>
-    <FORM METHOD="LINK" ACTION="<s:url value="/users/manageAccountEdit" />">
-      <INPUT TYPE="submit" VALUE=" Edit ">
-    </FORM>
   </div>
 </sec:authorize>

@@ -493,4 +493,15 @@ public class UserController {
     }
     return "users/manageAccount";
   }
+  
+  @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.GET)
+  // TODO(ccaper): unit test
+  public String manageAccountEdit(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
+    return "users/manageAccountEdit";
+  }
 }
