@@ -2,10 +2,11 @@ package net.ccaper.GraffitiTracker.objects;
 
 public class SecurityQuestions {
   public static final String[] QUESTIONS = new String[] {
+      "",
       "What was your childhood nickname?",
       "In what city did you meet your spouse/significant other?",
       "What is the name of your favorite childhood friend?",
-      "What is your oldest sibling’s birthday month and year? (e.g., January 1900)",
+      "What is your oldest sibling's birthday month and year? (e.g., January 1900)",
       "What is the middle name of your oldest child?",
       "What is your oldest sibling's middle name?",
       "What school did you attend for sixth grade?",

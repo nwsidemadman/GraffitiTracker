@@ -51,6 +51,7 @@ public class FormUserValidator implements Validator {
     validateEmail(errors, userForm.getEmail());
     validateSecurityAnswer(errors, userForm.getSecurityAnswer());
     validateAcceptTerms(errors, userForm.getAcceptTerms());
+    validateSecurityQuestion(errors, userForm.getSecurityQuestion());
   }
 
   // visible for testing
@@ -112,6 +113,15 @@ public class FormUserValidator implements Validator {
     if (acceptTerms == false) {
       errors.rejectValue("acceptTerms", "invalidAcceptTerms",
           "You must accept the terms and conditions.");
+    }
+  }
+
+  // visible for testing
+  // TODO(ccaper): unit test
+  void validateSecurityQuestion(Errors errors, String securityQuestion) {
+    if (StringUtils.isEmpty(securityQuestion)) {
+      errors.rejectValue("securityQuestion", "invalidSecurityQuestion",
+          "You must chose a security question.");
     }
   }
 }

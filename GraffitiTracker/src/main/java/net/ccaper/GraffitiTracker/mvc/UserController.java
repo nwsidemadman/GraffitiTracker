@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormManageAccountEditValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
+import net.ccaper.GraffitiTracker.objects.ManageAccountForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
@@ -71,6 +73,8 @@ public class UserController {
   @Autowired
   FormUsernameValidator formUsernameValidator;
   @Autowired
+  FormManageAccountEditValidator formManageAccountEditValidator;
+  @Autowired
   FormPasswordSecurityValidator formPasswordSecurityValidator;
   @Autowired
   VelocityEngine velocityEngine;
@@ -90,6 +94,11 @@ public class UserController {
   public void setFormUsernamelValidator(
       FormUsernameValidator formUsernameValidator) {
     this.formUsernameValidator = formUsernameValidator;
+  }
+  
+  public void setFormManageAccountEditValidator(
+      FormManageAccountEditValidator formManageAccountEditValidator) {
+    this.formManageAccountEditValidator = formManageAccountEditValidator;
   }
 
   public void setFormPasswordSecuritylValidator(
@@ -496,12 +505,38 @@ public class UserController {
   
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.GET)
   // TODO(ccaper): unit test
-  public String manageAccountEdit(Map<String, Object> model) {
+  public String manageAccountEdit(Map<String, Object> model, HttpSession session,
+      HttpServletRequest request) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
       model.put("appUser", appUser);
     }
+    ManageAccountForm manageAccountForm = new ManageAccountForm();
+    model.put("manageAccountForm", manageAccountForm);
     return "users/manageAccountEdit";
+  }
+  
+  @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.POST)
+  public String manageAccountEditSubmit(HttpServletRequest request,
+      HttpSession session, ManageAccountForm manageAccountForm, BindingResult bindingResult,
+      Map<String, Object> model) {
+    formManageAccountEditValidator.validate(manageAccountForm, bindingResult);
+    if (bindingResult.hasErrors()) {
+      if (!isUserAnonymous()) {
+        String username = getUsernameFromSecurity();
+        AppUser appUser = appUserService.getUser(username);
+        model.put("appUser", appUser);
+      }
+      return "users/manageAccountEdit";
+    }
+    // TODO(ccaper): send email to user if email changed, confirming change
+    // handleSendingConfirmationEmail(userForm, request);
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUser(username);
+      model.put("appUser", appUser);
+    }
+    return "redirect:/users/manageAccountEditSubmitted";
   }
 }
