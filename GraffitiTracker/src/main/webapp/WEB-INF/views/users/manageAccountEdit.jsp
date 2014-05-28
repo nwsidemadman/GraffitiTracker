@@ -12,7 +12,7 @@
 <sec:authorize access="isAuthenticated()">
   <div id="simple_content_text">
     <h2>Manage Account Edit</h2>
-    <p>Only use fields that should change.</p>
+    <p>Only edit fields that should change.</p>
     <sf:form method = "POST" modelAttribute="manageAccountForm" >
       <fieldset> 
           <p>

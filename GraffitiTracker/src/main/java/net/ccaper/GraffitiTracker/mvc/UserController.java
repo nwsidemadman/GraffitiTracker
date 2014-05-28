@@ -537,6 +537,6 @@ public class UserController {
       AppUser appUser = appUserService.getUser(username);
       model.put("appUser", appUser);
     }
-    return "redirect:/users/manageAccountEditSubmitted";
+    return "redirect:/users/manageAccount";
   }
 }

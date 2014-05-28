@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.Errors;
 
 public class CommonValidator {
-  static private final int MIN_PASSWORD_LENGTH = 6;
-  static private final int MAX_PASSWORD_LENGTH = 64;
+  static final int MIN_PASSWORD_LENGTH = 6;
+  static final int MAX_PASSWORD_LENGTH = 64;
 
   public static void validatePassword(Errors errors, String password, String confirmPassword) {
     if (StringUtils.isEmpty(password)) {

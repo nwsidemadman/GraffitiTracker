@@ -3,7 +3,6 @@ package net.ccaper.GraffitiTracker.mvc.validators;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.ManageAccountForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
-import net.ccaper.GraffitiTracker.service.BannedWordService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -24,15 +23,9 @@ public class FormManageAccountEditValidator implements Validator {
       .getInstance(false);
   @Autowired
   private AppUserService appUserService;
-  @Autowired
-  private BannedWordService bannedWordService;
 
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
-  }
-
-  public void setBannedWordService(BannedWordService bannedWordService) {
-    this.bannedWordService = bannedWordService;
   }
 
   @Override
@@ -43,17 +36,40 @@ public class FormManageAccountEditValidator implements Validator {
   @Override
   public void validate(Object target, Errors errors) {
     ManageAccountForm manageAccountForm = (ManageAccountForm) target;
-    CommonValidator.validatePassword(errors, manageAccountForm.getPassword(),
+    validatePassword(errors, manageAccountForm.getPassword(),
         manageAccountForm.getConfirmPassword());
     validateEmail(errors, manageAccountForm.getEmail());
     validateSecurityAnswer(errors, manageAccountForm.getSecurityAnswer());
+  }
+  
+  // TODO(ccaper): unit test
+  public void validatePassword(Errors errors, String password, String confirmPassword) {
+    if (StringUtils.isEmpty(password)) {
+      return;
+    } else if (password.length() < CommonValidator.MIN_PASSWORD_LENGTH) {
+      errors.rejectValue("password", "invalidPassword", String.format(
+          "Password must be longer than %s characters.", CommonValidator.MIN_PASSWORD_LENGTH));
+    } else if (password.length() > CommonValidator.MAX_PASSWORD_LENGTH) {
+      errors.rejectValue("password", "invalidPassword", String
+          .format("Password must be no longer than %s characters.",
+              CommonValidator.MAX_PASSWORD_LENGTH));
+    } else if (!password.equals(confirmPassword)) {
+      errors.rejectValue("password", "invalidPassword",
+          "Passwords do not match");
+      errors.rejectValue("confirmPassword", "invalidPassword",
+          "Passwords do not match");
+    }
+    if (StringUtils.isEmpty(confirmPassword)) {
+      errors.rejectValue("confirmPassword", "invalidConfirmPassword",
+          "Confirm password can not be empty.");
+    }
   }
 
   // visible for testing
   // TODO(ccaper): unit test
   void validateEmail(Errors errors, String email) {
     if (StringUtils.isEmpty(email)) {
-      errors.rejectValue("email", "invalidEmail", "Email can not be empty.");
+      return;
     } else if (email.length() > MAX_EMAIL_LENGTH) {
       errors.rejectValue("email", "invalidemail", String.format(
           "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
@@ -69,8 +85,7 @@ public class FormManageAccountEditValidator implements Validator {
   // TODO(ccaper): unit test
   void validateSecurityAnswer(Errors errors, String securityAnswer) {
     if (StringUtils.isEmpty(securityAnswer)) {
-      errors.rejectValue("securityAnswer", "invalidSecurityAnswer",
-          "Security answer can not be empty.");
+      return;
     } else if (securityAnswer.length() > MAX_SECURITY_ANSWER_LENGTH) {
       errors.rejectValue("securityAnswer", "invalidSecurityAnswer", String
           .format("Security answer must be no longer than %s characters.",
