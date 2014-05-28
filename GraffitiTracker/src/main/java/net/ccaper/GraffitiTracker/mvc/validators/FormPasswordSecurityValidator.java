@@ -29,13 +29,13 @@ public class FormPasswordSecurityValidator implements Validator {
   public void validate(Object target, Errors errors) {
     PasswordSecurityForm passwordSecurityForm = (PasswordSecurityForm) target;
     validateSecurityAnswer(errors, passwordSecurityForm.getSecurityAnswer(),
-        passwordSecurityForm.getUserId());
+        passwordSecurityForm.getUserid());
     CommonValidator.validatePassword(errors, passwordSecurityForm.getPassword(),
         passwordSecurityForm.getConfirmPassword());
   }
 
   // visible for testing
-  void validateSecurityAnswer(Errors errors, String securityAnswer, int userId) {
+  void validateSecurityAnswer(Errors errors, String securityAnswer, int userid) {
     if (StringUtils.isEmpty(securityAnswer)) {
       errors.rejectValue("securityAnswer", "invalidSecurityAnswer",
           "Security answer can not be empty.");
@@ -44,7 +44,7 @@ public class FormPasswordSecurityValidator implements Validator {
           .format("Security answer must be no longer than %s characters.",
               MAX_SECURITY_ANSWER_LENGTH));
     } else if (!securityAnswer.toLowerCase().equals(
-        appUserService.getSecurityAnswerByUserId(userId).toLowerCase())) {
+        appUserService.getSecurityAnswerByUserid(userid).toLowerCase())) {
       errors.rejectValue("securityAnswer", "invalidSecurityAnswer",
           "Security answer does not match security answer on record.");
     }

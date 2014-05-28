@@ -166,17 +166,32 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public String getSecurityAnswerByUserId(int userId) {
-    return appUserDao.getSecurityAnswerByUserId(userId);
+  public String getSecurityAnswerByUserid(int userid) {
+    return appUserDao.getSecurityAnswerByUserid(userid);
   }
 
   @Override
-  public String getUsernameByUserId(int userId) {
-    return appUserDao.getUsernameByUserId(userId);
+  public String getUsernameByUserid(int userid) {
+    return appUserDao.getUsernameByUserid(userid);
   }
 
   @Override
-  public void updatePasswordByUserid(int userId, String passwordEncoded) {
-    appUserDao.updatePasswordByUserId(userId, passwordEncoded);
+  public void updatePasswordByUserid(int userid, String passwordEncoded) {
+    appUserDao.updatePasswordByUserid(userid, passwordEncoded);
+  }
+
+  @Override
+  public void updateEmailByUserid(int userid, String email) {
+    appUserDao.updateEmailByUserid(userid, email);
+  }
+
+  @Override
+  public void updateSecurityQuestionByUserid(int userid, String securityQuestion) {
+    appUserDao.updateSecurityQuestionByUserid(userid, securityQuestion);
+  }
+
+  @Override
+  public void updateSecurityAnswerByUserid(int userid, String securityAnswer) {
+    appUserDao.updateSecurityAnswerByUserid(userid, securityAnswer);
   }
 }

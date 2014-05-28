@@ -1,19 +1,19 @@
 package net.ccaper.GraffitiTracker.objects;
 
 public class PasswordSecurityForm {
-  private int userId;
+  private int userid;
   private String securityQuestion;
   private String securityAnswer;
   private String password;
   private String confirmPassword;
   private boolean resetPassword;
 
-  public int getUserId() {
-    return userId;
+  public int getUserid() {
+    return userid;
   }
 
   public void setUserId(int userId) {
-    this.userId = userId;
+    this.userid = userId;
   }
 
   public String getSecurityQuestion() {

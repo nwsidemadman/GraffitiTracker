@@ -1599,10 +1599,10 @@ public class UserControllerTest {
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
-        appUserServiceMock.getSecurityAnswerByUserId(passwordSecurityForm
-            .getUserId())).thenReturn(passwordSecurityForm.getSecurityAnswer());
+        appUserServiceMock.getSecurityAnswerByUserid(passwordSecurityForm
+            .getUserid())).thenReturn(passwordSecurityForm.getSecurityAnswer());
     when(
-        appUserServiceMock.getUsernameByUserId(passwordSecurityForm.getUserId()))
+        appUserServiceMock.getUsernameByUserid(passwordSecurityForm.getUserid()))
         .thenReturn(username);
     when(appUserServiceMock.getUser(username)).thenReturn(appUser);
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
@@ -1618,12 +1618,12 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUser(username);
-    verify(appUserServiceMock).getSecurityAnswerByUserId(
-        passwordSecurityForm.getUserId());
-    verify(appUserServiceMock).getUsernameByUserId(
-        passwordSecurityForm.getUserId());
+    verify(appUserServiceMock).getSecurityAnswerByUserid(
+        passwordSecurityForm.getUserid());
+    verify(appUserServiceMock).getUsernameByUserid(
+        passwordSecurityForm.getUserid());
     verify(appUserServiceMock).updatePasswordByUserid(
-        passwordSecurityForm.getUserId(),
+        passwordSecurityForm.getUserid(),
         Encoder.encodeString(username, passwordSecurityForm.getPassword()));
   }
   
@@ -1646,10 +1646,10 @@ public class UserControllerTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     String username = "testUser";
     when(
-        appUserServiceMock.getSecurityAnswerByUserId(passwordSecurityForm
-            .getUserId())).thenReturn(passwordSecurityForm.getSecurityAnswer());
+        appUserServiceMock.getSecurityAnswerByUserid(passwordSecurityForm
+            .getUserid())).thenReturn(passwordSecurityForm.getSecurityAnswer());
     when(
-        appUserServiceMock.getUsernameByUserId(passwordSecurityForm.getUserId()))
+        appUserServiceMock.getUsernameByUserid(passwordSecurityForm.getUserid()))
         .thenReturn(username);
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     UserController controllerMock = new UserControllerMock();
@@ -1662,12 +1662,12 @@ public class UserControllerTest {
     assertEquals("redirect:/users/passwordUpdated", controllerMock.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
-    verify(appUserServiceMock).getSecurityAnswerByUserId(
-        passwordSecurityForm.getUserId());
-    verify(appUserServiceMock).getUsernameByUserId(
-        passwordSecurityForm.getUserId());
+    verify(appUserServiceMock).getSecurityAnswerByUserid(
+        passwordSecurityForm.getUserid());
+    verify(appUserServiceMock).getUsernameByUserid(
+        passwordSecurityForm.getUserid());
     verify(appUserServiceMock).updatePasswordByUserid(
-        passwordSecurityForm.getUserId(),
+        passwordSecurityForm.getUserid(),
         Encoder.encodeString(username, passwordSecurityForm.getPassword()));
   }
 

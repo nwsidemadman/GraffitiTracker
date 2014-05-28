@@ -37,15 +37,15 @@ public class FormPasswordSecurityValidatorTest {
     passwordSecurityForm.setConfirmPassword(password);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
-        appUserServiceMock.getSecurityAnswerByUserId(passwordSecurityForm
-            .getUserId())).thenReturn(passwordSecurityForm.getSecurityAnswer());
+        appUserServiceMock.getSecurityAnswerByUserid(passwordSecurityForm
+            .getUserid())).thenReturn(passwordSecurityForm.getSecurityAnswer());
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     Errors errors = new BeanPropertyBindingResult(passwordSecurityForm,
         "passwordSecurityValid");
     formPasswordSecurityValidator.validate(passwordSecurityForm, errors);
     assertFalse(errors.hasErrors());
-    verify(appUserServiceMock).getSecurityAnswerByUserId(
-        passwordSecurityForm.getUserId());
+    verify(appUserServiceMock).getSecurityAnswerByUserid(
+        passwordSecurityForm.getUserid());
   }
 
   @Test
@@ -74,7 +74,7 @@ public class FormPasswordSecurityValidatorTest {
         "passwordSecurityInvalidAnswer");
     formPasswordSecurityValidator.validateSecurityAnswer(errors,
         passwordSecurityFormSecurityAnswerEmpty.getSecurityAnswer(),
-        passwordSecurityFormSecurityAnswerEmpty.getUserId());
+        passwordSecurityFormSecurityAnswerEmpty.getUserid());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
   }
@@ -88,7 +88,7 @@ public class FormPasswordSecurityValidatorTest {
         passwordSecurityFormSecurityAnswerNull, "passwordSecurityInvalidAnswer");
     formPasswordSecurityValidator.validateSecurityAnswer(errors,
         passwordSecurityFormSecurityAnswerNull.getSecurityAnswer(),
-        passwordSecurityFormSecurityAnswerNull.getUserId());
+        passwordSecurityFormSecurityAnswerNull.getUserid());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
   }
@@ -104,7 +104,7 @@ public class FormPasswordSecurityValidatorTest {
         "passwordSecurityInvalidAnswer");
     formPasswordSecurityValidator.validateSecurityAnswer(errors,
         passwordSecurityFormSecurityAnswerTooLong.getSecurityAnswer(),
-        passwordSecurityFormSecurityAnswerTooLong.getUserId());
+        passwordSecurityFormSecurityAnswerTooLong.getUserid());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
   }
@@ -120,16 +120,16 @@ public class FormPasswordSecurityValidatorTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
         appUserServiceMock
-        .getSecurityAnswerByUserId(passwordSecurityFormSecurityAnswer
-            .getUserId())).thenReturn("differentAnswer");
+        .getSecurityAnswerByUserid(passwordSecurityFormSecurityAnswer
+            .getUserid())).thenReturn("differentAnswer");
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     formPasswordSecurityValidator.validateSecurityAnswer(errors,
         passwordSecurityFormSecurityAnswer.getSecurityAnswer(),
-        passwordSecurityFormSecurityAnswer.getUserId());
+        passwordSecurityFormSecurityAnswer.getUserid());
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("securityAnswer"));
-    verify(appUserServiceMock).getSecurityAnswerByUserId(
-        passwordSecurityFormSecurityAnswer.getUserId());
+    verify(appUserServiceMock).getSecurityAnswerByUserid(
+        passwordSecurityFormSecurityAnswer.getUserid());
   }
 
   @Test
@@ -143,14 +143,14 @@ public class FormPasswordSecurityValidatorTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
         appUserServiceMock
-        .getSecurityAnswerByUserId(passwordSecurityFormSecurityAnswer
-            .getUserId())).thenReturn(securityAnswer);
+        .getSecurityAnswerByUserid(passwordSecurityFormSecurityAnswer
+            .getUserid())).thenReturn(securityAnswer);
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     formPasswordSecurityValidator.validateSecurityAnswer(errors,
         passwordSecurityFormSecurityAnswer.getSecurityAnswer(),
-        passwordSecurityFormSecurityAnswer.getUserId());
+        passwordSecurityFormSecurityAnswer.getUserid());
     assertFalse(errors.hasErrors());
-    verify(appUserServiceMock).getSecurityAnswerByUserId(
-        passwordSecurityFormSecurityAnswer.getUserId());
+    verify(appUserServiceMock).getSecurityAnswerByUserid(
+        passwordSecurityFormSecurityAnswer.getUserid());
   }
 }

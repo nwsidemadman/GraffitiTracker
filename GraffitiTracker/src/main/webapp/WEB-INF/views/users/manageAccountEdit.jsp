@@ -45,7 +45,7 @@
           </p>
           <p>
             <input name="commit" type="submit" 
-                      value="Create account" />
+                      value="Edit Account" />
           </p>
       </fieldset>
     </sf:form>

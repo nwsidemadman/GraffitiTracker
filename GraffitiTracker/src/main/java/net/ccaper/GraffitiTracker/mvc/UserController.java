@@ -95,7 +95,7 @@ public class UserController {
       FormUsernameValidator formUsernameValidator) {
     this.formUsernameValidator = formUsernameValidator;
   }
-  
+
   public void setFormManageAccountEditValidator(
       FormManageAccountEditValidator formManageAccountEditValidator) {
     this.formManageAccountEditValidator = formManageAccountEditValidator;
@@ -469,9 +469,9 @@ public class UserController {
       model.put("contextPath", request.getContextPath());
       return "users/resetPassword";
     }
-    appUserService.updatePasswordByUserid(passwordSecurityForm.getUserId(),
+    appUserService.updatePasswordByUserid(passwordSecurityForm.getUserid(),
         Encoder.encodeString(appUserService
-            .getUsernameByUserId(passwordSecurityForm.getUserId()),
+            .getUsernameByUserid(passwordSecurityForm.getUserid()),
             passwordSecurityForm.getPassword()));
     return "redirect:/users/passwordUpdated";
   }
@@ -491,7 +491,7 @@ public class UserController {
     // TODO: can this be static?
     return "users/termsAndConditions";
   }
-  
+
   @RequestMapping(value = "/manageAccount", method = RequestMethod.GET)
   // TODO(ccaper): unit test
   public String manageAccount(Map<String, Object> model) {
@@ -502,11 +502,11 @@ public class UserController {
     }
     return "users/manageAccount";
   }
-  
+
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.GET)
   // TODO(ccaper): unit test
-  public String manageAccountEdit(Map<String, Object> model, HttpSession session,
-      HttpServletRequest request) {
+  public String manageAccountEdit(Map<String, Object> model,
+      HttpSession session, HttpServletRequest request) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -516,27 +516,39 @@ public class UserController {
     model.put("manageAccountForm", manageAccountForm);
     return "users/manageAccountEdit";
   }
-  
+
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.POST)
   public String manageAccountEditSubmit(HttpServletRequest request,
-      HttpSession session, ManageAccountForm manageAccountForm, BindingResult bindingResult,
-      Map<String, Object> model) {
+      HttpSession session, ManageAccountForm manageAccountForm,
+      BindingResult bindingResult, Map<String, Object> model) {
     formManageAccountEditValidator.validate(manageAccountForm, bindingResult);
+    String username = getUsernameFromSecurity();
+    AppUser appUser = appUserService.getUser(username);
+    model.put("appUser", appUser);
     if (bindingResult.hasErrors()) {
-      if (!isUserAnonymous()) {
-        String username = getUsernameFromSecurity();
-        AppUser appUser = appUserService.getUser(username);
-        model.put("appUser", appUser);
-      }
       return "users/manageAccountEdit";
+    }
+    if (StringUtils.isNotEmpty(manageAccountForm.getEmail())) {
+      appUserService.updateEmailByUserid(appUser.getUserId(),
+          manageAccountForm.getEmail());
+    }
+    if (StringUtils.isNotEmpty(manageAccountForm.getSecurityQuestion())) {
+      appUserService.updateSecurityQuestionByUserid(appUser.getUserId(),
+          manageAccountForm.getSecurityQuestion());
+    }
+    if (StringUtils.isNotEmpty(manageAccountForm.getSecurityAnswer())) {
+      appUserService.updateSecurityAnswerByUserid(appUser.getUserId(),
+          manageAccountForm.getSecurityAnswer());
+    }
+    if (StringUtils.isNotEmpty(manageAccountForm.getPassword())) {
+      appUserService.updatePasswordByUserid(appUser.getUserId(), Encoder
+          .encodeString(
+              appUserService.getUsernameByUserid(appUser.getUserId()),
+              manageAccountForm.getPassword()));
     }
     // TODO(ccaper): send email to user if email changed, confirming change
     // handleSendingConfirmationEmail(userForm, request);
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
-      model.put("appUser", appUser);
-    }
+    model.put("appUser", appUser);
     return "redirect:/users/manageAccount";
   }
 }

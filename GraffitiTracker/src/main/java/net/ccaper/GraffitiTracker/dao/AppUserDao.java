@@ -31,9 +31,15 @@ public interface AppUserDao {
 
   String getEmailByUsername(String username);
 
-  String getSecurityAnswerByUserId(int userId);
+  String getSecurityAnswerByUserid(int userid);
 
-  String getUsernameByUserId(int userId);
+  String getUsernameByUserid(int userid);
 
-  void updatePasswordByUserId(int userId, String passwordEncoded);
+  void updatePasswordByUserid(int userid, String passwordEncoded);
+  
+  void updateEmailByUserid(int userid, String email);
+  
+  void updateSecurityQuestionByUserid(int userid, String securityQuestion);
+  
+  void updateSecurityAnswerByUserid(int userid, String securityAnswer);
 }

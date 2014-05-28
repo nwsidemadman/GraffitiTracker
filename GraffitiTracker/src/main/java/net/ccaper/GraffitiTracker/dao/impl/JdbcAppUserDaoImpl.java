@@ -101,6 +101,15 @@ AppUserDao {
   private static final String SQL_UPDATE_PASSWORD_BY_USER_ID = String.format(
       "UPDATE %s SET %s = :%s WHERE %s = :%s",
       USERS_TABLE, PASSWORD_COL, PASSWORD_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID = String.format(
+      "UPDATE %s SET %s = :%s WHERE %s = :%s",
+      USERS_TABLE, SECURITY_QUESTION_COL, SECURITY_QUESTION_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID = String.format(
+      "UPDATE %s SET %s = :%s WHERE %s = :%s",
+      USERS_TABLE, SECURITY_ANSWER_COL, SECURITY_ANSWER_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_EMAIL_BY_USER_ID = String.format(
+      "UPDATE %s SET %s = :%s WHERE %s = :%s",
+      USERS_TABLE, EMAIL_COL, EMAIL_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
@@ -314,27 +323,54 @@ AppUserDao {
   }
 
   @Override
-  public String getSecurityAnswerByUserId(int userId) {
+  public String getSecurityAnswerByUserid(int userid) {
     Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
-    userIdParamMap.put(USER_ID_COL, userId);
+    userIdParamMap.put(USER_ID_COL, userid);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_SECURITY_ANSWER_BY_USER_ID, userIdParamMap, securityAnswerRowMapper);
   }
 
   @Override
-  public String getUsernameByUserId(int userId) {
+  public String getUsernameByUserid(int userid) {
     Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
-    userIdParamMap.put(USER_ID_COL, userId);
+    userIdParamMap.put(USER_ID_COL, userid);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USERNAME_BY_USER_ID, userIdParamMap, usernameRowMapper);
   }
 
   @Override
-  public void updatePasswordByUserId(int userId, String passwordEncoded) {
+  public void updatePasswordByUserid(int userid, String passwordEncoded) {
     Map<String, Object> paramMap = new HashMap<String, Object>();
-    paramMap.put(USER_ID_COL, userId);
+    paramMap.put(USER_ID_COL, userid);
     paramMap.put(PASSWORD_COL, passwordEncoded);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_PASSWORD_BY_USER_ID,
+        paramMap);
+  }
+
+  @Override
+  public void updateEmailByUserid(int userid, String email) {
+    Map<String, Object> paramMap = new HashMap<String, Object>();
+    paramMap.put(USER_ID_COL, userid);
+    paramMap.put(EMAIL_COL, email);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_EMAIL_BY_USER_ID,
+        paramMap);
+  }
+
+  @Override
+  public void updateSecurityQuestionByUserid(int userid, String securityQuestion) {
+    Map<String, Object> paramMap = new HashMap<String, Object>();
+    paramMap.put(USER_ID_COL, userid);
+    paramMap.put(SECURITY_QUESTION_COL, securityQuestion);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID,
+        paramMap);
+  }
+
+  @Override
+  public void updateSecurityAnswerByUserid(int userid, String securityAnswer) {
+    Map<String, Object> paramMap = new HashMap<String, Object>();
+    paramMap.put(USER_ID_COL, userid);
+    paramMap.put(SECURITY_ANSWER_COL, securityAnswer);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID,
         paramMap);
   }
 }
