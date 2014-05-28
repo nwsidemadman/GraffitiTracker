@@ -269,6 +269,7 @@ public class FormUserValidatorTest {
     userFormValid.setPassword("validPassword");
     userFormValid.setConfirmPassword("validPassword");
     userFormValid.setEmail("test@test.com");
+    userFormValid.setSecurityQuestion("testQuestion");
     userFormValid.setSecurityAnswer("testAnswer");
     userFormValid.setAcceptTerms(true);
     when(
