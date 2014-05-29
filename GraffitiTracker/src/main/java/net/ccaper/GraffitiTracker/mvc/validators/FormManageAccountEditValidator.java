@@ -36,9 +36,9 @@ public class FormManageAccountEditValidator implements Validator {
     validateEmail(errors, manageAccountForm.getEmail());
     validateSecurityAnswer(errors, manageAccountForm.getSecurityAnswer());
   }
-  
-  // TODO(ccaper): unit test
-  public void validatePassword(Errors errors, String password, String confirmPassword) {
+
+  // visible for testing
+  void validatePassword(Errors errors, String password, String confirmPassword) {
     if (StringUtils.isEmpty(password)) {
       return;
     }
@@ -46,7 +46,6 @@ public class FormManageAccountEditValidator implements Validator {
   }
 
   // visible for testing
-  // TODO(ccaper): unit test
   void validateEmail(Errors errors, String email) {
     if (StringUtils.isEmpty(email)) {
       return;
@@ -55,7 +54,6 @@ public class FormManageAccountEditValidator implements Validator {
   }
 
   // visible for testing
-  // TODO(ccaper): unit test
   void validateSecurityAnswer(Errors errors, String securityAnswer) {
     if (StringUtils.isEmpty(securityAnswer)) {
       return;

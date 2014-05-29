@@ -18,7 +18,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
 public class FormUserValidatorTest {
-  FormUserValidator formUserValidator = new FormUserValidator();
+  private FormUserValidator formUserValidator = new FormUserValidator();
 
   @Before
   public void setUp() throws Exception {
