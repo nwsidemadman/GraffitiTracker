@@ -46,23 +46,8 @@ public class FormManageAccountEditValidator implements Validator {
   public void validatePassword(Errors errors, String password, String confirmPassword) {
     if (StringUtils.isEmpty(password)) {
       return;
-    } else if (password.length() < CommonValidator.MIN_PASSWORD_LENGTH) {
-      errors.rejectValue("password", "invalidPassword", String.format(
-          "Password must be longer than %s characters.", CommonValidator.MIN_PASSWORD_LENGTH));
-    } else if (password.length() > CommonValidator.MAX_PASSWORD_LENGTH) {
-      errors.rejectValue("password", "invalidPassword", String
-          .format("Password must be no longer than %s characters.",
-              CommonValidator.MAX_PASSWORD_LENGTH));
-    } else if (!password.equals(confirmPassword)) {
-      errors.rejectValue("password", "invalidPassword",
-          "Passwords do not match");
-      errors.rejectValue("confirmPassword", "invalidPassword",
-          "Passwords do not match");
     }
-    if (StringUtils.isEmpty(confirmPassword)) {
-      errors.rejectValue("confirmPassword", "invalidConfirmPassword",
-          "Confirm password can not be empty.");
-    }
+    CommonValidator.validatePassword(errors, password, confirmPassword);
   }
 
   // visible for testing
