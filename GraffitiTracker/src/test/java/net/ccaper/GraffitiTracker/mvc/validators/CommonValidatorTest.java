@@ -3,7 +3,11 @@ package net.ccaper.GraffitiTracker.mvc.validators;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import net.ccaper.GraffitiTracker.objects.UserForm;
+import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
@@ -105,6 +109,125 @@ public class CommonValidatorTest {
     CommonValidator.validatePassword(errors,
         userFormValidPassword.getPassword(),
         userFormValidPassword.getConfirmPassword());
+    assertFalse(errors.hasErrors());
+  }
+  
+  @Test
+  public void testValidateEmail_Empty() throws Exception {
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
+        "userInvalidEmail");
+    CommonValidator.validateEmail(errors, userFormInvalidEmail.getEmail(), null);
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("email"));
+  }
+
+  @Test
+  public void testValidateEmail_Null() throws Exception {
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail(null);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
+        "userInvalidEmail");
+    CommonValidator.validateEmail(errors, userFormInvalidEmail.getEmail(), null);
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("email"));
+  }
+
+  @Test
+  public void testValidateEmail_TooLong() throws Exception {
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail
+    .setEmail("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
+        "userInvalidEmail");
+    CommonValidator.validateEmail(errors, userFormInvalidEmail.getEmail(), null);
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("email"));
+  }
+
+  @Test
+  public void testValidateEmail_InvalidAddress() throws Exception {
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail("test@test");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
+        "userInvalidEmail");
+    CommonValidator.validateEmail(errors, userFormInvalidEmail.getEmail(), null);
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("email"));
+  }
+
+  @Test
+  public void testValidateEmail_EmailAlreadyExists() throws Exception {
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    UserForm userFormInvalidEmail = new UserForm();
+    userFormInvalidEmail.setEmail("test@test.com");
+    userFormInvalidEmail.setAcceptTerms(true);
+    when(appUserServiceMock.doesEmailExist(userFormInvalidEmail.getEmail()))
+    .thenReturn(true);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidEmail,
+        "userInvalidEmail");
+    CommonValidator.validateEmail(errors, userFormInvalidEmail.getEmail(), appUserServiceMock);
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("email"));
+    verify(appUserServiceMock).doesEmailExist(userFormInvalidEmail.getEmail());
+  }
+
+  @Test
+  public void testValidateEmail_HappyPath() throws Exception {
+    AppUserService appUserServiceMock = mock(AppUserService.class);
+    UserForm userFormValidEmail = new UserForm();
+    userFormValidEmail.setEmail("test@test.com");
+    userFormValidEmail.setAcceptTerms(true);
+    when(appUserServiceMock.doesEmailExist(userFormValidEmail.getEmail())).thenReturn(
+        false);
+    Errors errors = new BeanPropertyBindingResult(userFormValidEmail,
+        "userValidEmail");
+    CommonValidator.validateEmail(errors, userFormValidEmail.getEmail(), appUserServiceMock);
+    assertFalse(errors.hasErrors());
+    verify(appUserServiceMock).doesEmailExist(userFormValidEmail.getEmail());
+  }
+  
+  @Test
+  public void testValidateSecurityAnswer_Empty() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    CommonValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityAnswer"));
+  }
+
+  @Test
+  public void testValidateSecurityAnswer_Null() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer(null);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    CommonValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityAnswer"));
+  }
+
+  @Test
+  public void testValidateSecurityAnswer_TooLong() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer("12345678901234567890123456789012345678901");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    CommonValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityAnswer"));
+  }
+
+  @Test
+  public void testValidateSecurityAnswer_HappyPath() throws Exception {
+    UserForm userFormInvalidSecurityAnswer = new UserForm();
+    userFormInvalidSecurityAnswer.setSecurityAnswer("testAnswer");
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityAnswer,
+        "userInvalidSecurityAnswer");
+    CommonValidator.validateSecurityAnswer(errors, userFormInvalidSecurityAnswer.getSecurityAnswer());
     assertFalse(errors.hasErrors());
   }
 }

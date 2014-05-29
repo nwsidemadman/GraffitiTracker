@@ -6,7 +6,6 @@ import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,6 @@ public class FormUserValidator implements Validator {
       .getLogger(FormUserValidator.class);
   static private final int MIN_USERNAME_LENGTH = 6;
   static private final int MAX_USERNAME_LENGTH = 20;
-  static private final int MAX_EMAIL_LENGTH = 100;
-  static private final int MAX_SECURITY_ANSWER_LENGTH = 40;
-  static private EmailValidator EMAIL_VALIDATOR = EmailValidator
-      .getInstance(false);
   @Autowired
   private AppUserService appUserService;
   @Autowired
@@ -48,8 +43,8 @@ public class FormUserValidator implements Validator {
     validateUsername(errors, userForm.getUsername());
     CommonValidator.validatePassword(errors, userForm.getPassword(),
         userForm.getConfirmPassword());
-    validateEmail(errors, userForm.getEmail());
-    validateSecurityAnswer(errors, userForm.getSecurityAnswer());
+    CommonValidator.validateEmail(errors, userForm.getEmail(), appUserService);
+    CommonValidator.validateSecurityAnswer(errors, userForm.getSecurityAnswer());
     validateAcceptTerms(errors, userForm.getAcceptTerms());
     validateSecurityQuestion(errors, userForm.getSecurityQuestion());
   }
@@ -78,33 +73,6 @@ public class FormUserValidator implements Validator {
     } else if (appUserService.doesUsernameExist(username)) {
       errors.rejectValue("username", "invalidUsername",
           "Username already exists, please chose another.");
-    }
-  }
-
-  // visible for testing
-  void validateEmail(Errors errors, String email) {
-    if (StringUtils.isEmpty(email)) {
-      errors.rejectValue("email", "invalidEmail", "Email can not be empty.");
-    } else if (email.length() > MAX_EMAIL_LENGTH) {
-      errors.rejectValue("email", "invalidemail", String.format(
-          "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
-    } else if (!EMAIL_VALIDATOR.isValid(email)) {
-      errors.rejectValue("email", "invalidemail", "Email is not valid.");
-    } else if (appUserService.doesEmailExist(email)) {
-      errors.rejectValue("email", "invalidEmail",
-          "Email already exists, one email per user.");
-    }
-  }
-
-  // visible for testing
-  void validateSecurityAnswer(Errors errors, String securityAnswer) {
-    if (StringUtils.isEmpty(securityAnswer)) {
-      errors.rejectValue("securityAnswer", "invalidSecurityAnswer",
-          "Security answer can not be empty.");
-    } else if (securityAnswer.length() > MAX_SECURITY_ANSWER_LENGTH) {
-      errors.rejectValue("securityAnswer", "invalidSecurityAnswer", String
-          .format("Security answer must be no longer than %s characters.",
-              MAX_SECURITY_ANSWER_LENGTH));
     }
   }
 

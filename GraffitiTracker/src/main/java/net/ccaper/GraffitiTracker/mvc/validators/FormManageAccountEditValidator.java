@@ -5,7 +5,6 @@ import net.ccaper.GraffitiTracker.objects.ManageAccountForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,6 @@ import org.springframework.validation.Validator;
 public class FormManageAccountEditValidator implements Validator {
   private static final Logger logger = LoggerFactory
       .getLogger(FormManageAccountEditValidator.class);
-  static private final int MAX_EMAIL_LENGTH = 100;
-  static private final int MAX_SECURITY_ANSWER_LENGTH = 40;
-  static private EmailValidator EMAIL_VALIDATOR = EmailValidator
-      .getInstance(false);
   @Autowired
   private AppUserService appUserService;
 
@@ -55,15 +50,8 @@ public class FormManageAccountEditValidator implements Validator {
   void validateEmail(Errors errors, String email) {
     if (StringUtils.isEmpty(email)) {
       return;
-    } else if (email.length() > MAX_EMAIL_LENGTH) {
-      errors.rejectValue("email", "invalidemail", String.format(
-          "Email must be no longer than %s characters.", MAX_EMAIL_LENGTH));
-    } else if (!EMAIL_VALIDATOR.isValid(email)) {
-      errors.rejectValue("email", "invalidemail", "Email is not valid.");
-    } else if (appUserService.doesEmailExist(email)) {
-      errors.rejectValue("email", "invalidEmail",
-          "Email already exists, one email per user.");
     }
+    CommonValidator.validateEmail(errors, email, appUserService);
   }
 
   // visible for testing
@@ -71,10 +59,7 @@ public class FormManageAccountEditValidator implements Validator {
   void validateSecurityAnswer(Errors errors, String securityAnswer) {
     if (StringUtils.isEmpty(securityAnswer)) {
       return;
-    } else if (securityAnswer.length() > MAX_SECURITY_ANSWER_LENGTH) {
-      errors.rejectValue("securityAnswer", "invalidSecurityAnswer", String
-          .format("Security answer must be no longer than %s characters.",
-              MAX_SECURITY_ANSWER_LENGTH));
     }
+    CommonValidator.validateSecurityAnswer(errors, securityAnswer);
   }
 }
