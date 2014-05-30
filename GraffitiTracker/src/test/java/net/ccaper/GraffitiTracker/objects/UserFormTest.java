@@ -19,28 +19,6 @@ public class UserFormTest {
   }
 
   @Test
-  public void testEncodePassword_HappyPath() throws Exception {
-    UserForm userForm = new UserForm();
-    userForm.setUsername("testUsername");
-    userForm.setPassword("testPassword");
-    assertFalse(userForm.getPassword().equals(userForm.encodePassword()));
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void testEncodePassword_UsernameNull() throws Exception {
-    UserForm userForm = new UserForm();
-    userForm.setPassword("testPassword");
-    userForm.getPassword().equals(userForm.encodePassword());
-  }
-  
-  @Test(expected = IllegalStateException.class)
-  public void testEncodePassword_PasswordNull() throws Exception {
-    UserForm userForm = new UserForm();
-    userForm.setUsername("testUsername");
-    userForm.getPassword().equals(userForm.encodePassword());
-  }
-  
-  @Test
   public void testCreateUserFromUserForm() throws Exception {
     UserForm userForm = new UserForm();
     userForm.setUsername("testUsername");

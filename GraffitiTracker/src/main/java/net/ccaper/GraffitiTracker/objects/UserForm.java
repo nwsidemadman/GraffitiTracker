@@ -1,5 +1,6 @@
 package net.ccaper.GraffitiTracker.objects;
 
+import net.ccaper.GraffitiTracker.utils.EncodePassword;
 import net.ccaper.GraffitiTracker.utils.Encoder;
 
 public class UserForm {
@@ -43,17 +44,6 @@ public class UserForm {
 
   public void setConfirmPassword(String confirmPassword) {
     this.confirmPassword = confirmPassword;
-  }
-
-  // visible for testing
-  String encodePassword() {
-    if (username == null) {
-      throw new IllegalStateException("Username needed for salting is null.");
-    }
-    if (password == null) {
-      throw new IllegalStateException("Password is null.");
-    }
-    return Encoder.encodeString(username, password);
   }
 
   public boolean getAcceptTerms() {
@@ -100,7 +90,7 @@ public class UserForm {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     appUser.setEmail(email);
-    appUser.setPassword(encodePassword());
+    appUser.setPassword(EncodePassword.encodePassword(username, password));
     appUser.setSecurityQuestion(securityQuestion);
     appUser.setSecurityAnswer(securityAnswer);
     return appUser;
