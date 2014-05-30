@@ -493,7 +493,6 @@ public class UserController {
   }
 
   @RequestMapping(value = "/manageAccount", method = RequestMethod.GET)
-  // TODO(ccaper): unit test
   public String manageAccount(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
@@ -504,9 +503,7 @@ public class UserController {
   }
 
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.GET)
-  // TODO(ccaper): unit test
-  public String manageAccountEdit(Map<String, Object> model,
-      HttpSession session, HttpServletRequest request) {
+  public String manageAccountEdit(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -517,9 +514,9 @@ public class UserController {
     return "users/manageAccountEdit";
   }
 
+  // TODO(ccaper): unit test
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.POST)
-  public String manageAccountEditSubmit(HttpServletRequest request,
-      HttpSession session, ManageAccountForm manageAccountForm,
+  public String manageAccountEditSubmit(ManageAccountForm manageAccountForm,
       BindingResult bindingResult, Map<String, Object> model) {
     formManageAccountEditValidator.validate(manageAccountForm, bindingResult);
     String username = getUsernameFromSecurity();

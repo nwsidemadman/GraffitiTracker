@@ -18,11 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator;
+import net.ccaper.GraffitiTracker.mvc.validators.FormManageAccountEditValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
+import net.ccaper.GraffitiTracker.objects.ManageAccountForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
 import net.ccaper.GraffitiTracker.objects.UserForm;
@@ -1722,5 +1724,129 @@ public class UserControllerTest {
   public void testTermsAndConditions() throws Exception {
     UserController controller = new UserController();
     assertEquals("users/termsAndConditions", controller.termsAndConditions());
+  }
+  
+  @Test
+  public void testManageAccount_NotAnonymousUser() throws Exception {
+    final String username = "testUser";
+    
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return false;
+      }
+
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+    
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    UserController controllerMock = new UserControllerMock();
+    controllerMock.setAppUserService(userServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/manageAccount", controllerMock.manageAccount(model));
+    assertTrue(model.containsKey("appUser"));
+    assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
+    verify(userServiceMock).getUser(username);
+  }
+  
+  @Test
+  public void testManageAccount_anonymousUser() throws Exception {
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return true;
+      }
+    }
+    
+    UserController controllerMock = new UserControllerMock();
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/manageAccount", controllerMock.manageAccount(model));
+    assertFalse(model.containsKey("appUser"));
+  }
+  
+  @Test
+  public void testManageAccountEdit_NotAnonymousUser() throws Exception {
+    final String username = "testUser";
+    
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return false;
+      }
+
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+    
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    UserController controllerMock = new UserControllerMock();
+    controllerMock.setAppUserService(userServiceMock);
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/manageAccountEdit", controllerMock.manageAccountEdit(model));
+    assertTrue(model.containsKey("appUser"));
+    assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
+    verify(userServiceMock).getUser(username);
+  }
+  
+  @Test
+  public void testManageAccountEdit_anonymousUser() throws Exception {
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return true;
+      }
+    }
+    
+    UserController controllerMock = new UserControllerMock();
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/manageAccountEdit", controllerMock.manageAccountEdit(model));
+    assertFalse(model.containsKey("appUser"));
+  }
+  
+  @Test
+  public void testManageAccountEditSubmit_invalidSubmission() throws Exception {
+    final String username = "testUser";
+
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return false;
+      }
+
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+    
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    ManageAccountForm manageAccountForm = new ManageAccountForm();
+    manageAccountForm.setSecurityAnswer("12345678901234567890123456789012345678901");
+    FormManageAccountEditValidator formManageAccountEditValidator = new FormManageAccountEditValidator();
+    UserControllerMock userControllerMock = new UserControllerMock();
+    userControllerMock.setAppUserService(userServiceMock);
+    userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidator);
+    BindingResult result = new BeanPropertyBindingResult(manageAccountForm,
+        "manageAccountForm");
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("users/manageAccountEdit", userControllerMock.manageAccountEditSubmit(
+        manageAccountForm, result, model));
+    assertTrue(model.containsKey("appUser"));
+    assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
+    verify(userServiceMock).getUser(username);
   }
 }
