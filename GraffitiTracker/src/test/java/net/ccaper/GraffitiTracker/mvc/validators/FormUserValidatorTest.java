@@ -227,4 +227,25 @@ public class FormUserValidatorTest {
     assertNotNull(errors.getFieldError("email"));
     assertNotNull(errors.getFieldError("acceptTerms"));
   }
+  
+  @Test
+  public void testValidateSecurityQuestion_Empty() {
+    UserForm userFormInvalidSecurityQuestion = new UserForm();
+    userFormInvalidSecurityQuestion.setSecurityQuestion(StringUtils.EMPTY);
+    Errors errors = new BeanPropertyBindingResult(userFormInvalidSecurityQuestion,
+        "userInvalidSecurityQuestion");
+    formUserValidator.validateSecurityQuestion(errors, userFormInvalidSecurityQuestion.getSecurityQuestion());
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("securityQuestion"));
+  }
+  
+  @Test
+  public void testValidateSecurityQuestion_NotEmpty() {
+    UserForm userFormValidSecurityQuestion = new UserForm();
+    userFormValidSecurityQuestion.setSecurityQuestion("some security question");
+    Errors errors = new BeanPropertyBindingResult(userFormValidSecurityQuestion,
+        "userValidSecurityQuestion");
+    formUserValidator.validateSecurityQuestion(errors, userFormValidSecurityQuestion.getSecurityQuestion());
+    assertFalse(errors.hasErrors());
+  }
 }

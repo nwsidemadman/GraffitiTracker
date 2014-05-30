@@ -85,7 +85,6 @@ public class FormUserValidator implements Validator {
   }
 
   // visible for testing
-  // TODO(ccaper): unit test
   void validateSecurityQuestion(Errors errors, String securityQuestion) {
     if (StringUtils.isEmpty(securityQuestion)) {
       errors.rejectValue("securityQuestion", "invalidSecurityQuestion",
