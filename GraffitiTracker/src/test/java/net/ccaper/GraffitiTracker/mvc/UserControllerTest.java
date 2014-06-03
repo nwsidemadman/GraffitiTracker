@@ -79,7 +79,7 @@ public class UserControllerTest {
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUser(username)).thenReturn(appUser);
     String inet = "127.0.0.1";
-    TextCaptcha captcha = new TextCaptcha("Some quesiton", "answer");
+    TextCaptcha captcha = new TextCaptcha("Some question", "answer");
     CaptchaService captchaServiceMock = mock(CaptchaService.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(captcha);
     BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
@@ -118,7 +118,7 @@ public class UserControllerTest {
     }
 
     String inet = "127.0.0.1";
-    TextCaptcha captcha = new TextCaptcha("Some quesiton", "answer");
+    TextCaptcha captcha = new TextCaptcha("Some question", "answer");
     CaptchaService captchaServiceMock = mock(CaptchaService.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(captcha);
     BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
