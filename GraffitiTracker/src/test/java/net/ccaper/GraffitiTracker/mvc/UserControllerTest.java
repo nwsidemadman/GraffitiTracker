@@ -1849,4 +1849,74 @@ public class UserControllerTest {
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUser(username);
   }
+  
+  @Test
+  public void testManageAccountEditSubmit_validSubmission_everythingEmpty() throws Exception {
+    final String username = "testUser";
+
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return false;
+      }
+
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+    
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    ManageAccountForm manageAccountForm = new ManageAccountForm();
+    FormManageAccountEditValidator formManageAccountEditValidator = new FormManageAccountEditValidator();
+    UserControllerMock userControllerMock = new UserControllerMock();
+    userControllerMock.setAppUserService(userServiceMock);
+    userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidator);
+    BindingResult result = new BeanPropertyBindingResult(manageAccountForm,
+        "manageAccountForm");
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("redirect:/users/manageAccount", userControllerMock.manageAccountEditSubmit(
+        manageAccountForm, result, model));
+    assertTrue(model.containsKey("appUser"));
+    assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
+    verify(userServiceMock).getUser(username);
+  }
+  
+  @Test
+  public void testManageAccountEditSubmit_validSubmission_everythingNotEmpty() throws Exception {
+    final String username = "testUser";
+
+    class UserControllerMock extends UserController {
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+    
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    ManageAccountForm manageAccountForm = new ManageAccountForm();
+    manageAccountForm.setEmail("test@test.com");
+    manageAccountForm.setSecurityQuestion("testSecurityQuestion");
+    manageAccountForm.setSecurityAnswer("testSecurityAnswer");
+    manageAccountForm.setPassword("testPassword");
+    BindingResult result = new BeanPropertyBindingResult(manageAccountForm,
+        "manageAccountForm");
+    FormManageAccountEditValidator formManageAccountEditValidatorMock = mock(FormManageAccountEditValidator.class);
+    UserControllerMock userControllerMock = new UserControllerMock();
+    userControllerMock.setAppUserService(userServiceMock);
+    userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidatorMock);
+    
+    Map<String, Object> model = new HashMap<String, Object>();
+    assertEquals("redirect:/users/manageAccount", userControllerMock.manageAccountEditSubmit(
+        manageAccountForm, result, model));
+    assertTrue(model.containsKey("appUser"));
+    assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
+    verify(userServiceMock).getUser(username);
+  }
 }

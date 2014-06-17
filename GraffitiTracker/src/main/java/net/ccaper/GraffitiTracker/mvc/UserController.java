@@ -514,7 +514,6 @@ public class UserController {
     return "users/manageAccountEdit";
   }
 
-  // TODO(ccaper): unit test
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.POST)
   public String manageAccountEditSubmit(ManageAccountForm manageAccountForm,
       BindingResult bindingResult, Map<String, Object> model) {
