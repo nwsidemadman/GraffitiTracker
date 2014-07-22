@@ -205,8 +205,7 @@ public class UserController {
 
   private void handleSendingConfirmationEmail(UserForm userForm,
       HttpServletRequest request) {
-    appUserService.addRegistrationConfirmation(userForm.getUsername());
-    List<String> recipients = new ArrayList<String>(1);
+    List<String> recipients = new ArrayList<String>(2);
     recipients.add(userForm.getEmail());
     mailService.sendVelocityEmail(recipients,
         "GraffitiTracker Registration Confirmation",
@@ -283,6 +282,27 @@ public class UserController {
   String generateHtmlFromVelocityTemplate(Map<String, Object> model) {
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
         "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
+  }
+
+  // visible for mocking
+  String generateEmailAddressChangeEmailBodyWithVelocityEngine(String oldEmail,
+      String newEmail, HttpServletRequest request) {
+    Map<String, Object> model = new HashMap<String, Object>(3);
+    model.put("copyrightYear", DateFormats.YEAR_FORMAT.format(new Date()));
+    model
+        .put(
+            "content",
+            String
+                .format(
+                    "<p>A change was made to the stored email address, and we thought you might like to know.</p>"
+                        + "<p>The old email address was '%s' and the new email address is '%s'.</p>"
+                        + "<p>If this change was made in error, please correct your email address on file.</p>",
+                    oldEmail, newEmail));
+    model.put(
+        "home_link",
+        getHomeLink(request.getRequestURL().toString(),
+            request.getServletPath()));
+    return generateHtmlFromVelocityTemplate(model);
   }
 
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
@@ -516,7 +536,8 @@ public class UserController {
 
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.POST)
   public String manageAccountEditSubmit(ManageAccountForm manageAccountForm,
-      BindingResult bindingResult, Map<String, Object> model) {
+      BindingResult bindingResult, Map<String, Object> model,
+      HttpServletRequest request) {
     formManageAccountEditValidator.validate(manageAccountForm, bindingResult);
     String username = getUsernameFromSecurity();
     AppUser appUser = appUserService.getUser(username);
@@ -525,6 +546,8 @@ public class UserController {
       return "users/manageAccountEdit";
     }
     if (StringUtils.isNotEmpty(manageAccountForm.getEmail())) {
+      handleSendingEmailAddressChangeEmail(appUser.getEmail(),
+          manageAccountForm.getEmail(), request);
       appUserService.updateEmailByUserid(appUser.getUserId(),
           manageAccountForm.getEmail());
     }
@@ -542,9 +565,19 @@ public class UserController {
               appUserService.getUsernameByUserid(appUser.getUserId()),
               manageAccountForm.getPassword()));
     }
-    // TODO(ccaper): send email to user if email changed, confirming change
-    // handleSendingConfirmationEmail(userForm, request);
     model.put("appUser", appUser);
     return "redirect:/users/manageAccount";
+  }
+
+  private void handleSendingEmailAddressChangeEmail(String oldEmail,
+      String newEmail, HttpServletRequest request) {
+    List<String> recipients = new ArrayList<String>(1);
+    recipients.add(oldEmail);
+    recipients.add(newEmail);
+    mailService.sendVelocityEmail(
+        recipients,
+        "GraffitiTracker Email Address Change Notification",
+        generateEmailAddressChangeEmailBodyWithVelocityEngine(oldEmail,
+            newEmail, request));
   }
 }
