@@ -1844,7 +1844,7 @@ public class UserControllerTest {
         "manageAccountForm");
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/manageAccountEdit", userControllerMock.manageAccountEditSubmit(
-        manageAccountForm, result, model));
+        manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUser(username);
@@ -1879,7 +1879,7 @@ public class UserControllerTest {
         "manageAccountForm");
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/manageAccount", userControllerMock.manageAccountEditSubmit(
-        manageAccountForm, result, model));
+        manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUser(username);
@@ -1894,29 +1894,44 @@ public class UserControllerTest {
       String getUsernameFromSecurity() {
         return username;
       }
+      
+      @Override
+      String generateEmailAddressChangeEmailBodyWithVelocityEngine(String oldEmail,
+          String newEmail, HttpServletRequest request) {
+        return "test";
+      }
     }
     
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
+    String oldEmail = "testOld@test.com";
+    appUser.setEmail(oldEmail);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUser(username)).thenReturn(appUser);
     ManageAccountForm manageAccountForm = new ManageAccountForm();
-    manageAccountForm.setEmail("test@test.com");
+    String newEmail = "testNew@test.com";
+    manageAccountForm.setEmail(newEmail);
     manageAccountForm.setSecurityQuestion("testSecurityQuestion");
     manageAccountForm.setSecurityAnswer("testSecurityAnswer");
     manageAccountForm.setPassword("testPassword");
     BindingResult result = new BeanPropertyBindingResult(manageAccountForm,
         "manageAccountForm");
     FormManageAccountEditValidator formManageAccountEditValidatorMock = mock(FormManageAccountEditValidator.class);
+    MailService mailServiceMock = mock(MailService.class);
     UserControllerMock userControllerMock = new UserControllerMock();
     userControllerMock.setAppUserService(userServiceMock);
     userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidatorMock);
-    
+    userControllerMock.setMailService(mailServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/manageAccount", userControllerMock.manageAccountEditSubmit(
-        manageAccountForm, result, model));
+        manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUser(username);
+    List<String> recipients = new ArrayList<String>();
+    recipients.add(appUser.getEmail());
+    recipients.add(newEmail);
+    verify(mailServiceMock).sendVelocityEmail(recipients, "GraffitiTracker Email Address Change Notification",
+        "test");
   }
 }
