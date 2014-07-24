@@ -42,4 +42,6 @@ public interface AppUserDao {
   void updateSecurityQuestionByUserid(int userid, String securityQuestion);
   
   void updateSecurityAnswerByUserid(int userid, String securityAnswer);
+  
+  List<AppUser> getAllUsers();
 }

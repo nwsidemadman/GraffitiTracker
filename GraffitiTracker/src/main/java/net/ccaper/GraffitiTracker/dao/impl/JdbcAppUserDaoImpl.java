@@ -2,7 +2,6 @@ package net.ccaper.GraffitiTracker.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
-AppUserDao {
+    AppUserDao {
   static final String USERS_TABLE = "app_users";
   static final String USER_ID_COL = "user_id";
   static final String USERNAME_COL = "username";
@@ -41,7 +40,12 @@ AppUserDao {
       "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s",
       USER_ID_COL, USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL,
       REGISTRATION_TIMESTAMP_COL, PASSWORD_COL, PREVIOUS_LOGIN_TIMESTAMP_COL,
-      LOGIN_COUNT_COL, SECURITY_QUESTION_COL, SECURITY_ANSWER_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
+      LOGIN_COUNT_COL, SECURITY_QUESTION_COL, SECURITY_ANSWER_COL, USERS_TABLE,
+      USERNAME_COL, USERNAME_COL).toLowerCase();
+  private static final String SQL_SELECT_ALL_USERS = String.format(
+      "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s", USER_ID_COL, USERNAME_COL,
+      EMAIL_COL, IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL,
+      PREVIOUS_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (:%s, :%s, :%s, :%s, :%s)",
       USERS_TABLE, USERNAME_COL, EMAIL_COL, PASSWORD_COL,
@@ -54,8 +58,8 @@ AppUserDao {
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
       EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_SELECT_USERNAME_BY_EMAIL = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", USERNAME_COL, USERS_TABLE,
-      EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL).toLowerCase();
+      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", USERNAME_COL,
+      USERS_TABLE, EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL).toLowerCase();
   private static final String SQL_SELECT_EMAIL_BY_USERNAME = String.format(
       "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", EMAIL_COL, USERS_TABLE,
       USERNAME_COL, USERNAME_COL, IS_ACTIVE_COL).toLowerCase();
@@ -92,31 +96,33 @@ AppUserDao {
           USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE, USERS_TABLE,
           USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE, USER_ID_COL,
           IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL, NUMBER_OF_DAYS);
-  private static final String SQL_SELECT_SECURITY_ANSWER_BY_USER_ID = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s",
-      SECURITY_ANSWER_COL, USERS_TABLE, USER_ID_COL , USER_ID_COL).toLowerCase();
+  private static final String SQL_SELECT_SECURITY_ANSWER_BY_USER_ID = String
+      .format("SELECT %s FROM %s WHERE %s = :%s", SECURITY_ANSWER_COL,
+          USERS_TABLE, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String SQL_SELECT_USERNAME_BY_USER_ID = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s",
-      USERNAME_COL, USERS_TABLE, USER_ID_COL, USER_ID_COL).toLowerCase();
+      "SELECT %s FROM %s WHERE %s = :%s", USERNAME_COL, USERS_TABLE,
+      USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String SQL_UPDATE_PASSWORD_BY_USER_ID = String.format(
-      "UPDATE %s SET %s = :%s WHERE %s = :%s",
-      USERS_TABLE, PASSWORD_COL, PASSWORD_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
-  private static final String SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID = String.format(
-      "UPDATE %s SET %s = :%s WHERE %s = :%s",
-      USERS_TABLE, SECURITY_QUESTION_COL, SECURITY_QUESTION_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
-  private static final String SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID = String.format(
-      "UPDATE %s SET %s = :%s WHERE %s = :%s",
-      USERS_TABLE, SECURITY_ANSWER_COL, SECURITY_ANSWER_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+      "UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE, PASSWORD_COL,
+      PASSWORD_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID = String
+      .format("UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE,
+          SECURITY_QUESTION_COL, SECURITY_QUESTION_COL, USER_ID_COL,
+          USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID = String
+      .format("UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE,
+          SECURITY_ANSWER_COL, SECURITY_ANSWER_COL, USER_ID_COL, USER_ID_COL)
+      .toLowerCase();
   private static final String SQL_UPDATE_EMAIL_BY_USER_ID = String.format(
-      "UPDATE %s SET %s = :%s WHERE %s = :%s",
-      USERS_TABLE, EMAIL_COL, EMAIL_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
+      "UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE, EMAIL_COL,
+      EMAIL_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
       "SELECT %s, %s FROM %s where %s = :%s ORDER BY %S ASC", ROLE_COL,
-      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL, ROLE_COL)
-      .toLowerCase();
+      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL,
+      ROLE_COL).toLowerCase();
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
       ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
@@ -142,6 +148,22 @@ AppUserDao {
       appUser.setLoginCount(rs.getInt(LOGIN_COUNT_COL));
       appUser.setSecurityQuestion(rs.getString(SECURITY_QUESTION_COL));
       appUser.setSecurityAnswer(rs.getString(SECURITY_ANSWER_COL));
+      return appUser;
+    }
+  };
+  
+  RowMapper<AppUser> appUserAdminViewRowMapper = new RowMapper<AppUser>() {
+    @Override
+    public AppUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+      AppUser appUser = new AppUser();
+      appUser.setUserId(rs.getInt(USER_ID_COL));
+      appUser.setUsername(rs.getString(USERNAME_COL));
+      appUser.setEmail(rs.getString(EMAIL_COL));
+      appUser.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
+      appUser.setRegisterTimestamp(rs.getTimestamp(REGISTRATION_TIMESTAMP_COL));
+      appUser.setPreviousLoginTimestamp(rs
+          .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
+      appUser.setLoginCount(rs.getInt(LOGIN_COUNT_COL));
       return appUser;
     }
   };
@@ -199,7 +221,7 @@ AppUserDao {
     rolesParamMap.put(USER_ID_COL, appUser.getUserId());
     List<Role> roles = getNamedParameterJdbcTemplate().query(
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
-    appUser.setRoles(new ArrayList<Role>(roles));
+    appUser.setRoles(roles);
     return appUser;
   }
 
@@ -327,7 +349,8 @@ AppUserDao {
     Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
     userIdParamMap.put(USER_ID_COL, userid);
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_SECURITY_ANSWER_BY_USER_ID, userIdParamMap, securityAnswerRowMapper);
+        SQL_SELECT_SECURITY_ANSWER_BY_USER_ID, userIdParamMap,
+        securityAnswerRowMapper);
   }
 
   @Override
@@ -361,8 +384,8 @@ AppUserDao {
     Map<String, Object> paramMap = new HashMap<String, Object>();
     paramMap.put(USER_ID_COL, userid);
     paramMap.put(SECURITY_QUESTION_COL, securityQuestion);
-    getNamedParameterJdbcTemplate().update(SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID,
-        paramMap);
+    getNamedParameterJdbcTemplate().update(
+        SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID, paramMap);
   }
 
   @Override
@@ -370,7 +393,21 @@ AppUserDao {
     Map<String, Object> paramMap = new HashMap<String, Object>();
     paramMap.put(USER_ID_COL, userid);
     paramMap.put(SECURITY_ANSWER_COL, securityAnswer);
-    getNamedParameterJdbcTemplate().update(SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID,
-        paramMap);
+    getNamedParameterJdbcTemplate().update(
+        SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID, paramMap);
+  }
+
+  @Override
+  public List<AppUser> getAllUsers() {
+    List<AppUser> users = getNamedParameterJdbcTemplate().query(SQL_SELECT_ALL_USERS,
+        appUserAdminViewRowMapper);
+    for (AppUser user : users) {
+      Map<String, Integer> rolesParamMap = new HashMap<String, Integer>();
+      rolesParamMap.put(USER_ID_COL, user.getUserId());
+      List<Role> roles = getNamedParameterJdbcTemplate().query(
+          SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
+      user.setRoles(roles);
+    }
+    return users;
   }
 }

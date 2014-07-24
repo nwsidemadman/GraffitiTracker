@@ -194,4 +194,10 @@ public class AppUserServiceImpl implements AppUserService {
   public void updateSecurityAnswerByUserid(int userid, String securityAnswer) {
     appUserDao.updateSecurityAnswerByUserid(userid, securityAnswer);
   }
+
+  @Override
+  public List<AppUser> getAllUsers() {
+    appUserDao.getAllUsers();
+    return null;
+  }
 }
