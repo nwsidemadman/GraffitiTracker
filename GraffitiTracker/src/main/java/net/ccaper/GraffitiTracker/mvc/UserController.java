@@ -349,7 +349,7 @@ public class UserController {
     return url.replace(oldServletPath, HOME_LINK);
   }
 
-  @RequestMapping(method = RequestMethod.GET, params = "forgotUsername")
+  @RequestMapping(value = "/forgotUsername", method = RequestMethod.GET, params = "forgotUsername")
   public String forgotUsername(Model model) {
     EmailForm emailForm = new EmailForm();
     emailForm.setRecoverUsername(true);
@@ -362,7 +362,7 @@ public class UserController {
     return "users/forgotUsername";
   }
 
-  @RequestMapping(params = "recoverUsername", method = RequestMethod.POST)
+  @RequestMapping(value = "/forgotUsername", params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request, Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -394,7 +394,7 @@ public class UserController {
     return "users/sentUsername";
   }
 
-  @RequestMapping(method = RequestMethod.GET, params = "forgotPassword")
+  @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET, params = "forgotPassword")
   public String forgotPassword(Model model) {
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setRecoverPassword(true);
@@ -407,7 +407,7 @@ public class UserController {
     return "users/forgotPassword";
   }
 
-  @RequestMapping(params = "recoverPassword", method = RequestMethod.POST)
+  @RequestMapping(value = "/forgotPassword", params = "recoverPassword", method = RequestMethod.POST)
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
@@ -459,7 +459,7 @@ public class UserController {
           .deleteResetPasswordByUniqueUrlParam(resetPasswordUniqueUrlParam);
       model.put("exists", true);
       PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-      passwordSecurityForm.setUserId(userSecurityQuestion.getUserid());
+      passwordSecurityForm.setUserid(userSecurityQuestion.getUserid());
       passwordSecurityForm.setSecurityQuestion(userSecurityQuestion
           .getSecurityQuestion());
       passwordSecurityForm.setResetPassword(true);

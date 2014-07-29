@@ -12,8 +12,8 @@ public class PasswordSecurityForm {
     return userid;
   }
 
-  public void setUserId(int userId) {
-    this.userid = userId;
+  public void setUserid(int userid) {
+    this.userid = userid;
   }
 
   public String getSecurityQuestion() {

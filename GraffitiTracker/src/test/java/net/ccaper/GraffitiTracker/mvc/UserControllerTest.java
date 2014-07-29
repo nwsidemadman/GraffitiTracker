@@ -1522,7 +1522,7 @@ public class UserControllerTest {
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUser(username)).thenReturn(appUser);
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer(StringUtils.EMPTY);
     passwordSecurityForm.setPassword(null);
     passwordSecurityForm.setConfirmPassword(null);
@@ -1556,7 +1556,7 @@ public class UserControllerTest {
     }
 
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer(StringUtils.EMPTY);
     passwordSecurityForm.setPassword(null);
     passwordSecurityForm.setConfirmPassword(null);
@@ -1594,7 +1594,7 @@ public class UserControllerTest {
     }
 
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer("testAnswer");
     String password = "testPassword";
     passwordSecurityForm.setPassword(password);
@@ -1642,7 +1642,7 @@ public class UserControllerTest {
     }
 
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer("testAnswer");
     String password = "testPassword";
     passwordSecurityForm.setPassword(password);

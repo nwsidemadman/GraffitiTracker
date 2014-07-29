@@ -12,7 +12,7 @@
       <sf:form method="POST" modelAttribute="passwordSecurityForm" action="${actionValue}">
         <fieldset>
           <sf:hidden path="resetPassword" />
-          <sf:hidden path="userId" />
+          <sf:hidden path="userid" />
           <sf:hidden path="securityQuestion" />
           <p>
             <sf:errors path="securityAnswer" cssClass="error" /><br/>
@@ -37,8 +37,7 @@
       </sf:form>
     </c:if>
     <c:if test="${exists == false}">
-      <p>This reset password link has expired, please register
-        again.</p>
+      <p>This reset password link has expired, please click Forgot Password again.</p>
     </c:if>
   </div>
 </sec:authorize>

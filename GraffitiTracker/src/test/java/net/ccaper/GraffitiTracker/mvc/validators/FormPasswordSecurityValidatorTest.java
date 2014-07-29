@@ -30,7 +30,7 @@ public class FormPasswordSecurityValidatorTest {
   @Test
   public void testValidate_HappyPath() throws Exception {
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer("testAnswer");
     String password = "testPassword";
     passwordSecurityForm.setPassword(password);
@@ -51,7 +51,7 @@ public class FormPasswordSecurityValidatorTest {
   @Test
   public void testValidate_SadPath() throws Exception {
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
-    passwordSecurityForm.setUserId(1);
+    passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer(null);
     passwordSecurityForm.setPassword("testPassword");
     passwordSecurityForm.setConfirmPassword("differentPassword");
@@ -68,7 +68,7 @@ public class FormPasswordSecurityValidatorTest {
     PasswordSecurityForm passwordSecurityFormSecurityAnswerEmpty = new PasswordSecurityForm();
     passwordSecurityFormSecurityAnswerEmpty
     .setSecurityAnswer(StringUtils.EMPTY);
-    passwordSecurityFormSecurityAnswerEmpty.setUserId(1);
+    passwordSecurityFormSecurityAnswerEmpty.setUserid(1);
     Errors errors = new BeanPropertyBindingResult(
         passwordSecurityFormSecurityAnswerEmpty,
         "passwordSecurityInvalidAnswer");
@@ -83,7 +83,7 @@ public class FormPasswordSecurityValidatorTest {
   public void testSecurityAnswer_Null() {
     PasswordSecurityForm passwordSecurityFormSecurityAnswerNull = new PasswordSecurityForm();
     passwordSecurityFormSecurityAnswerNull.setSecurityAnswer(null);
-    passwordSecurityFormSecurityAnswerNull.setUserId(1);
+    passwordSecurityFormSecurityAnswerNull.setUserid(1);
     Errors errors = new BeanPropertyBindingResult(
         passwordSecurityFormSecurityAnswerNull, "passwordSecurityInvalidAnswer");
     formPasswordSecurityValidator.validateSecurityAnswer(errors,
@@ -98,7 +98,7 @@ public class FormPasswordSecurityValidatorTest {
     PasswordSecurityForm passwordSecurityFormSecurityAnswerTooLong = new PasswordSecurityForm();
     passwordSecurityFormSecurityAnswerTooLong
     .setSecurityAnswer("12345678901234567890123456789012345678901");
-    passwordSecurityFormSecurityAnswerTooLong.setUserId(1);
+    passwordSecurityFormSecurityAnswerTooLong.setUserid(1);
     Errors errors = new BeanPropertyBindingResult(
         passwordSecurityFormSecurityAnswerTooLong,
         "passwordSecurityInvalidAnswer");
@@ -114,7 +114,7 @@ public class FormPasswordSecurityValidatorTest {
     String securityAnswer = "testAnswer";
     PasswordSecurityForm passwordSecurityFormSecurityAnswer = new PasswordSecurityForm();
     passwordSecurityFormSecurityAnswer.setSecurityAnswer(securityAnswer);
-    passwordSecurityFormSecurityAnswer.setUserId(1);
+    passwordSecurityFormSecurityAnswer.setUserid(1);
     Errors errors = new BeanPropertyBindingResult(
         passwordSecurityFormSecurityAnswer, "passwordSecurityInvalidAnswer");
     AppUserService appUserServiceMock = mock(AppUserService.class);
@@ -137,7 +137,7 @@ public class FormPasswordSecurityValidatorTest {
     String securityAnswer = "testAnswer";
     PasswordSecurityForm passwordSecurityFormSecurityAnswer = new PasswordSecurityForm();
     passwordSecurityFormSecurityAnswer.setSecurityAnswer(securityAnswer);
-    passwordSecurityFormSecurityAnswer.setUserId(1);
+    passwordSecurityFormSecurityAnswer.setUserid(1);
     Errors errors = new BeanPropertyBindingResult(
         passwordSecurityFormSecurityAnswer, "passwordSecurityInvalidAnswer");
     AppUserService appUserServiceMock = mock(AppUserService.class);

@@ -42,9 +42,9 @@
     
     <p><a href="<s:url value="/users/new"/>">Register</a></p>
     
-    <p><a href="<s:url value="/users?forgotUsername"/>">Forgot Username</a></p>
+    <p><a href="<s:url value="/users/forgotUsername?forgotUsername"/>">Forgot Username</a></p>
     
-    <p><a href="<s:url value="/users?forgotPassword"/>">Forgot Password</a></p>
+    <p><a href="<s:url value="/users/forgotPassword?forgotPassword"/>">Forgot Password</a></p>
 
     <script type="text/javascript">
           document.getElementById('username_or_email').focus();
