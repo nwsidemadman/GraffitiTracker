@@ -45,6 +45,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/users")
@@ -579,5 +580,12 @@ public class UserController {
         "GraffitiTracker Email Address Change Notification",
         generateEmailAddressChangeEmailBodyWithVelocityEngine(oldEmail,
             newEmail, request));
+  }
+  
+  @RequestMapping(value = "/test", method = RequestMethod.GET, headers = {"Accept=text/xml, application/json"}, produces = "application/json")
+  public @ResponseBody List<AppUser> getAllUsers(Model model, HttpSession session,
+      HttpServletRequest request) {
+    logger.info("number of users: " + appUserService.getAllUsers().size());
+    return appUserService.getAllUsers();
   }
 }

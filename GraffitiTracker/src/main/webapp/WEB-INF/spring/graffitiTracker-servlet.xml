@@ -41,7 +41,6 @@
     </beans:property>
   </beans:bean>
 
-
   <context:component-scan base-package="net.ccaper.GraffitiTracker" />
 
 </beans:beans>

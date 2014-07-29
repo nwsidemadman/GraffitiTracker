@@ -197,7 +197,6 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public List<AppUser> getAllUsers() {
-    appUserDao.getAllUsers();
-    return null;
+    return appUserDao.getAllUsers();
   }
 }
