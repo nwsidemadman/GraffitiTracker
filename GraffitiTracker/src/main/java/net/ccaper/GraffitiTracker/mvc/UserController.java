@@ -582,10 +582,9 @@ public class UserController {
             newEmail, request));
   }
   
-  @RequestMapping(value = "/test", method = RequestMethod.GET, headers = {"Accept=text/xml, application/json"}, produces = "application/json")
+  @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json")
   public @ResponseBody List<AppUser> getAllUsers(Model model, HttpSession session,
       HttpServletRequest request) {
-    logger.info("number of users: " + appUserService.getAllUsers().size());
     return appUserService.getAllUsers();
   }
 }
