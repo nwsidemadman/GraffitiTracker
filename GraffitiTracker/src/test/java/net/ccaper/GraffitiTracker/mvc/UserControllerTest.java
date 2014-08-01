@@ -1166,7 +1166,7 @@ public class UserControllerTest {
     when(appUserServiceMock.getUser(username)).thenReturn(appUser);
     controllerMock.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/sentPassword",
+    assertEquals("redirect:/users/forgotPassword/sentPassword",
         controllerMock.sendPasswordLink(usernameForm, result, requestMock,
             model));
     assertTrue(model.containsKey("appUser"));
@@ -1198,7 +1198,7 @@ public class UserControllerTest {
         .thenReturn(null);
     controllerMock.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/sentPassword",
+    assertEquals("redirect:/users/forgotPassword/sentPassword",
         controllerMock.sendPasswordLink(usernameForm, result, requestMock,
             model));
     assertFalse(model.containsKey("appUser"));
@@ -1248,7 +1248,7 @@ public class UserControllerTest {
     MailService mailServiceMock = mock(MailService.class);
     controllerMock.setMailService(mailServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/sentPassword",
+    assertEquals("redirect:/users/forgotPassword/sentPassword",
         controllerMock.sendPasswordLink(usernameForm, result, requestMock,
             model));
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
@@ -1295,7 +1295,7 @@ public class UserControllerTest {
     MailService mailServiceMock = mock(MailService.class);
     controllerMock.setMailService(mailServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/sentPassword",
+    assertEquals("redirect:/users/forgotPassword/sentPassword",
         controllerMock.sendPasswordLink(usernameForm, result, requestMock,
             model));
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
@@ -1618,7 +1618,7 @@ public class UserControllerTest {
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/passwordUpdated", controllerMock.updatePassword(
+    assertEquals("redirect:/users/forgotPassword/passwordUpdated", controllerMock.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
@@ -1664,7 +1664,7 @@ public class UserControllerTest {
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/passwordUpdated", controllerMock.updatePassword(
+    assertEquals("redirect:/users/forgotPassword/passwordUpdated", controllerMock.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock).getSecurityAnswerByUserid(
