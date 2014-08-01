@@ -5,13 +5,12 @@
 <%@ page session="false"%>
 
 <sec:authorize access="isAnonymous()">
-  <c:set var="actionValue" value="${contextPath}/users" />
+  <c:set var="actionValue" value="${contextPath}/users/forgotPassword/resetPassword" />
   <div>
     <c:if test="${exists == true}">
       <h2>Reset Password</h2>
       <sf:form method="POST" modelAttribute="passwordSecurityForm" action="${actionValue}">
         <fieldset>
-          <sf:hidden path="resetPassword" />
           <sf:hidden path="userid" />
           <sf:hidden path="securityQuestion" />
           <p>

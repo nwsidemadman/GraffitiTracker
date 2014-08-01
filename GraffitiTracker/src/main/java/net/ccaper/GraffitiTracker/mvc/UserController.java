@@ -56,7 +56,7 @@ public class UserController {
   // visible for testing
   static final String CONFIRMED_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/confirmed?registrationConfirmationUniqueUrlParam=";
   // visible for testing
-  static final String RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/resetPassword?resetPasswordUniqueUrlParam=";
+  static final String RESET_PASSWORD_EMAIL_LINK_SERVLET_PATH_WITH_PARAM = "/users/forgotPassword/resetPassword?resetPasswordUniqueUrlParam=";
   // visible for testing
   static final String HOME_LINK = "/home";
   @Autowired
@@ -394,7 +394,8 @@ public class UserController {
     return "users/sentUsername";
   }
 
-  @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET, params = "forgotPassword")
+  //gives user initial forgot password screen prompting for username to reset password
+  @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
   public String forgotPassword(Model model) {
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setRecoverPassword(true);
@@ -407,6 +408,7 @@ public class UserController {
     return "users/forgotPassword";
   }
 
+  //looks up email for username, sends user an email, and redirects user to email sent message to reset password
   @RequestMapping(value = "/forgotPassword", params = "recoverPassword", method = RequestMethod.POST)
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request,
@@ -433,10 +435,11 @@ public class UserController {
               .getResetPasswordUniqueUrlParamByUsername(usernameForm
                   .getUsername()), request));
     }
-    return "redirect:/users/sentPassword";
+    return "redirect:/users/forgotPassword/sentPassword";
   }
 
-  @RequestMapping(value = "/sentPassword", method = RequestMethod.GET)
+  // handles catching redirect to give user message that email was set to reset password
+  @RequestMapping(value = "/forgotPassword/sentPassword", method = RequestMethod.GET)
   public String sentPassword(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
@@ -446,7 +449,10 @@ public class UserController {
     return "users/sentPassword";
   }
 
-  @RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+  // reset password page after user clicks link in email prompting user for
+  // security question and new password
+  // deletes unique token after hitting this page expiring link in email
+  @RequestMapping(value = "/forgotPassword/resetPassword", method = RequestMethod.GET)
   public String resetPassword(
       @RequestParam(required = true) String resetPasswordUniqueUrlParam,
       Map<String, Object> model, HttpServletRequest request) {
@@ -474,10 +480,12 @@ public class UserController {
     return "users/resetPassword";
   }
 
-  @RequestMapping(params = "resetPassword", method = RequestMethod.POST)
+  // updates the password from the user for lost password, redirects to confirmation page
+  @RequestMapping(value = "/forgotPassword/resetPassword", method = RequestMethod.POST)
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
+    logger.info("boom");
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -485,6 +493,7 @@ public class UserController {
     }
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
     if (bindingResult.hasErrors()) {
+      logger.info("validator found errors");
       model.put("exists", true);
       model.put("passwordSecurityForm", passwordSecurityForm);
       model.put("contextPath", request.getContextPath());
@@ -494,10 +503,12 @@ public class UserController {
         Encoder.encodeString(appUserService
             .getUsernameByUserid(passwordSecurityForm.getUserid()),
             passwordSecurityForm.getPassword()));
-    return "redirect:/users/passwordUpdated";
+    return "redirect:/users/forgotPassword/passwordUpdated";
   }
 
-  @RequestMapping(value = "/passwordUpdated", method = RequestMethod.GET)
+  // gives the user a confirmation screen that the password has been reset,
+  // completing the forgot password workflow
+  @RequestMapping(value = "/forgotPassword/passwordUpdated", method = RequestMethod.GET)
   public String passwordUpdated(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
