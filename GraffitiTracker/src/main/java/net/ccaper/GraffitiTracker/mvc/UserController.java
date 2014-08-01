@@ -493,7 +493,6 @@ public class UserController {
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
-    logger.info("boom");
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
       AppUser appUser = appUserService.getUser(username);
@@ -501,7 +500,6 @@ public class UserController {
     }
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
     if (bindingResult.hasErrors()) {
-      logger.info("validator found errors");
       model.put("exists", true);
       model.put("passwordSecurityForm", passwordSecurityForm);
       model.put("contextPath", request.getContextPath());
