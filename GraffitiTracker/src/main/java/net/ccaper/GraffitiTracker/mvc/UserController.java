@@ -209,7 +209,8 @@ public class UserController {
 
   private void handleSendingConfirmationEmail(UserForm userForm,
       HttpServletRequest request) {
-    List<String> recipients = new ArrayList<String>(2);
+    appUserService.addRegistrationConfirmation(userForm.getUsername());
+    List<String> recipients = new ArrayList<String>(1);
     recipients.add(userForm.getEmail());
     mailService.sendVelocityEmail(recipients,
         "GraffitiTracker Registration Confirmation",
