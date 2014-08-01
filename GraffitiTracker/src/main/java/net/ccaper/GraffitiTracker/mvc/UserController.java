@@ -123,6 +123,7 @@ public class UserController {
     this.velocityEngine = velocityEngine;
   }
 
+  // initial create user screen
   @RequestMapping(value = "/new", method = RequestMethod.GET)
   public String createUserProfile(Model model, HttpSession session,
       HttpServletRequest request) {
@@ -156,6 +157,8 @@ public class UserController {
         .getContext().getAuthentication());
   }
 
+  // handles user response from initial create user screen
+  // redirects user to screen stating confirmation registration email sent
   @RequestMapping(value = "/new", method = RequestMethod.POST)
   public String addAppUserFromForm(HttpServletRequest request,
       HttpSession session, UserForm userForm, BindingResult bindingResult,
@@ -306,6 +309,7 @@ public class UserController {
     return generateHtmlFromVelocityTemplate(model);
   }
 
+  // when creating new user, handles redirect to give user messages that confirmation registration email sent
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
   public String showRegisteredUser(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -316,6 +320,7 @@ public class UserController {
     return "users/registered";
   }
 
+  // when creating new user, handles click in email confirming the registration of a new user
   @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
   public String showConfirmedUser(
       @RequestParam(required = true) String registrationConfirmationUniqueUrlParam,
@@ -349,6 +354,7 @@ public class UserController {
     return url.replace(oldServletPath, HOME_LINK);
   }
 
+  // initial forgot username screen
   @RequestMapping(value = "/forgotUsername", method = RequestMethod.GET, params = "forgotUsername")
   public String forgotUsername(Model model) {
     EmailForm emailForm = new EmailForm();
@@ -362,6 +368,7 @@ public class UserController {
     return "users/forgotUsername";
   }
 
+  // handles user entry of email address for recovering user name
   @RequestMapping(value = "/forgotUsername", params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request, Map<String, Object> model) {
@@ -384,6 +391,7 @@ public class UserController {
     return "redirect:/users/sentUsername";
   }
 
+  // for forgotten username, confirmation that email containing username sent
   @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
   public String sentUsername(Map<String, Object> model) {
     if (!isUserAnonymous()) {
