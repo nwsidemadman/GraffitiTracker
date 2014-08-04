@@ -1934,4 +1934,17 @@ public class UserControllerTest {
     verify(mailServiceMock).sendVelocityEmail(recipients, "GraffitiTracker Email Address Change Notification",
         "test");
   }
+  
+  @Test
+  public void testGetAllUsers() throws Exception {
+    List<AppUser> appUsers = new ArrayList<AppUser>();
+    AppUser appUser = new AppUser();
+    appUser.setUsername("test");
+    appUsers.add(appUser);
+    UserController userController = new UserController();
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getAllUsers()).thenReturn(appUsers);
+    userController.setAppUserService(userServiceMock);
+    assertEquals(appUsers, userController.getAllUsers());
+  }
 }

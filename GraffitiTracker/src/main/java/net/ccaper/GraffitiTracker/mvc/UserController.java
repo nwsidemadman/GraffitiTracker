@@ -600,10 +600,8 @@ public class UserController {
             newEmail, request));
   }
   
-  // TODO(ccaper): unit test
   @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody List<AppUser> getAllUsers(Model model, HttpSession session,
-      HttpServletRequest request) {
+  public @ResponseBody List<AppUser> getAllUsers() {
     return appUserService.getAllUsers();
   }
 }
