@@ -1,7 +1,7 @@
 Drop table `app_users`;
 
 CREATE TABLE `app_users` (
-  `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
   `is_active` bit(1) NOT NULL DEFAULT b'0',
@@ -12,8 +12,8 @@ CREATE TABLE `app_users` (
   `login_count` int(10) unsigned NOT NULL DEFAULT '0',
   `security_question` varchar(75) NOT NULL,
   `security_answer` varchar(40) NOT NULL,
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `userId_UNIQUE` (`user_id`),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;

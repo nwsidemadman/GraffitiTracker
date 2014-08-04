@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     AppUserDao {
   static final String USERS_TABLE = "app_users";
-  static final String USER_ID_COL = "user_id";
+  static final String USER_ID_COL = "id";
   static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
   private static final String IS_ACTIVE_COL = "is_active";
@@ -117,20 +117,21 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE, EMAIL_COL,
       EMAIL_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
+  static final String ID_FK_COL = "app_user_id";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
       "SELECT %s, %s FROM %s where %s = :%s ORDER BY %S ASC", ROLE_COL,
-      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, USER_ID_COL, USER_ID_COL,
+      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, ID_FK_COL, ID_FK_COL,
       ROLE_COL).toLowerCase();
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
-      ROLES_TABLE, USER_ID_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
+      ROLES_TABLE, ID_FK_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
       USERNAME_COL).toLowerCase();
   private static final String SQL_SELECT_SUPERADMIN_EMAILS = String.format(
       "SELECT %s FROM %s INNER JOIN %S ON %s.%s = %s.%s WHERE %s.%s = '%s'",
       EMAIL_COL, USERS_TABLE, ROLES_TABLE, USERS_TABLE, USER_ID_COL,
-      ROLES_TABLE, USER_ID_COL, ROLES_TABLE, ROLE_COL,
+      ROLES_TABLE, ID_FK_COL, ROLES_TABLE, ROLE_COL,
       RoleEnum.SUPERADMIN.getDbString()).toLowerCase();
 
   RowMapper<AppUser> appUserRowMapper = new RowMapper<AppUser>() {

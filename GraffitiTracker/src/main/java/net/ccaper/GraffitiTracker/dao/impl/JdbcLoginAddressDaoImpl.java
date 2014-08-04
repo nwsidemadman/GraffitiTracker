@@ -19,12 +19,13 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport implem
   private static final String NUMBER_VISITS_COL = "number_visits";
   private static final String USERS_TABLE = JdbcAppUserDaoImpl.USERS_TABLE;
   private static final String USER_ID_COL = JdbcAppUserDaoImpl.USER_ID_COL;
+  private static final String ID_FK_COL = JdbcAppUserDaoImpl.ID_FK_COL;
   private static final String USERNAME_COL = JdbcAppUserDaoImpl.USERNAME_COL;
   
   private static final String SQL_UPDATE_LOGIN_ADDRESSES = String.format(
       "INSERT INTO %s (%s, %s, %s) VALUES ((SELECT %s FROM %s WHERE %s = :%s), INET_ATON(:%s), current_timestamp) "
       + "ON DUPLICATE KEY UPDATE %s = %s + 1, %s = current_timestamp",
-      LOGIN_ADDRESSES_TABLE, USER_ID_COL, INET_ADDRESS_COL, LAST_VISIT_TIMESTAMP_COL,
+      LOGIN_ADDRESSES_TABLE, ID_FK_COL, INET_ADDRESS_COL, LAST_VISIT_TIMESTAMP_COL,
       USER_ID_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL, INET_ADDRESS_COL, NUMBER_VISITS_COL, NUMBER_VISITS_COL,
       LAST_VISIT_TIMESTAMP_COL).toLowerCase();
   

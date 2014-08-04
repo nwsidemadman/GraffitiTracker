@@ -20,25 +20,26 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
 NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   static final String REGISTRATION_CONFIRMATIONS_TABLE = "registration_confirmations";
   private static final String USER_ID_COL = JdbcAppUserDaoImpl.USER_ID_COL;
+  private static final String ID_FK_COL = JdbcAppUserDaoImpl.ID_FK_COL;
   private static final String UNIQUE_URL_PARAM_COL = "unique_url_param";
   private static final String USERS_TABLE = JdbcAppUserDaoImpl.USERS_TABLE;
   private static final String USERNAME_COL = JdbcAppUserDaoImpl.USERNAME_COL;
   private static final String SQL_INSERT_REGISTRATION_CONFIRMATION_BY_USERNAME = String
       .format(
           "INSERT INTO %s (%s, %s) VALUES ((SELECT %s FROM %s WHERE %s = :%s), UUID())",
-          REGISTRATION_CONFIRMATIONS_TABLE, USER_ID_COL, UNIQUE_URL_PARAM_COL,
+          REGISTRATION_CONFIRMATIONS_TABLE, ID_FK_COL, UNIQUE_URL_PARAM_COL,
           USER_ID_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_SELECT_UNIQUE_URL_PARAM_BY_USERNAME = String
       .format(
           "SELECT %s FROM %s INNER JOIN %s WHERE %s.%s = %s.%s AND %s = :%s",
           UNIQUE_URL_PARAM_COL, USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE,
           USERS_TABLE, USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE,
-          USER_ID_COL, USERNAME_COL, USERNAME_COL).toLowerCase();
+          ID_FK_COL, USERNAME_COL, USERNAME_COL).toLowerCase();
   private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
       "DELETE FROM %s WHERE %s = :%s", REGISTRATION_CONFIRMATIONS_TABLE,
       UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
   private static final String SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM = String
-      .format("SELECT %s FROM %s WHERE %s = :%s", USER_ID_COL,
+      .format("SELECT %s FROM %s WHERE %s = :%s", ID_FK_COL,
           REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL,
           UNIQUE_URL_PARAM_COL).toLowerCase();
 
