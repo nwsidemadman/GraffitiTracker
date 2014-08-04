@@ -190,11 +190,13 @@
     </dependency>
 
     <!-- Jackson -->
+    <!-- Used for handling rest client call -->
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-mapper-asl</artifactId>
       <version>1.9.13</version>
     </dependency>
+    <!-- Used for REST Service JSON translation -->
     <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
