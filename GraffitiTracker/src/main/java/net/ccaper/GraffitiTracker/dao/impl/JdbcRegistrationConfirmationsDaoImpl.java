@@ -60,7 +60,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   RowMapper<Integer> useridRowMapper = new RowMapper<Integer>() {
     @Override
     public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new Integer(rs.getInt(USER_ID_COL));
+      return new Integer(rs.getInt(ID_FK_COL));
     }
   };
 

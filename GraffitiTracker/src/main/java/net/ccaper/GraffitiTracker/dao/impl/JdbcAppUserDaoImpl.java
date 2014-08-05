@@ -219,7 +219,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     AppUser appUser = getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USER_BY_USERNAME, userParamMap, appUserRowMapper);
     Map<String, Integer> rolesParamMap = new HashMap<String, Integer>();
-    rolesParamMap.put(USER_ID_COL, appUser.getUserId());
+    rolesParamMap.put(ID_FK_COL, appUser.getUserId());
     List<Role> roles = getNamedParameterJdbcTemplate().query(
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
     appUser.setRoles(roles);
