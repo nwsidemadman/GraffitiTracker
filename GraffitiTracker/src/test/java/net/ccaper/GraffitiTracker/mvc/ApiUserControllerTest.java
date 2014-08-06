@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
@@ -35,7 +37,9 @@ public class ApiUserControllerTest {
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getAllUsers()).thenReturn(appUsers);
     apiUserController.setAppUserService(userServiceMock);
-    assertEquals(appUsers, apiUserController.getAllUsers());
+    Map<String, List<AppUser>> data = new HashMap<String, List<AppUser>>(1);
+    data.put("data", appUsers);
+    assertEquals(data, apiUserController.getAllUsers());
     verify(userServiceMock).getAllUsers();
   }
 
@@ -44,12 +48,13 @@ public class ApiUserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername("test");
     appUser.setUserId(1);
-    ;
     ApiUserController apiUserController = new ApiUserController();
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserById(appUser.getUserId())).thenReturn(appUser);
     apiUserController.setAppUserService(userServiceMock);
-    assertEquals(appUser, apiUserController.getUser(appUser.getUserId()));
+    Map<String, AppUser> data = new HashMap<String, AppUser>(1);
+    data.put("data", appUser);
+    assertEquals(data, apiUserController.getUser(appUser.getUserId()));
     verify(userServiceMock).getUserById(appUser.getUserId());
   }
 
@@ -60,7 +65,9 @@ public class ApiUserControllerTest {
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserById(userId)).thenReturn(null);
     apiUserController.setAppUserService(userServiceMock);
-    assertNull(apiUserController.getUser(userId));
+    Map<String, AppUser> data = new HashMap<String, AppUser>(1);
+    data.put("data", null);
+    assertEquals(data, apiUserController.getUser(userId));
     verify(userServiceMock).getUserById(userId);
   }
 }

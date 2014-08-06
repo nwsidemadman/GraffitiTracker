@@ -1,6 +1,8 @@
 package net.ccaper.GraffitiTracker.mvc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
@@ -30,12 +32,16 @@ public class ApiUserController {
   }
   
   @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody List<AppUser> getAllUsers() {
-    return appUserService.getAllUsers();
+  public @ResponseBody Map<String, List<AppUser>> getAllUsers() {
+    Map<String, List<AppUser>> data = new HashMap<String, List<AppUser>>(1);
+    data.put("data", appUserService.getAllUsers());
+    return data;
   }
   
   @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody AppUser getUser(@PathVariable int id) {
-    return appUserService.getUserById(id);
+  public @ResponseBody Map<String, AppUser> getUser(@PathVariable int id) {
+    Map<String, AppUser> data = new HashMap<String, AppUser>(1);
+    data.put("data", appUserService.getUserById(id));
+    return data;
   }
 }
