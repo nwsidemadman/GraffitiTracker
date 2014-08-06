@@ -49,7 +49,7 @@ implements BannedInetsDao {
 
   @Override
   public int selectCountInetInRange(String inet) {
-    Map<String, String> inetParamMap = new HashMap<String, String>();
+    Map<String, String> inetParamMap = new HashMap<String, String>(1);
     inetParamMap.put(INET, inet);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_INET_IN_RANGE, inetParamMap, countRowMapper);
@@ -57,7 +57,7 @@ implements BannedInetsDao {
 
   @Override
   public void updateNumberRegistrationAttemptsInetInRange(String inet) {
-    Map<String, String> inetParamMap = new HashMap<String, String>();
+    Map<String, String> inetParamMap = new HashMap<String, String>(1);
     inetParamMap.put(INET, inet);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_NUMBER_REGISTRATION_ATTEMPTS_INET_IN_RANGE, inetParamMap);
   }

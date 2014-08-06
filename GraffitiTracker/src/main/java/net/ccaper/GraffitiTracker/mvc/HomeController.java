@@ -36,7 +36,7 @@ public class HomeController {
   public String showHomePage(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
 
@@ -59,7 +59,7 @@ public class HomeController {
   public String contact(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "contact";
@@ -69,7 +69,7 @@ public class HomeController {
   public String about(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "about";
@@ -79,7 +79,7 @@ public class HomeController {
   public String legal(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "legal";
@@ -89,7 +89,7 @@ public class HomeController {
   public String privacy(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "privacy";

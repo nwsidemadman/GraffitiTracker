@@ -6,7 +6,9 @@ import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 
 public interface AppUserService {
-  AppUser getUser(String username);
+  AppUser getUserByUsername(String username);
+  
+  AppUser getUserById(int id);
 
   void addAppUser(AppUser appUser);
 

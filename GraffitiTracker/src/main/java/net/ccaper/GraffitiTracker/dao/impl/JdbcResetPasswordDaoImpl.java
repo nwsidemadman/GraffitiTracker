@@ -82,7 +82,7 @@ implements ResetPasswordDao {
 
   @Override
   public void addResetPassword(String username) {
-    Map<String, String> usernameParamMap = new HashMap<String, String>();
+    Map<String, String> usernameParamMap = new HashMap<String, String>(1);
     usernameParamMap.put(USERNAME_COL, username);
     getNamedParameterJdbcTemplate().update(
         SQL_INSERT_RESET_PASSWORD_BY_USERNAME, usernameParamMap);
@@ -90,7 +90,7 @@ implements ResetPasswordDao {
 
   @Override
   public String getUniqueUrlParamByUsername(String username) {
-    Map<String, String> usernameParamMap = new HashMap<String, String>();
+    Map<String, String> usernameParamMap = new HashMap<String, String>(1);
     usernameParamMap.put(USERNAME_COL, username);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_UNIQUE_PARAM_BY_USERNAME, usernameParamMap,
@@ -100,7 +100,7 @@ implements ResetPasswordDao {
   @Override
   public UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
       String uniqueUrlParam) {
-    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
       return getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParamParamMap);
@@ -119,7 +119,7 @@ implements ResetPasswordDao {
 
   @Override
   public void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam) {
-    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM,
         uniqueUrlParamParamMap);
@@ -127,6 +127,6 @@ implements ResetPasswordDao {
 
   @Override
   public void deleteResetPasswordWhereTimestampExpired() {
-    getNamedParameterJdbcTemplate().update(SQL_DELETE_EXPIRED_RESET_PASSWORDS, new HashMap<String, String>());
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_EXPIRED_RESET_PASSWORDS, new HashMap<String, String>(0));
   }
 }

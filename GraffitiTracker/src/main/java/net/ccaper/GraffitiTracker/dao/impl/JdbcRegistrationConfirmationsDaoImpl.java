@@ -71,7 +71,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
 
   @Override
   public void addRegistrationConfirmationByUsername(String username) {
-    Map<String, String> registrationConfirmationParamMap = new HashMap<String, String>();
+    Map<String, String> registrationConfirmationParamMap = new HashMap<String, String>(1);
     registrationConfirmationParamMap.put(USERNAME_COL, username);
     getNamedParameterJdbcTemplate().update(
         SQL_INSERT_REGISTRATION_CONFIRMATION_BY_USERNAME,
@@ -80,7 +80,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
 
   @Override
   public String getUniqueUrlParamByUsername(String username) {
-    Map<String, String> userParamMap = new HashMap<String, String>();
+    Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(USERNAME_COL, username);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_UNIQUE_URL_PARAM_BY_USERNAME, userParamMap,
@@ -90,7 +90,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   @Override
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
-    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     getNamedParameterJdbcTemplate().update(SQL_DELETE_BY_UNIQUE_URL_PARAM,
         uniqueUrlParamParamMap);
@@ -98,7 +98,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
 
   @Override
   public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam) {
-    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>();
+    Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
       return getUserIdByUniqueUrlParam(uniqueUrlParamParamMap);

@@ -36,7 +36,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport implem
 
   @Override
   public void updateLoginAddressByUsername(String username, String ipAddress) {
-    Map<String, String> loginAddressesParamMap = new HashMap<String, String>();
+    Map<String, String> loginAddressesParamMap = new HashMap<String, String>(2);
     loginAddressesParamMap.put(USERNAME_COL, username);
     loginAddressesParamMap.put(INET_ADDRESS_COL, ipAddress);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_ADDRESSES, loginAddressesParamMap);

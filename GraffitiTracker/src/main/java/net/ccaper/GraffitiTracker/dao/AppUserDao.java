@@ -2,6 +2,8 @@ package net.ccaper.GraffitiTracker.dao;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import net.ccaper.GraffitiTracker.objects.AppUser;
 
 public interface AppUserDao {
@@ -44,4 +46,6 @@ public interface AppUserDao {
   void updateSecurityAnswerByUserid(int userid, String securityAnswer);
   
   List<AppUser> getAllUsers();
+  
+  AppUser getAppUserById(int id) throws EmptyResultDataAccessException;
 }

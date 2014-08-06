@@ -46,6 +46,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s", USER_ID_COL, USERNAME_COL,
       EMAIL_COL, IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL,
       PREVIOUS_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE).toLowerCase();
+  private static final String SQL_SELECT_USER_BY_ID = String.format(
+      "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
+      USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL,
+      PREVIOUS_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE, USER_ID_COL,
+      USER_ID_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (:%s, :%s, :%s, :%s, :%s)",
       USERS_TABLE, USERNAME_COL, EMAIL_COL, PASSWORD_COL,
@@ -122,8 +127,8 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
       "SELECT %s, %s FROM %s where %s = :%s ORDER BY %S ASC", ROLE_COL,
-      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, ID_FK_COL, ID_FK_COL,
-      ROLE_COL).toLowerCase();
+      ROLE_GRANTED_TIMESTAMP_COL, ROLES_TABLE, ID_FK_COL, ID_FK_COL, ROLE_COL)
+      .toLowerCase();
   private static final String SQL_INSERT_ROLE = String.format(
       "INSERT INTO %s (%s) VALUES ((SELECT %s FROM %s WHERE %S = :%s))",
       ROLES_TABLE, ID_FK_COL, USER_ID_COL, USERS_TABLE, USERNAME_COL,
@@ -152,7 +157,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       return appUser;
     }
   };
-  
+
   RowMapper<AppUser> appUserAdminViewRowMapper = new RowMapper<AppUser>() {
     @Override
     public AppUser mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -214,11 +219,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public AppUser getAppUserByUsername(String username) {
-    Map<String, String> userParamMap = new HashMap<String, String>();
+    Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(USERNAME_COL, username);
     AppUser appUser = getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USER_BY_USERNAME, userParamMap, appUserRowMapper);
-    Map<String, Integer> rolesParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
     rolesParamMap.put(ID_FK_COL, appUser.getUserId());
     List<Role> roles = getNamedParameterJdbcTemplate().query(
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
@@ -228,21 +233,21 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void addAppUser(AppUser appUser) {
-    Map<String, String> userParamMap = new HashMap<String, String>();
+    Map<String, String> userParamMap = new HashMap<String, String>(5);
     userParamMap.put(USERNAME_COL, appUser.getUsername());
     userParamMap.put(EMAIL_COL, appUser.getEmail());
     userParamMap.put(PASSWORD_COL, appUser.getPassword());
     userParamMap.put(SECURITY_QUESTION_COL, appUser.getSecurityQuestion());
     userParamMap.put(SECURITY_ANSWER_COL, appUser.getSecurityAnswer());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_USER, userParamMap);
-    Map<String, String> roleParamMap = new HashMap<String, String>();
+    Map<String, String> roleParamMap = new HashMap<String, String>(1);
     roleParamMap.put(USERNAME_COL, appUser.getUsername());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_ROLE, roleParamMap);
   }
 
   @Override
   public int getCountUsernames(String username) {
-    Map<String, String> userParamMap = new HashMap<String, String>();
+    Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(USERNAME_COL, username);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_USERNAME, userParamMap, countRowMapper);
@@ -250,7 +255,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public int getCountEmails(String email) {
-    Map<String, String> userParamMap = new HashMap<String, String>();
+    Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(EMAIL_COL, email);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_EMAIL, userParamMap, countRowMapper);
@@ -258,7 +263,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void updateLoginTimestamps(String username) {
-    Map<String, String> userParamMap = new HashMap<String, String>();
+    Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(USERNAME_COL, username);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_TIMESTAMPS,
         userParamMap);
@@ -266,7 +271,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void updateAppUserAsActive(int userid) {
-    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
     userIdParamMap.put(USER_ID_COL, userid);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE,
         userIdParamMap);
@@ -275,12 +280,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   @Override
   public void deleteAppUsersWhenRegistrationExpired() {
     getNamedParameterJdbcTemplate().update(
-        SQL_DELETE_EXPIRED_REGISTRATION_USERS, new HashMap<String, String>());
+        SQL_DELETE_EXPIRED_REGISTRATION_USERS, new HashMap<String, String>(0));
   }
 
   @Override
   public int getCountNewUsers(int numberOfDays) {
-    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>(1);
     numberOfDaysParamMap.put(NUMBER_OF_DAYS, numberOfDays);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_NEW_USERS_IN_LAST_X_DAYS, numberOfDaysParamMap,
@@ -289,7 +294,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public int getCountLogins(int numberOfDays) {
-    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>(1);
     numberOfDaysParamMap.put(NUMBER_OF_DAYS, numberOfDays);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_LOGINS_IN_LAST_X_DAYS, numberOfDaysParamMap,
@@ -298,7 +303,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public int getCountUnconfirmedUsers(int numberOfDays) {
-    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>(1);
     numberOfDaysParamMap.put(NUMBER_OF_DAYS, numberOfDays);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_COUNT_UNCONFIRMED_USERS_IN_LAST_X_DAYS,
@@ -313,7 +318,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public String getUsernameByEmail(String email) {
-    Map<String, String> emailParamMap = new HashMap<String, String>();
+    Map<String, String> emailParamMap = new HashMap<String, String>(1);
     emailParamMap.put(EMAIL_COL, email);
     try {
       return getUsernameByEmail(emailParamMap);
@@ -330,7 +335,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public String getEmailByUsername(String username) {
-    Map<String, String> usernameParamMap = new HashMap<String, String>();
+    Map<String, String> usernameParamMap = new HashMap<String, String>(1);
     usernameParamMap.put(USERNAME_COL, username);
     try {
       return getEmailByUsername(usernameParamMap);
@@ -347,7 +352,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public String getSecurityAnswerByUserid(int userid) {
-    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
     userIdParamMap.put(USER_ID_COL, userid);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_SECURITY_ANSWER_BY_USER_ID, userIdParamMap,
@@ -356,7 +361,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public String getUsernameByUserid(int userid) {
-    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>();
+    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
     userIdParamMap.put(USER_ID_COL, userid);
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USERNAME_BY_USER_ID, userIdParamMap, usernameRowMapper);
@@ -364,7 +369,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void updatePasswordByUserid(int userid, String passwordEncoded) {
-    Map<String, Object> paramMap = new HashMap<String, Object>();
+    Map<String, Object> paramMap = new HashMap<String, Object>(2);
     paramMap.put(USER_ID_COL, userid);
     paramMap.put(PASSWORD_COL, passwordEncoded);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_PASSWORD_BY_USER_ID,
@@ -373,7 +378,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void updateEmailByUserid(int userid, String email) {
-    Map<String, Object> paramMap = new HashMap<String, Object>();
+    Map<String, Object> paramMap = new HashMap<String, Object>(2);
     paramMap.put(USER_ID_COL, userid);
     paramMap.put(EMAIL_COL, email);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_EMAIL_BY_USER_ID,
@@ -382,7 +387,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void updateSecurityQuestionByUserid(int userid, String securityQuestion) {
-    Map<String, Object> paramMap = new HashMap<String, Object>();
+    Map<String, Object> paramMap = new HashMap<String, Object>(2);
     paramMap.put(USER_ID_COL, userid);
     paramMap.put(SECURITY_QUESTION_COL, securityQuestion);
     getNamedParameterJdbcTemplate().update(
@@ -391,7 +396,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public void updateSecurityAnswerByUserid(int userid, String securityAnswer) {
-    Map<String, Object> paramMap = new HashMap<String, Object>();
+    Map<String, Object> paramMap = new HashMap<String, Object>(2);
     paramMap.put(USER_ID_COL, userid);
     paramMap.put(SECURITY_ANSWER_COL, securityAnswer);
     getNamedParameterJdbcTemplate().update(
@@ -400,15 +405,29 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public List<AppUser> getAllUsers() {
-    List<AppUser> users = getNamedParameterJdbcTemplate().query(SQL_SELECT_ALL_USERS,
-        appUserAdminViewRowMapper);
+    List<AppUser> users = getNamedParameterJdbcTemplate().query(
+        SQL_SELECT_ALL_USERS, appUserAdminViewRowMapper);
     for (AppUser user : users) {
-      Map<String, Integer> rolesParamMap = new HashMap<String, Integer>();
-      rolesParamMap.put(USER_ID_COL, user.getUserId());
+      Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
+      rolesParamMap.put(ID_FK_COL, user.getUserId());
       List<Role> roles = getNamedParameterJdbcTemplate().query(
           SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
       user.setRoles(roles);
     }
     return users;
+  }
+
+  @Override
+  public AppUser getAppUserById(int id) throws EmptyResultDataAccessException {
+    Map<String, Integer> idParamMap = new HashMap<String, Integer>(1);
+    idParamMap.put(USER_ID_COL, id);
+    AppUser user = getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USER_BY_ID, idParamMap, appUserAdminViewRowMapper);
+    Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
+    rolesParamMap.put(ID_FK_COL, user.getUserId());
+    List<Role> roles = getNamedParameterJdbcTemplate().query(
+        SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
+    user.setRoles(roles);
+    return user;
   }
 }

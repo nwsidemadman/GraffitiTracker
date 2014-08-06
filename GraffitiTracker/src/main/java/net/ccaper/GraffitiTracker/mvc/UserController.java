@@ -42,6 +42,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -130,7 +131,7 @@ public class UserController {
     String userInet = request.getRemoteAddr();
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.addAttribute("appUser", appUser);
     }
     if (bannedInetsService.isInetBanned(userInet)) {
@@ -176,7 +177,7 @@ public class UserController {
     handleSendingConfirmationEmail(userForm, request);
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "redirect:/users/registered";
@@ -190,7 +191,7 @@ public class UserController {
     userForm.setCaptchaAnswer(null);
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/create";
@@ -315,7 +316,7 @@ public class UserController {
   public String showRegisteredUser(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/registered";
@@ -330,7 +331,7 @@ public class UserController {
         .getUserIdByRegistrationConfirmationUniqueUrlParam(registrationConfirmationUniqueUrlParam);
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     if (userId == null) {
@@ -363,7 +364,7 @@ public class UserController {
     model.addAttribute(emailForm);
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.addAttribute("appUser", appUser);
     }
     return "users/forgotUsername";
@@ -375,7 +376,7 @@ public class UserController {
       HttpServletRequest request, Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     formEmailValidator.validate(emailForm, bindingResult);
@@ -397,7 +398,7 @@ public class UserController {
   public String sentUsername(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/sentUsername";
@@ -411,7 +412,7 @@ public class UserController {
     model.addAttribute(usernameForm);
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.addAttribute("appUser", appUser);
     }
     return "users/forgotPassword";
@@ -424,7 +425,7 @@ public class UserController {
       Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     formUsernameValidator.validate(usernameForm, bindingResult);
@@ -452,7 +453,7 @@ public class UserController {
   public String sentPassword(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/sentPassword";
@@ -483,7 +484,7 @@ public class UserController {
     model.put("contextPath", request.getContextPath());
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/resetPassword";
@@ -496,7 +497,7 @@ public class UserController {
       Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     formPasswordSecurityValidator.validate(passwordSecurityForm, bindingResult);
@@ -519,7 +520,7 @@ public class UserController {
   public String passwordUpdated(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/passwordUpdated";
@@ -535,7 +536,7 @@ public class UserController {
   public String manageAccount(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     return "users/manageAccount";
@@ -545,7 +546,7 @@ public class UserController {
   public String manageAccountEdit(Map<String, Object> model) {
     if (!isUserAnonymous()) {
       String username = getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUser(username);
+      AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
     ManageAccountForm manageAccountForm = new ManageAccountForm();
@@ -559,7 +560,7 @@ public class UserController {
       HttpServletRequest request) {
     formManageAccountEditValidator.validate(manageAccountForm, bindingResult);
     String username = getUsernameFromSecurity();
-    AppUser appUser = appUserService.getUser(username);
+    AppUser appUser = appUserService.getUserByUsername(username);
     model.put("appUser", appUser);
     if (bindingResult.hasErrors()) {
       return "users/manageAccountEdit";
@@ -603,5 +604,10 @@ public class UserController {
   @RequestMapping(method = RequestMethod.GET, produces = "application/json")
   public @ResponseBody List<AppUser> getAllUsers() {
     return appUserService.getAllUsers();
+  }
+  
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
+  public @ResponseBody AppUser getUser(@PathVariable int id) {
+    return appUserService.getUserById(id);
   }
 }

@@ -62,14 +62,14 @@ public class HomeControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     HomeController controllerMock = new HomeControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("home", controllerMock.showHomePage(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -108,14 +108,14 @@ public class HomeControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     HomeController controllerMock = new HomeControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("contact", controllerMock.contact(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -153,14 +153,14 @@ public class HomeControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     HomeController controllerMock = new HomeControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("about", controllerMock.about(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -198,14 +198,14 @@ public class HomeControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     HomeController controllerMock = new HomeControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("legal", controllerMock.legal(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -243,13 +243,13 @@ public class HomeControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     HomeController controllerMock = new HomeControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("privacy", controllerMock.privacy(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 }

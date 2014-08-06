@@ -16,6 +16,7 @@ import net.ccaper.GraffitiTracker.utils.DateFormats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  public AppUser getUser(String username) {
+  public AppUser getUserByUsername(String username) {
     return appUserDao.getAppUserByUsername(username);
   }
 
@@ -198,5 +199,15 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public List<AppUser> getAllUsers() {
     return appUserDao.getAllUsers();
+  }
+
+  @Override
+  // wrap access with security
+  public AppUser getUserById(int id) {
+    try {
+      return appUserDao.getAppUserById(id);
+    } catch (DataAccessException e) {
+      return null;
+    }
   }
 }

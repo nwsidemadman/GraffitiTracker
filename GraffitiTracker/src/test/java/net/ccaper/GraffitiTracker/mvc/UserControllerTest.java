@@ -77,7 +77,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     String inet = "127.0.0.1";
     TextCaptcha captcha = new TextCaptcha("Some question", "answer");
     CaptchaService captchaServiceMock = mock(CaptchaService.class);
@@ -101,11 +101,11 @@ public class UserControllerTest {
     assertTrue(model.containsAttribute("appUser"));
     Map<String, Object> modelMap = model.asMap();
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
     verify(captchaServiceMock).getTextCaptcha();
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -166,7 +166,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setBannedInetsService(banndedInetsServiceMock);
     controllerMock.setAppUserService(userServiceMock);
@@ -179,7 +179,7 @@ public class UserControllerTest {
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -247,7 +247,7 @@ public class UserControllerTest {
         false);
     when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
         .thenReturn(false);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
     when(
         bannedWordServiceMock.doesStringContainBannedWord(userForm
@@ -271,7 +271,7 @@ public class UserControllerTest {
         requestMock, session, userForm, result, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
@@ -371,7 +371,7 @@ public class UserControllerTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
         false);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(invalidUserCaptcha);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
@@ -397,7 +397,7 @@ public class UserControllerTest {
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(captchaServiceMock).getTextCaptcha();
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -527,14 +527,14 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/registered", controllerMock.showRegisteredUser(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -602,7 +602,7 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(1);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController userControllerMock = new UserControllerMock();
     userControllerMock.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
@@ -616,7 +616,7 @@ public class UserControllerTest {
         uniqueUrlParam);
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -675,7 +675,7 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController userControllerMock = new UserControllerMock();
     userControllerMock.setAppUserService(appUserServiceMock);
     assertEquals("users/confirmed",
@@ -684,7 +684,7 @@ public class UserControllerTest {
     assertEquals(false, model.get("confirmed"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock)
         .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
   }
@@ -736,7 +736,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     EmailForm emailForm = new EmailForm();
     emailForm.setEmail("test");
     BindingResult result = new BeanPropertyBindingResult(emailForm, "email");
@@ -750,7 +750,7 @@ public class UserControllerTest {
         controllerMock.sendUsername(emailForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -801,7 +801,7 @@ public class UserControllerTest {
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(null);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
     controllerMock.setFormEmailValidator(formEmailValidator);
@@ -810,7 +810,7 @@ public class UserControllerTest {
         controllerMock.sendUsername(emailForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock).getUsernameByEmail(email);
   }
   
@@ -873,7 +873,7 @@ public class UserControllerTest {
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(username);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     MailService mailServiceMock = mock(MailService.class);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
@@ -889,7 +889,7 @@ public class UserControllerTest {
         "test");
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -918,7 +918,7 @@ public class UserControllerTest {
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(username);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     MailService mailServiceMock = mock(MailService.class);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
@@ -954,14 +954,14 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/sentUsername", controllerMock.sentUsername(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -998,7 +998,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     Model model = new ExtendedModelMap();
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
@@ -1007,7 +1007,7 @@ public class UserControllerTest {
     Map<String, Object> modelMap = model.asMap();
     assertTrue(model.containsAttribute("emailForm"));
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -1045,7 +1045,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     Model model = new ExtendedModelMap();
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
@@ -1054,7 +1054,7 @@ public class UserControllerTest {
     assertTrue(model.containsAttribute("appUser"));
     Map<String, Object> modelMap = model.asMap();
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -1093,7 +1093,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UsernameForm usernameForm = new UsernameForm();
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
@@ -1107,7 +1107,7 @@ public class UserControllerTest {
         usernameForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -1163,7 +1163,7 @@ public class UserControllerTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
         .thenReturn(null);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     controllerMock.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/forgotPassword/sentPassword",
@@ -1171,7 +1171,7 @@ public class UserControllerTest {
             model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
   }
 
@@ -1243,7 +1243,7 @@ public class UserControllerTest {
     String userEmail = "test@test.com";
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
         .thenReturn(userEmail);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     controllerMock.setAppUserService(appUserServiceMock);
     MailService mailServiceMock = mock(MailService.class);
     controllerMock.setMailService(mailServiceMock);
@@ -1259,7 +1259,7 @@ public class UserControllerTest {
         emailBody);
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -1326,14 +1326,14 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/sentPassword", controllerMock.sentPassword(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -1379,7 +1379,7 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
         .thenReturn(userSecurityQuestion);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
@@ -1392,7 +1392,7 @@ public class UserControllerTest {
     assertEquals(contextPath, model.get("contextPath"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock)
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
     verify(requestMock).getContextPath();
@@ -1458,7 +1458,7 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
@@ -1468,7 +1468,7 @@ public class UserControllerTest {
     assertFalse((Boolean) model.get("exists"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock)
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
   }
@@ -1520,7 +1520,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
     passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer(StringUtils.EMPTY);
@@ -1543,7 +1543,7 @@ public class UserControllerTest {
     assertEquals(passwordSecurityForm, model.get("passwordSecurityForm"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
   
   @Test
@@ -1609,7 +1609,7 @@ public class UserControllerTest {
     when(
         appUserServiceMock.getUsernameByUserid(passwordSecurityForm.getUserid()))
         .thenReturn(username);
-    when(appUserServiceMock.getUser(username)).thenReturn(appUser);
+    when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
@@ -1622,7 +1622,7 @@ public class UserControllerTest {
         passwordSecurityForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).getUser(username);
+    verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock).getSecurityAnswerByUserid(
         passwordSecurityForm.getUserid());
     verify(appUserServiceMock).getUsernameByUserid(
@@ -1695,14 +1695,14 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/passwordUpdated", controllerMock.passwordUpdated(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
 
   @Test
@@ -1745,14 +1745,14 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/manageAccount", controllerMock.manageAccount(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
   
   @Test
@@ -1789,14 +1789,14 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/manageAccountEdit", controllerMock.manageAccountEdit(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
   
   @Test
@@ -1833,7 +1833,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     ManageAccountForm manageAccountForm = new ManageAccountForm();
     manageAccountForm.setSecurityAnswer("12345678901234567890123456789012345678901");
     FormManageAccountEditValidator formManageAccountEditValidator = new FormManageAccountEditValidator();
@@ -1847,7 +1847,7 @@ public class UserControllerTest {
         manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
   
   @Test
@@ -1869,7 +1869,7 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     ManageAccountForm manageAccountForm = new ManageAccountForm();
     FormManageAccountEditValidator formManageAccountEditValidator = new FormManageAccountEditValidator();
     UserControllerMock userControllerMock = new UserControllerMock();
@@ -1882,7 +1882,7 @@ public class UserControllerTest {
         manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
   }
   
   @Test
@@ -1907,7 +1907,7 @@ public class UserControllerTest {
     String oldEmail = "testOld@test.com";
     appUser.setEmail(oldEmail);
     AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUser(username)).thenReturn(appUser);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     ManageAccountForm manageAccountForm = new ManageAccountForm();
     String newEmail = "testNew@test.com";
     manageAccountForm.setEmail(newEmail);
@@ -1927,7 +1927,7 @@ public class UserControllerTest {
         manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(userServiceMock).getUser(username);
+    verify(userServiceMock).getUserByUsername(username);
     List<String> recipients = new ArrayList<String>();
     recipients.add(appUser.getEmail());
     recipients.add(newEmail);
@@ -1946,5 +1946,30 @@ public class UserControllerTest {
     when(userServiceMock.getAllUsers()).thenReturn(appUsers);
     userController.setAppUserService(userServiceMock);
     assertEquals(appUsers, userController.getAllUsers());
+    verify(userServiceMock).getAllUsers();
+  }
+  
+  @Test
+  public void testUser_HappyPath() throws Exception {
+    AppUser appUser = new AppUser();
+    appUser.setUsername("test");
+    appUser.setUserId(1);;
+    UserController userController = new UserController();
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUserById(appUser.getUserId())).thenReturn(appUser);
+    userController.setAppUserService(userServiceMock);
+    assertEquals(appUser, userController.getUser(appUser.getUserId()));
+    verify(userServiceMock).getUserById(appUser.getUserId());
+  }
+  
+  @Test
+  public void testUser_NoUser() throws Exception {
+    int userId = 5;
+    UserController userController = new UserController();
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUserById(userId)).thenReturn(null);
+    userController.setAppUserService(userServiceMock);
+    assertNull(userController.getUser(userId));
+    verify(userServiceMock).getUserById(userId);
   }
 }
