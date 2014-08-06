@@ -24,6 +24,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     AppUserDao {
   static final String USERS_TABLE = "app_users";
   static final String USER_ID_COL = "id";
+  static final String ID_FK_COL = "app_user_id";
   static final String USERNAME_COL = "username";
   private static final String EMAIL_COL = "email";
   private static final String IS_ACTIVE_COL = "is_active";
@@ -83,7 +84,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
           "DELETE %s FROM %s INNER JOIN %s ON %s.%s = %s.%s WHERE %s.%s = 0 AND %s.%s < (NOW() - INTERVAL 2 day)",
           USERS_TABLE, USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE,
           USERS_TABLE, USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE,
-          USER_ID_COL, USERS_TABLE, IS_ACTIVE_COL, USERS_TABLE,
+          ID_FK_COL, USERS_TABLE, IS_ACTIVE_COL, USERS_TABLE,
           REGISTRATION_TIMESTAMP_COL).toLowerCase();
   private static final String SQL_SELECT_COUNT_NEW_USERS_IN_LAST_X_DAYS = String
       .format(
@@ -99,7 +100,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       .format(
           "select count(*) from %s inner join %s on %s.%s = %s.%s where %s = 0 and %s > (NOW() - INTERVAL :%s DAY)",
           USERS_TABLE, REGISTRATION_CONFIRMATIONS_TABLE, USERS_TABLE,
-          USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE, USER_ID_COL,
+          USER_ID_COL, REGISTRATION_CONFIRMATIONS_TABLE, ID_FK_COL,
           IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL, NUMBER_OF_DAYS);
   private static final String SQL_SELECT_SECURITY_ANSWER_BY_USER_ID = String
       .format("SELECT %s FROM %s WHERE %s = :%s", SECURITY_ANSWER_COL,
@@ -122,7 +123,6 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE, EMAIL_COL,
       EMAIL_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String ROLES_TABLE = "roles";
-  static final String ID_FK_COL = "app_user_id";
   private static final String ROLE_COL = "role";
   private static final String ROLE_GRANTED_TIMESTAMP_COL = "role_granted_timestamp";
   private static final String SQL_SELECT_ROLES_BY_USER_ID = String.format(
