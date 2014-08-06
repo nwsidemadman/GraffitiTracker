@@ -9,6 +9,10 @@
       Upload Graffiti
       &middot;
       <a href="<s:url value="/users/manageAccount" />">Manage Account</a>
+      <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
+        &middot;
+        <a href="<s:url value="/users/manageUsers" />">Manage Users</a>
+      </sec:authorize>
     </p>
   </div>
 </sec:authorize>

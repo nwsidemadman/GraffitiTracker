@@ -600,4 +600,14 @@ public class UserController {
         generateEmailAddressChangeEmailBodyWithVelocityEngine(oldEmail,
             newEmail, request));
   }
+  
+  @RequestMapping(value = "/manageUsers", method = RequestMethod.GET)
+  public String manageUsers(Map<String, Object> model) {
+    if (!isUserAnonymous()) {
+      String username = getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUserByUsername(username);
+      model.put("appUser", appUser);
+    }
+    return "users/manageUsers";
+  }
 }
