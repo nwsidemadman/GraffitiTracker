@@ -1934,42 +1934,4 @@ public class UserControllerTest {
     verify(mailServiceMock).sendVelocityEmail(recipients, "GraffitiTracker Email Address Change Notification",
         "test");
   }
-  
-  @Test
-  public void testGetAllUsers() throws Exception {
-    List<AppUser> appUsers = new ArrayList<AppUser>();
-    AppUser appUser = new AppUser();
-    appUser.setUsername("test");
-    appUsers.add(appUser);
-    UserController userController = new UserController();
-    AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getAllUsers()).thenReturn(appUsers);
-    userController.setAppUserService(userServiceMock);
-    assertEquals(appUsers, userController.getAllUsers());
-    verify(userServiceMock).getAllUsers();
-  }
-  
-  @Test
-  public void testUser_HappyPath() throws Exception {
-    AppUser appUser = new AppUser();
-    appUser.setUsername("test");
-    appUser.setUserId(1);;
-    UserController userController = new UserController();
-    AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUserById(appUser.getUserId())).thenReturn(appUser);
-    userController.setAppUserService(userServiceMock);
-    assertEquals(appUser, userController.getUser(appUser.getUserId()));
-    verify(userServiceMock).getUserById(appUser.getUserId());
-  }
-  
-  @Test
-  public void testUser_NoUser() throws Exception {
-    int userId = 5;
-    UserController userController = new UserController();
-    AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUserById(userId)).thenReturn(null);
-    userController.setAppUserService(userServiceMock);
-    assertNull(userController.getUser(userId));
-    verify(userServiceMock).getUserById(userId);
-  }
 }

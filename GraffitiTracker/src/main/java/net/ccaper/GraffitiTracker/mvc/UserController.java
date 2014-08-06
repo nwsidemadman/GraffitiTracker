@@ -600,14 +600,4 @@ public class UserController {
         generateEmailAddressChangeEmailBodyWithVelocityEngine(oldEmail,
             newEmail, request));
   }
-  
-  @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody List<AppUser> getAllUsers() {
-    return appUserService.getAllUsers();
-  }
-  
-  @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody AppUser getUser(@PathVariable int id) {
-    return appUserService.getUserById(id);
-  }
 }
