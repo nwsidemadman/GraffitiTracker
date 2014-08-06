@@ -5,6 +5,12 @@
 <title>GraffitiTracker</title>
 <link href="<s:url value="/resources" />/css/graffitiTracker.css"
   rel="stylesheet" type="text/css" />
+<link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"
+  rel="stylesheet" type="text/css" />
+<script type="text/javascript"
+  src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript"
+  src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
@@ -29,5 +35,9 @@
     <t:insertAttribute name="footer" />
     <!--<co id="co_tile_footer" />-->
   </div>
+  <script type="text/javascript"
+    src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
 </body>
 </html>

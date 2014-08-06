@@ -11,6 +11,43 @@
     <p>User Edit Here</p>
   </div>
   <div id="manageUsers">
-    <p>List Users Here</p>
+    <table id="usersTable" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Active</th>
+                <th>Roles</th>
+                <th>Registered</th>
+                <th>Last Login</th>
+                <th>Number Logins</th>
+            </tr>
+        </thead>
+ 
+        <tfoot>
+            <tr>
+                <th>Username</th>
+                <th>Active</th>
+                <th>Roles</th>
+                <th>Registered</th>
+                <th>Last Login</th>
+                <th>Number Logins</th>
+            </tr>
+        </tfoot>
+    </table>
+    <script type="text/javascript">
+    $(document).ready(function() {
+      $('#usersTable').dataTable( {
+          "ajax": "<s:url value="/api/users" />",
+          "columns": [
+              { "data": "username" },
+              { "data": "isActive"},
+              { "data": "roles[<br>].role" },
+              { "data": "registerTimestamp" },
+              { "data": "previousLoginTimestamp" },
+              { "data": "loginCount" }
+          ]
+      } );
+  } );
+    </script>
   </div>
 </sec:authorize>
