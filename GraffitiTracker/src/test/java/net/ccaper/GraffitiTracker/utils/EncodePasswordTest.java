@@ -1,7 +1,6 @@
 package net.ccaper.GraffitiTracker.utils;
 
 import static org.junit.Assert.*;
-import net.ccaper.GraffitiTracker.objects.UserForm;
 
 import org.junit.After;
 import org.junit.Before;
