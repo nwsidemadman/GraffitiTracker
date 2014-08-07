@@ -191,6 +191,7 @@ label {
 }
 
 #manageUsers {
+  padding-top: 6px;
   width: 736px;
   hieght: 100%;
 }
