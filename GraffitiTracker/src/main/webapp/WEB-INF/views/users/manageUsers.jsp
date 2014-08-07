@@ -53,8 +53,12 @@
                 "mRender": function( oObj ) {
                   value = oObj.toLowerCase();
                   values = value.split("<br>");
-                  for (i = 0; i < values.length; i++) { 
-                    values[i] = values[i].charAt(0).toUpperCase() + values[i].slice(1);
+                  for (i = 0; i < values.length; i++) {
+                    if (values[i] == 'superadmin') {
+                      values[i] = 'Super Admin';
+                    } else {
+                      values[i] = values[i].charAt(0).toUpperCase() + values[i].slice(1);
+                    }
                   }
                   return values.join("<br>");
                 }
