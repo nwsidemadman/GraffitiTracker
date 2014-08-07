@@ -185,6 +185,16 @@ label {
   line-height: 100%;
 }
 
+#manageUser {
+  height: 170px;
+  vertical-align: middle;
+}
+
+#manageUsers {
+  width: 736px;
+  hieght: 100%;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;

@@ -8,7 +8,7 @@
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
   <div id="manageUser">
-    <p>User Edit Here</p>
+    <p align="center" style="height: 170px; line-height: 170px;">Select user to edit from list below</p>
   </div>
   <div id="manageUsers">
     <table id="usersTable" class="display" cellspacing="0" width="100%">
@@ -22,21 +22,14 @@
                 <th>Number Logins</th>
             </tr>
         </thead>
- 
-        <tfoot>
-            <tr>
-                <th>Username</th>
-                <th>Status</th>
-                <th>Roles</th>
-                <th>Registered</th>
-                <th>Last Login</th>
-                <th>Number Logins</th>
-            </tr>
-        </tfoot>
     </table>
     <script type="text/javascript">
     $(document).ready(function() {
       $('#usersTable').dataTable( {
+          "scrollX": false,
+          "scrollY": "400px",
+          "scrollCollapse": true,
+          "paging": false,
           "ajax": "<s:url value="/api/users" />",
           "columns": [
               { "data": "username" },
