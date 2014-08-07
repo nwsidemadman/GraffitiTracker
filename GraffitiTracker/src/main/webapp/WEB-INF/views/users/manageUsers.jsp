@@ -19,7 +19,7 @@
                 <th>Roles</th>
                 <th>Registered</th>
                 <th>Last Login</th>
-                <th>Number Logins</th>
+                <th>Logins</th>
             </tr>
         </thead>
     </table>
