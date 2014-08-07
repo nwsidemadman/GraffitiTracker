@@ -56,12 +56,30 @@
                   for (i = 0; i < values.length; i++) { 
                     values[i] = values[i].charAt(0).toUpperCase() + values[i].slice(1);
                   }
-                  value = values.join("<br>");
-                  return value;
+                  return values.join("<br>");
                 }
               },
-              { "data": "registerTimestamp" },
-              { "data": "previousLoginTimestamp" },
+              { "data": "registerTimestamp",
+                "mRender": function ( oObj ) {
+                  date = new Date(oObj);
+                  yyyy = date.getFullYear();
+                  mm = ((date.getMonth() + 1) <= 9 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1));
+                  dd = (date.getDate() <= 9 ? ('0' + date.getDate()) : date.getDate());
+                  return yyyy + '-' + mm + '-' + dd;
+                }
+              },
+              { "data": "previousLoginTimestamp",
+                "mRender": function ( oObj ) {
+                  if (oObj == null) {
+                    return "N/A";
+                  }
+                  date = new Date(oObj);
+                  yyyy = date.getFullYear();
+                  mm = ((date.getMonth() + 1) <= 9 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1));
+                  dd = (date.getDate() <= 9 ? ('0' + date.getDate()) : date.getDate());
+                  return yyyy + '-' + mm + '-' + dd;
+                }
+              },
               { "data": "loginCount" }
           ]
       });
