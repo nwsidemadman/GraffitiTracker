@@ -196,6 +196,10 @@ label {
   hieght: 100%;
 }
 
+#manageUsers table {
+  font-size: 0.90em;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;
