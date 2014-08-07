@@ -15,7 +15,7 @@
         <thead>
             <tr>
                 <th>Username</th>
-                <th>Active</th>
+                <th>Status</th>
                 <th>Roles</th>
                 <th>Registered</th>
                 <th>Last Login</th>
@@ -26,7 +26,7 @@
         <tfoot>
             <tr>
                 <th>Username</th>
-                <th>Active</th>
+                <th>Status</th>
                 <th>Roles</th>
                 <th>Registered</th>
                 <th>Last Login</th>
@@ -40,14 +40,32 @@
           "ajax": "<s:url value="/api/users" />",
           "columns": [
               { "data": "username" },
-              { "data": "isActive"},
-              { "data": "roles[<br>].role" },
+              { "data": "isActive",
+                "mRender": function ( oObj ) {
+                  if (oObj == true) {
+                    return "Enabled";
+                  } else {
+                    return "Disabled";
+                  }
+                }
+              },
+              { "data": "roles[<br>].role",
+                "mRender": function( oObj ) {
+                  value = oObj.toLowerCase();
+                  values = value.split("<br>");
+                  for (i = 0; i < values.length; i++) { 
+                    values[i] = values[i].charAt(0).toUpperCase() + values[i].slice(1);
+                  }
+                  value = values.join("<br>");
+                  return value;
+                }
+              },
               { "data": "registerTimestamp" },
               { "data": "previousLoginTimestamp" },
               { "data": "loginCount" }
           ]
-      } );
-  } );
+      });
+    });
     </script>
   </div>
 </sec:authorize>
