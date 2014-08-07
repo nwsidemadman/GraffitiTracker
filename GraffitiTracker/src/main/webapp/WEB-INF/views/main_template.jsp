@@ -8,6 +8,8 @@
 <link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"
   rel="stylesheet" type="text/css" />
 <script type="text/javascript"
+  src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
+<script type="text/javascript"
   src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript"
   src="https://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
