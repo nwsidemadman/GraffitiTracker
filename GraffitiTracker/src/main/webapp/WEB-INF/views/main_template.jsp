@@ -3,13 +3,13 @@
 <html>
 <head>
 <title>GraffitiTracker</title>
-<link href="<s:url value="/resources" />/css/graffitiTracker.css"
-  rel="stylesheet" type="text/css" />
+
 <link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"
   rel="stylesheet" type="text/css" />
-<script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
+<link href="<s:url value="/resources" />/css/graffitiTracker.css"
+  rel="stylesheet" type="text/css" />
+  
 <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
-<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
 <script src="<s:url value="/resources" />/js/jquery.dataTables.columnFilter.js"></script>
 <script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>

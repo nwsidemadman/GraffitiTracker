@@ -32,79 +32,76 @@
                 <th>Logins</th>
             </tr>
         </tfoot>
-        
     </table>
     <script type="text/javascript">
     $(document).ready(function() {
-      $(document).ready(function() {
-        $('#usersTable').dataTable( {
-            "sDom": '<"H"lr>t<"F"ip>',
-            "scrollX": false,
-            "scrollY": "400px",
-            "scrollCollapse": true,
-            "paging": false,
-            "ajax": "<s:url value="/api/users" />",
-            "columns": [
-                { "data": "username" },
-                { "data": "isActive",
-                  "mRender": function ( oObj ) {
-                    if (oObj == true) {
-                      return "Enabled";
+      $('#usersTable').dataTable( {
+          "sDom": '<"H"lr>t<"F"ip>',
+          "scrollX": false,
+          "scrollY": "400px",
+          "scrollCollapse": true,
+          "paging": false,
+          "ajax": "<s:url value="/api/users" />",
+          "columns": [
+              { "data": "username" },
+              { "data": "isActive",
+                "mRender": function ( oObj ) {
+                  if (oObj == true) {
+                    return "Enabled";
+                  } else {
+                    return "Disabled";
+                  }
+                }
+              },
+              { "data": "roles[<br>].role",
+                "mRender": function( oObj ) {
+                  value = oObj.toLowerCase();
+                  values = value.split("<br>");
+                  for (i = 0; i < values.length; i++) {
+                    if (values[i] == 'superadmin') {
+                      values[i] = 'Super Admin';
                     } else {
-                      return "Disabled";
+                      values[i] = values[i].charAt(0).toUpperCase() + values[i].slice(1);
                     }
                   }
-                },
-                { "data": "roles[<br>].role",
-                  "mRender": function( oObj ) {
-                    value = oObj.toLowerCase();
-                    values = value.split("<br>");
-                    for (i = 0; i < values.length; i++) {
-                      if (values[i] == 'superadmin') {
-                        values[i] = 'Super Admin';
-                      } else {
-                        values[i] = values[i].charAt(0).toUpperCase() + values[i].slice(1);
-                      }
-                    }
-                    return values.join("<br>");
+                  return values.join("<br>");
+                }
+              },
+              { "data": "registerTimestamp",
+                "mRender": function ( oObj ) {
+                  return dateFormat_yyyymmdd(oObj);
+                }
+              },
+              { "data": "previousLoginTimestamp",
+                "mRender": function ( oObj ) {
+                  if (oObj == null) {
+                    return "N/A";
                   }
-                },
-                { "data": "registerTimestamp",
-                  "mRender": function ( oObj ) {
-                    return dateFormat_yyyymmdd(oObj);
-                  }
-                },
-                { "data": "previousLoginTimestamp",
-                  "mRender": function ( oObj ) {
-                    if (oObj == null) {
-                      return "N/A";
-                    }
-                    return dateFormat_yyyymmdd(oObj);
-                  }
-                },
-                { "data": "loginCount" }
-            ]
-        }).columnFilter( {
-          sPlaceHolder: "head:before",
-          "aoColumns": [
-            {
-              type: "text",
-              bRegex: true,
-              bSmart: true
-            },
-            {
-              type: "select",
-              values: ['Enabled', 'Disabled']
-            },
-            {
-              type: "select",
-              values: ['Super Admin', 'Admin', 'Basic', 'Subscription', 'Licensed', 'Trial']
-            },
-            null,
-            null,
-            null
+                  return dateFormat_yyyymmdd(oObj);
+                }
+              },
+              { "data": "loginCount" }
           ]
-        });
+      }).columnFilter( {
+        sPlaceHolder: "head:before",
+        "aoColumns": [
+          {
+            type: "text",
+            bRegex: true,
+            bSmart: true
+          },
+          {
+            type: "select",
+            values: ['Enabled', 'Disabled']
+          },
+          {
+            type: "select",
+            values: ['Super Admin', 'Admin', 'Basic', 'Subscription', 'Licensed', 'Trial']
+          },
+          null,
+          null,
+          null
+        ]
       });
     });
     </script>
