@@ -11,7 +11,6 @@
   
 <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
 <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script src="<s:url value="/resources" />/js/jquery.dataTables.columnFilter.js"></script>
 <script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
 </head>
 
