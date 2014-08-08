@@ -15,7 +15,7 @@
         <thead>
             <tr align="left">
                 <th>Username</th>
-                <th>Status</th>
+                <th>Active</th>
                 <th>Roles</th>
                 <th>Registered</th>
                 <th>Last Login</th>
@@ -24,20 +24,23 @@
         </thead>
         <tfoot>
             <tr align="left">
-                <th>Username</th>
-                <th>Status</th>
-                <th>Roles</th>
-                <th>Registered</th>
-                <th>Last Login</th>
-                <th>Logins</th>
+                <th id="username">Username</th>
+                <th id="active">Active</th>
+                <th id="roles">Roles</th>
+                <th id="registered">Registered</th>
+                <th id="lastLogin">Last Login</th>
+                <th id="logins">Logins</th>
             </tr>
         </tfoot>
     </table>
     <script type="text/javascript">
     $(document).ready(function() {
-      $('#usersTable tfoot th').each( function () {
-        $(this).html( '<input type="text" placeholder="Search" />' );
-        } );
+      $('#usersTable tfoot #username').html('<input type="text" placeholder="Search" />');
+      $('#usersTable tfoot #active').html('<select><option></option><option value="Yes">Yes</option><option value="No">No</option></select>');
+      $('#usersTable tfoot #roles').html('<input type="text" placeholder="Search" />');
+      $('#usersTable tfoot #registered').html('<input type="text" placeholder="Search" />');
+      $('#usersTable tfoot #lastLogin').html('<input type="text" placeholder="Search" />');
+      $('#usersTable tfoot #logins').html('<input type="text" placeholder="Search" />');
       
       var usersTable = $('#usersTable').DataTable( {
           "sDom": '<"H"lr>t<"F"ip>',
@@ -51,9 +54,9 @@
               { "data": "isActive",
                 "mRender": function ( oObj ) {
                   if (oObj == true) {
-                    return "Enabled";
+                    return "Yes";
                   } else {
-                    return "Disabled";
+                    return "No";
                   }
                 }
               },
@@ -89,13 +92,39 @@
       });
       
       // Apply the search
-      usersTable.columns().eq( 0 ).each( function ( colIdx ) {
-          $( 'input', usersTable.column( colIdx ).footer() ).on( 'keyup change', function () {
-            usersTable
-                  .column( colIdx )
-                  .search( this.value )
-                  .draw();
-          } );
+      $( 'input', usersTable.column( 0 ).footer() ).on( 'keyup change', function () {
+        usersTable
+              .column( 0 )
+              .search( this.value )
+              .draw();
+      } );
+      
+      $( 'select', usersTable.column( 1 ).footer() ).on( 'change', function () {
+        usersTable
+              .column( 1 )
+              .search( this.value )
+              .draw();
+      } );
+      
+      $( 'input', usersTable.column( 3 ).footer() ).on( 'keyup change', function () {
+        usersTable
+              .column( 3 )
+              .search( this.value )
+              .draw();
+      } );
+      
+      $( 'input', usersTable.column( 4 ).footer() ).on( 'keyup change', function () {
+        usersTable
+              .column( 4 )
+              .search( this.value )
+              .draw();
+      } );
+      
+      $( 'input', usersTable.column( 5 ).footer() ).on( 'keyup change', function () {
+        usersTable
+              .column( 5 )
+              .search( this.value )
+              .draw();
       } );
     });
     </script>
