@@ -37,7 +37,7 @@
     $(document).ready(function() {
       $('#usersTable tfoot #username').html('<input type="text" placeholder="Search" />');
       $('#usersTable tfoot #active').html('<select><option></option><option value="Yes">Yes</option><option value="No">No</option></select>');
-      $('#usersTable tfoot #roles').html('<input type="text" placeholder="Search" />');
+      $('#usersTable tfoot #roles').html('<select><option></option><option value="Super Admin">Super Admin</option><option value="Admin">Admin</option><option value="Basic">Basic</option><option value="Supscription">Subscription</option><option value="Licensed">Licensed</option><option value="Trial">Trial</option></select>');
       $('#usersTable tfoot #registered').html('<input type="text" placeholder="Search" />');
       $('#usersTable tfoot #lastLogin').html('<input type="text" placeholder="Search" />');
       $('#usersTable tfoot #logins').html('<input type="text" placeholder="Search" />');
@@ -102,6 +102,13 @@
       $( 'select', usersTable.column( 1 ).footer() ).on( 'change', function () {
         usersTable
               .column( 1 )
+              .search( this.value )
+              .draw();
+      } );
+      
+      $( 'select', usersTable.column( 2 ).footer() ).on( 'change', function () {
+        usersTable
+              .column( 2 )
               .search( this.value )
               .draw();
       } );
