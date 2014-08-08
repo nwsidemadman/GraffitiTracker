@@ -35,7 +35,11 @@
     </table>
     <script type="text/javascript">
     $(document).ready(function() {
-      $('#usersTable').dataTable( {
+      $('#usersTable tfoot th').each( function () {
+        $(this).html( '<input type="text" placeholder="Search" />' );
+        } );
+      
+      var usersTable = $('#usersTable').DataTable( {
           "sDom": '<"H"lr>t<"F"ip>',
           "scrollX": false,
           "scrollY": "400px",
@@ -57,7 +61,7 @@
                 "mRender": function( oObj ) {
                   value = oObj.toLowerCase();
                   values = value.split("<br>");
-                  for (i = 0; i < values.length; i++) {
+                  for (var i = 0; i < values.length; i++) {
                     if (values[i] == 'superadmin') {
                       values[i] = 'Super Admin';
                     } else {
@@ -82,27 +86,17 @@
               },
               { "data": "loginCount" }
           ]
-      }).columnFilter( {
-        sPlaceHolder: "head:before",
-        "aoColumns": [
-          {
-            type: "text",
-            bRegex: true,
-            bSmart: true
-          },
-          {
-            type: "select",
-            values: ['Enabled', 'Disabled']
-          },
-          {
-            type: "select",
-            values: ['Super Admin', 'Admin', 'Basic', 'Subscription', 'Licensed', 'Trial']
-          },
-          null,
-          null,
-          null
-        ]
       });
+      
+      // Apply the search
+      usersTable.columns().eq( 0 ).each( function ( colIdx ) {
+          $( 'input', usersTable.column( colIdx ).footer() ).on( 'keyup change', function () {
+            usersTable
+                  .column( colIdx )
+                  .search( this.value )
+                  .draw();
+          } );
+      } );
     });
     </script>
   </div>

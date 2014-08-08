@@ -200,6 +200,13 @@ label {
   font-size: 0.90em;
 }
 
+#manageUsers tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+        font-size: 1em;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;
