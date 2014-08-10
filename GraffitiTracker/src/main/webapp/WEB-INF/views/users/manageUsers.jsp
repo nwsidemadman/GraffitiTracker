@@ -88,7 +88,12 @@
                 }
               },
               { "data": "loginCount" }
-          ]
+          ],
+      });
+      
+      $('#usersTable tbody').on('click', 'tr', function () {
+        var aData = usersTable.fnGetData(this);
+        alert(aData[0]);
       });
       
       // Apply the search
