@@ -29,7 +29,13 @@
     </td>
     <td width="50%">
       <table width="100%">
-        
+        <c:forEach var="login" items="${logins}">
+          <tr>
+            <td>${login.getInet()}</td>
+            <td>${login.getNumberVisits()}</td>
+            <td><fmt:formatDate value="${login.getLastVisit()}" pattern="yyyy-MM-dd hh:mm:ss" /></td>
+          </tr>
+        </c:forEach>
       </table>
     </td>
   </tr>

@@ -1,10 +1,13 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.ccaper.GraffitiTracker.dao.LoginAddressDao;
+import net.ccaper.GraffitiTracker.objects.LoginInet;
 import net.ccaper.GraffitiTracker.service.LoginAddressService;
 
 @Service("loginAddressService")
@@ -36,5 +39,10 @@ public class LoginAddressServiceImpl implements LoginAddressService {
       }
     }
     return true;
+  }
+
+  @Override
+  public List<LoginInet> getLoginAddressesByUserId(int userId) {
+    return loginAddressDao.getLoginAddressByUserId(userId);
   }
 }

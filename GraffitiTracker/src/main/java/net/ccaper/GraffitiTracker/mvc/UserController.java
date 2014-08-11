@@ -16,6 +16,7 @@ import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
+import net.ccaper.GraffitiTracker.objects.LoginInet;
 import net.ccaper.GraffitiTracker.objects.ManageAccountForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
@@ -25,6 +26,7 @@ import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.BannedInetsService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
+import net.ccaper.GraffitiTracker.service.LoginAddressService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.utils.DateFormats;
 import net.ccaper.GraffitiTracker.utils.Encoder;
@@ -68,6 +70,8 @@ public class UserController {
   MailService mailService;
   @Autowired
   BannedInetsService bannedInetsService;
+  @Autowired
+  LoginAddressService loginAddressService;
   @Autowired
   FormUserValidator formUserValidator;
   @Autowired
@@ -118,6 +122,10 @@ public class UserController {
 
   public void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;
+  }
+  
+  public void setLoginAddressService(LoginAddressService loginAddressService) {
+    this.loginAddressService = loginAddressService;
   }
 
   public void setVelocityEngine(VelocityEngine velocityEngine) {
@@ -611,12 +619,15 @@ public class UserController {
     return "users/manageUsers";
   }
   
+  // TODO(ccaper): unit test
   @RequestMapping(method = RequestMethod.GET)
   public String getUser(
       @RequestParam(required = true) int userId,
       Map<String, Object> model) {
     AppUser user = appUserService.getUserById(userId);
+    List<LoginInet> logins = loginAddressService.getLoginAddressesByUserId(userId);
     model.put("appUser", user);
+    model.put("logins", logins);
     return "users/user";
   }
 }
