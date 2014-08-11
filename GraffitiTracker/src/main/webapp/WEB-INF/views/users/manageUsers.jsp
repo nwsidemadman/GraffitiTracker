@@ -44,7 +44,7 @@
       $('#usersTable tfoot #logins').html('<input type="text" placeholder="Search" />');
       
       // create the datatable
-      var usersTable = $('#usersTable').dataTable( {
+      var usersTableJObject = $('#usersTable').dataTable( {
           "sDom": '<"H"lr>t<"F"ip>',
           "scrollX": false,
           "scrollY": "400px",
@@ -95,49 +95,48 @@
       
       // capture a click on the datatable
       $('#usersTable tbody').on('click', 'tr', function () {
-        var aData = usersTable.fnGetData(this);
+        var aData = usersTableJObject.fnGetData(this);
         alert('You clicked on a row for id \'' + aData.userId + '\'');
       });
 
-      /*
       // Apply the search
-      $( 'input', usersTable.column( 0 ).footer() ).on( 'keyup change', function () {
-        usersTable
+      var usersTableDTObject = usersTableJObject.api();
+      $( 'input', usersTableDTObject.column( 0 ).footer() ).on( 'keyup change', function () {
+        usersTableDTObject
               .column( 0 )
               .search( this.value )
               .draw();
       } );
-      $( 'select', usersTable.column( 1 ).footer() ).on( 'change', function () {
-        usersTable
+      $( 'select', usersTableDTObject.column( 1 ).footer() ).on( 'change', function () {
+        usersTableDTObject
               .column( 1 )
               .search( this.value )
               .draw();
       } );
-      $( 'select', usersTable.column( 2 ).footer() ).on( 'change', function () {
-        usersTable
+      $( 'select', usersTableDTObject.column( 2 ).footer() ).on( 'change', function () {
+        usersTableDTObject
               .column( 2 )
               .search( this.value )
               .draw();
       } );
-      $( 'input', usersTable.column( 3 ).footer() ).on( 'keyup change', function () {
-        usersTable
+      $( 'input', usersTableDTObject.column( 3 ).footer() ).on( 'keyup change', function () {
+        usersTableDTObject
               .column( 3 )
               .search( this.value )
               .draw();
       } );
-      $( 'input', usersTable.column( 4 ).footer() ).on( 'keyup change', function () {
-        usersTable
+      $( 'input', usersTableDTObject.column( 4 ).footer() ).on( 'keyup change', function () {
+        usersTableDTObject
               .column( 4 )
               .search( this.value )
               .draw();
       } );
-      $( 'input', usersTable.column( 5 ).footer() ).on( 'keyup change', function () {
-        usersTable
+      $( 'input', usersTableDTObject.column( 5 ).footer() ).on( 'keyup change', function () {
+        usersTableDTObject
               .column( 5 )
               .search( this.value )
               .draw();
       } );
-      */
     });
     </script>
   </div>
