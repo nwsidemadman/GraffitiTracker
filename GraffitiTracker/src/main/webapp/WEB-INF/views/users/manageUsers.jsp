@@ -8,7 +8,7 @@
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
   <div id="manageUser">
-    <p align="center" style="height: 170px; line-height: 170px;">Select user to edit from list below</p>
+    <p align="center" style="height: 170px; line-height: 170px;">Click a row to select a user from the table below</p>
   </div>
   <div id="manageUsers">
     <table id="usersTable" class="display" cellspacing="0" width="100%">
@@ -96,7 +96,17 @@
       // capture a click on the datatable
       $('#usersTable tbody').on('click', 'tr', function () {
         var aData = usersTableJObject.fnGetData(this);
-        alert('You clicked on a row for id \'' + aData.userId + '\'');
+        //$('#manageUser').html('<p>' + aData.userId + '</p>');
+        $.ajax({ 
+          type: "GET",
+          dataType: "json",
+          url: '<s:url value="/api/users/' + aData.userId + '" />',
+          success: function(data){
+            var string = "<p>Username: " + data.data.username + "</p>";
+            string += "<p>Email: " + data.data.email + "</p>";
+            $('#manageUser').html(string);
+          },
+        });
       });
 
       // Apply the search
