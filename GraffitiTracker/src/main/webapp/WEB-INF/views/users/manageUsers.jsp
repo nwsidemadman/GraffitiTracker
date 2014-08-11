@@ -96,15 +96,16 @@
       // capture a click on the datatable
       $('#usersTable tbody').on('click', 'tr', function () {
         var aData = usersTableJObject.fnGetData(this);
-        //$('#manageUser').html('<p>' + aData.userId + '</p>');
         $.ajax({ 
           type: "GET",
-          dataType: "json",
-          url: '<s:url value="/api/users/' + aData.userId + '" />',
+          dataType: "html",
+          //url: '<s:url value="/users/' + aData.userId + '" />',
+          url: '<s:url value="/users?userId=' + aData.userId + '" />',
           success: function(data){
-            var string = "<p>Username: " + data.data.username + "</p>";
-            string += "<p>Email: " + data.data.email + "</p>";
-            $('#manageUser').html(string);
+            //var string = "<p>Username: " + data.data.username + "</p>";
+            //string += "<p>Email: " + data.data.email + "</p>";
+            //$('#manageUser').html(string);
+            $('#manageUser').html(data);
           },
         });
       });

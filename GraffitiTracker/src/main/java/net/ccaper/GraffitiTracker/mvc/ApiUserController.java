@@ -38,6 +38,7 @@ public class ApiUserController {
     return data;
   }
   
+  // TODO(ccaper): this will likely be pulled out in favor of controller call, remove this AND security
   @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
   public @ResponseBody Map<String, AppUser> getUser(@PathVariable int id) {
     Map<String, AppUser> data = new HashMap<String, AppUser>(1);

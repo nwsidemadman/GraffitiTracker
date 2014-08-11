@@ -62,14 +62,14 @@
     <p>Register Date: <fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></p>
     <p>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></p>
     <p>Roles:</p>
-    <ol id="roles">
+    <ul id="roles">
     <c:forEach var="role" items="${appUser.getRoles()}">
       <li>
         <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-dd" var="grantedDate"/>
         <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" />
       </li>
     </c:forEach>
-    </ol>
+    </ul>
     <p>Number Of Logins: ${appUser.getLoginCount()}</p>
     <p>
       <FORM METHOD="LINK" ACTION="<s:url value="${unauthUrl}" />">

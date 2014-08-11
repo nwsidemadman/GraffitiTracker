@@ -610,4 +610,13 @@ public class UserController {
     }
     return "users/manageUsers";
   }
+  
+  @RequestMapping(method = RequestMethod.GET)
+  public String getUser(
+      @RequestParam(required = true) int userId,
+      Map<String, Object> model) {
+    AppUser user = appUserService.getUserById(userId);
+    model.put("appUser", user);
+    return "users/user";
+  }
 }

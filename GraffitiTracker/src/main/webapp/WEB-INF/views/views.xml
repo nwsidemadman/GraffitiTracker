@@ -15,6 +15,9 @@
   
   <definition name="info" template="/WEB-INF/views/info_template.jsp">
   </definition>
+  
+  <definition name="stub" template="/WEB-INF/views/stub_template.jsp">
+  </definition>
 
   <!--<start id="tile_home"/> -->
   <definition name="home" extends="template">

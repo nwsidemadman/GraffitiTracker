@@ -58,4 +58,8 @@
     <put-attribute name="content"
       value="/WEB-INF/views/users/manageUsers.jsp" />
   </definition>
+  <definition name="users/user" extends="stub">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/user.jsp" />
+  </definition>
 </tiles-definitions>
