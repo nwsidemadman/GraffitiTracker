@@ -62,4 +62,8 @@
     <put-attribute name="content"
       value="/WEB-INF/views/users/user.jsp" />
   </definition>
+  <definition name="users/usersSharingInets" extends="stub">
+    <put-attribute name="content"
+      value="/WEB-INF/views/users/usersSharingInets.jsp" />
+  </definition>
 </tiles-definitions>

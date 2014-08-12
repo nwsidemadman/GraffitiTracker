@@ -29,22 +29,31 @@
       </table>
     </td>
     <td width="50%">
-      <table id="userLoginsTable" class="display" cellspacing="0" width="100%">
-        <thead>
-          <tr>
-            <th>IP</th>
-            <th>Visits</th>
-            <th>Last Visit</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th id="ip">IP</th>
-            <th>Visits</th>
-            <th>Last Visit</th>
-          </tr>
-        </tfoot>
       <table>
+        <tr>
+          <td>
+            <table id="userLoginsTable" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th>IP</th>
+                  <th>Visits</th>
+                  <th>Last Visit</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th id="ip">IP</th>
+                  <th>Visits</th>
+                  <th>Last Visit</th>
+                </tr>
+              </tfoot>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td id="usersSharingIp">
+          </td>
+        </tr>
       </table>
     </td>
   </tr>
@@ -68,6 +77,19 @@
           }
         }
       ]
+    });
+    
+    // capture a click on the datatable
+    $('#userLoginsTable tbody').on('click', 'td:first-child', function () {
+      var aData = userLoginsTableJObject.fnGetData(this);
+      $.ajax({ 
+        type: "GET",
+        dataType: "html",
+        url: '<s:url value="/users/usersSharingInets?inet=' + aData + '" />',
+        success: function(data){
+          $('#usersSharingIp').html(data);
+        },
+      });
     });
   });
 </script>

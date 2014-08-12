@@ -99,12 +99,8 @@
         $.ajax({ 
           type: "GET",
           dataType: "html",
-          //url: '<s:url value="/users/' + aData.userId + '" />',
           url: '<s:url value="/users?userId=' + aData.userId + '" />',
           success: function(data){
-            //var string = "<p>Username: " + data.data.username + "</p>";
-            //string += "<p>Email: " + data.data.email + "</p>";
-            //$('#manageUser').html(string);
             $('#manageUser').html(data);
           },
         });

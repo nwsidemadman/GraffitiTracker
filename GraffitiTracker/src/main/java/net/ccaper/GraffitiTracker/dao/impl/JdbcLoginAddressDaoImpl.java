@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -38,10 +39,18 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
           LAST_VISIT_TIMESTAMP_COL).toLowerCase();
 
   private static final String SQL_GET_LOGIN_ADDRESSES_BY_USERID = String
-      .format("SELECT INET_NTOA(%s), %s, %s FROM %s WHERE %s = :%s", INET_ADDRESS_COL,
-          NUMBER_VISITS_COL, LAST_VISIT_TIMESTAMP_COL, LOGIN_ADDRESSES_TABLE,
-          ID_FK_COL, ID_FK_COL).toLowerCase();
-  
+      .format("SELECT INET_NTOA(%s), %s, %s FROM %s WHERE %s = :%s",
+          INET_ADDRESS_COL, NUMBER_VISITS_COL, LAST_VISIT_TIMESTAMP_COL,
+          LOGIN_ADDRESSES_TABLE, ID_FK_COL, ID_FK_COL).toLowerCase();
+
+  private static final String SQL_GET_USERS_SHARING_INET = String
+      .format(
+          "SELECT %s.%s, %s.%s FROM %s INNER JOIN %s on %s.%s = %s.%s WHERE %s.%s = inet_aton(:%s)",
+          USERS_TABLE, USER_ID_COL, USERS_TABLE, USERNAME_COL, USERS_TABLE,
+          LOGIN_ADDRESSES_TABLE, LOGIN_ADDRESSES_TABLE, ID_FK_COL, USERS_TABLE,
+          USER_ID_COL, LOGIN_ADDRESSES_TABLE, INET_ADDRESS_COL,
+          INET_ADDRESS_COL).toLowerCase();
+
   RowMapper<LoginInet> loginInetRowMapper = new RowMapper<LoginInet>() {
     @Override
     public LoginInet mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -52,6 +61,13 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
       return loginInet;
     }
   };
+  
+  RowMapper<ImmutablePair<Integer, String>> userRowMapper = new RowMapper<ImmutablePair<Integer, String>>() {
+    @Override
+    public ImmutablePair<Integer, String> mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return new ImmutablePair<Integer, String>(rs.getInt(USER_ID_COL), rs.getString(USERNAME_COL));
+    }
+  };
 
   @Autowired
   public void setDs(DataSource dataSource) {
@@ -60,17 +76,27 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
 
   @Override
   public void updateLoginAddressByUsername(String username, String ipAddress) {
-    Map<String, String> loginAddressesParamMap = new HashMap<String, String>(2);
-    loginAddressesParamMap.put(USERNAME_COL, username);
-    loginAddressesParamMap.put(INET_ADDRESS_COL, ipAddress);
+    Map<String, String> loginAddressParamMap = new HashMap<String, String>(2);
+    loginAddressParamMap.put(USERNAME_COL, username);
+    loginAddressParamMap.put(INET_ADDRESS_COL, ipAddress);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_ADDRESSES,
-        loginAddressesParamMap);
+        loginAddressParamMap);
   }
 
   @Override
   public List<LoginInet> getLoginAddressByUserId(int userId) {
-    Map<String, Integer> loginAddressesParamMap = new HashMap<String, Integer>(1);
-    loginAddressesParamMap.put(ID_FK_COL, userId);
-    return getNamedParameterJdbcTemplate().query(SQL_GET_LOGIN_ADDRESSES_BY_USERID, loginAddressesParamMap, loginInetRowMapper);
+    Map<String, Integer> loginAddressParamMap = new HashMap<String, Integer>(1);
+    loginAddressParamMap.put(ID_FK_COL, userId);
+    return getNamedParameterJdbcTemplate().query(
+        SQL_GET_LOGIN_ADDRESSES_BY_USERID, loginAddressParamMap,
+        loginInetRowMapper);
+  }
+
+  @Override
+  public List<ImmutablePair<Integer, String>> getUsersSharingInet(String inet) {
+    Map<String, String> loginAddressParamMap = new HashMap<String, String>(1);
+    loginAddressParamMap.put(INET_ADDRESS_COL, inet);
+    return getNamedParameterJdbcTemplate().query(SQL_GET_USERS_SHARING_INET,
+        loginAddressParamMap, userRowMapper);
   }
 }

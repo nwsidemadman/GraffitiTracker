@@ -1,8 +1,11 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +47,15 @@ public class LoginAddressServiceImpl implements LoginAddressService {
   @Override
   public List<LoginInet> getLoginAddressesByUserId(int userId) {
     return loginAddressDao.getLoginAddressByUserId(userId);
+  }
+
+  @Override
+  public Map<Integer, String> getUsersSharingInet(String inet) {
+    List<ImmutablePair<Integer, String>> tuples = loginAddressDao.getUsersSharingInet(inet);
+    Map<Integer, String> results = new HashMap<Integer, String>(tuples.size());
+    for (ImmutablePair<Integer, String> tuple : tuples) {
+      results.put(tuple.getLeft(), tuple.getRight());
+    }
+    return results;
   }
 }

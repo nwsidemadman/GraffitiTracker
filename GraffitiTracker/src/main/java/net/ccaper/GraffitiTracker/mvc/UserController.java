@@ -71,6 +71,8 @@ public class UserController {
   @Autowired
   BannedInetsService bannedInetsService;
   @Autowired
+  LoginAddressService loginAddressService;
+  @Autowired
   FormUserValidator formUserValidator;
   @Autowired
   FormEmailValidator formEmailValidator;
@@ -113,6 +115,10 @@ public class UserController {
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
+  
+  public void setLoginAddressService(LoginAddressService loginAddressService) {
+    this.loginAddressService = loginAddressService;
+  }
 
   public void setMailService(MailService mailService) {
     this.mailService = mailService;
@@ -121,7 +127,7 @@ public class UserController {
   public void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;
   }
-  
+
   public void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
   }
@@ -313,7 +319,8 @@ public class UserController {
     return generateHtmlFromVelocityTemplate(model);
   }
 
-  // when creating new user, handles redirect to give user messages that confirmation registration email sent
+  // when creating new user, handles redirect to give user messages that
+  // confirmation registration email sent
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
   public String showRegisteredUser(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -324,7 +331,8 @@ public class UserController {
     return "users/registered";
   }
 
-  // when creating new user, handles click in email confirming the registration of a new user
+  // when creating new user, handles click in email confirming the registration
+  // of a new user
   @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
   public String showConfirmedUser(
       @RequestParam(required = true) String registrationConfirmationUniqueUrlParam,
@@ -406,7 +414,8 @@ public class UserController {
     return "users/sentUsername";
   }
 
-  //gives user initial forgot password screen prompting for username to reset password
+  // gives user initial forgot password screen prompting for username to reset
+  // password
   @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
   public String forgotPassword(Model model) {
     UsernameForm usernameForm = new UsernameForm();
@@ -420,7 +429,8 @@ public class UserController {
     return "users/forgotPassword";
   }
 
-  //looks up email for username, sends user an email, and redirects user to email sent message to reset password
+  // looks up email for username, sends user an email, and redirects user to
+  // email sent message to reset password
   @RequestMapping(value = "/forgotPassword", params = "recoverPassword", method = RequestMethod.POST)
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request,
@@ -450,7 +460,8 @@ public class UserController {
     return "redirect:/users/forgotPassword/sentPassword";
   }
 
-  // handles catching redirect to give user message that email was set to reset password
+  // handles catching redirect to give user message that email was set to reset
+  // password
   @RequestMapping(value = "/forgotPassword/sentPassword", method = RequestMethod.GET)
   public String sentPassword(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -492,7 +503,8 @@ public class UserController {
     return "users/resetPassword";
   }
 
-  // updates the password from the user for lost password, redirects to confirmation page
+  // updates the password from the user for lost password, redirects to
+  // confirmation page
   @RequestMapping(value = "/forgotPassword/resetPassword", method = RequestMethod.POST)
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
@@ -602,7 +614,7 @@ public class UserController {
         generateEmailAddressChangeEmailBodyWithVelocityEngine(oldEmail,
             newEmail, request));
   }
-  
+
   @RequestMapping(value = "/manageUsers", method = RequestMethod.GET)
   public String manageUsers(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -612,14 +624,22 @@ public class UserController {
     }
     return "users/manageUsers";
   }
-  
+
   // TODO(ccaper): unit test
   @RequestMapping(method = RequestMethod.GET)
-  public String getUser(
-      @RequestParam(required = true) int userId,
+  public String getUser(@RequestParam(required = true) int userId,
       Map<String, Object> model) {
     AppUser user = appUserService.getUserById(userId);
     model.put("appUser", user);
     return "users/user";
+  }
+
+  // TODO(ccaper): unit test
+  @RequestMapping(value = "/usersSharingInets", method = RequestMethod.GET)
+  public String getSharedInets(@RequestParam(required = true) String inet,
+      Map<String, Object> model) {
+    Map<Integer, String> usersSharingInets = loginAddressService.getUsersSharingInet(inet);
+    model.put("usersSharingInets", usersSharingInets);
+    return "users/usersSharingInets";
   }
 }
