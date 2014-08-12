@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.objects.LoginInet;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.LoginAddressService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +29,15 @@ public class ApiUserController {
   @Autowired
   AppUserService appUserService;
   
+  @Autowired
+  LoginAddressService loginAddressService;
+  
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
+  }
+  
+  public void setLoginAddressService(LoginAddressService loginAddressService) {
+    this.loginAddressService = loginAddressService;
   }
   
   @RequestMapping(method = RequestMethod.GET, produces = "application/json")
@@ -39,10 +48,18 @@ public class ApiUserController {
   }
   
   // TODO(ccaper): this will likely be pulled out in favor of controller call, remove this AND security
-  @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
-  public @ResponseBody Map<String, AppUser> getUser(@PathVariable int id) {
+  @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
+  public @ResponseBody Map<String, AppUser> getUser(@PathVariable int userId) {
     Map<String, AppUser> data = new HashMap<String, AppUser>(1);
-    data.put("data", appUserService.getUserById(id));
+    data.put("data", appUserService.getUserById(userId));
+    return data;
+  }
+  
+  // TODO(ccaper): unit test
+  @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET, produces = "application/json")
+  public @ResponseBody Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
+    Map<String, List<LoginInet>> data = new HashMap<String, List<LoginInet>>(1);
+    data.put("data", loginAddressService.getLoginAddressesByUserId(userId));
     return data;
   }
 }

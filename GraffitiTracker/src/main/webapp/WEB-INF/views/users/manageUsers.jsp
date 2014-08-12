@@ -45,7 +45,7 @@
       
       // create the datatable
       var usersTableJObject = $('#usersTable').dataTable( {
-          "sDom": '<"H"lr>t<"F"ip>',
+          "sDom": '<"H"lr>t<"F"i>',
           "scrollX": false,
           "scrollY": "400px",
           "scrollCollapse": true,
@@ -90,7 +90,7 @@
                 }
               },
               { "data": "loginCount" }
-          ],
+          ]
       });
       
       // capture a click on the datatable

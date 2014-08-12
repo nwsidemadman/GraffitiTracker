@@ -71,8 +71,6 @@ public class UserController {
   @Autowired
   BannedInetsService bannedInetsService;
   @Autowired
-  LoginAddressService loginAddressService;
-  @Autowired
   FormUserValidator formUserValidator;
   @Autowired
   FormEmailValidator formEmailValidator;
@@ -124,10 +122,6 @@ public class UserController {
     this.bannedInetsService = bannedInetsService;
   }
   
-  public void setLoginAddressService(LoginAddressService loginAddressService) {
-    this.loginAddressService = loginAddressService;
-  }
-
   public void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
   }
@@ -625,9 +619,7 @@ public class UserController {
       @RequestParam(required = true) int userId,
       Map<String, Object> model) {
     AppUser user = appUserService.getUserById(userId);
-    List<LoginInet> logins = loginAddressService.getLoginAddressesByUserId(userId);
     model.put("appUser", user);
-    model.put("logins", logins);
     return "users/user";
   }
 }
