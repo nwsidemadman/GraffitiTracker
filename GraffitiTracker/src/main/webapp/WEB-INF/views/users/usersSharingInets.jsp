@@ -8,7 +8,15 @@
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
   <c:forEach var="userId" items="${usersSharingInets.keySet()}">
-    <c:out value="${usersSharingInets.get(userId)}(${userId}) " />
+    <a id="userLink" href="<c:out value="${userId}" />"><c:out value="${usersSharingInets.get(userId)}" /></a>
   </c:forEach>
+<script type="text/javascript">
+  $(document).ready(function() {
+    // capture a click on the link
+    $().on('click', '#userLink', function () {
+      var aData = usersTableJObject.fnGetData(this);
+      alert(aData);
+    });
+  });
 </script>
 </sec:authorize>
