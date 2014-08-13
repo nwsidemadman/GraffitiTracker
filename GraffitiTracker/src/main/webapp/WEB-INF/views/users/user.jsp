@@ -40,13 +40,6 @@
                   <th>Last Visit</th>
                 </tr>
               </thead>
-              <tfoot>
-                <tr>
-                  <th id="ip">IP</th>
-                  <th>Visits</th>
-                  <th>Last Visit</th>
-                </tr>
-              </tfoot>
             </table>
           </td>
         </tr>

@@ -8,14 +8,23 @@
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
   <c:forEach var="userId" items="${usersSharingInets.keySet()}">
-    <a id="userLink" href="<c:out value="${userId}" />"><c:out value="${usersSharingInets.get(userId)}" /></a>
+    <a href="<c:out value="${userId}" />"><c:out value="${usersSharingInets.get(userId)}" /></a>
   </c:forEach>
 <script type="text/javascript">
   $(document).ready(function() {
     // capture a click on the link
-    $().on('click', '#userLink', function () {
-      var aData = usersTableJObject.fnGetData(this);
-      alert(aData);
+    $('#usersSharingIp a').click(function (e) {
+      e.preventDefault();
+      var aUrlPaths = this.href.split("/");
+      var userId = aUrlPaths[aUrlPaths.length - 1];
+      $.ajax({ 
+        type: "GET",
+        dataType: "html",
+        url: '<s:url value="/users?userId=' + userId + '" />',
+        success: function(data){
+          $('#manageUser').html(data);
+        },
+      });
     });
   });
 </script>
