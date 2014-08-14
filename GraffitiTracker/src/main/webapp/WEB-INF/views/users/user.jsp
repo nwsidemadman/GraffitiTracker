@@ -28,8 +28,9 @@
           <td>Roles:<td>
           <td>
             <select multiple>
+              <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
               <c:forEach var="entry" items="<%=RoleEnum.values()%>">
-                <option value="${entry}" <c:if test="${appUser.getRolesAsTimestampToRoleEnumMap().containsKey(entry)}">selected</c:if> >
+                <option value="${entry}" <c:if test="${roles.containsKey(entry)}">selected</c:if> >
                   ${entry.getDisplayString()}
                 </option>
               </c:forEach>
