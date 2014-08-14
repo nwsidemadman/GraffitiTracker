@@ -3,6 +3,9 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+<%@ page import="net.ccaper.GraffitiTracker.enums.RoleEnum" %>
+
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <p>Not authorized to view this pane</p>
 </sec:authorize>
@@ -19,6 +22,18 @@
               <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-dd" var="grantedDate"/>
               <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" /><br>
             </c:forEach>
+          </td>
+        </tr>
+        <tr>
+          <td>Roles:<td>
+          <td>
+            <select multiple>
+              <c:forEach var="entry" items="<%=RoleEnum.values()%>">
+                <option value="${entry}" <c:if test="${appUser.getRoles().contains(entry)}">selected</c:if> >
+                  ${entry.getDisplayString()}
+                </option>
+              </c:forEach>
+            </select>
           </td>
         </tr>
         <tr><td>Email:</td><td>${appUser.getEmail()}</td></tr>
