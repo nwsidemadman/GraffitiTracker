@@ -30,8 +30,13 @@
             <select multiple>
               <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
               <c:forEach var="entry" items="<%=RoleEnum.values()%>">
-                <option value="${entry}" <c:if test="${roles.containsKey(entry)}">selected</c:if> >
+                <c:set var="roleSet" value="${roles.containsKey(entry)}" />
+                <option value="${entry}" <c:if test="${roleSet}">selected</c:if> >
                   ${entry.getDisplayString()}
+                  <c:if test="${roleSet}">
+                    <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
+                    <c:out value="(${grantedDate})" /><br>
+                  </c:if>
                 </option>
               </c:forEach>
             </select>
