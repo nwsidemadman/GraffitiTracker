@@ -15,7 +15,7 @@
     <td width="50%">
       <table width="100%">
         <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
-          <td>Roles:<td>
+          <td>Roles:</td>
           <td>
             <select multiple>
               <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
