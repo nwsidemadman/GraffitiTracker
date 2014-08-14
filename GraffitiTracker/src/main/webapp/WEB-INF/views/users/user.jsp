@@ -17,7 +17,7 @@
         <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
           <td>Roles:</td>
           <td>
-            <select multiple>
+            <select id="manageUsersSelectRoles" multiple>
               <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
               <c:forEach var="entry" items="<%=RoleEnum.values()%>">
                 <c:set var="roleSet" value="${roles.containsKey(entry)}" />

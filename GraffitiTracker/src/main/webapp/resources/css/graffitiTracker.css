@@ -211,6 +211,10 @@ label {
         font-size: 1em;
 }
 
+#manageUsersSelectRoles {
+  font-size: 0.95em;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;
