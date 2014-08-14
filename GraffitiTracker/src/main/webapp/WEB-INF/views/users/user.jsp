@@ -33,7 +33,13 @@
           </td>
         </tr>
         <tr><td>Email:</td><td>${appUser.getEmail()}</td></tr>
-        <tr><td>Active:</td><td>${appUser.getIsActive() ? "Yes" : "No"}</td></tr>
+        <tr>
+          <td>Active:</td>
+          <td>
+            <input type="radio" name="userActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
+            <input type="radio" name="userActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
+          </td>
+        </tr>
         <tr><td>Registered:</td><td><fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
         <tr><td>Last Login:</td><td><fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
         <tr><td>Login Count:</td><td>${appUser.getLoginCount() }</td></tr>
