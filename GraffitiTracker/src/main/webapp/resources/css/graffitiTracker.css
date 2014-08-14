@@ -219,6 +219,10 @@ label {
   font-size: 1.05em;
 }
 
+#manageUsersSubmit {
+  font-size: 1.05em;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;

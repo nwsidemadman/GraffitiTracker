@@ -44,6 +44,7 @@
         <tr><td>Registered:</td><td><fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
         <tr><td>Last Login:</td><td><fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
         <tr><td>Login Count:</td><td>${appUser.getLoginCount() }</td></tr>
+        <tr><td><input id="manageUsersSubmit" type="submit" value="Edit"></td></tr>
       </table>
     </td>
     <td width="50%">
