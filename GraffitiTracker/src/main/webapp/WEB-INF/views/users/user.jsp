@@ -15,6 +15,7 @@
     <td width="50%">
       <table width="100%">
         <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
+        <tr>
           <td>Roles:</td>
           <td>
             <select id="manageUsersSelectRoles" multiple>
@@ -32,7 +33,7 @@
             </select>
           </td>
         </tr>
-        <tr><td>Email:</td><td>${appUser.getEmail()}</td></tr>
+        <tr><td>Email:</td><td><input type="email" id="manageUsersEmail" name="email" value="${appUser.getEmail()}"></td></tr>
         <tr>
           <td>Active:</td>
           <td>
