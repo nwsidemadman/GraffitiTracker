@@ -15,16 +15,6 @@
     <td width="50%">
       <table width="100%">
         <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
-        <tr>
-          <td>Roles:<td>
-          <td>
-            <c:forEach var="role" items="${appUser.getRoles()}">
-              <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-dd" var="grantedDate"/>
-              <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" /><br>
-            </c:forEach>
-          </td>
-        </tr>
-        <tr>
           <td>Roles:<td>
           <td>
             <select multiple>
@@ -35,7 +25,7 @@
                   ${entry.getDisplayString()}
                   <c:if test="${roleSet}">
                     <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
-                    <c:out value="(${grantedDate})" /><br>
+                    <c:out value="(${grantedDate})" />
                   </c:if>
                 </option>
               </c:forEach>
