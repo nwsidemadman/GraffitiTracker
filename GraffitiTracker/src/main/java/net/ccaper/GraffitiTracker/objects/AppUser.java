@@ -1,7 +1,11 @@
 package net.ccaper.GraffitiTracker.objects;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import net.ccaper.GraffitiTracker.enums.RoleEnum;
 
 public class AppUser {
   private int userId;
@@ -12,6 +16,7 @@ public class AppUser {
   private String password;
   private Timestamp currentLoginTimestamp;
   private Timestamp previousLoginTimestamp;
+  // TODO(ccaper): consider removing Role object and making this a map of timestamps to RoleEnum
   private List<Role> roles;
   private int loginCount;
   private String securityQuestion;
@@ -95,6 +100,18 @@ public class AppUser {
 
   public void setRoles(List<Role> roles) {
     this.roles = roles;
+  }
+  
+  // TODO(ccaper): unit test and JavaDoc
+  public Map<RoleEnum, Timestamp> getRolesAsTimestampToRoleEnumMap() {
+    if (roles == null) {
+      return null;
+    }
+    Map<RoleEnum, Timestamp> rolesMap = new HashMap<RoleEnum, Timestamp>(roles.size());
+    for (Role role : roles) {
+      rolesMap.put(role.getRole(), role.getGrantedTimestamp());
+    }
+    return rolesMap;
   }
 
   public String getSecurityQuestion() {

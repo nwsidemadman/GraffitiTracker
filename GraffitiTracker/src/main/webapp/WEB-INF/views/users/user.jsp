@@ -29,7 +29,7 @@
           <td>
             <select multiple>
               <c:forEach var="entry" items="<%=RoleEnum.values()%>">
-                <option value="${entry}" <c:if test="${appUser.getRoles().contains(entry)}">selected</c:if> >
+                <option value="${entry}" <c:if test="${appUser.getRolesAsTimestampToRoleEnumMap().containsKey(entry)}">selected</c:if> >
                   ${entry.getDisplayString()}
                 </option>
               </c:forEach>
