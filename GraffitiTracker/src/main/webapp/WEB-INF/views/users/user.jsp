@@ -76,7 +76,7 @@
     var userLoginsTableJObject = $('#userLoginsTable').dataTable( {
       "sDom": '<"H"lr>t<"F">',
       "scrollX": false,
-      "scrollY": "400px",
+      "scrollY": "80px",
       "scrollCollapse": true,
       "paging": false,
       "ajax": "<s:url value="/api/users/${appUser.getUserId()}/logins" />",
