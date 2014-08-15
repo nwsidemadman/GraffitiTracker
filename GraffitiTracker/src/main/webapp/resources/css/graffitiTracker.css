@@ -231,6 +231,26 @@ label {
   white-space: nowrap;
 }
 
+#usersSharingIp a:link {
+  color:#000000;
+  text-decoration:none;
+}      /* unvisited link */
+
+#usersSharingIp a:visited {
+  color:#000000;
+  text-decoration:none;
+}  /* visited link */
+
+#usersSharingIp a:hover {
+  color:#000000;
+  text-decoration:none;
+}  /* mouse over link */
+
+#usersSharingIp a:active {
+  color:#000000;
+  text-decoration:none;
+}  /* selected link */ 
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;
