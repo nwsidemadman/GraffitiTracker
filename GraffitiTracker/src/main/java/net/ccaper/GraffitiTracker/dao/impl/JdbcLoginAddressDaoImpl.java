@@ -55,6 +55,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     @Override
     public LoginInet mapRow(ResultSet rs, int rowNum) throws SQLException {
       LoginInet loginInet = new LoginInet();
+      // TODO(ccaper): fix so that this doesn't use row num
       loginInet.setInet(rs.getString(1));
       loginInet.setNumberVisits(rs.getInt(NUMBER_VISITS_COL));
       loginInet.setLastVisit(rs.getTimestamp(LAST_VISIT_TIMESTAMP_COL));
