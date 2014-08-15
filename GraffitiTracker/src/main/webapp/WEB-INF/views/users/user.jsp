@@ -64,6 +64,7 @@
         </tr>
         <tr>
           <td id="usersSharingIp">
+            Click an IP to see other users sharing IP
           </td>
         </tr>
       </table>

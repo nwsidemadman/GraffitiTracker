@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,7 +17,6 @@ import net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator;
 import net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.EmailForm;
-import net.ccaper.GraffitiTracker.objects.LoginInet;
 import net.ccaper.GraffitiTracker.objects.ManageAccountForm;
 import net.ccaper.GraffitiTracker.objects.PasswordSecurityForm;
 import net.ccaper.GraffitiTracker.objects.TextCaptcha;
@@ -44,11 +44,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/users")
@@ -638,7 +636,7 @@ public class UserController {
   @RequestMapping(value = "/usersSharingInets", method = RequestMethod.GET)
   public String getSharedInets(@RequestParam(required = true) String inet,
       Map<String, Object> model) {
-    Map<Integer, String> usersSharingInets = loginAddressService.getUsersSharingInet(inet);
+    SortedMap<String, Integer> usersSharingInets = loginAddressService.getUsersSharingInet(inet);
     model.put("usersSharingInets", usersSharingInets);
     return "users/usersSharingInets";
   }

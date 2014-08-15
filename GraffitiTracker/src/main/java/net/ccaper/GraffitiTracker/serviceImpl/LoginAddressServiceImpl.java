@@ -1,8 +1,8 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -50,10 +50,10 @@ public class LoginAddressServiceImpl implements LoginAddressService {
   }
 
   @Override
-  public Map<Integer, String> getUsersSharingInet(String inet) {
-    List<ImmutablePair<Integer, String>> tuples = loginAddressDao.getUsersSharingInet(inet);
-    Map<Integer, String> results = new HashMap<Integer, String>(tuples.size());
-    for (ImmutablePair<Integer, String> tuple : tuples) {
+  public SortedMap<String, Integer> getUsersSharingInet(String inet) {
+    List<ImmutablePair<String, Integer>> tuples = loginAddressDao.getUsersSharingInet(inet);
+    SortedMap<String, Integer> results = new TreeMap<String, Integer>();
+    for (ImmutablePair<String, Integer> tuple : tuples) {
       results.put(tuple.getLeft(), tuple.getRight());
     }
     return results;

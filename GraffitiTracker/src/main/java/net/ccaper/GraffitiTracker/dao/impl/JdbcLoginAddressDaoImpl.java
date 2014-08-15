@@ -62,10 +62,10 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     }
   };
   
-  RowMapper<ImmutablePair<Integer, String>> userRowMapper = new RowMapper<ImmutablePair<Integer, String>>() {
+  RowMapper<ImmutablePair<String, Integer>> userRowMapper = new RowMapper<ImmutablePair<String, Integer>>() {
     @Override
-    public ImmutablePair<Integer, String> mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new ImmutablePair<Integer, String>(rs.getInt(USER_ID_COL), rs.getString(USERNAME_COL));
+    public ImmutablePair<String, Integer> mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return new ImmutablePair<String, Integer>(rs.getString(USERNAME_COL), rs.getInt(USER_ID_COL));
     }
   };
 
@@ -93,7 +93,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
   }
 
   @Override
-  public List<ImmutablePair<Integer, String>> getUsersSharingInet(String inet) {
+  public List<ImmutablePair<String, Integer>> getUsersSharingInet(String inet) {
     Map<String, String> loginAddressParamMap = new HashMap<String, String>(1);
     loginAddressParamMap.put(INET_ADDRESS_COL, inet);
     return getNamedParameterJdbcTemplate().query(SQL_GET_USERS_SHARING_INET,

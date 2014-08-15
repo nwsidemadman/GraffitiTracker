@@ -11,5 +11,5 @@ public interface LoginAddressDao {
   
   List<LoginInet> getLoginAddressByUserId(int userId);
   
-  List<ImmutablePair<Integer, String>> getUsersSharingInet(String inet);
+  List<ImmutablePair<String, Integer>> getUsersSharingInet(String inet);
 }
