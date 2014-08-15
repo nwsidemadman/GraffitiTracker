@@ -22,6 +22,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     implements LoginAddressDao {
   private static final String LOGIN_ADDRESSES_TABLE = "login_addresses";
   private static final String INET_ADDRESS_COL = "inet_address";
+  private static final String INET_ADDRESS_AS_STRING_COL = "inet_address_string";
   private static final String LAST_VISIT_TIMESTAMP_COL = "last_visit_timestamp";
   private static final String NUMBER_VISITS_COL = "number_visits";
   private static final String USERS_TABLE = JdbcAppUserDaoImpl.USERS_TABLE;
@@ -39,9 +40,10 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
           LAST_VISIT_TIMESTAMP_COL).toLowerCase();
 
   private static final String SQL_GET_LOGIN_ADDRESSES_BY_USERID = String
-      .format("SELECT INET_NTOA(%s), %s, %s FROM %s WHERE %s = :%s",
-          INET_ADDRESS_COL, NUMBER_VISITS_COL, LAST_VISIT_TIMESTAMP_COL,
-          LOGIN_ADDRESSES_TABLE, ID_FK_COL, ID_FK_COL).toLowerCase();
+      .format("SELECT INET_NTOA(%s) as %s, %s, %s FROM %s WHERE %s = :%s",
+          INET_ADDRESS_COL, INET_ADDRESS_AS_STRING_COL, NUMBER_VISITS_COL,
+          LAST_VISIT_TIMESTAMP_COL, LOGIN_ADDRESSES_TABLE, ID_FK_COL, ID_FK_COL)
+      .toLowerCase();
 
   private static final String SQL_GET_USERS_SHARING_INET = String
       .format(
@@ -55,18 +57,19 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     @Override
     public LoginInet mapRow(ResultSet rs, int rowNum) throws SQLException {
       LoginInet loginInet = new LoginInet();
-      // TODO(ccaper): fix so that this doesn't use row num
-      loginInet.setInet(rs.getString(1));
+      loginInet.setInet(rs.getString(INET_ADDRESS_AS_STRING_COL));
       loginInet.setNumberVisits(rs.getInt(NUMBER_VISITS_COL));
       loginInet.setLastVisit(rs.getTimestamp(LAST_VISIT_TIMESTAMP_COL));
       return loginInet;
     }
   };
-  
+
   RowMapper<ImmutablePair<String, Integer>> userRowMapper = new RowMapper<ImmutablePair<String, Integer>>() {
     @Override
-    public ImmutablePair<String, Integer> mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new ImmutablePair<String, Integer>(rs.getString(USERNAME_COL), rs.getInt(USER_ID_COL));
+    public ImmutablePair<String, Integer> mapRow(ResultSet rs, int rowNum)
+        throws SQLException {
+      return new ImmutablePair<String, Integer>(rs.getString(USERNAME_COL),
+          rs.getInt(USER_ID_COL));
     }
   };
 
