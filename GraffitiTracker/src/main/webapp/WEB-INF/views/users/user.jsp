@@ -48,15 +48,15 @@
       </table>
     </td>
     <td width="50%">
-      <table>
+      <table width="100%">
         <tr>
           <td>
             <table id="userLoginsTable" class="display" cellspacing="0" width="100%">
               <thead>
                 <tr>
-                  <th>IP</th>
-                  <th>Visits</th>
-                  <th>Last Visit</th>
+                  <th align="left">IP</th>
+                  <th align="left">Visits</th>
+                  <th align="left">Last Visit</th>
                 </tr>
               </thead>
             </table>
@@ -64,8 +64,7 @@
         </tr>
         <tr>
           <td id="usersSharingIp">
-            Click an IP to see other users sharing IP
-          </td>
+            Click an IP to see users sharing IP
         </tr>
       </table>
     </td>

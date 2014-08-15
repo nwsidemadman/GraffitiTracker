@@ -8,9 +8,11 @@
   <p>Not authorized to view this pane</p>
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
-  <c:forEach var="userId" items="${usersSharingInets.keySet()}">
-    <a href="<c:out value="${usersSharingInets.get(userId)}" />"><c:out value="${userId}" /></a>
-  </c:forEach>
+  <div id="usersSharingIpScrollable">
+    <c:forEach var="userId" items="${usersSharingInets.keySet()}">
+      <a href="<c:out value="${usersSharingInets.get(userId)}" />"><c:out value="${userId}" /></a>
+    </c:forEach>
+  </div>
 <script type="text/javascript">
   $(document).ready(function() {
     // capture a click on the link

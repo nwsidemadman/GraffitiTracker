@@ -223,6 +223,14 @@ label {
   font-size: 1.05em;
 }
 
+#usersSharingIpScrollable {
+  width: 260px;
+  height:30px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
 fieldset input[type="text"],input[type="password"],select,checkbox {
   border: 1px solid #AAAAAA;
   margin-right: 3px;
