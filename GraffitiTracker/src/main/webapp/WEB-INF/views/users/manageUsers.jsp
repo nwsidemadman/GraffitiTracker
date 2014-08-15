@@ -47,7 +47,7 @@
       var usersTableJObject = $('#usersTable').dataTable( {
           "sDom": '<"H"lr>t<"F"i>',
           "scrollX": false,
-          "scrollY": "400px",
+          "scrollY": "238px",
           "scrollCollapse": true,
           "paging": false,
           "ajax": "<s:url value="/api/users" />",
