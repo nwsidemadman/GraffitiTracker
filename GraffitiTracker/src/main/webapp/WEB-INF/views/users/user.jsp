@@ -11,7 +11,7 @@
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
 <table width="100%">
-  <tr>
+  <tr valign="top">
     <td width="50%">
       <table width="100%">
         <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
