@@ -25,10 +25,15 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
   private static final String INET_ADDRESS_AS_STRING_COL = "inet_address_string";
   private static final String LAST_VISIT_TIMESTAMP_COL = "last_visit_timestamp";
   private static final String NUMBER_VISITS_COL = "number_visits";
+  private static final String IS_INETBANNDED_COL = "is_inet_banned";
   private static final String USERS_TABLE = JdbcAppUserDaoImpl.USERS_TABLE;
   private static final String USER_ID_COL = JdbcAppUserDaoImpl.USER_ID_COL;
   private static final String ID_FK_COL = JdbcAppUserDaoImpl.ID_FK_COL;
   private static final String USERNAME_COL = JdbcAppUserDaoImpl.USERNAME_COL;
+  private static final String BANNED_INETS_TABLE = JdbcBannedInetsDaoImpl.BANNED_INETS_TABLE;
+  private static final String MIN_BANNED_INET_COL = JdbcBannedInetsDaoImpl.MIN_INET_COL;
+  private static final String MAX_BANNED_INET_COL = JdbcBannedInetsDaoImpl.MAX_INET_COL;
+  private static final String ACTIVE_BANNED_INET_COL = JdbcBannedInetsDaoImpl.ACTIVE_COL;
 
   private static final String SQL_UPDATE_LOGIN_ADDRESSES = String
       .format(
@@ -44,6 +49,19 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
           INET_ADDRESS_COL, INET_ADDRESS_AS_STRING_COL, NUMBER_VISITS_COL,
           LAST_VISIT_TIMESTAMP_COL, LOGIN_ADDRESSES_TABLE, ID_FK_COL, ID_FK_COL)
       .toLowerCase();
+
+  private static final String SQL_GET_LOGIN_ADDRESSES_BY_USERID2 = String
+      .format(
+          "SELECT INET_NTOA(%s) as %s, %s, %s, (SELECT case when (select count(*) "
+              + "FROM %s WHERE inet_aton(%s) >= %s "
+              + "AND inet_aton(inet_address_string) <= inet_max_incl AND active = 1) > 0 "
+              + "then true else false end) as %s FROM %s WHERE %s = :%s",
+          INET_ADDRESS_COL, INET_ADDRESS_AS_STRING_COL, NUMBER_VISITS_COL,
+          LAST_VISIT_TIMESTAMP_COL, BANNED_INETS_TABLE,
+          INET_ADDRESS_AS_STRING_COL, MIN_BANNED_INET_COL,
+          INET_ADDRESS_AS_STRING_COL, MAX_BANNED_INET_COL,
+          ACTIVE_BANNED_INET_COL, IS_INETBANNDED_COL, LOGIN_ADDRESSES_TABLE,
+          ID_FK_COL, ID_FK_COL).toLowerCase();
 
   private static final String SQL_GET_USERS_SHARING_INET = String
       .format(

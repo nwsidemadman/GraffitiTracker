@@ -6,6 +6,7 @@ public class LoginInet {
   private String inet;
   private int numberVisits;
   private Timestamp lastVisit;
+  private boolean isInetBanned;
 
   public String getInet() {
     return inet;
@@ -29,6 +30,14 @@ public class LoginInet {
 
   public void setLastVisit(Timestamp lastVisit) {
     this.lastVisit = lastVisit;
+  }
+  
+  public boolean getIsInetBanned() {
+    return isInetBanned;
+  }
+  
+  public void setIsInetBanned(boolean isInetBanned) {
+    this.isInetBanned = isInetBanned;
   }
 
   @Override

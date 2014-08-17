@@ -17,13 +17,15 @@ import org.springframework.stereotype.Repository;
 @Repository("bannedInetsDao")
 public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
 implements BannedInetsDao {
-  private static final String BANNED_INETS_TABLE = "banned_inets";
-  private static final String MIN_INET_COL = "inet_min_incl";
-  private static final String MAX_INET_COL = "inet_max_incl";
-  private static final String ACTIVE_COL = "active";
+  static final String BANNED_INETS_TABLE = "banned_inets";
+  static final String MIN_INET_COL = "inet_min_incl";
+  static final String MAX_INET_COL = "inet_max_incl";
+  static final String ACTIVE_COL = "active";
   private static final String NUMBER_REGISTRATION_ATTEMPTS_COL = "number_registration_attempts";
   private static final String NOTES_COL = "notes";
   private static final String INET = "inet";
+  // TODO(ccaper) rewrite so returns true/false isntead of count so logic
+  // doesn't have to be done in service layer
   private static final String SQL_SELECT_COUNT_INET_IN_RANGE = String
       .format(
           "SELECT COUNT(*) FROM %s WHERE inet_aton(:%s) >= %s AND inet_aton(:%s) <= %s AND %s = 1;",
