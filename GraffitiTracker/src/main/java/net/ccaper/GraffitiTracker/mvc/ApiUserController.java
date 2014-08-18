@@ -40,7 +40,7 @@ public class ApiUserController {
     this.loginAddressService = loginAddressService;
   }
   
-  @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody Map<String, List<AppUser>> getAllUsers() {
     Map<String, List<AppUser>> data = new HashMap<String, List<AppUser>>(1);
     data.put("data", appUserService.getAllUsers());
@@ -48,7 +48,7 @@ public class ApiUserController {
   }
   
   // TODO(ccaper): this will likely be pulled out in favor of controller call, remove this AND security
-  @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
   public @ResponseBody Map<String, AppUser> getUser(@PathVariable int userId) {
     Map<String, AppUser> data = new HashMap<String, AppUser>(1);
     data.put("data", appUserService.getUserById(userId));
@@ -56,7 +56,7 @@ public class ApiUserController {
   }
   
   // TODO(ccaper): unit test
-  @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET, produces = "application/json")
+  @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET)
   public @ResponseBody Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
     Map<String, List<LoginInet>> data = new HashMap<String, List<LoginInet>>(1);
     data.put("data", loginAddressService.getLoginAddressesByUserId(userId));
