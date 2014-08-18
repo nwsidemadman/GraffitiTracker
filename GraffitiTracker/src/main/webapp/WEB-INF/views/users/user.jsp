@@ -101,7 +101,7 @@
       ]
     });
     
-    // capture a click on the datatable
+    // capture a click on ip column of the datatable
     $('#userLoginsTable tbody').on('click', 'td:first-child', function () {
       var aData = userLoginsTableJObject.fnGetData(this);
       $.ajax({ 
@@ -110,8 +110,14 @@
         url: '<s:url value="/users/usersSharingInets?inet=' + aData + '" />',
         success: function(data){
           $('#usersSharingIp').html(data);
-        },
+        }
       });
+    });
+    
+    // capture a click on banned column of the datatable
+    $('#userLoginsTable tbody').on('click', 'td:last-child', function () {
+      var ip = $(this).closest('tr').find('td:first').text();
+      alert("Userid: '${appUser.getUserId()}' Username: '${appUser.getUsername()}' IP: '" + ip + "'");
     });
   });
 </script>
