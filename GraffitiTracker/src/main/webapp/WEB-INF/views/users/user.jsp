@@ -6,6 +6,10 @@
 
 <%@ page import="net.ccaper.GraffitiTracker.enums.RoleEnum" %>
 
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
+
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <p>Not authorized to view this pane</p>
 </sec:authorize>
@@ -117,7 +121,21 @@
     // capture a click on banned column of the datatable
     $('#userLoginsTable tbody').on('click', 'td:last-child', function () {
       var ip = $(this).closest('tr').find('td:first').text();
-      alert("Userid: '${appUser.getUserId()}' Username: '${appUser.getUsername()}' IP: '" + ip + "'");
+      var bannedInet = new Object();
+      bannedInet.inetMinIncl = ip;
+      bannedInet.inetMaxIncl = ip;
+      bannedInet.isActive = true;
+      bannedInet.numberRegistrationAttempts = 0;
+      bannedInet.notes = "${appUser.getUsername()} (${appUser.getUserId()})";
+      $.ajax({ 
+        type: "POST",
+        url: '<s:url value="/api/banned_inets" />',
+        data: JSON.stringify(bannedInet),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+        }
+      });
     });
   });
 </script>

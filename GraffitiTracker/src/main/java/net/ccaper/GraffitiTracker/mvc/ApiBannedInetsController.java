@@ -44,7 +44,7 @@ public class ApiBannedInetsController {
     BannedInet test = new BannedInet();
     test.setInetMinIncl("127.0.0.1");
     test.setInetMaxIncl("127.0.0.1");
-    test.setActive(true);
+    test.setIsActive(true);
     test.setNotes("test");
     return test;
   }
