@@ -45,16 +45,10 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
           LAST_VISIT_TIMESTAMP_COL).toLowerCase();
 
   private static final String SQL_GET_LOGIN_ADDRESSES_BY_USERID = String
-      .format("SELECT INET_NTOA(%s) as %s, %s, %s FROM %s WHERE %s = :%s",
-          INET_ADDRESS_COL, INET_ADDRESS_AS_STRING_COL, NUMBER_VISITS_COL,
-          LAST_VISIT_TIMESTAMP_COL, LOGIN_ADDRESSES_TABLE, ID_FK_COL, ID_FK_COL)
-      .toLowerCase();
-
-  private static final String SQL_GET_LOGIN_ADDRESSES_BY_USERID2 = String
       .format(
           "SELECT INET_NTOA(%s) as %s, %s, %s, (SELECT case when (select count(*) "
               + "FROM %s WHERE inet_aton(%s) >= %s "
-              + "AND inet_aton(inet_address_string) <= inet_max_incl AND active = 1) > 0 "
+              + "AND inet_aton(%s) <= %s AND %s = 1) > 0 "
               + "then true else false end) as %s FROM %s WHERE %s = :%s",
           INET_ADDRESS_COL, INET_ADDRESS_AS_STRING_COL, NUMBER_VISITS_COL,
           LAST_VISIT_TIMESTAMP_COL, BANNED_INETS_TABLE,
@@ -78,6 +72,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
       loginInet.setInet(rs.getString(INET_ADDRESS_AS_STRING_COL));
       loginInet.setNumberVisits(rs.getInt(NUMBER_VISITS_COL));
       loginInet.setLastVisit(rs.getTimestamp(LAST_VISIT_TIMESTAMP_COL));
+      loginInet.setIsInetBanned(rs.getBoolean(IS_INETBANNDED_COL));
       return loginInet;
     }
   };

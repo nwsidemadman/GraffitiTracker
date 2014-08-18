@@ -57,6 +57,7 @@
                   <th align="left">IP</th>
                   <th align="left">Visits</th>
                   <th align="left">Last Visit</th>
+                  <th align="left">Banned</th>
                 </tr>
               </thead>
             </table>
@@ -87,6 +88,14 @@
         {"data": "lastVisit",
           "mRender": function ( oObj ) {
             return dateFormat_yyyymmdd(oObj);
+          }
+        },
+        {"data": "isInetBanned",
+          "mRender": function ( oObj ) {
+            if (oObj) {
+              return "Yes";
+            }
+            return "No";
           }
         }
       ]
