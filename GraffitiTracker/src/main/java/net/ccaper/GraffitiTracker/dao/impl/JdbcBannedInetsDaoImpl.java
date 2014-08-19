@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import net.ccaper.GraffitiTracker.dao.BannedInetsDao;
+import net.ccaper.GraffitiTracker.objects.BannedInet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,6 +38,12 @@ implements BannedInetsDao {
           BANNED_INETS_TABLE, NUMBER_REGISTRATION_ATTEMPTS_COL,
           NUMBER_REGISTRATION_ATTEMPTS_COL, INET, MIN_INET_COL, INET,
           MAX_INET_COL, ACTIVE_COL).toLowerCase();
+  private static final String SQL_INSERT_OR_UPDATE_BANNED_INET = String.format(
+      "insert into %s (%s, %s, %s) values (inet_aton(:%s), inet_aton(:%s), :%s) "
+      + "on duplicate key update %s = true, %s = concat(%s, concat('; ', :%s))",
+      BANNED_INETS_TABLE, MIN_INET_COL, MAX_INET_COL, NOTES_COL, MIN_INET_COL,
+      MAX_INET_COL, NOTES_COL, ACTIVE_COL, NOTES_COL, NOTES_COL, NOTES_COL).toLowerCase();
+  
   RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
     @Override
     public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -62,5 +69,14 @@ implements BannedInetsDao {
     Map<String, String> inetParamMap = new HashMap<String, String>(1);
     inetParamMap.put(INET, inet);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_NUMBER_REGISTRATION_ATTEMPTS_INET_IN_RANGE, inetParamMap);
+  }
+
+  @Override
+  public void insertOrUpdateBannedInets(BannedInet bannedInet) {
+    Map<String, String> bannedInetParamMap = new HashMap<String, String>(3);
+    bannedInetParamMap.put(MIN_INET_COL, bannedInet.getInetMinIncl());
+    bannedInetParamMap.put(MAX_INET_COL, bannedInet.getInetMaxIncl());
+    bannedInetParamMap.put(NOTES_COL, bannedInet.getNotes());
+    getNamedParameterJdbcTemplate().update(SQL_INSERT_OR_UPDATE_BANNED_INET, bannedInetParamMap);
   }
 }

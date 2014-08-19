@@ -1,6 +1,7 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
 import net.ccaper.GraffitiTracker.dao.BannedInetsDao;
+import net.ccaper.GraffitiTracker.objects.BannedInet;
 import net.ccaper.GraffitiTracker.service.BannedInetsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,10 @@ public class BannedInetsServiceImpl implements BannedInetsService {
   @Override
   public void updateNumberRegistrationAttemptsInetInRange(String inet) {
     bannedInetsDao.updateNumberRegistrationAttemptsInetInRange(inet);
+  }
+
+  @Override
+  public void insertOrUpdateBannedInets(BannedInet bannedInet) {
+    bannedInetsDao.insertOrUpdateBannedInets(bannedInet);
   }
 }

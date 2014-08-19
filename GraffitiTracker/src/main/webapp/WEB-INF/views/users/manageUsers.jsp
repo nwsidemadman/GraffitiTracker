@@ -102,7 +102,7 @@
           url: '<s:url value="/users?userId=' + aData.userId + '" />',
           success: function(data){
             $('#manageUser').html(data);
-          },
+          }
         });
       });
 

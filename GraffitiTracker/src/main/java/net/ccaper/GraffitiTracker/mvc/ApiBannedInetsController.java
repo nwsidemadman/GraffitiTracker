@@ -40,12 +40,7 @@ public class ApiBannedInetsController {
   //TODO(ccaper): unit test
   @RequestMapping(method = RequestMethod.POST)
   @ResponseBody public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
-    logger.info("BannedInet: " + bannedInet);
-    BannedInet test = new BannedInet();
-    test.setInetMinIncl("127.0.0.1");
-    test.setInetMaxIncl("127.0.0.1");
-    test.setIsActive(true);
-    test.setNotes("test");
-    return test;
+    bannedInetsService.insertOrUpdateBannedInets(bannedInet);
+    return bannedInet;
   }
 }
