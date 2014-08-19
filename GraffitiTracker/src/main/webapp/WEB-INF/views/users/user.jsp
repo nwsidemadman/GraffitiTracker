@@ -6,6 +6,10 @@
 
 <%@ page import="net.ccaper.GraffitiTracker.enums.RoleEnum" %>
 
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
+
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <p>Not authorized to view this pane</p>
 </sec:authorize>
@@ -14,37 +18,41 @@
   <tr valign="top">
     <td width="50%">
       <table width="100%">
-        <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
-        <tr>
-          <td>Roles:</td>
-          <td>
-            <select id="manageUsersSelectRoles" multiple size="4">
-              <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
-              <c:forEach var="entry" items="<%=RoleEnum.values()%>">
-                <c:set var="roleSet" value="${roles.containsKey(entry)}" />
-                <option value="${entry}" <c:if test="${roleSet}">selected</c:if> >
-                  ${entry.getDisplayString()}
-                  <c:if test="${roleSet}">
-                    <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
-                    <c:out value="(${grantedDate})" />
-                  </c:if>
-                </option>
-              </c:forEach>
-            </select>
-          </td>
-        </tr>
-        <tr><td>Email:</td><td><input type="email" id="manageUsersEmail" name="email" value="${appUser.getEmail()}"></td></tr>
-        <tr>
-          <td>Active:</td>
-          <td>
-            <input type="radio" name="userActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
-            <input type="radio" name="userActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
-          </td>
-        </tr>
-        <tr><td>Registered:</td><td><fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
-        <tr><td>Last Login:</td><td><fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
-        <tr><td>Login Count:</td><td>${appUser.getLoginCount() }</td></tr>
-        <tr><td><input id="manageUsersSubmit" type="submit" value="Edit"></td></tr>
+        <form id="adminEditUser">
+          <input type="hidden" name="id" value="${appUser.userId }" />
+          <input type="hidden" name="username" value="${appUser.username }" />
+          <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
+          <tr>
+            <td>Roles:</td>
+            <td>
+              <select id="manageUsersSelectRoles" multiple size="4">
+                <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
+                <c:forEach var="entry" items="<%=RoleEnum.values()%>">
+                  <c:set var="roleSet" value="${roles.containsKey(entry)}" />
+                  <option value="${entry}" <c:if test="${roleSet}">selected</c:if> >
+                    ${entry.getDisplayString()}
+                    <c:if test="${roleSet}">
+                      <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
+                      <c:out value="(${grantedDate})" />
+                    </c:if>
+                  </option>
+                </c:forEach>
+              </select>
+            </td>
+          </tr>
+          <tr><td>Email:</td><td><input type="email" id="manageUsersEmail" name="email" value="${appUser.getEmail()}"></td></tr>
+          <tr>
+            <td>Active:</td>
+            <td>
+              <input type="radio" name="isActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
+              <input type="radio" name="isActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
+            </td>
+          </tr>
+          <tr><td>Registered:</td><td><fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
+          <tr><td>Last Login:</td><td><fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
+          <tr><td>Login Count:</td><td>${appUser.getLoginCount() }</td></tr>
+          <tr><td><input id="manageUsersSubmit" type="submit" value="Edit"></td></tr>
+        </form>
       </table>
     </td>
     <td width="50%">
@@ -74,6 +82,28 @@
 </table>
 <script type="text/javascript">
   $(document).ready(function() {
+    // handle editing user
+    $('#adminEditUser').submit(function (e) {
+      e.preventDefault();
+      var appUser = new Object();
+      appUser.inetMinIncl = null;
+      appUser.inetMaxIncl = null;
+      appUser.isActive = null;
+      appUser.numberRegistrationAttempts = null;
+      appUser.notes = null;
+      $.ajax({ 
+        type: "PUT",
+        url: '<s:url value="/api/users/${appUser.userId}" />',
+        data: $('#adminEditUser').serialize(),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+          
+        }
+      });
+      alert('boom');
+    });
+    
     // create the datatable
     var userLoginsTableJObject = $('#userLoginsTable').dataTable( {
       "sDom": '<"H"lr>t<"F">',
