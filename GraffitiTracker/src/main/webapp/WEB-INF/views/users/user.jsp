@@ -18,7 +18,7 @@
         <tr>
           <td>Roles:</td>
           <td>
-            <select id="manageUsersSelectRoles" multiple>
+            <select id="manageUsersSelectRoles" multiple size="4">
               <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
               <c:forEach var="entry" items="<%=RoleEnum.values()%>">
                 <c:set var="roleSet" value="${roles.containsKey(entry)}" />
@@ -118,22 +118,24 @@
     $('#userLoginsTable tbody').on('click', 'td:last-child', function () {
       var bannedCol = this;
       var ip = $(this).closest('tr').find('td:first').text();
-      var bannedInet = new Object();
-      bannedInet.inetMinIncl = ip;
-      bannedInet.inetMaxIncl = ip;
-      bannedInet.isActive = true;
-      bannedInet.numberRegistrationAttempts = 0;
-      bannedInet.notes = "${appUser.getUsername()} (${appUser.getUserId()})";
-      $.ajax({ 
-        type: "POST",
-        url: '<s:url value="/api/banned_inets" />',
-        data: JSON.stringify(bannedInet),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(data){
-          $(bannedCol).html('Yes');
-        }
-      });
+      if (confirm('Do you want to ban IP \'' + ip + '\'?')) {
+        var bannedInet = new Object();
+        bannedInet.inetMinIncl = ip;
+        bannedInet.inetMaxIncl = ip;
+        bannedInet.isActive = true;
+        bannedInet.numberRegistrationAttempts = 0;
+        bannedInet.notes = "${appUser.getUsername()} (${appUser.getUserId()})";
+        $.ajax({ 
+          type: "POST",
+          url: '<s:url value="/api/banned_inets" />',
+          data: JSON.stringify(bannedInet),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(data){
+            $(bannedCol).html('Yes');
+          }
+        });
+      }
     });
   });
 </script>
