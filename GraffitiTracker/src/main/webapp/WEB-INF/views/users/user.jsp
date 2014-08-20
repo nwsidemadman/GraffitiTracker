@@ -19,8 +19,6 @@
     <td width="50%">
       <table width="100%">
         <form id="adminEditUser">
-          <input type="hidden" name="id" value="${appUser.userId }" />
-          <input type="hidden" name="username" value="${appUser.username }" />
           <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
           <tr>
             <td>Roles:</td>
@@ -44,8 +42,8 @@
           <tr>
             <td>Active:</td>
             <td>
-              <input type="radio" name="isActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
-              <input type="radio" name="isActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
+              <input id="manageUsersIsActive" type="radio" name="isActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
+              <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
             </td>
           </tr>
           <tr><td>Registered:</td><td><fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
@@ -85,23 +83,20 @@
     // handle editing user
     $('#adminEditUser').submit(function (e) {
       e.preventDefault();
-      var appUser = new Object();
-      appUser.inetMinIncl = null;
-      appUser.inetMaxIncl = null;
-      appUser.isActive = null;
-      appUser.numberRegistrationAttempts = null;
-      appUser.notes = null;
+      var editedUser = new Object();
+      editedUser.email = $('#manageUsersEmail').val();
+      editedUser.isActive = $('#manageUsersIsActive').val();
+      editedUser.roles = $('#manageUsersSelectRoles').val();
       $.ajax({ 
         type: "PUT",
         url: '<s:url value="/api/users/${appUser.userId}" />',
-        data: $('#adminEditUser').serialize(),
+        data: JSON.stringify(editedUser),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function(data){
           
         }
       });
-      alert('boom');
     });
     
     // create the datatable
