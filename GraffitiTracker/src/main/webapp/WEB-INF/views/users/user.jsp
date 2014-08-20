@@ -6,10 +6,6 @@
 
 <%@ page import="net.ccaper.GraffitiTracker.enums.RoleEnum" %>
 
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
-
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <p>Not authorized to view this pane</p>
 </sec:authorize>
