@@ -6,10 +6,6 @@
 
 <%@ page import="net.ccaper.GraffitiTracker.enums.RoleEnum" %>
 
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
-
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <p>Not authorized to view this pane</p>
 </sec:authorize>
@@ -23,7 +19,7 @@
           <tr>
             <td>Roles:</td>
             <td>
-              <select id="manageUsersSelectRoles" multiple size="4">
+              <select id="manageUsersSelectRoles" name="roles" multiple size="4">
                 <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
                 <c:forEach var="entry" items="<%=RoleEnum.values()%>">
                   <c:set var="roleSet" value="${roles.containsKey(entry)}" />
@@ -83,20 +79,24 @@
     // handle editing user
     $('#adminEditUser').submit(function (e) {
       e.preventDefault();
-      var editedUser = new Object();
-      editedUser.email = $('#manageUsersEmail').val();
-      editedUser.isActive = $('#manageUsersIsActive:checked').val();
-      editedUser.roles = $('#manageUsersSelectRoles').val();
-      $.ajax({ 
-        type: "PUT",
-        url: '<s:url value="/api/users/${appUser.userId}" />',
-        data: JSON.stringify(editedUser),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(data){
-          
-        }
-      });
+      if (!$('#manageUsersSelectRoles').val()) {
+        alert("You must select at least one role");
+      } else {
+        var editedUser = new Object();
+        editedUser.email = $('#manageUsersEmail').val();
+        editedUser.isActive = $('#manageUsersIsActive:checked').val();
+        editedUser.roles = $('#manageUsersSelectRoles').val();
+        $.ajax({ 
+          type: "PUT",
+          url: '<s:url value="/api/users/${appUser.userId}" />',
+          data: JSON.stringify(editedUser),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(data){
+            
+          }
+        });
+      }
     });
     
     // create the datatable
