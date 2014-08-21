@@ -242,6 +242,15 @@ public class AppUserServiceImpl implements AppUserService {
 
   // TODO(ccaper): unit test
   private boolean areRolesEqual(AppUser uneditedUser, AdminEditAppUser edits) {
+    if (uneditedUser.getRoles() == null && edits.getRoles() == null) {
+      return true;
+    }
+    if (uneditedUser.getRoles() == null && edits.getRoles() != null) {
+      return false;
+    }
+    if (uneditedUser.getRoles() != null && edits.getRoles() == null) {
+      return false;
+    }
     List<RoleEnum> uneditedRolesEnum = new ArrayList<RoleEnum>(uneditedUser
         .getRoles().size());
     for (Role role : uneditedUser.getRoles()) {
