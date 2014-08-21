@@ -2,6 +2,7 @@ package net.ccaper.GraffitiTracker.service;
 
 import java.util.List;
 
+import net.ccaper.GraffitiTracker.objects.AdminEditAppUser;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 
@@ -57,4 +58,6 @@ public interface AppUserService {
   void updateSecurityAnswerByUserid(int userid, String securityAnswer);
   
   List<AppUser> getAllUsers();
+  
+  void updateAppUser(AppUser uneditedUser, AdminEditAppUser edits);
 }

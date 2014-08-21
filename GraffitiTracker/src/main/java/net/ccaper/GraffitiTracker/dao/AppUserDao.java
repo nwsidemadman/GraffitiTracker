@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 
 public interface AppUserDao {
@@ -17,7 +18,10 @@ public interface AppUserDao {
 
   void updateLoginTimestamps(String username);
 
+  // TODO(ccaper): remove
   void updateAppUserAsActive(int userid);
+  
+  void updateIsActiveByUserid(int userid, boolean isActive);
 
   void deleteAppUsersWhenRegistrationExpired();
 
@@ -48,4 +52,8 @@ public interface AppUserDao {
   List<AppUser> getAllUsers();
   
   AppUser getAppUserById(int id) throws EmptyResultDataAccessException;
+  
+  void addRolesByUserid(int id, List<RoleEnum> roleAdditions);
+  
+  void deleteRolesByUserid(int id, List<RoleEnum> roleDeletions);
 }

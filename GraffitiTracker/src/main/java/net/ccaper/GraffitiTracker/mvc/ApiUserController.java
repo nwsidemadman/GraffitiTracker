@@ -6,7 +6,7 @@ import java.util.Map;
 
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.LoginInet;
-import net.ccaper.GraffitiTracker.objects.ManagerEditAppUser;
+import net.ccaper.GraffitiTracker.objects.AdminEditAppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.LoginAddressService;
 
@@ -68,9 +68,10 @@ public class ApiUserController {
   }
   
   //TODO(ccaper): unit test
-  @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+  @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void editUser(@PathVariable int userId, ManagerEditAppUser editedUser) {
-    logger.info("We got in");
+  public void editUser(@PathVariable int userId, @RequestBody AdminEditAppUser editedUser) {
+    AppUser uneditedUser = appUserService.getUserById(userId);
+    appUserService.updateAppUser(uneditedUser, editedUser);
   }
 }

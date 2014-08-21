@@ -1,13 +1,18 @@
 package net.ccaper.GraffitiTracker.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 import net.ccaper.GraffitiTracker.dao.ResetPasswordDao;
 import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
+import net.ccaper.GraffitiTracker.enums.RoleEnum;
+import net.ccaper.GraffitiTracker.objects.AdminEditAppUser;
 import net.ccaper.GraffitiTracker.objects.AppUser;
+import net.ccaper.GraffitiTracker.objects.Role;
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.MailService;
@@ -73,7 +78,7 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public void addRegistrationConfirmation(String username) {
     registrationConfirmationsDao
-    .addRegistrationConfirmationByUsername(username);
+        .addRegistrationConfirmationByUsername(username);
   }
 
   @Override
@@ -86,7 +91,7 @@ public class AppUserServiceImpl implements AppUserService {
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
     registrationConfirmationsDao
-    .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
+        .deleteRegistrationConfirmationByUniqueUrlParam(uniqueUrlParam);
   }
 
   @Override
@@ -115,7 +120,7 @@ public class AppUserServiceImpl implements AppUserService {
     List<String> recipients = appUserDao.getSuperAdminEmails();
     if (recipients.size() == 0) {
       logger
-      .error("There are no users with super admin role to deliver daily stats.");
+          .error("There are no users with super admin role to deliver daily stats.");
       return;
     }
     String content = "";
@@ -130,8 +135,8 @@ public class AppUserServiceImpl implements AppUserService {
         "%s GraffitiTracker Daily Stats %s",
         EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
             System.getProperty("CLASSPATH_PROP_ENV")).getDisplayString(),
-            DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT.format(new Date())),
-            content);
+        DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT.format(new Date())),
+        content);
   }
 
   @Override
@@ -203,11 +208,77 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   // wrap access with security
+  // TODO(ccaper): unit test
   public AppUser getUserById(int id) {
     try {
       return appUserDao.getAppUserById(id);
     } catch (DataAccessException e) {
       return null;
     }
+  }
+
+  // TODO(ccaper): unit test
+  @Override
+  public void updateAppUser(AppUser uneditedUser, AdminEditAppUser edits) {
+    if (uneditedUser.getEmail() != edits.getEmail()) {
+      appUserDao
+          .updateEmailByUserid(uneditedUser.getUserId(), edits.getEmail());
+    }
+    if (uneditedUser.getIsActive() != edits.getIsActive()) {
+      appUserDao.updateIsActiveByUserid(uneditedUser.getUserId(),
+          edits.getIsActive());
+    }
+    if (!areRolesEqual(uneditedUser, edits)) {
+      appUserDao.addRolesByUserid(uneditedUser.getUserId(),
+          getRoleAdditions(uneditedUser, edits));
+      appUserDao.deleteRolesByUserid(uneditedUser.getUserId(),
+          getRoleDeletions(uneditedUser, edits));
+    }
+  }
+
+  // TODO(ccaper): unit test
+  private boolean areRolesEqual(AppUser uneditedUser, AdminEditAppUser edits) {
+    List<RoleEnum> uneditedRolesEnum = new ArrayList<RoleEnum>(uneditedUser
+        .getRoles().size());
+    for (Role role : uneditedUser.getRoles()) {
+      uneditedRolesEnum.add(role.getRole());
+    }
+    return uneditedRolesEnum == edits.getRoles();
+  }
+
+  // TODO(ccaper): unit test
+  private List<RoleEnum> getRoleAdditions(AppUser uneditedUser,
+      AdminEditAppUser edits) {
+    List<RoleEnum> roleAdditions = new ArrayList<RoleEnum>(
+        RoleEnum.values().length);
+    List<RoleEnum> uneditedRolesEnum = new ArrayList<RoleEnum>(uneditedUser
+        .getRoles().size());
+    for (Role role : uneditedUser.getRoles()) {
+      uneditedRolesEnum.add(role.getRole());
+    }
+    for (RoleEnum roleInEdits : edits.getRoles()) {
+      if (!uneditedRolesEnum.contains(roleInEdits)) {
+        roleAdditions.add(roleInEdits);
+      }
+    }
+    return roleAdditions;
+  }
+
+  // TODO(ccaper): unit test
+  private List<RoleEnum> getRoleDeletions(AppUser uneditedUser,
+      AdminEditAppUser edits) {
+    List<RoleEnum> roleDeletions = new ArrayList<RoleEnum>(
+        RoleEnum.values().length);
+    List<RoleEnum> uneditedRolesEnum = new ArrayList<RoleEnum>(uneditedUser
+        .getRoles().size());
+    for (Role role : uneditedUser.getRoles()) {
+      uneditedRolesEnum.add(role.getRole());
+    }
+    for (RoleEnum roleInUnedits : uneditedRolesEnum) {
+      if (!edits.getRoles().contains(roleInUnedits)) {
+        roleDeletions.add(roleInUnedits);
+      }
+    }
+    return roleDeletions;
   }
 }

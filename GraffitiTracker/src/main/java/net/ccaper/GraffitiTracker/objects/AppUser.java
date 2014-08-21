@@ -16,7 +16,8 @@ public class AppUser {
   private String password;
   private Timestamp currentLoginTimestamp;
   private Timestamp previousLoginTimestamp;
-  // TODO(ccaper): consider removing Role object and making this a map of timestamps to RoleEnum
+  // TODO(ccaper): consider removing Role object and making this a map of
+  // timestamps to RoleEnum
   private List<Role> roles;
   private int loginCount;
   private String securityQuestion;
@@ -101,13 +102,14 @@ public class AppUser {
   public void setRoles(List<Role> roles) {
     this.roles = roles;
   }
-  
+
   // TODO(ccaper): unit test and JavaDoc
   public Map<RoleEnum, Timestamp> getRolesAsTimestampToRoleEnumMap() {
     if (roles == null) {
       return null;
     }
-    Map<RoleEnum, Timestamp> rolesMap = new HashMap<RoleEnum, Timestamp>(roles.size());
+    Map<RoleEnum, Timestamp> rolesMap = new HashMap<RoleEnum, Timestamp>(
+        roles.size());
     for (Role role : roles) {
       rolesMap.put(role.getRole(), role.getGrantedTimestamp());
     }

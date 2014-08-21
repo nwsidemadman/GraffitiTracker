@@ -2,6 +2,7 @@ package net.ccaper.GraffitiTracker.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.Role;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -76,9 +78,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
           CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, LOGIN_COUNT_COL,
           USERNAME_COL, USERNAME_COL).toLowerCase();
+  // TODO(ccaper): remove
   private static final String SQL_UPDATE_APPUSER_AS_ACTIVE = String.format(
       "UPDATE %s SET %S = 1 WHERE %s = :%s", USERS_TABLE, IS_ACTIVE_COL,
       USER_ID_COL, USER_ID_COL).toLowerCase();
+  private static final String SQL_UPDATE_ISACTIVE_BY_USERID = String.format(
+      "UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE, IS_ACTIVE_COL,
+      IS_ACTIVE_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String SQL_DELETE_EXPIRED_REGISTRATION_USERS = String
       .format(
           "DELETE %s FROM %s INNER JOIN %s ON %s.%s = %s.%s WHERE %s.%s = 0 AND %s.%s < (NOW() - INTERVAL 2 day)",
@@ -138,6 +144,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       EMAIL_COL, USERS_TABLE, ROLES_TABLE, USERS_TABLE, USER_ID_COL,
       ROLES_TABLE, ID_FK_COL, ROLES_TABLE, ROLE_COL,
       RoleEnum.SUPERADMIN.getDbString()).toLowerCase();
+  private static final String SQL_INSERT_ROLES = String.format(
+      "INSERT INTO %s (%s, %s) VALUES ", ROLES_TABLE, ID_FK_COL, ROLE_COL)
+      .toLowerCase();
+  private static final String SQL_DELETE_ROLES = String.format(
+      "DELETE FROM %s WHERE %s = :%s and %s in ", ROLES_TABLE, ID_FK_COL,
+      ID_FK_COL, ROLE_COL).toLowerCase();
 
   RowMapper<AppUser> appUserRowMapper = new RowMapper<AppUser>() {
     @Override
@@ -270,11 +282,21 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   @Override
+  // TODO(ccaper): remove
   public void updateAppUserAsActive(int userid) {
     Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
     userIdParamMap.put(USER_ID_COL, userid);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE,
         userIdParamMap);
+  }
+
+  @Override
+  public void updateIsActiveByUserid(int userid, boolean isActive) {
+    Map<String, Object> useridParamMap = new HashMap<String, Object>(2);
+    useridParamMap.put(USER_ID_COL, userid);
+    useridParamMap.put(IS_ACTIVE_COL, isActive);
+    getNamedParameterJdbcTemplate().update(SQL_UPDATE_ISACTIVE_BY_USERID,
+        useridParamMap);
   }
 
   @Override
@@ -429,5 +451,38 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
     user.setRoles(roles);
     return user;
+  }
+
+  @Override
+  public void addRolesByUserid(int id, List<RoleEnum> roleAdditions) {
+    String sql = SQL_INSERT_ROLES
+        + generateInsertRolesValues(id, roleAdditions);
+    getNamedParameterJdbcTemplate().update(sql, new HashMap<String, String>(0));
+  }
+
+  // TODO(ccaper): unit test
+  private String generateInsertRolesValues(int id, List<RoleEnum> roleAdditions) {
+    List<String> values = new ArrayList<String>(roleAdditions.size());
+    for (RoleEnum role : roleAdditions) {
+      values.add(String.format("(%d, '%s'", id, role.getDbString()));
+    }
+    return StringUtils.join(values, ", ");
+  }
+
+  @Override
+  public void deleteRolesByUserid(int id, List<RoleEnum> roleDeletions) {
+    String sql = SQL_DELETE_ROLES + generateDeleteRolesIns(roleDeletions);
+    Map<String, Integer> paramMap = new HashMap<String, Integer>(1);
+    paramMap.put(ID_FK_COL, id);
+    getNamedParameterJdbcTemplate().update(sql, paramMap);
+  }
+
+  // TODO(ccaper): unit test
+  private String generateDeleteRolesIns(List<RoleEnum> roleDeletions) {
+    List<String> ins = new ArrayList<String>(roleDeletions.size());
+    for (RoleEnum role : roleDeletions) {
+      ins.add(String.format("'%s'", role.getDbString()));
+    }
+    return "(" + StringUtils.join(ins, ", ") + ")";
   }
 }
