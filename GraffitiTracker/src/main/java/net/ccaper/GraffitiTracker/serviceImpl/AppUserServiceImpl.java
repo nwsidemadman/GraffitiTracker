@@ -228,12 +228,12 @@ public class AppUserServiceImpl implements AppUserService {
       appUserDao.updateIsActiveByUserid(uneditedUser.getUserId(),
           edits.getIsActive());
     }
-    if (!areRolesEqual(uneditedUser, edits)) {
-      appUserDao.addRolesByUserid(uneditedUser.getUserId(),
-          getRoleAdditions(uneditedUser, edits));
-      appUserDao.deleteRolesByUserid(uneditedUser.getUserId(),
-          getRoleDeletions(uneditedUser, edits));
-    }
+//    if (!areRolesEqual(uneditedUser, edits)) {
+//      appUserDao.addRolesByUserid(uneditedUser.getUserId(),
+//          getRoleAdditions(uneditedUser, edits));
+//      appUserDao.deleteRolesByUserid(uneditedUser.getUserId(),
+//          getRoleDeletions(uneditedUser, edits));
+//    }
   }
 
   // TODO(ccaper): unit test

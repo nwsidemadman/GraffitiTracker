@@ -85,7 +85,7 @@
       e.preventDefault();
       var editedUser = new Object();
       editedUser.email = $('#manageUsersEmail').val();
-      editedUser.isActive = $('#manageUsersIsActive').val();
+      editedUser.isActive = $('#manageUsersIsActive:checked').val();
       editedUser.roles = $('#manageUsersSelectRoles').val();
       $.ajax({ 
         type: "PUT",

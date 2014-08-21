@@ -33,4 +33,10 @@ public class AdminEditAppUser {
   public void setRoles(List<RoleEnum> roles) {
     this.roles = roles;
   }
+
+  @Override
+  public String toString() {
+    return "AdminEditAppUser [email=" + email + ", isActive=" + isActive
+        + ", roles=" + roles + "]";
+  }
 }
