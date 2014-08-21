@@ -464,7 +464,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private String generateInsertRolesValues(int id, List<RoleEnum> roleAdditions) {
     List<String> values = new ArrayList<String>(roleAdditions.size());
     for (RoleEnum role : roleAdditions) {
-      values.add(String.format("(%d, '%s'", id, role.getDbString()));
+      values.add(String.format("(%d, '%s')", id, role.getDbString()));
     }
     return StringUtils.join(values, ", ");
   }

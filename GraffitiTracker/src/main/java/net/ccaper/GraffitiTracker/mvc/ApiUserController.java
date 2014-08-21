@@ -71,7 +71,6 @@ public class ApiUserController {
   @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void editUser(@PathVariable int userId, @RequestBody AdminEditAppUser editedUser) {
-    logger.info("edits: " + editedUser);
     AppUser uneditedUser = appUserService.getUserById(userId);
     appUserService.updateAppUser(uneditedUser, editedUser);
   }
