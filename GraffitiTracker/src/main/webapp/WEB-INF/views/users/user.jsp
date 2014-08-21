@@ -13,41 +13,33 @@
 <table width="100%">
   <tr valign="top">
     <td width="50%">
-      <table width="100%">
-        <form id="adminEditUser">
-          <tr><td>Username:</td><td>${appUser.getUsername()}</td></tr>
-          <tr>
-            <td>Roles:</td>
-            <td>
-              <select id="manageUsersSelectRoles" name="roles" multiple size="4">
-                <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
-                <c:forEach var="entry" items="<%=RoleEnum.values()%>">
-                  <c:set var="roleSet" value="${roles.containsKey(entry)}" />
-                  <option value="${entry}" <c:if test="${roleSet}">selected</c:if> >
-                    ${entry.getDisplayString()}
-                    <c:if test="${roleSet}">
-                      <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
-                      <c:out value="(${grantedDate})" />
-                    </c:if>
-                  </option>
-                </c:forEach>
-              </select>
-            </td>
-          </tr>
-          <tr><td>Email:</td><td><input type="email" id="manageUsersEmail" name="email" value="${appUser.getEmail()}"></td></tr>
-          <tr>
-            <td>Active:</td>
-            <td>
-              <input id="manageUsersIsActive" type="radio" name="isActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
-              <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
-            </td>
-          </tr>
-          <tr><td>Registered:</td><td><fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
-          <tr><td>Last Login:</td><td><fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></td></tr>
-          <tr><td>Login Count:</td><td>${appUser.getLoginCount() }</td></tr>
-          <tr><td><input id="manageUsersSubmit" type="submit" value="Edit"></td></tr>
-        </form>
-      </table>
+      <form id="adminEditUser">
+        <div>Username: ${appUser.getUsername()}</div>
+        <div>Roles:
+          <select id="manageUsersSelectRoles" name="roles" multiple size="3">
+            <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
+            <c:forEach var="entry" items="<%=RoleEnum.values()%>">
+              <c:set var="roleSet" value="${roles.containsKey(entry)}" />
+              <option value="${entry}" <c:if test="${roleSet}">selected</c:if> >
+                ${entry.getDisplayString()}
+                <c:if test="${roleSet}">
+                  <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
+                  <c:out value="(${grantedDate})" />
+                </c:if>
+              </option>
+            </c:forEach>
+          </select>
+        </div>
+        <div>Email: <input type="email" id="manageUsersEmail" name="email" value="${appUser.getEmail()}"></div>
+        <div>Active:
+          <input id="manageUsersIsActive" type="radio" name="isActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
+          <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
+        </div>
+        <div>Registered: <fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></div>
+        <div>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></div>
+        <div>Login Count: ${appUser.getLoginCount() }</p>
+        <div><input id="manageUsersSubmit" type="submit" value="Edit"><p>
+      </form>
     </td>
     <td width="50%">
       <table width="100%">
@@ -93,7 +85,14 @@
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           success: function(data){
-            
+            $.ajax({ 
+              type: "GET",
+              dataType: "html",
+              url: '<s:url value="/users?userId=' + ${appUser.userId} + '" />',
+              success: function(data){
+                $('#manageUser').html(data);
+              }
+            });
           }
         });
       }
