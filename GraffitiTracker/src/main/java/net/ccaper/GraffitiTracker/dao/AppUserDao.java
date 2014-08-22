@@ -18,9 +18,6 @@ public interface AppUserDao {
 
   void updateLoginTimestamps(String username);
 
-  // TODO(ccaper): remove
-  void updateAppUserAsActive(int userid);
-  
   void updateIsActiveByUserid(int userid, boolean isActive);
 
   void deleteAppUsersWhenRegistrationExpired();

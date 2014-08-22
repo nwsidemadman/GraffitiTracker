@@ -78,10 +78,6 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
           CURRENT_LOGIN_TIMESTAMP_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL,
           CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, LOGIN_COUNT_COL,
           USERNAME_COL, USERNAME_COL).toLowerCase();
-  // TODO(ccaper): remove
-  private static final String SQL_UPDATE_APPUSER_AS_ACTIVE = String.format(
-      "UPDATE %s SET %S = 1 WHERE %s = :%s", USERS_TABLE, IS_ACTIVE_COL,
-      USER_ID_COL, USER_ID_COL).toLowerCase();
   private static final String SQL_UPDATE_ISACTIVE_BY_USERID = String.format(
       "UPDATE %s SET %s = :%s WHERE %s = :%s", USERS_TABLE, IS_ACTIVE_COL,
       IS_ACTIVE_COL, USER_ID_COL, USER_ID_COL).toLowerCase();
@@ -279,15 +275,6 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     userParamMap.put(USERNAME_COL, username);
     getNamedParameterJdbcTemplate().update(SQL_UPDATE_LOGIN_TIMESTAMPS,
         userParamMap);
-  }
-
-  @Override
-  // TODO(ccaper): remove
-  public void updateAppUserAsActive(int userid) {
-    Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
-    userIdParamMap.put(USER_ID_COL, userid);
-    getNamedParameterJdbcTemplate().update(SQL_UPDATE_APPUSER_AS_ACTIVE,
-        userIdParamMap);
   }
 
   @Override

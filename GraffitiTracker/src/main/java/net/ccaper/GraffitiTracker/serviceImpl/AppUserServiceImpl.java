@@ -103,7 +103,7 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public void updateAppUserAsActive(int userid) {
-    appUserDao.updateAppUserAsActive(userid);
+    appUserDao.updateIsActiveByUserid(userid, true);
   }
 
   @Override
