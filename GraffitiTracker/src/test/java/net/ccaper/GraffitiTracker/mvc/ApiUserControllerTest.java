@@ -42,32 +42,4 @@ public class ApiUserControllerTest {
     assertEquals(data, apiUserController.getAllUsers());
     verify(userServiceMock).getAllUsers();
   }
-
-  @Test
-  public void testUser_HappyPath() throws Exception {
-    AppUser appUser = new AppUser();
-    appUser.setUsername("test");
-    appUser.setUserId(1);
-    ApiUserController apiUserController = new ApiUserController();
-    AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUserById(appUser.getUserId())).thenReturn(appUser);
-    apiUserController.setAppUserService(userServiceMock);
-    Map<String, AppUser> data = new HashMap<String, AppUser>(1);
-    data.put("data", appUser);
-    assertEquals(data, apiUserController.getUser(appUser.getUserId()));
-    verify(userServiceMock).getUserById(appUser.getUserId());
-  }
-
-  @Test
-  public void testUser_NoUser() throws Exception {
-    int userId = 5;
-    ApiUserController apiUserController = new ApiUserController();
-    AppUserService userServiceMock = mock(AppUserService.class);
-    when(userServiceMock.getUserById(userId)).thenReturn(null);
-    apiUserController.setAppUserService(userServiceMock);
-    Map<String, AppUser> data = new HashMap<String, AppUser>(1);
-    data.put("data", null);
-    assertEquals(data, apiUserController.getUser(userId));
-    verify(userServiceMock).getUserById(userId);
-  }
 }
