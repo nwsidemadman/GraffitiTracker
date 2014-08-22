@@ -59,9 +59,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       USERS_TABLE, USERNAME_COL, EMAIL_COL, PASSWORD_COL,
       SECURITY_QUESTION_COL, SECURITY_ANSWER_COL, USERNAME_COL, EMAIL_COL,
       PASSWORD_COL, SECURITY_QUESTION_COL, SECURITY_ANSWER_COL).toLowerCase();
+  // TODO(ccaper): refactor count
   private static final String SQL_SELECT_COUNT_USERNAME = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
       USERNAME_COL, USERNAME_COL).toLowerCase();
+  // TODO(ccaper): refactor count
   private static final String SQL_SELECT_COUNT_EMAIL = String.format(
       "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
       EMAIL_COL, EMAIL_COL).toLowerCase();

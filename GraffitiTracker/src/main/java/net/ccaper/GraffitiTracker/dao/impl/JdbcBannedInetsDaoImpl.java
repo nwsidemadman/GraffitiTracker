@@ -25,11 +25,10 @@ implements BannedInetsDao {
   private static final String NUMBER_REGISTRATION_ATTEMPTS_COL = "number_registration_attempts";
   private static final String NOTES_COL = "notes";
   private static final String INET = "inet";
-  // TODO(ccaper) rewrite so returns true/false isntead of count so logic
-  // doesn't have to be done in service layer
-  private static final String SQL_SELECT_COUNT_INET_IN_RANGE = String
+  private static final String SQL_IS_INET_IN_RANGE = String
       .format(
-          "SELECT COUNT(*) FROM %s WHERE inet_aton(:%s) >= %s AND inet_aton(:%s) <= %s AND %s = 1;",
+          "SELECT CASE WHEN (SELECT COUNT(*) FROM %s WHERE inet_aton(:%s) >= %s "
+          + "AND inet_aton(:%s) <= %s AND %s = 1) > 0 THEN TRUE ELSE FALSE;",
           BANNED_INETS_TABLE, INET, MIN_INET_COL, INET, MAX_INET_COL,
           ACTIVE_COL).toLowerCase();
   private static final String SQL_UPDATE_NUMBER_REGISTRATION_ATTEMPTS_INET_IN_RANGE = String
@@ -44,10 +43,10 @@ implements BannedInetsDao {
       BANNED_INETS_TABLE, MIN_INET_COL, MAX_INET_COL, NOTES_COL, MIN_INET_COL,
       MAX_INET_COL, NOTES_COL, ACTIVE_COL, NOTES_COL, NOTES_COL, NOTES_COL).toLowerCase();
   
-  RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
+  RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
     @Override
-    public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new Integer(rs.getInt(1));
+    public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getBoolean(1);
     }
   };
 
@@ -57,11 +56,11 @@ implements BannedInetsDao {
   }
 
   @Override
-  public int selectCountInetInRange(String inet) {
+  public boolean isInetInRange(String inet) {
     Map<String, String> inetParamMap = new HashMap<String, String>(1);
     inetParamMap.put(INET, inet);
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_COUNT_INET_IN_RANGE, inetParamMap, countRowMapper);
+        SQL_IS_INET_IN_RANGE, inetParamMap, booleanRowMapper);
   }
 
   @Override

@@ -18,11 +18,7 @@ public class BannedInetsServiceImpl implements BannedInetsService {
 
   @Override
   public boolean isInetBanned(String inet) {
-    if (bannedInetsDao.selectCountInetInRange(inet) == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return bannedInetsDao.isInetInRange(inet);
   }
 
   @Override

@@ -3,7 +3,7 @@ package net.ccaper.GraffitiTracker.dao;
 import net.ccaper.GraffitiTracker.objects.BannedInet;
 
 public interface BannedInetsDao {
-  int selectCountInetInRange(String inet);
+  boolean isInetInRange(String inet);
 
   void updateNumberRegistrationAttemptsInetInRange(String inet);
   
