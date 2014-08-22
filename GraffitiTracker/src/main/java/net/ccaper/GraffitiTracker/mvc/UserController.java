@@ -540,7 +540,6 @@ public class UserController {
 
   @RequestMapping(value = "/termsAndConditions", method = RequestMethod.GET)
   public String termsAndConditions() {
-    // TODO: can this be static?
     return "users/termsAndConditions";
   }
 
