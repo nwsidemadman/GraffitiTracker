@@ -60,10 +60,10 @@
   </definition>
   <definition name="users/user" extends="stub">
     <put-attribute name="content"
-      value="/WEB-INF/views/users/user.jsp" />
+      value="/WEB-INF/views/users/userStub.jsp" />
   </definition>
   <definition name="users/usersSharingInets" extends="stub">
     <put-attribute name="content"
-      value="/WEB-INF/views/users/usersSharingInets.jsp" />
+      value="/WEB-INF/views/users/usersSharingInetsStub.jsp" />
   </definition>
 </tiles-definitions>
