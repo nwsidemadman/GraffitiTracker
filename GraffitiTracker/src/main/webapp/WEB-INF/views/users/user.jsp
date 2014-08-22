@@ -14,14 +14,14 @@
   <tr valign="top">
     <td width="50%">
       <form id="adminEditUser">
-        <div>Username: ${appUser.getUsername()}</div>
+        <div>Username: ${appUser.username}</div>
         <div>Roles:
           <select id="manageUsersSelectRoles" name="roles" multiple size="3">
-            <c:set var="roles" value="${appUser.getRolesAsTimestampToRoleEnumMap()}" />
+            <c:set var="roles" value="${appUser.rolesAsTimestampToRoleEnumMap}" />
             <c:forEach var="entry" items="<%=RoleEnum.values()%>">
               <c:set var="roleSet" value="${roles.containsKey(entry)}" />
               <option value="${entry}" <c:if test="${roleSet}">selected</c:if> >
-                ${entry.getDisplayString()}
+                ${entry.displayString}
                 <c:if test="${roleSet}">
                   <fmt:formatDate value="${roles.get(entry)}" pattern="yyyy-MM-dd" var="grantedDate"/>
                   <c:out value="(${grantedDate})" />
@@ -30,14 +30,14 @@
             </c:forEach>
           </select>
         </div>
-        <div>Email: <input type="email" id="manageUsersEmail" name="email" value="${appUser.getEmail()}"></div>
+        <div>Email: <input type="email" id="manageUsersEmail" name="email" value="${appUser.email}"></div>
         <div>Active:
-          <input id="manageUsersIsActive" type="radio" name="isActive" value="true" <c:if test="${appUser.getIsActive()}">checked</c:if>>Yes
-          <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.getIsActive() == false}">checked</c:if>>No
+          <input id="manageUsersIsActive" type="radio" name="isActive" value="true" <c:if test="${appUser.isActive}">checked</c:if>>Yes
+          <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.isActive == false}">checked</c:if>>No
         </div>
-        <div>Registered: <fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></div>
-        <div>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></div>
-        <div>Login Count: ${appUser.getLoginCount() }</p>
+        <div>Registered: <fmt:formatDate value="${appUser.registerTimestamp}" pattern="yyyy-MM-dd" /></div>
+        <div>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></div>
+        <div>Login Count: ${appUser.loginCount }</p>
         <div><input id="manageUsersSubmit" type="submit" value="Edit"><p>
       </form>
     </td>
@@ -105,7 +105,7 @@
       "scrollY": "80px",
       "scrollCollapse": true,
       "paging": false,
-      "ajax": "<s:url value="/api/users/${appUser.getUserId()}/logins" />",
+      "ajax": "<s:url value="/api/users/${appUser.userId}/logins" />",
       "columns": [
         {"data": "inet"},
         {"data": "numberVisits"},
@@ -148,7 +148,7 @@
         bannedInet.inetMaxIncl = ip;
         bannedInet.isActive = true;
         bannedInet.numberRegistrationAttempts = 0;
-        bannedInet.notes = "${appUser.getUsername()} (${appUser.getUserId()})";
+        bannedInet.notes = "${appUser.username} (${appUser.userId})";
         $.ajax({ 
           type: "POST",
           url: '<s:url value="/api/banned_inets" />',

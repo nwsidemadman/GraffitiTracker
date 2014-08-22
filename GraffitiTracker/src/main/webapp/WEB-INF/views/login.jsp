@@ -58,19 +58,19 @@
     <p>
     </p>
     <sec:authentication property="authorities" var="roles" />
-    <p>Username: ${appUser.getUsername()} (ID: ${appUser.getUserId()})</p>
-    <p>Register Date: <fmt:formatDate value="${appUser.getRegisterTimestamp()}" pattern="yyyy-MM-dd" /></p>
-    <p>Last Login: <fmt:formatDate value="${appUser.getPreviousLoginTimestamp()}" pattern="yyyy-MM-dd" /></p>
+    <p>Username: ${appUser.username} (ID: ${appUser.userId})</p>
+    <p>Register Date: <fmt:formatDate value="${appUser.registerTimestamp}" pattern="yyyy-MM-dd" /></p>
+    <p>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></p>
     <p>Roles:</p>
     <ul id="roles">
     <c:forEach var="role" items="${appUser.getRoles()}">
       <li>
-        <fmt:formatDate value="${role.getGrantedTimestamp()}" pattern="yyyy-MM-dd" var="grantedDate"/>
-        <c:out value="${role.getRole().getDisplayString()} (${grantedDate})" />
+        <fmt:formatDate value="${role.grantedTimestamp}" pattern="yyyy-MM-dd" var="grantedDate"/>
+        <c:out value="${role.role.displayString} (${grantedDate})" />
       </li>
     </c:forEach>
     </ul>
-    <p>Number Of Logins: ${appUser.getLoginCount()}</p>
+    <p>Number Of Logins: ${appUser.loginCount}</p>
     <p>
       <FORM METHOD="LINK" ACTION="<s:url value="${unauthUrl}" />">
         <INPUT TYPE="submit" VALUE=" Logout ">
