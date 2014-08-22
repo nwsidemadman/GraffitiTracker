@@ -21,6 +21,7 @@
     <intercept-url pattern="*/**" access="isAuthenticated()" />
     <intercept-url pattern="/api/users" access="hasRole('ROLE_SUPERADMIN')" />
     <intercept-url pattern="/api/users/*" access="hasRole('ROLE_SUPERADMIN')" />
+    <intercept-url pattern="/api/banned_inets" access="hasRole('ROLE_SUPERADMIN')" />
     <intercept-url pattern="/" access="permitAll" />
     <intercept-url pattern="/home" access="permitAll" />
     <intercept-url pattern="/home/" access="permitAll" />

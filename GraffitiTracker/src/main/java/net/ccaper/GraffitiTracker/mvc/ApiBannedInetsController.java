@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO: add security
 @RestController
 @RequestMapping("/api/banned_inets")
 @Scope("session")
