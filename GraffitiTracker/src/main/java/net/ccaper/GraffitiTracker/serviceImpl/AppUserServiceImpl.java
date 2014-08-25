@@ -3,7 +3,6 @@ package net.ccaper.GraffitiTracker.serviceImpl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
@@ -200,7 +199,6 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   // wrap access with security
-  // TODO(ccaper): unit test
   public AppUser getUserById(int id) {
     try {
       return appUserDao.getAppUserById(id);
@@ -209,7 +207,6 @@ public class AppUserServiceImpl implements AppUserService {
     }
   }
 
-  // TODO(ccaper): unit test
   @Override
   public void updateAppUser(AppUser uneditedUser, AdminEditAppUser edits) {
     if (uneditedUser.getEmail() != edits.getEmail()) {
@@ -232,8 +229,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
   }
 
-  // TODO(ccaper): unit test
-  private boolean areRolesEqual(AppUser uneditedUser, AdminEditAppUser edits) {
+  // visible for testing
+  static boolean areRolesEqual(AppUser uneditedUser, AdminEditAppUser edits) {
     if (uneditedUser.getRoles() == null && edits.getRoles() == null) {
       return true;
     }
@@ -251,8 +248,8 @@ public class AppUserServiceImpl implements AppUserService {
     return uneditedRolesEnum.equals(edits.getRoles());
   }
 
-  // TODO(ccaper): unit test
-  private List<RoleEnum> getRoleAdditions(AppUser uneditedUser,
+  // visible for testing
+  static List<RoleEnum> getRoleAdditions(AppUser uneditedUser,
       AdminEditAppUser edits) {
     List<RoleEnum> roleAdditions = new ArrayList<RoleEnum>(
         RoleEnum.values().length);
@@ -269,8 +266,8 @@ public class AppUserServiceImpl implements AppUserService {
     return roleAdditions;
   }
 
-  // TODO(ccaper): unit test
-  private List<RoleEnum> getRoleDeletions(AppUser uneditedUser,
+  // visible for testing
+  static List<RoleEnum> getRoleDeletions(AppUser uneditedUser,
       AdminEditAppUser edits) {
     List<RoleEnum> roleDeletions = new ArrayList<RoleEnum>(
         RoleEnum.values().length);
