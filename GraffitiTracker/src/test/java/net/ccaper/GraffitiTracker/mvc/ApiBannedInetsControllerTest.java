@@ -2,8 +2,6 @@ package net.ccaper.GraffitiTracker.mvc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import net.ccaper.GraffitiTracker.objects.BannedInet;
 import net.ccaper.GraffitiTracker.service.BannedInetsService;
 
