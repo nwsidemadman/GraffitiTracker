@@ -29,7 +29,6 @@ public class ApiBannedInetsController {
     this.bannedInetsService = bannedInetsService;
   }
   
-  //TODO(ccaper): unit test
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
