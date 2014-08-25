@@ -2,6 +2,7 @@ package net.ccaper.GraffitiTracker.mvc;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import net.ccaper.GraffitiTracker.objects.BannedInet;
 import net.ccaper.GraffitiTracker.service.BannedInetsService;
 
@@ -29,5 +30,6 @@ public class ApiBannedInetsControllerTest {
     ApiBannedInetsController controller = new ApiBannedInetsController();
     controller.setBannedInetsService(bannedInetsServiceMock);
     assertEquals(bannedInet, controller.addBannedInet(bannedInet));
+    verify(bannedInetsServiceMock).insertOrUpdateBannedInets(bannedInet);
   }
 }
