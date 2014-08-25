@@ -28,12 +28,12 @@ implements BannedInetsDao {
   private static final String SQL_IS_INET_IN_RANGE = String
       .format(
           "SELECT CASE WHEN (SELECT COUNT(*) FROM %s WHERE inet_aton(:%s) >= %s "
-          + "AND inet_aton(:%s) <= %s AND %s = 1) > 0 THEN TRUE ELSE FALSE;",
+          + "AND inet_aton(:%s) <= %s AND %s = 1) > 0 THEN TRUE ELSE FALSE END",
           BANNED_INETS_TABLE, INET, MIN_INET_COL, INET, MAX_INET_COL,
           ACTIVE_COL).toLowerCase();
   private static final String SQL_UPDATE_NUMBER_REGISTRATION_ATTEMPTS_INET_IN_RANGE = String
       .format(
-          "UPDATE %s SET %s = %s + 1 WHERE inet_aton(:%s) >= %s AND inet_aton(:%s) <= %s AND %s = 1;",
+          "UPDATE %s SET %s = %s + 1 WHERE inet_aton(:%s) >= %s AND inet_aton(:%s) <= %s AND %s = 1",
           BANNED_INETS_TABLE, NUMBER_REGISTRATION_ATTEMPTS_COL,
           NUMBER_REGISTRATION_ATTEMPTS_COL, INET, MIN_INET_COL, INET,
           MAX_INET_COL, ACTIVE_COL).toLowerCase();

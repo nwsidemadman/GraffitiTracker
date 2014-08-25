@@ -59,17 +59,18 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       USERS_TABLE, USERNAME_COL, EMAIL_COL, PASSWORD_COL,
       SECURITY_QUESTION_COL, SECURITY_ANSWER_COL, USERNAME_COL, EMAIL_COL,
       PASSWORD_COL, SECURITY_QUESTION_COL, SECURITY_ANSWER_COL).toLowerCase();
-  // TODO(ccaper): refactor count
-  private static final String SQL_SELECT_COUNT_USERNAME = String.format(
-      "SELECT COUNT(%s) FROM %S WHERE %S = :%s", USERNAME_COL, USERS_TABLE,
-      USERNAME_COL, USERNAME_COL).toLowerCase();
-  // TODO(ccaper): refactor count
-  private static final String SQL_SELECT_COUNT_EMAIL = String.format(
-      "SELECT COUNT(%s) FROM %S WHERE %S = :%s", EMAIL_COL, USERS_TABLE,
-      EMAIL_COL, EMAIL_COL).toLowerCase();
+  private static final String SQL_DOES_USERNAME_EXIST = String
+      .format(
+          "SELECT CASE WHEN (SELECT COUNT(%s) FROM %S WHERE %S = :%s) > 0 THEN TRUE ELSE FALSE END",
+          USERNAME_COL, USERS_TABLE, USERNAME_COL, USERNAME_COL).toLowerCase();
+  private static final String SQL_DOES_EMAIL_EXIST = String
+      .format(
+          "SELECT CASE WHEN (SELECT COUNT(%s) FROM %S WHERE %S = :%s) > 0 THEN TRUE ELSE FALSE END",
+          EMAIL_COL, USERS_TABLE, EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_SELECT_USERNAME_BY_EMAIL = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", USERNAME_COL,
-      USERS_TABLE, EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL).toLowerCase();
+      "SELECT CASE WHEN (SELECT %s FROM %s WHERE %s = :%s and %s = 1;",
+      USERNAME_COL, USERS_TABLE, EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL)
+      .toLowerCase();
   private static final String SQL_SELECT_EMAIL_BY_USERNAME = String.format(
       "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", EMAIL_COL, USERS_TABLE,
       USERNAME_COL, USERNAME_COL, IS_ACTIVE_COL).toLowerCase();
@@ -191,6 +192,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   };
 
+  RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
+    @Override
+    public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
+      return rs.getBoolean(1);
+    }
+  };
+
   RowMapper<Role> rolesRowMapper = new RowMapper<Role>() {
     @Override
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -256,19 +264,19 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   @Override
-  public int getCountUsernames(String username) {
+  public boolean doesUsernameExist(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(USERNAME_COL, username);
     return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_COUNT_USERNAME, userParamMap, countRowMapper);
+        SQL_DOES_USERNAME_EXIST, userParamMap, booleanRowMapper);
   }
 
   @Override
-  public int getCountEmails(String email) {
+  public boolean doesEmailExist(String email) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
     userParamMap.put(EMAIL_COL, email);
-    return getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_COUNT_EMAIL, userParamMap, countRowMapper);
+    return getNamedParameterJdbcTemplate().queryForObject(SQL_DOES_EMAIL_EXIST,
+        userParamMap, booleanRowMapper);
   }
 
   @Override

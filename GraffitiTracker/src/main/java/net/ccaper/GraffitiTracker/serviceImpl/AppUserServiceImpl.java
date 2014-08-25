@@ -54,20 +54,12 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public boolean doesUsernameExist(String username) {
-    if (appUserDao.getCountUsernames(username) == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return appUserDao.doesUsernameExist(username);
   }
 
   @Override
   public boolean doesEmailExist(String email) {
-    if (appUserDao.getCountEmails(email) == 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return appUserDao.doesEmailExist(email);
   }
 
   @Override

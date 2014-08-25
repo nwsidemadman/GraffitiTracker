@@ -12,9 +12,9 @@ public interface AppUserDao {
 
   void addAppUser(AppUser appUser);
 
-  int getCountUsernames(String username);
+  boolean doesUsernameExist(String username);
 
-  int getCountEmails(String email);
+  boolean doesEmailExist(String email);
 
   void updateLoginTimestamps(String username);
 
