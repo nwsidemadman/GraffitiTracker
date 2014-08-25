@@ -20,7 +20,7 @@ public class ApiBannedInetsControllerTest {
   }
 
   @Test
-  public void testAddBannedInet() {
+  public void testAddBannedInet() throws Exception {
     BannedInetsService bannedInetsServiceMock = mock(BannedInetsService.class);
     BannedInet bannedInet = new BannedInet();
     bannedInet.setInetMaxIncl("127.0.0.1");
