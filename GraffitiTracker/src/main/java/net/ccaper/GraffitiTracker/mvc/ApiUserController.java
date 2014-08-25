@@ -51,7 +51,6 @@ public class ApiUserController {
     return data;
   }
   
-  // TODO(ccaper): unit test
   @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET)
   public @ResponseBody Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
     Map<String, List<LoginInet>> data = new HashMap<String, List<LoginInet>>(1);
@@ -59,7 +58,6 @@ public class ApiUserController {
     return data;
   }
   
-  //TODO(ccaper): unit test
   @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void editUser(@PathVariable int userId, @RequestBody AdminEditAppUser editedUser) {
