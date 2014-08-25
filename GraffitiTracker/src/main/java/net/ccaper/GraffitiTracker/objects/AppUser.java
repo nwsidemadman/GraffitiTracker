@@ -16,8 +16,6 @@ public class AppUser {
   private String password;
   private Timestamp currentLoginTimestamp;
   private Timestamp previousLoginTimestamp;
-  // TODO(ccaper): consider removing Role object and making this a map of
-  // timestamps to RoleEnum
   private List<Role> roles;
   private int loginCount;
   private String securityQuestion;

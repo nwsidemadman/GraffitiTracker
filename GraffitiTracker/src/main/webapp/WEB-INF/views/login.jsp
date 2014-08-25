@@ -63,7 +63,7 @@
     <p>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></p>
     <p>Roles:</p>
     <ul id="roles">
-    <c:forEach var="role" items="${appUser.getRoles()}">
+    <c:forEach var="role" items="${appUser.roles}">
       <li>
         <fmt:formatDate value="${role.grantedTimestamp}" pattern="yyyy-MM-dd" var="grantedDate"/>
         <c:out value="${role.role.displayString} (${grantedDate})" />

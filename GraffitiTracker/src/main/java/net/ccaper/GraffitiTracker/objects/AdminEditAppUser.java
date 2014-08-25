@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 
-// TODO(ccaper): this will likely go away when roles changed in AppUser
 public class AdminEditAppUser {
   private String email;
   private boolean isActive;
