@@ -204,7 +204,6 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   @Override
-  // wrap access with security
   public AppUser getUserById(int id) {
     try {
       return appUserDao.getAppUserById(id);

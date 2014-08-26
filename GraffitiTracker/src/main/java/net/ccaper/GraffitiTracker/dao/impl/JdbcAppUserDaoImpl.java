@@ -438,16 +438,26 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
 
   @Override
   public AppUser getAppUserById(int id) throws EmptyResultDataAccessException {
-    Map<String, Integer> idParamMap = new HashMap<String, Integer>(1);
-    idParamMap.put(USER_ID_COL, id);
-    AppUser user = getNamedParameterJdbcTemplate().queryForObject(
-        SQL_SELECT_USER_BY_ID, idParamMap, appUserAdminViewRowMapper);
-    Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
-    rolesParamMap.put(ID_FK_COL, user.getUserId());
-    List<Role> roles = getNamedParameterJdbcTemplate().query(
-        SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
+    AppUser user = getAppUserByIdNoRoles(id);
+    List<Role> roles = getRolesById(id);
     user.setRoles(roles);
     return user;
+  }
+  
+  // visible for testing
+  AppUser getAppUserByIdNoRoles(int id) throws EmptyResultDataAccessException {
+    Map<String, Integer> idParamMap = new HashMap<String, Integer>(1);
+    idParamMap.put(USER_ID_COL, id);
+    return getNamedParameterJdbcTemplate().queryForObject(
+        SQL_SELECT_USER_BY_ID, idParamMap, appUserAdminViewRowMapper);
+  }
+  
+  // visible for testing
+  List<Role> getRolesById(int id) {
+    Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
+    rolesParamMap.put(ID_FK_COL, id);
+    return getNamedParameterJdbcTemplate().query(
+        SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
   }
 
   @Override
