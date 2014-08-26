@@ -101,7 +101,10 @@ public class AppUser {
     this.roles = roles;
   }
 
-  // TODO(ccaper): unit test and JavaDoc
+  /**
+   * Takes the List of roles and converts it to a map of timestamps to role
+   * @return map of timestamps to role
+   */
   public Map<RoleEnum, Timestamp> getRolesAsTimestampToRoleEnumMap() {
     if (roles == null) {
       return null;
