@@ -467,8 +467,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     getNamedParameterJdbcTemplate().update(sql, new HashMap<String, String>(0));
   }
 
-  // TODO(ccaper): unit test
-  private String generateInsertRolesValues(int id, List<RoleEnum> roleAdditions) {
+  // visible for testing
+  static String generateInsertRolesValues(int id, List<RoleEnum> roleAdditions) {
+    if (roleAdditions == null) {
+      roleAdditions = new ArrayList<RoleEnum>(0);
+    }
     List<String> values = new ArrayList<String>(roleAdditions.size());
     for (RoleEnum role : roleAdditions) {
       values.add(String.format("(%d, '%s')", id, role.getDbString()));
@@ -484,8 +487,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     getNamedParameterJdbcTemplate().update(sql, paramMap);
   }
 
-  // TODO(ccaper): unit test
-  private String generateDeleteRolesIns(List<RoleEnum> roleDeletions) {
+  // visible for testing
+  static String generateDeleteRolesIns(List<RoleEnum> roleDeletions) {
+    if (roleDeletions == null) {
+      roleDeletions = new ArrayList<RoleEnum>(0);
+    }
     List<String> ins = new ArrayList<String>(roleDeletions.size());
     for (RoleEnum role : roleDeletions) {
       ins.add(String.format("'%s'", role.getDbString()));
