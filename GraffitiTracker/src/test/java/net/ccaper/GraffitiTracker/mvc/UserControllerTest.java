@@ -1934,4 +1934,47 @@ public class UserControllerTest {
     verify(mailServiceMock).sendVelocityEmail(recipients, "GraffitiTracker Email Address Change Notification",
         "test");
   }
+  
+  @Test
+  public void testManageUsers_anonymousUser() throws Exception {
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return true;
+      }
+    }
+
+    UserController classUnderTest = new UserControllerMock();
+    Map<String, Object> model = new HashMap<String, Object>(0);
+    assertEquals("users/manageUsers", classUnderTest.manageUsers(model));
+    assertTrue(model.isEmpty());
+  }
+  
+  @Test
+  public void testManageUsers_nonAnonymousUser() throws Exception {
+    final String username = "testUser";
+
+    class UserControllerMock extends UserController {
+      @Override
+      boolean isUserAnonymous() {
+        return false;
+      }
+
+      @Override
+      String getUsernameFromSecurity() {
+        return username;
+      }
+    }
+
+    AppUser appUser = new AppUser();
+    appUser.setUsername(username);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
+    UserController classUnderTest = new UserControllerMock();
+    Map<String, Object> model = new HashMap<String, Object>(0);
+    classUnderTest.setAppUserService(userServiceMock);
+    assertEquals("users/manageUsers", classUnderTest.manageUsers(model));
+    assertEquals(appUser, model.get("appUser"));
+    verify(userServiceMock).getUserByUsername(username);
+  }
 }
