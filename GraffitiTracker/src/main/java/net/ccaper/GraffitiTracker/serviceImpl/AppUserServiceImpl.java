@@ -104,6 +104,7 @@ public class AppUserServiceImpl implements AppUserService {
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 
+  // TODO(ccaper): unit test
   @Override
   @Scheduled(cron = "0 01 6 * * ?")
   public void emailAdminStatsDaily() {
@@ -231,14 +232,14 @@ public class AppUserServiceImpl implements AppUserService {
 
   // visible for testing
   static boolean areRolesEqual(AppUser uneditedUser, AdminEditAppUser edits) {
-    if (uneditedUser.getRoles() == null && edits.getRoles() == null) {
-      return true;
-    }
     if (uneditedUser.getRoles() == null && edits.getRoles() != null) {
       return false;
     }
     if (uneditedUser.getRoles() != null && edits.getRoles() == null) {
       return false;
+    }
+    if (uneditedUser.getRoles() == null && edits.getRoles() == null) {
+      return true;
     }
     List<RoleEnum> uneditedRolesEnum = new ArrayList<RoleEnum>(uneditedUser
         .getRoles().size());
