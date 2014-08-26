@@ -23,7 +23,7 @@ public class ApiBannedInetsController {
       .getLogger(ApiBannedInetsController.class);
   
   @Autowired
-  BannedInetsService bannedInetsService;
+  private BannedInetsService bannedInetsService;
   
   public void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;

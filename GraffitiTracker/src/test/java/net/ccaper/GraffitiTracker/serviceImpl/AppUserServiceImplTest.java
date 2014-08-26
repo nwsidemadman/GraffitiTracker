@@ -6,15 +6,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.impl.JdbcAppUserDaoImpl;
+import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.AdminEditAppUser;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.Role;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.MailService;
+import net.ccaper.GraffitiTracker.utils.DateFormats;
 
 import org.junit.After;
 import org.junit.Before;
@@ -74,7 +78,7 @@ public class AppUserServiceImplTest {
     AppUserService service = new AppUserServiceImpl();
     service.updateAppUser(uneditedUser, editedUser);
   }
-  
+
   @Test
   public void testUpdateAppUser_AllEdits() throws Exception {
     AppUser uneditedUser = new AppUser();
@@ -100,16 +104,21 @@ public class AppUserServiceImplTest {
     AppUserDao daoMock = mock(JdbcAppUserDaoImpl.class);
     service.setAppUserDao(daoMock);
     service.updateAppUser(uneditedUser, editedUser);
-    List<RoleEnum> additions = AppUserServiceImpl.getRoleAdditions(uneditedUser, editedUser);
-    List<RoleEnum> deletions = AppUserServiceImpl.getRoleDeletions(uneditedUser, editedUser);
-    verify(daoMock).updateEmailByUserid(uneditedUser.getUserId(), editedUser.getEmail());
-    verify(daoMock).updateIsActiveByUserid(uneditedUser.getUserId(), editedUser.getIsActive());
+    List<RoleEnum> additions = AppUserServiceImpl.getRoleAdditions(
+        uneditedUser, editedUser);
+    List<RoleEnum> deletions = AppUserServiceImpl.getRoleDeletions(
+        uneditedUser, editedUser);
+    verify(daoMock).updateEmailByUserid(uneditedUser.getUserId(),
+        editedUser.getEmail());
+    verify(daoMock).updateIsActiveByUserid(uneditedUser.getUserId(),
+        editedUser.getIsActive());
     verify(daoMock).addRolesByUserid(uneditedUser.getUserId(), additions);
     verify(daoMock).deleteRolesByUserid(uneditedUser.getUserId(), deletions);
   }
-  
+
   @Test
-  public void testUpdateAppUser_AllEditsWithOnlyRoleAdditions() throws Exception {
+  public void testUpdateAppUser_AllEditsWithOnlyRoleAdditions()
+      throws Exception {
     AppUser uneditedUser = new AppUser();
     uneditedUser.setUserId(5);
     uneditedUser.setEmail("test@test.com");
@@ -130,14 +139,18 @@ public class AppUserServiceImplTest {
     AppUserDao daoMock = mock(JdbcAppUserDaoImpl.class);
     service.setAppUserDao(daoMock);
     service.updateAppUser(uneditedUser, editedUser);
-    List<RoleEnum> additions = AppUserServiceImpl.getRoleAdditions(uneditedUser, editedUser);
-    verify(daoMock).updateEmailByUserid(uneditedUser.getUserId(), editedUser.getEmail());
-    verify(daoMock).updateIsActiveByUserid(uneditedUser.getUserId(), editedUser.getIsActive());
+    List<RoleEnum> additions = AppUserServiceImpl.getRoleAdditions(
+        uneditedUser, editedUser);
+    verify(daoMock).updateEmailByUserid(uneditedUser.getUserId(),
+        editedUser.getEmail());
+    verify(daoMock).updateIsActiveByUserid(uneditedUser.getUserId(),
+        editedUser.getIsActive());
     verify(daoMock).addRolesByUserid(uneditedUser.getUserId(), additions);
   }
-  
+
   @Test
-  public void testUpdateAppUser_AllEditsWithOnlyRoleDeletions() throws Exception {
+  public void testUpdateAppUser_AllEditsWithOnlyRoleDeletions()
+      throws Exception {
     AppUser uneditedUser = new AppUser();
     uneditedUser.setUserId(5);
     uneditedUser.setEmail("test@test.com");
@@ -160,9 +173,12 @@ public class AppUserServiceImplTest {
     AppUserDao daoMock = mock(JdbcAppUserDaoImpl.class);
     service.setAppUserDao(daoMock);
     service.updateAppUser(uneditedUser, editedUser);
-    List<RoleEnum> deletions = AppUserServiceImpl.getRoleDeletions(uneditedUser, editedUser);
-    verify(daoMock).updateEmailByUserid(uneditedUser.getUserId(), editedUser.getEmail());
-    verify(daoMock).updateIsActiveByUserid(uneditedUser.getUserId(), editedUser.getIsActive());
+    List<RoleEnum> deletions = AppUserServiceImpl.getRoleDeletions(
+        uneditedUser, editedUser);
+    verify(daoMock).updateEmailByUserid(uneditedUser.getUserId(),
+        editedUser.getEmail());
+    verify(daoMock).updateIsActiveByUserid(uneditedUser.getUserId(),
+        editedUser.getIsActive());
     verify(daoMock).deleteRolesByUserid(uneditedUser.getUserId(), deletions);
   }
 
@@ -252,5 +268,50 @@ public class AppUserServiceImplTest {
     rolesToDelete.add(RoleEnum.ADMIN);
     assertEquals(rolesToDelete,
         AppUserServiceImpl.getRoleDeletions(uneditedUser, editedUser));
+  }
+
+  @Test
+  public void testEmailAdminDailyStats_noAdminUsers() throws Exception {
+    AppUserDao daoMock = mock(JdbcAppUserDaoImpl.class);
+    when(daoMock.getSuperAdminEmails()).thenReturn(new ArrayList<String>());
+    AppUserServiceImpl service = new AppUserServiceImpl();
+    service.setAppUserDao(daoMock);
+    service.emailAdminStatsDaily();
+    verify(daoMock).getSuperAdminEmails();
+  }
+
+  @Test
+  public void testEmailAdminDailyStats_hasAdminUsers() throws Exception {
+    AppUserDao daoMock = mock(JdbcAppUserDaoImpl.class);
+    List<String> superAdmins = new ArrayList<String>(1);
+    superAdmins.add("test@test.com");
+    when(daoMock.getSuperAdminEmails()).thenReturn(superAdmins);
+    int numberOfDays = 1;
+    int newUsers = 3;
+    int unconfirmedUsers = 4;
+    int logins = 5;
+    when(daoMock.getCountNewUsers(numberOfDays)).thenReturn(newUsers);
+    when(daoMock.getCountUnconfirmedUsers(numberOfDays)).thenReturn(
+        unconfirmedUsers);
+    when(daoMock.getCountLogins(numberOfDays)).thenReturn(logins);
+    MailService mailServiceMock = mock(MailServiceJavaMailSenderImpl.class);
+    AppUserServiceImpl service = new AppUserServiceImpl();
+    service.setAppUserDao(daoMock);
+    service.setMailService(mailServiceMock);
+    service.emailAdminStatsDaily();
+    verify(daoMock).getSuperAdminEmails();
+    verify(daoMock).getCountNewUsers(numberOfDays);
+    verify(daoMock).getCountUnconfirmedUsers(numberOfDays);
+    verify(daoMock).getCountLogins(numberOfDays);
+    String subject = String.format(
+        "%s GraffitiTracker Daily Stats %s",
+        EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
+            System.getProperty("CLASSPATH_PROP_ENV")).getDisplayString(),
+        DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT.format(new Date()));
+    String content = String
+        .format(
+            "New Users Last Day: %d\nUnconfirmed Users Last Day: %d\nNumber Users Logged In Last Day: %d\n",
+            newUsers, unconfirmedUsers, logins);
+    verify(mailServiceMock).sendSimpleEmail(superAdmins, subject, content);
   }
 }

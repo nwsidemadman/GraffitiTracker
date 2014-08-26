@@ -61,27 +61,27 @@ public class UserController {
   // visible for testing
   static final String HOME_LINK = "/home";
   @Autowired
-  AppUserService appUserService;
+  private AppUserService appUserService;
   @Autowired
-  CaptchaService captchaService;
+  private CaptchaService captchaService;
   @Autowired
-  MailService mailService;
+  private MailService mailService;
   @Autowired
-  BannedInetsService bannedInetsService;
+  private BannedInetsService bannedInetsService;
   @Autowired
-  LoginAddressService loginAddressService;
+  private LoginAddressService loginAddressService;
   @Autowired
-  FormUserValidator formUserValidator;
+  private FormUserValidator formUserValidator;
   @Autowired
-  FormEmailValidator formEmailValidator;
+  private FormEmailValidator formEmailValidator;
   @Autowired
-  FormUsernameValidator formUsernameValidator;
+  private FormUsernameValidator formUsernameValidator;
   @Autowired
-  FormManageAccountEditValidator formManageAccountEditValidator;
+  private FormManageAccountEditValidator formManageAccountEditValidator;
   @Autowired
-  FormPasswordSecurityValidator formPasswordSecurityValidator;
+  private FormPasswordSecurityValidator formPasswordSecurityValidator;
   @Autowired
-  VelocityEngine velocityEngine;
+  private VelocityEngine velocityEngine;
 
   public void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;

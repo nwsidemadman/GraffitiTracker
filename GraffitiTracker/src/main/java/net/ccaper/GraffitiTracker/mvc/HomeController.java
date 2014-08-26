@@ -23,7 +23,7 @@ public class HomeController {
   private static final Logger logger = LoggerFactory
       .getLogger(HomeController.class);
   @Autowired
-  AppUserService appUserService;
+  private AppUserService appUserService;
 
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;

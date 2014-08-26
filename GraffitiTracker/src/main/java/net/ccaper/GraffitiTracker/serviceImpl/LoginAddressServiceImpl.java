@@ -16,8 +16,9 @@ import net.ccaper.GraffitiTracker.service.LoginAddressService;
 @Service("loginAddressService")
 public class LoginAddressServiceImpl implements LoginAddressService {
   @Autowired
-  LoginAddressDao loginAddressDao;
+  private LoginAddressDao loginAddressDao;
 
+  // TODO(ccaper): unit test
   @Override
   public void updateLoginAddressByUsername(String username, String ipAddress) {
     if (isIpAddressValid(ipAddress)) {

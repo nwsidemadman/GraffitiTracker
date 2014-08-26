@@ -29,16 +29,22 @@ public class AppUserServiceImpl implements AppUserService {
   private static final Logger logger = LoggerFactory
       .getLogger(AppUserServiceImpl.class);
   @Autowired
-  AppUserDao appUserDao;
+  private AppUserDao appUserDao;
   @Autowired
-  RegistrationConfirmationsDao registrationConfirmationsDao;
+  private RegistrationConfirmationsDao registrationConfirmationsDao;
   @Autowired
-  ResetPasswordDao resetPasswordDao;
+  private ResetPasswordDao resetPasswordDao;
   @Autowired
-  MailService mailService;
+  private MailService mailService;
 
-  public void setAppUserDao(AppUserDao appUserDao) {
+  // visible for testing
+  void setAppUserDao(AppUserDao appUserDao) {
     this.appUserDao = appUserDao;
+  }
+  
+  // visible for testing
+  void setMailService(MailService mailService) {
+    this.mailService = mailService;
   }
 
   @Override
@@ -104,7 +110,6 @@ public class AppUserServiceImpl implements AppUserService {
     appUserDao.deleteAppUsersWhenRegistrationExpired();
   }
 
-  // TODO(ccaper): unit test
   @Override
   @Scheduled(cron = "0 01 6 * * ?")
   public void emailAdminStatsDaily() {

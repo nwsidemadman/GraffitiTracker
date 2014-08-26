@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service("bannedInetsService")
 public class BannedInetsServiceImpl implements BannedInetsService {
   @Autowired
-  BannedInetsDao bannedInetsDao;
+  private BannedInetsDao bannedInetsDao;
 
   public void setBannedInetsDao(BannedInetsDao bannedInetsDao) {
     this.bannedInetsDao = bannedInetsDao;

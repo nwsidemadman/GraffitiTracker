@@ -15,7 +15,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
       .getLogger(ResetPasswordServiceImpl.class);
 
   @Autowired
-  ResetPasswordDao resetPasswordDao;
+  private ResetPasswordDao resetPasswordDao;
 
   @Override
   @Scheduled(cron = "0 0 7 * * ?")

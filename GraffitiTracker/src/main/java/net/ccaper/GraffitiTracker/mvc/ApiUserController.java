@@ -31,10 +31,10 @@ public class ApiUserController {
       .getLogger(ApiUserController.class);
   
   @Autowired
-  AppUserService appUserService;
+  private AppUserService appUserService;
   
   @Autowired
-  LoginAddressService loginAddressService;
+  private LoginAddressService loginAddressService;
   
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
