@@ -630,12 +630,10 @@ public class UserController {
     return "users/user";
   }
 
-  // TODO(ccaper): unit test
   @RequestMapping(value = "/usersSharingInets", method = RequestMethod.GET)
   public String getSharedInets(@RequestParam(required = true) String inet,
       Map<String, Object> model) {
     SortedMap<String, Integer> usersSharingInets = loginAddressService.getUsersSharingInet(inet);
-    StringUtils.join(usersSharingInets.keySet(), " ").length();
     model.put("usersSharingInets", usersSharingInets);
     model.put("displayUsernamesStringLength", StringUtils.join(usersSharingInets.keySet(), " ").length());
     return "users/usersSharingInets";

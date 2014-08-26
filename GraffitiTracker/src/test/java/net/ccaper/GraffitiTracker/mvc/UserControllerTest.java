@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +36,7 @@ import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.BannedInetsService;
 import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
+import net.ccaper.GraffitiTracker.service.LoginAddressService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
 import net.ccaper.GraffitiTracker.utils.Encoder;
@@ -1991,5 +1994,22 @@ public class UserControllerTest {
     assertEquals("users/user", classUnderTest.getUser(id, model));
     assertEquals(appUser, model.get("appUser"));
     verify(userServiceMock).getUserById(id);
+  }
+  
+  @Test
+  public void testGetSharedInets() throws Exception {
+    String inet = "127.0.0.1";
+    LoginAddressService loginAddressServiceMock = mock(LoginAddressService.class);
+    SortedMap<String, Integer> idsToUsernames = new TreeMap<String, Integer>();
+    idsToUsernames.put("test1", 5);
+    idsToUsernames.put("test2", 6);
+    when(loginAddressServiceMock.getUsersSharingInet(inet)).thenReturn(idsToUsernames);
+    UserController classUnderTest = new UserController();
+    Map<String, Object> model = new HashMap<String, Object>(0);
+    classUnderTest.setLoginAddressService(loginAddressServiceMock);
+    assertEquals("users/usersSharingInets", classUnderTest.getSharedInets(inet, model));
+    assertEquals(idsToUsernames, model.get("usersSharingInets"));
+    assertEquals(StringUtils.join(idsToUsernames.keySet(), " ").length(), model.get("displayUsernamesStringLength"));
+    verify(loginAddressServiceMock).getUsersSharingInet(inet);
   }
 }
