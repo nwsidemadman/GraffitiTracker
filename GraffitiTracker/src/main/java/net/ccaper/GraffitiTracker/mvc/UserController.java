@@ -622,7 +622,6 @@ public class UserController {
     return "users/manageUsers";
   }
 
-  // TODO(ccaper): unit test
   @RequestMapping(method = RequestMethod.GET)
   public String getUser(@RequestParam(required = true) int userId,
       Map<String, Object> model) {

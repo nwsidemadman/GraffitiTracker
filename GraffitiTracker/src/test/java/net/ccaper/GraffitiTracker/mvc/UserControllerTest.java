@@ -1977,4 +1977,19 @@ public class UserControllerTest {
     assertEquals(appUser, model.get("appUser"));
     verify(userServiceMock).getUserByUsername(username);
   }
+  
+  @Test
+  public void testGetUser() throws Exception {
+    int id = 5;
+    AppUser appUser = new AppUser();
+    appUser.setUserId(id);
+    AppUserService userServiceMock = mock(AppUserService.class);
+    when(userServiceMock.getUserById(id)).thenReturn(appUser);
+    UserController classUnderTest = new UserController();
+    Map<String, Object> model = new HashMap<String, Object>(0);
+    classUnderTest.setAppUserService(userServiceMock);
+    assertEquals("users/user", classUnderTest.getUser(id, model));
+    assertEquals(appUser, model.get("appUser"));
+    verify(userServiceMock).getUserById(id);
+  }
 }
