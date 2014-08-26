@@ -25,7 +25,8 @@ public class HomeController {
   @Autowired
   private AppUserService appUserService;
 
-  public void setAppUserService(AppUserService appUserService) {
+  // visible for testing
+  void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
 
@@ -43,18 +44,20 @@ public class HomeController {
     return "home";
   }
 
+  // TODO(ccaper): switch to service
   // visible for mocking
   String getUsernameFromSecurity() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
+  // TODO(ccaper): switch to service
   // visible for mocking
   boolean isUserAnonymous() {
     AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
     return authenticationTrustResolver.isAnonymous(SecurityContextHolder
         .getContext().getAuthentication());
   }
-  
+
   @RequestMapping(value = "/contact", method = RequestMethod.GET)
   public String contact(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -64,7 +67,7 @@ public class HomeController {
     }
     return "contact";
   }
-  
+
   @RequestMapping(value = "/about", method = RequestMethod.GET)
   public String about(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -74,7 +77,7 @@ public class HomeController {
     }
     return "about";
   }
-  
+
   @RequestMapping(value = "/legal", method = RequestMethod.GET)
   public String legal(Map<String, Object> model) {
     if (!isUserAnonymous()) {
@@ -84,7 +87,7 @@ public class HomeController {
     }
     return "legal";
   }
-  
+
   @RequestMapping(value = "/privacy", method = RequestMethod.GET)
   public String privacy(Map<String, Object> model) {
     if (!isUserAnonymous()) {

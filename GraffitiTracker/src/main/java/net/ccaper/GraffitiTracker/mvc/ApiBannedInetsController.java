@@ -21,17 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiBannedInetsController {
   private static final Logger logger = LoggerFactory
       .getLogger(ApiBannedInetsController.class);
-  
+
   @Autowired
   private BannedInetsService bannedInetsService;
-  
-  public void setBannedInetsService(BannedInetsService bannedInetsService) {
+
+  // visible for testing
+  void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;
   }
-  
+
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  @ResponseBody public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
+  @ResponseBody
+  public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
     bannedInetsService.insertOrUpdateBannedInets(bannedInet);
     return bannedInet;
   }

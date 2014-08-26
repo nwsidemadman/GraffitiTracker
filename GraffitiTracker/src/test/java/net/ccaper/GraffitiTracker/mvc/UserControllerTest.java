@@ -38,7 +38,9 @@ import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.LoginAddressService;
 import net.ccaper.GraffitiTracker.service.MailService;
+import net.ccaper.GraffitiTracker.service.UserSecurityService;
 import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
+import net.ccaper.GraffitiTracker.serviceImpl.UserSecurityServiceImpl;
 import net.ccaper.GraffitiTracker.utils.Encoder;
 
 import org.apache.commons.lang3.StringUtils;
@@ -63,20 +65,7 @@ public class UserControllerTest {
 
   @Test
   public void testCreateUserProfile_HappyPath_NotAnonymousUser() {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
@@ -89,14 +78,18 @@ public class UserControllerTest {
     when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(false);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     when(requestMock.getRemoteAddr()).thenReturn(inet);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
-    controllerMock.setBannedInetsService(banndedInetsServiceMock);
-    controllerMock.setCaptchaService(captchaServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setBannedInetsService(banndedInetsServiceMock);
+    classUnderTest.setCaptchaService(captchaServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
     assertEquals("users/create",
-        controllerMock.createUserProfile(model, session, requestMock));
+        classUnderTest.createUserProfile(model, session, requestMock));
     UserForm userForm = (UserForm) model.asMap().get("userForm");
     assertNull(userForm.getUsername());
     assertEquals(captcha.getQuestion(), userForm.getTextCaptchaQuestion());
@@ -109,17 +102,12 @@ public class UserControllerTest {
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testCreateUserProfile_HappyPath_AnonymousUser() {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     String inet = "127.0.0.1";
     TextCaptcha captcha = new TextCaptcha("Some question", "answer");
     CaptchaService captchaServiceMock = mock(CaptchaService.class);
@@ -128,13 +116,16 @@ public class UserControllerTest {
     when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(false);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     when(requestMock.getRemoteAddr()).thenReturn(inet);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setBannedInetsService(banndedInetsServiceMock);
-    controllerMock.setCaptchaService(captchaServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setBannedInetsService(banndedInetsServiceMock);
+    classUnderTest.setCaptchaService(captchaServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
     assertEquals("users/create",
-        controllerMock.createUserProfile(model, session, requestMock));
+        classUnderTest.createUserProfile(model, session, requestMock));
     UserForm userForm = (UserForm) model.asMap().get("userForm");
     assertNull(userForm.getUsername());
     assertEquals(captcha.getQuestion(), userForm.getTextCaptchaQuestion());
@@ -143,24 +134,12 @@ public class UserControllerTest {
     verify(captchaServiceMock).getTextCaptcha();
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testCreateUserProfile_InetBanned_NotAnonymousUser() {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     String inet = "127.0.0.1";
     BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
     when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(true);
@@ -170,68 +149,60 @@ public class UserControllerTest {
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setBannedInetsService(banndedInetsServiceMock);
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setBannedInetsService(banndedInetsServiceMock);
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
     assertEquals("users/banned",
-        controllerMock.createUserProfile(model, session, requestMock));
+        classUnderTest.createUserProfile(model, session, requestMock));
     assertTrue(model.containsAttribute("appUser"));
     Map<String, Object> modelMap = model.asMap();
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testCreateUserProfile_InetBanned_AnonymousUser() {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     String inet = "127.0.0.1";
     BannedInetsService banndedInetsServiceMock = mock(BannedInetsService.class);
     when(banndedInetsServiceMock.isInetBanned(inet)).thenReturn(true);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     when(requestMock.getRemoteAddr()).thenReturn(inet);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setBannedInetsService(banndedInetsServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setBannedInetsService(banndedInetsServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Model model = new ExtendedModelMap();
     HttpSession session = new MockHttpSession();
     assertEquals("users/banned",
-        controllerMock.createUserProfile(model, session, requestMock));
+        classUnderTest.createUserProfile(model, session, requestMock));
     assertFalse(model.containsAttribute("appUser"));
     verify(banndedInetsServiceMock).isInetBanned(inet);
     verify(requestMock).getRemoteAddr();
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testAddAppUserFromForm_HappyPath_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-    
     class UserControllerMock extends UserController {
       @Override
       String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
           HttpServletRequest request) {
         return "test";
       }
-      
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
     }
 
+    String username = "testUser";
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     UserForm userForm = new UserForm();
@@ -263,11 +234,15 @@ public class UserControllerTest {
     formUserValidator.setBannedWordService(bannedWordServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
     UserControllerMock controller = new UserControllerMock();
     controller.setAppUserService(appUserServiceMock);
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaService);
     controller.setMailService(mailServiceMock);
+    controller.setUserSecurityService(userSecurityService);
     BindingResult result = new BeanPropertyBindingResult(userForm, "userForm");
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/registered", controller.addAppUserFromForm(
@@ -279,6 +254,8 @@ public class UserControllerTest {
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
@@ -289,11 +266,6 @@ public class UserControllerTest {
           HttpServletRequest request) {
         return "test";
       }
-      
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
     }
 
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
@@ -324,11 +296,14 @@ public class UserControllerTest {
     formUserValidator.setBannedWordService(bannedWordServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserControllerMock controller = new UserControllerMock();
     controller.setAppUserService(appUserServiceMock);
     controller.setFormUserValidator(formUserValidator);
     controller.setCaptchaService(captchaService);
     controller.setMailService(mailServiceMock);
+    controller.setUserSecurityService(userSecurityService);
     BindingResult result = new BeanPropertyBindingResult(userForm, "userForm");
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/registered", controller.addAppUserFromForm(
@@ -338,25 +313,13 @@ public class UserControllerTest {
     verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
     verify(bannedWordServiceMock).doesStringContainBannedWord(
         userForm.getUsername());
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testAddAppUserFromForm_InvalidUser_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     TextCaptcha invalidUserCaptcha = new TextCaptcha(
@@ -382,13 +345,17 @@ public class UserControllerTest {
     formUserValidator.setAppUserService(appUserServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
-    controllerMock.setFormUserValidator(formUserValidator);
-    controllerMock.setCaptchaService(captchaServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setFormUserValidator(formUserValidator);
+    classUnderTest.setCaptchaService(captchaServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/create", controllerMock.addAppUserFromForm(requestMock,
+    assertEquals("users/create", classUnderTest.addAppUserFromForm(requestMock,
         session, userForm, result, model));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
@@ -401,18 +368,13 @@ public class UserControllerTest {
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(captchaServiceMock).getTextCaptcha();
     verify(appUserServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testAddAppUserFromForm_InvalidUser_AnonymousUser()
       throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     TextCaptcha captcha = new TextCaptcha("What is Chris' name?",
         "6b34fe24ac2ff8103f6fce1f0da2ef57");
     TextCaptcha invalidUserCaptcha = new TextCaptcha(
@@ -435,13 +397,16 @@ public class UserControllerTest {
     formUserValidator.setAppUserService(appUserServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
-    controllerMock.setFormUserValidator(formUserValidator);
-    controllerMock.setCaptchaService(captchaServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setFormUserValidator(formUserValidator);
+    classUnderTest.setCaptchaService(captchaServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/create", controllerMock.addAppUserFromForm(requestMock,
+    assertEquals("users/create", classUnderTest.addAppUserFromForm(requestMock,
         session, userForm, result, model));
     assertFalse(userForm.getTextCaptchaQuestion().equals(captcha.getQuestion()));
     assertEquals(userForm.getTextCaptchaQuestion(),
@@ -452,6 +417,7 @@ public class UserControllerTest {
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(captchaServiceMock).getTextCaptcha();
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
@@ -513,46 +479,36 @@ public class UserControllerTest {
 
   @Test
   public void testShowRegisteredUser_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/registered", controllerMock.showRegisteredUser(model));
+    assertEquals("users/registered", classUnderTest.showRegisteredUser(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testShowRegisteredUser_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/registered", controllerMock.showRegisteredUser(model));
+    assertEquals("users/registered", classUnderTest.showRegisteredUser(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
@@ -582,20 +538,7 @@ public class UserControllerTest {
   @Test
   public void testShowConfirmedUser_HappyPath_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUser appUser = new AppUser();
@@ -606,10 +549,14 @@ public class UserControllerTest {
             .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(1);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController userControllerMock = new UserControllerMock();
-    userControllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     assertEquals("users/confirmed",
-        userControllerMock.showConfirmedUser(uniqueUrlParam, model));
+        classUnderTest.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(true, model.get("confirmed"));
     verify(appUserServiceMock)
@@ -620,17 +567,12 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testShowConfirmedUser_HappyPath_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
@@ -638,10 +580,13 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(1);
-    UserController userControllerMock = new UserControllerMock();
-    userControllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     assertEquals("users/confirmed",
-        userControllerMock.showConfirmedUser(uniqueUrlParam, model));
+        classUnderTest.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(true, model.get("confirmed"));
     verify(appUserServiceMock)
@@ -650,25 +595,13 @@ public class UserControllerTest {
     verify(appUserServiceMock).deleteRegistrationConfirmationByUniqueUrlParam(
         uniqueUrlParam);
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testShowConfirmedUser_UniqueUrlParamDoesNotExist_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUser appUser = new AppUser();
@@ -679,10 +612,14 @@ public class UserControllerTest {
             .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController userControllerMock = new UserControllerMock();
-    userControllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     assertEquals("users/confirmed",
-        userControllerMock.showConfirmedUser(uniqueUrlParam, model));
+        classUnderTest.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
     assertTrue(model.containsKey("appUser"));
@@ -690,18 +627,13 @@ public class UserControllerTest {
     verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock)
         .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testShowConfirmedUser_UniqueUrlParamDoesNotExist_AnonymousUser()
       throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     Map<String, Object> model = new HashMap<String, Object>();
     String uniqueUrlParam = "582744a9-7f06-11e3-8afc-12313815ec2d";
     AppUserService appUserServiceMock = mock(AppUserService.class);
@@ -709,33 +641,24 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
-    UserController userControllerMock = new UserControllerMock();
-    userControllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     assertEquals("users/confirmed",
-        userControllerMock.showConfirmedUser(uniqueUrlParam, model));
+        classUnderTest.showConfirmedUser(uniqueUrlParam, model));
     assertTrue(model.containsKey("confirmed"));
     assertEquals(false, model.get("confirmed"));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock)
         .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam);
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSendUsername_InvalidEmail_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
@@ -745,55 +668,45 @@ public class UserControllerTest {
     BindingResult result = new BeanPropertyBindingResult(emailForm, "email");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     FormEmailValidator formEmailValidator = new FormEmailValidator();
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
-    controllerMock.setFormEmailValidator(formEmailValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setFormEmailValidator(formEmailValidator);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/forgotUsername",
-        controllerMock.sendUsername(emailForm, result, requestMock, model));
+        classUnderTest.sendUsername(emailForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testSendUsername_InvalidEmail_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     EmailForm emailForm = new EmailForm();
     emailForm.setEmail("test");
     BindingResult result = new BeanPropertyBindingResult(emailForm, "email");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     FormEmailValidator formEmailValidator = new FormEmailValidator();
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setFormEmailValidator(formEmailValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setFormEmailValidator(formEmailValidator);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/forgotUsername",
-        controllerMock.sendUsername(emailForm, result, requestMock, model));
+        classUnderTest.sendUsername(emailForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSendUsername_UserDoesNotExist_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+     String username = "testUser";
     EmailForm emailForm = new EmailForm();
     String email = "test@test.com";
     emailForm.setEmail(email);
@@ -805,27 +718,26 @@ public class UserControllerTest {
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(null);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
-    controllerMock.setFormEmailValidator(formEmailValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setFormEmailValidator(formEmailValidator);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentUsername",
-        controllerMock.sendUsername(emailForm, result, requestMock, model));
+        classUnderTest.sendUsername(emailForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock).getUsernameByEmail(email);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testSendUsername_UserDoesNotExist_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     EmailForm emailForm = new EmailForm();
     String email = "test@test.com";
     emailForm.setEmail(email);
@@ -834,38 +746,31 @@ public class UserControllerTest {
     FormEmailValidator formEmailValidator = new FormEmailValidator();
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(null);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
-    controllerMock.setFormEmailValidator(formEmailValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setFormEmailValidator(formEmailValidator);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentUsername",
-        controllerMock.sendUsername(emailForm, result, requestMock, model));
+        classUnderTest.sendUsername(emailForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock).getUsernameByEmail(email);
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSendUsername_HappyPath_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
     class UserControllerMock extends UserController {
       @Override
       String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
           HttpServletRequest request) {
         return "test";
       }
-
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
     }
 
+    String username = "testUser";
     EmailForm emailForm = new EmailForm();
     String email = "test@test.com";
     emailForm.setEmail(email);
@@ -878,10 +783,14 @@ public class UserControllerTest {
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(username);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     MailService mailServiceMock = mock(MailService.class);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
     controllerMock.setFormEmailValidator(formEmailValidator);
     controllerMock.setMailService(mailServiceMock);
+    controllerMock.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentUsername",
         controllerMock.sendUsername(emailForm, result, requestMock, model));
@@ -893,6 +802,8 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
@@ -902,11 +813,6 @@ public class UserControllerTest {
       String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
           HttpServletRequest request) {
         return "test";
-      }
-
-      @Override
-      boolean isUserAnonymous() {
-        return true;
       }
     }
 
@@ -923,10 +829,13 @@ public class UserControllerTest {
     when(appUserServiceMock.getUsernameByEmail(email)).thenReturn(username);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     MailService mailServiceMock = mock(MailService.class);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserController controllerMock = new UserControllerMock();
     controllerMock.setAppUserService(appUserServiceMock);
     controllerMock.setFormEmailValidator(formEmailValidator);
     controllerMock.setMailService(mailServiceMock);
+    controllerMock.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/sentUsername",
         controllerMock.sendUsername(emailForm, result, requestMock, model));
@@ -936,163 +845,121 @@ public class UserControllerTest {
     verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Username",
         "test");
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSentUsername_NotAnonymousUser() {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/sentUsername", controllerMock.sentUsername(model));
+    assertEquals("users/sentUsername", classUnderTest.sentUsername(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testSentUsername_AnonymousUser() {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/sentUsername", controllerMock.sentUsername(model));
+    assertEquals("users/sentUsername", classUnderTest.sentUsername(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testForgotUsername_NotAnonymousUser() {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     Model model = new ExtendedModelMap();
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
-    assertEquals("users/forgotUsername", controllerMock.forgotUsername(model));
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
+    assertEquals("users/forgotUsername", classUnderTest.forgotUsername(model));
     assertTrue(model.containsAttribute("appUser"));
     Map<String, Object> modelMap = model.asMap();
     assertTrue(model.containsAttribute("emailForm"));
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testForgotUsername_AnonymousUser() {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     Model model = new ExtendedModelMap();
-    UserController controllerMock = new UserControllerMock();
-    assertEquals("users/forgotUsername", controllerMock.forgotUsername(model));
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    assertEquals("users/forgotUsername", classUnderTest.forgotUsername(model));
     assertFalse(model.containsAttribute("appUser"));
     assertTrue(model.containsAttribute("emailForm"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testForgotPassword_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     Model model = new ExtendedModelMap();
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
-    assertEquals("users/forgotPassword", controllerMock.forgotPassword(model));
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setUserSecurityService(userSecurityService);
+    assertEquals("users/forgotPassword", classUnderTest.forgotPassword(model));
     assertTrue(model.containsAttribute("usernameForm"));
     assertTrue(model.containsAttribute("appUser"));
     Map<String, Object> modelMap = model.asMap();
     assertEquals(username, ((AppUser) modelMap.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testForgotPassword_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     Model model = new ExtendedModelMap();
-    UserController controllerMock = new UserControllerMock();
-    assertEquals("users/forgotPassword", controllerMock.forgotPassword(model));
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    assertEquals("users/forgotPassword", classUnderTest.forgotPassword(model));
     assertTrue(model.containsAttribute("usernameForm"));
     assertFalse(model.containsAttribute("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSendPasswordLink_invalidUsername_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
@@ -1101,111 +968,104 @@ public class UserControllerTest {
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setAppUserService(userServiceMock);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/forgotPassword", controllerMock.sendPasswordLink(
+    assertEquals("users/forgotPassword", classUnderTest.sendPasswordLink(
         usernameForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testSendPasswordLink_invalidUsername_AnonymousUser()
       throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     UsernameForm usernameForm = new UsernameForm();
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/forgotPassword", controllerMock.sendPasswordLink(
+    assertEquals("users/forgotPassword", classUnderTest.sendPasswordLink(
         usernameForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSendPasswordLink_usernameDoesNotExist_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setUsername("testUsername");
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
         .thenReturn(null);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    controllerMock.setAppUserService(appUserServiceMock);
+    classUnderTest.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/forgotPassword/sentPassword",
-        controllerMock.sendPasswordLink(usernameForm, result, requestMock,
+        classUnderTest.sendPasswordLink(usernameForm, result, requestMock,
             model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testSendPasswordLink_usernameDoesNotExist_AnonymousUser()
       throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setUsername("testUsername");
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
         .thenReturn(null);
-    controllerMock.setAppUserService(appUserServiceMock);
+    classUnderTest.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("redirect:/users/forgotPassword/sentPassword",
-        controllerMock.sendPasswordLink(usernameForm, result, requestMock,
+        classUnderTest.sendPasswordLink(usernameForm, result, requestMock,
             model));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock).getEmailByUsername(usernameForm.getUsername());
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
@@ -1220,16 +1080,6 @@ public class UserControllerTest {
           HttpServletRequest request) {
         return emailBody;
       }
-
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
     }
 
     UsernameForm usernameForm = new UsernameForm();
@@ -1237,7 +1087,11 @@ public class UserControllerTest {
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
     UserController controllerMock = new UserControllerMock();
+    controllerMock.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
     controllerMock.setFormUsernamelValidator(formUsernameValidator);
     AppUser appUser = new AppUser();
@@ -1263,6 +1117,8 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
@@ -1275,11 +1131,6 @@ public class UserControllerTest {
           HttpServletRequest request) {
         return emailBody;
       }
-
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
     }
 
     UsernameForm usernameForm = new UsernameForm();
@@ -1287,7 +1138,10 @@ public class UserControllerTest {
     BindingResult result = new BeanPropertyBindingResult(usernameForm,
         "username");
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserController controllerMock = new UserControllerMock();
+    controllerMock.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
     controllerMock.setFormUsernamelValidator(formUsernameValidator);
     AppUserService appUserServiceMock = mock(AppUserService.class);
@@ -1308,69 +1162,47 @@ public class UserControllerTest {
     verify(mailServiceMock).sendVelocityEmail(recipients, "Recover Password",
         emailBody);
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testSentPassword_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/sentPassword", controllerMock.sentPassword(model));
+    assertEquals("users/sentPassword", classUnderTest.sentPassword(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testSentPassword_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/sentPassword", controllerMock.sentPassword(model));
+    assertEquals("users/sentPassword", classUnderTest.sentPassword(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamExists_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     UserSecurityQuestion userSecurityQuestion = new UserSecurityQuestion();
     userSecurityQuestion.setUserid(1);
     userSecurityQuestion.setSecurityQuestion("test question");
@@ -1383,14 +1215,18 @@ public class UserControllerTest {
             .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
         .thenReturn(userSecurityQuestion);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     String contextPath = "/test";
     when(requestMock.getContextPath()).thenReturn(contextPath);
     assertEquals("users/resetPassword",
-        controllerMock.resetPassword(uniqueUrlParam, model, requestMock));
+        classUnderTest.resetPassword(uniqueUrlParam, model, requestMock));
     assertTrue((Boolean) model.get("exists"));
     assertEquals(contextPath, model.get("contextPath"));
     assertTrue(model.containsKey("appUser"));
@@ -1399,18 +1235,13 @@ public class UserControllerTest {
     verify(appUserServiceMock)
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
     verify(requestMock).getContextPath();
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamExists_AnonymousUser()
       throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     UserSecurityQuestion userSecurityQuestion = new UserSecurityQuestion();
     userSecurityQuestion.setUserid(1);
     userSecurityQuestion.setSecurityQuestion("test question");
@@ -1420,39 +1251,30 @@ public class UserControllerTest {
         appUserServiceMock
             .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
         .thenReturn(userSecurityQuestion);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     String contextPath = "/test";
     when(requestMock.getContextPath()).thenReturn(contextPath);
     assertEquals("users/resetPassword",
-        controllerMock.resetPassword(uniqueUrlParam, model, requestMock));
+        classUnderTest.resetPassword(uniqueUrlParam, model, requestMock));
     assertTrue((Boolean) model.get("exists"));
     assertEquals(contextPath, model.get("contextPath"));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock)
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
     verify(requestMock).getContextPath();
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamNotExists_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     String uniqueUrlParam = "test";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
@@ -1462,64 +1284,54 @@ public class UserControllerTest {
             .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     assertEquals("users/resetPassword",
-        controllerMock.resetPassword(uniqueUrlParam, model, requestMock));
+        classUnderTest.resetPassword(uniqueUrlParam, model, requestMock));
     assertFalse((Boolean) model.get("exists"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
     verify(appUserServiceMock)
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testRestPassword_UniqueUrlParamNotExists_AnonymousUser()
       throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     String uniqueUrlParam = "test";
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
         appUserServiceMock
             .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam))
         .thenReturn(null);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(appUserServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     assertEquals("users/resetPassword",
-        controllerMock.resetPassword(uniqueUrlParam, model, requestMock));
+        classUnderTest.resetPassword(uniqueUrlParam, model, requestMock));
     assertFalse((Boolean) model.get("exists"));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock)
         .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam);
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testUpdatePassword_InvalidPasswordSecurity_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
@@ -1530,16 +1342,20 @@ public class UserControllerTest {
     passwordSecurityForm.setPassword(null);
     passwordSecurityForm.setConfirmPassword(null);
     FormPasswordSecurityValidator formPasswordSecurityValidator = new FormPasswordSecurityValidator();
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
-    controllerMock.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     String contextPath = "/test";
     when(requestMock.getContextPath()).thenReturn(contextPath);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/resetPassword", controllerMock.updatePassword(
+    assertEquals("users/resetPassword", classUnderTest.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertTrue((Boolean) model.get("exists"));
     assertEquals(contextPath, model.get("contextPath"));
@@ -1547,55 +1363,41 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testUpdatePassword_InvalidPasswordSecurity_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
     passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer(StringUtils.EMPTY);
     passwordSecurityForm.setPassword(null);
     passwordSecurityForm.setConfirmPassword(null);
     FormPasswordSecurityValidator formPasswordSecurityValidator = new FormPasswordSecurityValidator();
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     String contextPath = "/test";
     when(requestMock.getContextPath()).thenReturn(contextPath);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/resetPassword", controllerMock.updatePassword(
+    assertEquals("users/resetPassword", classUnderTest.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertTrue((Boolean) model.get("exists"));
     assertEquals(contextPath, model.get("contextPath"));
     assertEquals(passwordSecurityForm, model.get("passwordSecurityForm"));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testUpdatePassword_HappyPath_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
     passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer("testAnswer");
@@ -1614,14 +1416,18 @@ public class UserControllerTest {
         .thenReturn(username);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
-    controllerMock.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/forgotPassword/passwordUpdated", controllerMock.updatePassword(
+    assertEquals("redirect:/users/forgotPassword/passwordUpdated", classUnderTest.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
@@ -1633,17 +1439,12 @@ public class UserControllerTest {
     verify(appUserServiceMock).updatePasswordByUserid(
         passwordSecurityForm.getUserid(),
         Encoder.encodeString(username, passwordSecurityForm.getPassword()));
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testUpdatePassword_HappyPath_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
     PasswordSecurityForm passwordSecurityForm = new PasswordSecurityForm();
     passwordSecurityForm.setUserid(1);
     passwordSecurityForm.setSecurityAnswer("testAnswer");
@@ -1660,14 +1461,17 @@ public class UserControllerTest {
         appUserServiceMock.getUsernameByUserid(passwordSecurityForm.getUserid()))
         .thenReturn(username);
     formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(appUserServiceMock);
-    controllerMock.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(appUserServiceMock);
+    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/forgotPassword/passwordUpdated", controllerMock.updatePassword(
+    assertEquals("redirect:/users/forgotPassword/passwordUpdated", classUnderTest.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
     verify(appUserServiceMock).getSecurityAnswerByUserid(
@@ -1677,50 +1481,41 @@ public class UserControllerTest {
     verify(appUserServiceMock).updatePasswordByUserid(
         passwordSecurityForm.getUserid(),
         Encoder.encodeString(username, passwordSecurityForm.getPassword()));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void testPasswordUpdated_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/passwordUpdated", controllerMock.passwordUpdated(model));
+    assertEquals("users/passwordUpdated", classUnderTest.passwordUpdated(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testPasswordUpdated_AnonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/passwordUpdated", controllerMock.passwordUpdated(model));
+    assertEquals("users/passwordUpdated", classUnderTest.passwordUpdated(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
@@ -1731,108 +1526,75 @@ public class UserControllerTest {
   
   @Test
   public void testManageAccount_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-    
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-    
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/manageAccount", controllerMock.manageAccount(model));
+    assertEquals("users/manageAccount", classUnderTest.manageAccount(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testManageAccount_anonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-    
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/manageAccount", controllerMock.manageAccount(model));
+    assertEquals("users/manageAccount", classUnderTest.manageAccount(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
   
   @Test
   public void testManageAccountEdit_NotAnonymousUser() throws Exception {
-    final String username = "testUser";
-    
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-    
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController controllerMock = new UserControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/manageAccountEdit", controllerMock.manageAccountEdit(model));
+    assertEquals("users/manageAccountEdit", classUnderTest.manageAccountEdit(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testManageAccountEdit_anonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-    
-    UserController controllerMock = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/manageAccountEdit", controllerMock.manageAccountEdit(model));
+    assertEquals("users/manageAccountEdit", classUnderTest.manageAccountEdit(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
   
   @Test
   public void testManageAccountEditSubmit_invalidSubmission() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-    
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
@@ -1840,52 +1602,47 @@ public class UserControllerTest {
     ManageAccountForm manageAccountForm = new ManageAccountForm();
     manageAccountForm.setSecurityAnswer("12345678901234567890123456789012345678901");
     FormManageAccountEditValidator formManageAccountEditValidator = new FormManageAccountEditValidator();
-    UserControllerMock userControllerMock = new UserControllerMock();
-    userControllerMock.setAppUserService(userServiceMock);
-    userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setFormManageAccountEditValidator(formManageAccountEditValidator);
     BindingResult result = new BeanPropertyBindingResult(manageAccountForm,
         "manageAccountForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("users/manageAccountEdit", userControllerMock.manageAccountEditSubmit(
+    assertEquals("users/manageAccountEdit", classUnderTest.manageAccountEditSubmit(
         manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testManageAccountEditSubmit_validSubmission_everythingEmpty() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-    
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
     ManageAccountForm manageAccountForm = new ManageAccountForm();
     FormManageAccountEditValidator formManageAccountEditValidator = new FormManageAccountEditValidator();
-    UserControllerMock userControllerMock = new UserControllerMock();
-    userControllerMock.setAppUserService(userServiceMock);
-    userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidator);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
+    classUnderTest.setFormManageAccountEditValidator(formManageAccountEditValidator);
     BindingResult result = new BeanPropertyBindingResult(manageAccountForm,
         "manageAccountForm");
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("redirect:/users/manageAccount", userControllerMock.manageAccountEditSubmit(
+    assertEquals("redirect:/users/manageAccount", classUnderTest.manageAccountEditSubmit(
         manageAccountForm, result, model, null));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
@@ -1893,11 +1650,6 @@ public class UserControllerTest {
     final String username = "testUser";
 
     class UserControllerMock extends UserController {
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-      
       @Override
       String generateEmailAddressChangeEmailBodyWithVelocityEngine(String oldEmail,
           String newEmail, HttpServletRequest request) {
@@ -1921,7 +1673,10 @@ public class UserControllerTest {
         "manageAccountForm");
     FormManageAccountEditValidator formManageAccountEditValidatorMock = mock(FormManageAccountEditValidator.class);
     MailService mailServiceMock = mock(MailService.class);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
     UserControllerMock userControllerMock = new UserControllerMock();
+    userControllerMock.setUserSecurityService(userSecurityService);
     userControllerMock.setAppUserService(userServiceMock);
     userControllerMock.setFormManageAccountEditValidator(formManageAccountEditValidatorMock);
     userControllerMock.setMailService(mailServiceMock);
@@ -1936,49 +1691,40 @@ public class UserControllerTest {
     recipients.add(newEmail);
     verify(mailServiceMock).sendVelocityEmail(recipients, "GraffitiTracker Email Address Change Notification",
         "test");
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test
   public void testManageUsers_anonymousUser() throws Exception {
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    UserController classUnderTest = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>(0);
     assertEquals("users/manageUsers", classUnderTest.manageUsers(model));
     assertTrue(model.isEmpty());
+    verify(userSecurityService).isUserAnonymous();
   }
   
   @Test
   public void testManageUsers_nonAnonymousUser() throws Exception {
-    final String username = "testUser";
-
-    class UserControllerMock extends UserController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    UserController classUnderTest = new UserControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    UserController classUnderTest = new UserController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>(0);
     classUnderTest.setAppUserService(userServiceMock);
     assertEquals("users/manageUsers", classUnderTest.manageUsers(model));
     assertEquals(appUser, model.get("appUser"));
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
   
   @Test

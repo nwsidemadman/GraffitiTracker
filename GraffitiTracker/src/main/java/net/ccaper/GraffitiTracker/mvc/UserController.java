@@ -28,6 +28,7 @@ import net.ccaper.GraffitiTracker.service.BannedInetsService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.LoginAddressService;
 import net.ccaper.GraffitiTracker.service.MailService;
+import net.ccaper.GraffitiTracker.service.UserSecurityService;
 import net.ccaper.GraffitiTracker.utils.DateFormats;
 import net.ccaper.GraffitiTracker.utils.Encoder;
 
@@ -37,9 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.authentication.AuthenticationTrustResolver;
-import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.velocity.VelocityEngineUtils;
@@ -82,52 +80,69 @@ public class UserController {
   private FormPasswordSecurityValidator formPasswordSecurityValidator;
   @Autowired
   private VelocityEngine velocityEngine;
+  @Autowired
+  private UserSecurityService userSecurityService;
 
-  public void setCaptchaService(CaptchaService captchaService) {
+  // visible for testing
+  void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
   }
 
-  public void setFormUserValidator(FormUserValidator formUserValidator) {
+  // visible for testing
+  void setFormUserValidator(FormUserValidator formUserValidator) {
     this.formUserValidator = formUserValidator;
   }
 
-  public void setFormEmailValidator(FormEmailValidator formEmailValidator) {
+  // visible for testing
+  void setFormEmailValidator(FormEmailValidator formEmailValidator) {
     this.formEmailValidator = formEmailValidator;
   }
 
-  public void setFormUsernamelValidator(
-      FormUsernameValidator formUsernameValidator) {
+  // visible for testing
+  void setFormUsernamelValidator(FormUsernameValidator formUsernameValidator) {
     this.formUsernameValidator = formUsernameValidator;
   }
 
-  public void setFormManageAccountEditValidator(
+  // visible for testing
+  void setFormManageAccountEditValidator(
       FormManageAccountEditValidator formManageAccountEditValidator) {
     this.formManageAccountEditValidator = formManageAccountEditValidator;
   }
 
-  public void setFormPasswordSecuritylValidator(
+  // visible for testing
+  void setFormPasswordSecuritylValidator(
       FormPasswordSecurityValidator formPasswordSecurityValidator) {
     this.formPasswordSecurityValidator = formPasswordSecurityValidator;
   }
 
-  public void setAppUserService(AppUserService appUserService) {
+  // visible for testing
+  void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
-  
-  public void setLoginAddressService(LoginAddressService loginAddressService) {
+
+  // visible for testing
+  void setLoginAddressService(LoginAddressService loginAddressService) {
     this.loginAddressService = loginAddressService;
   }
 
-  public void setMailService(MailService mailService) {
+  // visible for testing
+  void setMailService(MailService mailService) {
     this.mailService = mailService;
   }
 
-  public void setBannedInetsService(BannedInetsService bannedInetsService) {
+  // visible for testing
+  void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;
   }
 
-  public void setVelocityEngine(VelocityEngine velocityEngine) {
+  // visible for testing
+  void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
+  }
+
+  // visible for testing
+  void setUserSecurityService(UserSecurityService userSecurityService) {
+    this.userSecurityService = userSecurityService;
   }
 
   // initial create user screen
@@ -135,8 +150,8 @@ public class UserController {
   public String createUserProfile(Model model, HttpSession session,
       HttpServletRequest request) {
     String userInet = request.getRemoteAddr();
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.addAttribute("appUser", appUser);
     }
@@ -150,18 +165,6 @@ public class UserController {
     userForm.setTextCaptchaQuestion(captcha.getQuestion());
     model.addAttribute(userForm);
     return "users/create";
-  }
-
-  // visible for mocking
-  String getUsernameFromSecurity() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
-
-  // visible for mocking
-  boolean isUserAnonymous() {
-    AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
-    return authenticationTrustResolver.isAnonymous(SecurityContextHolder
-        .getContext().getAuthentication());
   }
 
   // handles user response from initial create user screen
@@ -181,8 +184,8 @@ public class UserController {
     }
     appUserService.addAppUser(userForm.createAppUserFromUserForm());
     handleSendingConfirmationEmail(userForm, request);
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -195,8 +198,8 @@ public class UserController {
     session.setAttribute("textCaptcha", captcha);
     userForm.setTextCaptchaQuestion(captcha.getQuestion());
     userForm.setCaptchaAnswer(null);
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -321,8 +324,8 @@ public class UserController {
   // confirmation registration email sent
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
   public String showRegisteredUser(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -337,8 +340,8 @@ public class UserController {
       Map<String, Object> model) {
     Integer userId = appUserService
         .getUserIdByRegistrationConfirmationUniqueUrlParam(registrationConfirmationUniqueUrlParam);
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -370,8 +373,8 @@ public class UserController {
     EmailForm emailForm = new EmailForm();
     emailForm.setRecoverUsername(true);
     model.addAttribute(emailForm);
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.addAttribute("appUser", appUser);
     }
@@ -382,8 +385,8 @@ public class UserController {
   @RequestMapping(value = "/forgotUsername", params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request, Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -404,8 +407,8 @@ public class UserController {
   // for forgotten username, confirmation that email containing username sent
   @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
   public String sentUsername(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -419,8 +422,8 @@ public class UserController {
     UsernameForm usernameForm = new UsernameForm();
     usernameForm.setRecoverPassword(true);
     model.addAttribute(usernameForm);
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.addAttribute("appUser", appUser);
     }
@@ -433,8 +436,8 @@ public class UserController {
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -462,8 +465,8 @@ public class UserController {
   // password
   @RequestMapping(value = "/forgotPassword/sentPassword", method = RequestMethod.GET)
   public String sentPassword(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -493,8 +496,8 @@ public class UserController {
       model.put("passwordSecurityForm", passwordSecurityForm);
     }
     model.put("contextPath", request.getContextPath());
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -507,8 +510,8 @@ public class UserController {
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
       Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -530,8 +533,8 @@ public class UserController {
   // completing the forgot password workflow
   @RequestMapping(value = "/forgotPassword/passwordUpdated", method = RequestMethod.GET)
   public String passwordUpdated(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -545,8 +548,8 @@ public class UserController {
 
   @RequestMapping(value = "/manageAccount", method = RequestMethod.GET)
   public String manageAccount(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -555,8 +558,8 @@ public class UserController {
 
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.GET)
   public String manageAccountEdit(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -570,7 +573,7 @@ public class UserController {
       BindingResult bindingResult, Map<String, Object> model,
       HttpServletRequest request) {
     formManageAccountEditValidator.validate(manageAccountForm, bindingResult);
-    String username = getUsernameFromSecurity();
+    String username = userSecurityService.getUsernameFromSecurity();
     AppUser appUser = appUserService.getUserByUsername(username);
     model.put("appUser", appUser);
     if (bindingResult.hasErrors()) {
@@ -614,8 +617,8 @@ public class UserController {
 
   @RequestMapping(value = "/manageUsers", method = RequestMethod.GET)
   public String manageUsers(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -633,9 +636,11 @@ public class UserController {
   @RequestMapping(value = "/usersSharingInets", method = RequestMethod.GET)
   public String getSharedInets(@RequestParam(required = true) String inet,
       Map<String, Object> model) {
-    SortedMap<String, Integer> usersSharingInets = loginAddressService.getUsersSharingInet(inet);
+    SortedMap<String, Integer> usersSharingInets = loginAddressService
+        .getUsersSharingInet(inet);
     model.put("usersSharingInets", usersSharingInets);
-    model.put("displayUsernamesStringLength", StringUtils.join(usersSharingInets.keySet(), " ").length());
+    model.put("displayUsernamesStringLength",
+        StringUtils.join(usersSharingInets.keySet(), " ").length());
     return "users/usersSharingInets";
   }
 }

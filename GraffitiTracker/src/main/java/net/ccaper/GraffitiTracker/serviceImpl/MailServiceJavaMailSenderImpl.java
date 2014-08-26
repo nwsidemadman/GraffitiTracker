@@ -26,7 +26,8 @@ public class MailServiceJavaMailSenderImpl implements MailService {
   @Autowired
   private JavaMailSender mailSender;
 
-  public void setMailSender(JavaMailSender mailSender) {
+  // visible for testing
+  void setMailSender(JavaMailSender mailSender) {
     this.mailSender = mailSender;
   }
 
@@ -70,16 +71,18 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     }
   }
 
-  MimeMessage getVelocityMimeMessage(String[] recipients, String subject, String content)
-      throws MessagingException {
+  MimeMessage getVelocityMimeMessage(String[] recipients, String subject,
+      String content) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message, true);
     helper.setReplyTo(REPLY_TO);
     helper.setTo(recipients);
-    helper.setSubject(String.format("%s %s", EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
-        System.getProperty("CLASSPATH_PROP_ENV")).getDisplayString(), subject));
-    helper.setText(
-        content, true);
+    helper.setSubject(String.format(
+        "%s %s",
+        EnvironmentEnum.getEnvironmentEnumFromEnvironmentPropertyString(
+            System.getProperty("CLASSPATH_PROP_ENV")).getDisplayString(),
+        subject));
+    helper.setText(content, true);
     return message;
   }
 }

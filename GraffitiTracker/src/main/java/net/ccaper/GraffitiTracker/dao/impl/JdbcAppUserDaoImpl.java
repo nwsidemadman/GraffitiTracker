@@ -336,6 +336,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   @Override
+  // TODO(ccaper): move logic to service layer
   public String getUsernameByEmail(String email) {
     Map<String, String> emailParamMap = new HashMap<String, String>(1);
     emailParamMap.put(EMAIL_COL, email);
@@ -353,6 +354,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   @Override
+  // TODO(ccaper): move logic to service layer
   public String getEmailByUsername(String username) {
     Map<String, String> usernameParamMap = new HashMap<String, String>(1);
     usernameParamMap.put(USERNAME_COL, username);

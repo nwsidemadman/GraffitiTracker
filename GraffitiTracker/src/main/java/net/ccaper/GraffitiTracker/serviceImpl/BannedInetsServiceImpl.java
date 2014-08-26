@@ -12,7 +12,8 @@ public class BannedInetsServiceImpl implements BannedInetsService {
   @Autowired
   private BannedInetsDao bannedInetsDao;
 
-  public void setBannedInetsDao(BannedInetsDao bannedInetsDao) {
+  // visible for testing
+  void setBannedInetsDao(BannedInetsDao bannedInetsDao) {
     this.bannedInetsDao = bannedInetsDao;
   }
 

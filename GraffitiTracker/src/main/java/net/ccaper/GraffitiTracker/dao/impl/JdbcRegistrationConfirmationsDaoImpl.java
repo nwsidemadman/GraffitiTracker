@@ -96,6 +96,7 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
         uniqueUrlParamParamMap);
   }
 
+  // TODO(ccaper): move logic out of dao and into service
   @Override
   public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);

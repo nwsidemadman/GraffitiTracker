@@ -29,38 +29,43 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiUserController {
   private static final Logger logger = LoggerFactory
       .getLogger(ApiUserController.class);
-  
+
   @Autowired
   private AppUserService appUserService;
-  
+
   @Autowired
   private LoginAddressService loginAddressService;
-  
-  public void setAppUserService(AppUserService appUserService) {
+
+  // visible for testing
+  void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
-  
-  public void setLoginAddressService(LoginAddressService loginAddressService) {
+
+  // visible for testing
+  void setLoginAddressService(LoginAddressService loginAddressService) {
     this.loginAddressService = loginAddressService;
   }
-  
+
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody Map<String, List<AppUser>> getAllUsers() {
+  public @ResponseBody
+  Map<String, List<AppUser>> getAllUsers() {
     Map<String, List<AppUser>> data = new HashMap<String, List<AppUser>>(1);
     data.put("data", appUserService.getAllUsers());
     return data;
   }
-  
+
   @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET)
-  public @ResponseBody Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
+  public @ResponseBody
+  Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
     Map<String, List<LoginInet>> data = new HashMap<String, List<LoginInet>>(1);
     data.put("data", loginAddressService.getLoginAddressesByUserId(userId));
     return data;
   }
-  
+
   @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void editUser(@PathVariable int userId, @RequestBody AdminEditAppUser editedUser) {
+  public void editUser(@PathVariable int userId,
+      @RequestBody AdminEditAppUser editedUser) {
     AppUser uneditedUser = appUserService.getUserById(userId);
     appUserService.updateAppUser(uneditedUser, editedUser);
   }

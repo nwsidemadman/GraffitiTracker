@@ -98,6 +98,7 @@ implements ResetPasswordDao {
   }
 
   @Override
+  // TODO(ccaper): move logic out of dao into service
   public UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
       String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
