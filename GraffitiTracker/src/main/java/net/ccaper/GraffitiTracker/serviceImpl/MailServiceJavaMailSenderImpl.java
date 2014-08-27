@@ -31,6 +31,7 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     this.mailSender = mailSender;
   }
 
+  // TODO(ccaper): unit test
   @Override
   public void sendSimpleEmail(List<String> recipients, String subject,
       String content) {
@@ -44,6 +45,7 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     }
   }
 
+  // TODO(ccaper): unit test
   SimpleMailMessage getSimpleMailMessage(String[] recipients, String subject,
       String content) {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -54,6 +56,7 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     return message;
   }
 
+  // TODO(ccaper): unit test
   @Override
   public void sendVelocityEmail(List<String> recipients, String subject,
       String content) {
@@ -71,6 +74,7 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     }
   }
 
+  // TODO(ccaper): unit test
   MimeMessage getVelocityMimeMessage(String[] recipients, String subject,
       String content) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
