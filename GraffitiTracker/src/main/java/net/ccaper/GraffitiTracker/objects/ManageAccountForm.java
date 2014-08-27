@@ -1,7 +1,6 @@
 package net.ccaper.GraffitiTracker.objects;
 
 import net.ccaper.GraffitiTracker.utils.EncodePassword;
-import net.ccaper.GraffitiTracker.utils.Encoder;
 
 public class ManageAccountForm {
   private String email;
