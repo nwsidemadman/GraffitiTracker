@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class ResetPasswordServiceImpl implements ResetPasswordService {
   private static final Logger logger = LoggerFactory
       .getLogger(ResetPasswordServiceImpl.class);
-
   @Autowired
   private ResetPasswordDao resetPasswordDao;
 
