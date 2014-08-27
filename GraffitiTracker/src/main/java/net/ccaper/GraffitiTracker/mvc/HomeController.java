@@ -45,7 +45,6 @@ public class HomeController {
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
-
     return "home";
   }
 
