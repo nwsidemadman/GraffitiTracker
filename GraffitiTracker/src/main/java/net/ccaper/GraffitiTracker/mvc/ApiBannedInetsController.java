@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiBannedInetsController {
   private static final Logger logger = LoggerFactory
       .getLogger(ApiBannedInetsController.class);
-
   @Autowired
   private BannedInetsService bannedInetsService;
 
