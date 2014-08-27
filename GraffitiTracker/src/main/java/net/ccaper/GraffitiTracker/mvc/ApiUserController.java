@@ -29,10 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiUserController {
   private static final Logger logger = LoggerFactory
       .getLogger(ApiUserController.class);
-
   @Autowired
   private AppUserService appUserService;
-
   @Autowired
   private LoginAddressService loginAddressService;
 
