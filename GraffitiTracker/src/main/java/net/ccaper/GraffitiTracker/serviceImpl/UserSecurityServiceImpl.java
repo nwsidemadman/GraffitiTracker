@@ -9,7 +9,6 @@ import net.ccaper.GraffitiTracker.service.UserSecurityService;
 
 @Service("userSecurityService")
 public class UserSecurityServiceImpl implements UserSecurityService {
-
   @Override
   public String getUsernameFromSecurity() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -21,5 +20,4 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     return authenticationTrustResolver.isAnonymous(SecurityContextHolder
         .getContext().getAuthentication());
   }
-
 }
