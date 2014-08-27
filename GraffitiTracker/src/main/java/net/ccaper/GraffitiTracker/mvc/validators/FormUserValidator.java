@@ -24,10 +24,12 @@ public class FormUserValidator implements Validator {
   @Autowired
   private BannedWordService bannedWordService;
 
+  // TODO(ccaper): make default visibility
   public void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
 
+  // TODO(ccaper): make default visiblity
   public void setBannedWordService(BannedWordService bannedWordService) {
     this.bannedWordService = bannedWordService;
   }
