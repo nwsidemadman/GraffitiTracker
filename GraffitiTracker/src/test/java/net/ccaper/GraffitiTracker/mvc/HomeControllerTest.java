@@ -13,6 +13,7 @@ import java.util.Map;
 import net.ccaper.GraffitiTracker.mvc.HomeController;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.UserSecurityService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -30,226 +31,179 @@ public class HomeControllerTest {
 
   @Test
   public void homeReturnsCorrectViewAndModel_AnonymousUser() {
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    HomeController controllerMock = new HomeControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("home", controllerMock.showHomePage(model));
+    assertEquals("home", classUnderTest.showHomePage(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
 
   @Test
   public void homeReturnsCorrectViewAndModel_NotAnonymousUser() {
-    final String username = "testUser";
-
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    HomeController controllerMock = new HomeControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("home", controllerMock.showHomePage(model));
+    assertEquals("home", classUnderTest.showHomePage(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
   public void testContactReturnsCorrectViewAndModel_AnonymousUser()
       throws Exception {
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    HomeController controllerMock = new HomeControllerMock();
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("contact", controllerMock.contact(model));
+    assertEquals("contact", classUnderTest.contact(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
-  
+
   @Test
   public void testContactReturnsCorrectViewAndModel_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    HomeController controllerMock = new HomeControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("contact", controllerMock.contact(model));
+    assertEquals("contact", classUnderTest.contact(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
-  public void testAboutReturnsCorrectViewAndModel_AnonymousUser() throws Exception {
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    HomeController controllerMock = new HomeControllerMock();
+  public void testAboutReturnsCorrectViewAndModel_AnonymousUser()
+      throws Exception {
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("about", controllerMock.about(model));
+    assertEquals("about", classUnderTest.about(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
-  
+
   @Test
   public void testAboutReturnsCorrectViewAndModel_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    HomeController controllerMock = new HomeControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("about", controllerMock.about(model));
+    assertEquals("about", classUnderTest.about(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
-  public void testLegalReturnsCorrectViewAndModel_AnonymousUser() throws Exception {
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    HomeController controllerMock = new HomeControllerMock();
+  public void testLegalReturnsCorrectViewAndModel_AnonymousUser()
+      throws Exception {
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("legal", controllerMock.legal(model));
+    assertEquals("legal", classUnderTest.legal(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
-  
+
   @Test
   public void testLegalReturnsCorrectViewAndModel_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    HomeController controllerMock = new HomeControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("legal", controllerMock.legal(model));
+    assertEquals("legal", classUnderTest.legal(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 
   @Test
-  public void testPrivacyReturnsCorrectViewAndModel_AnonymousUser() throws Exception {
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return true;
-      }
-    }
-
-    HomeController controllerMock = new HomeControllerMock();
+  public void testPrivacyReturnsCorrectViewAndModel_AnonymousUser()
+      throws Exception {
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(true);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("privacy", controllerMock.privacy(model));
+    assertEquals("privacy", classUnderTest.privacy(model));
     assertFalse(model.containsKey("appUser"));
+    verify(userSecurityService).isUserAnonymous();
   }
-  
+
   @Test
   public void testPrivacyReturnsCorrectViewAndModel_NotAnonymousUser()
       throws Exception {
-    final String username = "testUser";
-
-    class HomeControllerMock extends HomeController {
-      @Override
-      boolean isUserAnonymous() {
-        return false;
-      }
-
-      @Override
-      String getUsernameFromSecurity() {
-        return username;
-      }
-    }
-
+    String username = "testUser";
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService userServiceMock = mock(AppUserService.class);
     when(userServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    HomeController controllerMock = new HomeControllerMock();
-    controllerMock.setAppUserService(userServiceMock);
+    UserSecurityService userSecurityService = mock(UserSecurityService.class);
+    when(userSecurityService.isUserAnonymous()).thenReturn(false);
+    when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
+    HomeController classUnderTest = new HomeController();
+    classUnderTest.setUserSecurityService(userSecurityService);
+    classUnderTest.setAppUserService(userServiceMock);
     Map<String, Object> model = new HashMap<String, Object>();
-    assertEquals("privacy", controllerMock.privacy(model));
+    assertEquals("privacy", classUnderTest.privacy(model));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(userServiceMock).getUserByUsername(username);
+    verify(userSecurityService).isUserAnonymous();
+    verify(userSecurityService).getUsernameFromSecurity();
   }
 }

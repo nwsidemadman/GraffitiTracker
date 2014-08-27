@@ -4,13 +4,11 @@ import java.util.Map;
 
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.service.AppUserService;
+import net.ccaper.GraffitiTracker.service.UserSecurityService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationTrustResolver;
-import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,10 +22,17 @@ public class HomeController {
       .getLogger(HomeController.class);
   @Autowired
   private AppUserService appUserService;
+  @Autowired
+  private UserSecurityService userSecurityService;
 
   // visible for testing
   void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
+  }
+
+  // visible for testing
+  void setUserSecurityService(UserSecurityService userSecurityService) {
+    this.userSecurityService = userSecurityService;
   }
 
   /**
@@ -35,8 +40,8 @@ public class HomeController {
    */
   @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
   public String showHomePage(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -44,24 +49,10 @@ public class HomeController {
     return "home";
   }
 
-  // TODO(ccaper): switch to service
-  // visible for mocking
-  String getUsernameFromSecurity() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
-
-  // TODO(ccaper): switch to service
-  // visible for mocking
-  boolean isUserAnonymous() {
-    AuthenticationTrustResolver authenticationTrustResolver = new AuthenticationTrustResolverImpl();
-    return authenticationTrustResolver.isAnonymous(SecurityContextHolder
-        .getContext().getAuthentication());
-  }
-
   @RequestMapping(value = "/contact", method = RequestMethod.GET)
   public String contact(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -70,8 +61,8 @@ public class HomeController {
 
   @RequestMapping(value = "/about", method = RequestMethod.GET)
   public String about(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -80,8 +71,8 @@ public class HomeController {
 
   @RequestMapping(value = "/legal", method = RequestMethod.GET)
   public String legal(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
@@ -90,8 +81,8 @@ public class HomeController {
 
   @RequestMapping(value = "/privacy", method = RequestMethod.GET)
   public String privacy(Map<String, Object> model) {
-    if (!isUserAnonymous()) {
-      String username = getUsernameFromSecurity();
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
