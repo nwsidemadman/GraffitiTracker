@@ -19,8 +19,8 @@ public class FormManageAccountEditValidator implements Validator {
   @Autowired
   private AppUserService appUserService;
 
-  // TODO(ccaper): make default visibility
-  public void setAppUserService(AppUserService appUserService) {
+  // visible for testing
+  void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
 

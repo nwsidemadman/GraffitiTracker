@@ -34,13 +34,11 @@ import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.objects.UsernameForm;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.BannedInetsService;
-import net.ccaper.GraffitiTracker.service.BannedWordService;
 import net.ccaper.GraffitiTracker.service.CaptchaService;
 import net.ccaper.GraffitiTracker.service.LoginAddressService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.service.UserSecurityService;
 import net.ccaper.GraffitiTracker.serviceImpl.TextCaptchaServiceImpl;
-import net.ccaper.GraffitiTracker.serviceImpl.UserSecurityServiceImpl;
 import net.ccaper.GraffitiTracker.utils.Encoder;
 
 import org.apache.commons.lang3.StringUtils;
@@ -217,21 +215,11 @@ public class UserControllerTest {
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
-        false);
-    when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
-    when(
-        bannedWordServiceMock.doesStringContainBannedWord(userForm
-            .getUsername())).thenReturn(false);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     MailService mailServiceMock = mock(MailService.class);
     CaptchaService captchaService = new TextCaptchaServiceImpl();
-    FormUserValidator formUserValidator = new FormUserValidator();
-    formUserValidator.setAppUserService(appUserServiceMock);
-    formUserValidator.setBannedWordService(bannedWordServiceMock);
+    FormUserValidator formUserValidatorMock = mock(FormUserValidator.class);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserSecurityService userSecurityService = mock(UserSecurityService.class);
@@ -239,7 +227,7 @@ public class UserControllerTest {
     when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
     UserControllerMock controller = new UserControllerMock();
     controller.setAppUserService(appUserServiceMock);
-    controller.setFormUserValidator(formUserValidator);
+    controller.setFormUserValidator(formUserValidatorMock);
     controller.setCaptchaService(captchaService);
     controller.setMailService(mailServiceMock);
     controller.setUserSecurityService(userSecurityService);
@@ -250,10 +238,6 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
-    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
-    verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
-    verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userForm.getUsername());
     verify(userSecurityService).isUserAnonymous();
     verify(userSecurityService).getUsernameFromSecurity();
   }
@@ -280,27 +264,17 @@ public class UserControllerTest {
     userForm.setSecurityAnswer("testAnswer");
     userForm.setSecurityQuestion("testQuestion");
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
-        false);
-    when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
-    BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
-    when(
-        bannedWordServiceMock.doesStringContainBannedWord(userForm
-            .getUsername())).thenReturn(false);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     MailService mailServiceMock = mock(MailService.class);
     CaptchaService captchaService = new TextCaptchaServiceImpl();
-    FormUserValidator formUserValidator = new FormUserValidator();
-    formUserValidator.setAppUserService(appUserServiceMock);
-    formUserValidator.setBannedWordService(bannedWordServiceMock);
+    FormUserValidator formUserValidatorMock = mock(FormUserValidator.class);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserSecurityService userSecurityService = mock(UserSecurityService.class);
     when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserControllerMock controller = new UserControllerMock();
     controller.setAppUserService(appUserServiceMock);
-    controller.setFormUserValidator(formUserValidator);
+    controller.setFormUserValidator(formUserValidatorMock);
     controller.setCaptchaService(captchaService);
     controller.setMailService(mailServiceMock);
     controller.setUserSecurityService(userSecurityService);
@@ -309,10 +283,6 @@ public class UserControllerTest {
     assertEquals("redirect:/users/registered", controller.addAppUserFromForm(
         requestMock, session, userForm, result, model));
     assertFalse(model.containsKey("appUser"));
-    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
-    verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
-    verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userForm.getUsername());
     verify(userSecurityService).isUserAnonymous();
   }
 
@@ -329,20 +299,17 @@ public class UserControllerTest {
     userForm.setUsername("test");
     userForm.setPassword("testPassword");
     userForm.setConfirmPassword("testPassword");
-    userForm.setEmail("test@test.com");
+    userForm.setEmail("badEmail");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("Chris");
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
-        false);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(invalidUserCaptcha);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     FormUserValidator formUserValidator = new FormUserValidator();
-    formUserValidator.setAppUserService(appUserServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserSecurityService userSecurityService = mock(UserSecurityService.class);
@@ -365,7 +332,6 @@ public class UserControllerTest {
     assertEquals(invalidUserCaptcha, session.getAttribute("textCaptcha"));
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
-    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(captchaServiceMock).getTextCaptcha();
     verify(appUserServiceMock).getUserByUsername(username);
     verify(userSecurityService).isUserAnonymous();
@@ -384,17 +350,14 @@ public class UserControllerTest {
     userForm.setUsername("test");
     userForm.setPassword("testPassword");
     userForm.setConfirmPassword("testPassword");
-    userForm.setEmail("test@test.com");
+    userForm.setEmail("badEmail");
     userForm.setAcceptTerms(true);
     userForm.setCaptchaAnswer("Chris");
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
-        false);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha()).thenReturn(invalidUserCaptcha);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     FormUserValidator formUserValidator = new FormUserValidator();
-    formUserValidator.setAppUserService(appUserServiceMock);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserSecurityService userSecurityService = mock(UserSecurityService.class);
@@ -415,7 +378,6 @@ public class UserControllerTest {
     assertFalse(captcha.equals(session.getAttribute("textCaptcha")));
     assertEquals(invalidUserCaptcha, session.getAttribute("textCaptcha"));
     assertFalse(model.containsKey("appUser"));
-    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
     verify(captchaServiceMock).getTextCaptcha();
     verify(userSecurityService).isUserAnonymous();
   }
@@ -437,26 +399,16 @@ public class UserControllerTest {
     userForm.setSecurityQuestion("testQuestion");
     userForm.setSecurityAnswer("testAnswer");
     AppUserService appUserServiceMock = mock(AppUserService.class);
-    when(appUserServiceMock.doesEmailExist(userForm.getEmail())).thenReturn(
-        false);
-    when(appUserServiceMock.doesUsernameExist(userForm.getUsername()))
-        .thenReturn(false);
-    BannedWordService bannedWordServiceMock = mock(BannedWordService.class);
-    when(
-        bannedWordServiceMock.doesStringContainBannedWord(userForm
-            .getUsername())).thenReturn(false);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     CaptchaService captchaServiceMock = mock(TextCaptchaServiceImpl.class);
     when(captchaServiceMock.getTextCaptcha())
         .thenReturn(incorrectAnswerCaptcha);
-    FormUserValidator formUserValidator = new FormUserValidator();
-    formUserValidator.setAppUserService(appUserServiceMock);
-    formUserValidator.setBannedWordService(bannedWordServiceMock);
+    FormUserValidator formUserValidatorMock = mock(FormUserValidator.class);
     HttpSession session = new MockHttpSession();
     session.setAttribute("textCaptcha", captcha);
     UserController controller = new UserController();
     controller.setAppUserService(appUserServiceMock);
-    controller.setFormUserValidator(formUserValidator);
+    controller.setFormUserValidator(formUserValidatorMock);
     controller.setCaptchaService(captchaServiceMock);
     BindingResult result = new BeanPropertyBindingResult(userForm, "user");
     Map<String, Object> model = new HashMap<String, Object>();
@@ -470,10 +422,6 @@ public class UserControllerTest {
     assertEquals(incorrectAnswerCaptcha, session.getAttribute("textCaptcha"));
     assertTrue(result.hasErrors());
     assertNotNull(result.getFieldError("captchaAnswer"));
-    verify(appUserServiceMock).doesEmailExist(userForm.getEmail());
-    verify(appUserServiceMock).doesUsernameExist(userForm.getUsername());
-    verify(bannedWordServiceMock).doesStringContainBannedWord(
-        userForm.getUsername());
     verify(captchaServiceMock).getTextCaptcha();
   }
 
@@ -1404,25 +1352,21 @@ public class UserControllerTest {
     String password = "testPassword";
     passwordSecurityForm.setPassword(password);
     passwordSecurityForm.setConfirmPassword(password);
-    FormPasswordSecurityValidator formPasswordSecurityValidator = new FormPasswordSecurityValidator();
+    FormPasswordSecurityValidator formPasswordSecurityValidatorMock = mock(FormPasswordSecurityValidator.class);
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(
-        appUserServiceMock.getSecurityAnswerByUserid(passwordSecurityForm
-            .getUserid())).thenReturn(passwordSecurityForm.getSecurityAnswer());
-    when(
         appUserServiceMock.getUsernameByUserid(passwordSecurityForm.getUserid()))
         .thenReturn(username);
     when(appUserServiceMock.getUserByUsername(username)).thenReturn(appUser);
-    formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     UserSecurityService userSecurityService = mock(UserSecurityService.class);
     when(userSecurityService.isUserAnonymous()).thenReturn(false);
     when(userSecurityService.getUsernameFromSecurity()).thenReturn(username);
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     classUnderTest.setAppUserService(appUserServiceMock);
-    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidatorMock);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
@@ -1432,8 +1376,6 @@ public class UserControllerTest {
     assertTrue(model.containsKey("appUser"));
     assertEquals(username, ((AppUser) model.get("appUser")).getUsername());
     verify(appUserServiceMock).getUserByUsername(username);
-    verify(appUserServiceMock).getSecurityAnswerByUserid(
-        passwordSecurityForm.getUserid());
     verify(appUserServiceMock).getUsernameByUserid(
         passwordSecurityForm.getUserid());
     verify(appUserServiceMock).updatePasswordByUserid(
@@ -1451,22 +1393,18 @@ public class UserControllerTest {
     String password = "testPassword";
     passwordSecurityForm.setPassword(password);
     passwordSecurityForm.setConfirmPassword(password);
-    FormPasswordSecurityValidator formPasswordSecurityValidator = new FormPasswordSecurityValidator();
+    FormPasswordSecurityValidator formPasswordSecurityValidatorMock = mock(FormPasswordSecurityValidator.class);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     String username = "testUser";
     when(
-        appUserServiceMock.getSecurityAnswerByUserid(passwordSecurityForm
-            .getUserid())).thenReturn(passwordSecurityForm.getSecurityAnswer());
-    when(
         appUserServiceMock.getUsernameByUserid(passwordSecurityForm.getUserid()))
         .thenReturn(username);
-    formPasswordSecurityValidator.setAppUserService(appUserServiceMock);
     UserSecurityService userSecurityService = mock(UserSecurityService.class);
     when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     classUnderTest.setAppUserService(appUserServiceMock);
-    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidatorMock);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
@@ -1474,8 +1412,6 @@ public class UserControllerTest {
     assertEquals("redirect:/users/forgotPassword/passwordUpdated", classUnderTest.updatePassword(
         passwordSecurityForm, result, requestMock, model));
     assertFalse(model.containsKey("appUser"));
-    verify(appUserServiceMock).getSecurityAnswerByUserid(
-        passwordSecurityForm.getUserid());
     verify(appUserServiceMock).getUsernameByUserid(
         passwordSecurityForm.getUserid());
     verify(appUserServiceMock).updatePasswordByUserid(
