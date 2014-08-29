@@ -11,6 +11,18 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+/**
+ * @author ccaper
+ * The listener interface for receiving authentication events.
+ * The class that is interested in processing a authentication
+ * event implements this interface, and the object created
+ * with that class is registered with a component using the
+ * component's <code>addAuthenticationListener<code> method. When
+ * the authentication event occurs, that object's appropriate
+ * method is invoked.
+ *
+ * @see AuthenticationEvent
+ */
 public class AuthenticationListener implements
     ApplicationListener<InteractiveAuthenticationSuccessEvent> {
   private static final Logger logger = LoggerFactory
