@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
+import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
 import net.ccaper.GraffitiTracker.dao.impl.JdbcAppUserDaoImpl;
+import net.ccaper.GraffitiTracker.dao.impl.JdbcRegistrationConfirmationsDaoImpl;
 import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.AdminEditAppUser;
@@ -313,5 +315,30 @@ public class AppUserServiceImplTest {
             "New Users Last Day: %d\nUnconfirmed Users Last Day: %d\nNumber Users Logged In Last Day: %d\n",
             newUsers, unconfirmedUsers, logins);
     verify(mailServiceMock).sendSimpleEmail(superAdmins, subject, content);
+  }
+
+  @Test
+  public void testGetUserIdByRegistrationConfirmationUniqueUrlParam_happyPath()
+      throws Exception {
+    String uniqueUrlParam = "test";
+    Integer userid = 5;
+    RegistrationConfirmationsDao daoMock = mock(JdbcRegistrationConfirmationsDaoImpl.class);
+    when(daoMock.getUserIdByUniqueUrlParam(uniqueUrlParam)).thenReturn(userid);
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setRegistrationConfirmationDao(daoMock);
+    assertEquals(userid, classUnderTest.getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam));
+    verify(daoMock).getUserIdByUniqueUrlParam(uniqueUrlParam);
+  }
+  
+  @Test
+  public void testGetUserIdByRegistrationConfirmationUniqueUrlParam_null()
+      throws Exception {
+    String uniqueUrlParam = "test";
+    RegistrationConfirmationsDao daoMock = mock(JdbcRegistrationConfirmationsDaoImpl.class);
+    when(daoMock.getUserIdByUniqueUrlParam(uniqueUrlParam)).thenThrow(new EmptyResultDataAccessException("test", 1));
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setRegistrationConfirmationDao(daoMock);
+    assertNull(classUnderTest.getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam));
+    verify(daoMock).getUserIdByUniqueUrlParam(uniqueUrlParam);
   }
 }

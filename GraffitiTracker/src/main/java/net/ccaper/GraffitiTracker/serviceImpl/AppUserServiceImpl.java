@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,13 @@ public class AppUserServiceImpl implements AppUserService {
   void setAppUserDao(AppUserDao appUserDao) {
     this.appUserDao = appUserDao;
   }
-  
+
+  // visible for testing
+  void setRegistrationConfirmationDao(
+      RegistrationConfirmationsDao registrationConfirmationDao) {
+    this.registrationConfirmationsDao = registrationConfirmationDao;
+  }
+
   // visible for testing
   void setMailService(MailService mailService) {
     this.mailService = mailService;
@@ -94,8 +101,12 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public Integer getUserIdByRegistrationConfirmationUniqueUrlParam(
       String uniqueUrlParam) {
-    return registrationConfirmationsDao
-        .getUserIdByUniqueUrlParam(uniqueUrlParam);
+    try {
+      return registrationConfirmationsDao
+          .getUserIdByUniqueUrlParam(uniqueUrlParam);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   @Override

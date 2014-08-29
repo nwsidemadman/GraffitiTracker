@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("registrationConfirmationsDao")
 public class JdbcRegistrationConfirmationsDaoImpl extends
-NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
+    NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
   static final String REGISTRATION_CONFIRMATIONS_TABLE = "registration_confirmations";
   private static final String USER_ID_COL = JdbcAppUserDaoImpl.USER_ID_COL;
   private static final String ID_FK_COL = JdbcAppUserDaoImpl.ID_FK_COL;
@@ -71,7 +71,8 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
 
   @Override
   public void addRegistrationConfirmationByUsername(String username) {
-    Map<String, String> registrationConfirmationParamMap = new HashMap<String, String>(1);
+    Map<String, String> registrationConfirmationParamMap = new HashMap<String, String>(
+        1);
     registrationConfirmationParamMap.put(USERNAME_COL, username);
     getNamedParameterJdbcTemplate().update(
         SQL_INSERT_REGISTRATION_CONFIRMATION_BY_USERNAME,
@@ -96,16 +97,12 @@ NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
         uniqueUrlParamParamMap);
   }
 
-  // TODO(ccaper): move logic out of dao and into service
   @Override
-  public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam) {
+  public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam)
+      throws EmptyResultDataAccessException {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
-    try {
-      return getUserIdByUniqueUrlParam(uniqueUrlParamParamMap);
-    } catch (EmptyResultDataAccessException e) {
-      return null;
-    }
+    return getUserIdByUniqueUrlParam(uniqueUrlParamParamMap);
   }
 
   // visible for mocking
