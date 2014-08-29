@@ -31,7 +31,6 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     this.mailSender = mailSender;
   }
 
-  // TODO(ccaper): unit test
   @Override
   public void sendSimpleEmail(List<String> recipients, String subject,
       String content) {
