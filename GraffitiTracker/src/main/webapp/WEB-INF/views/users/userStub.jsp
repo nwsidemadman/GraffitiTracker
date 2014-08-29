@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<%@ page import="net.ccaper.GraffitiTracker.enums.RoleEnum" %>
+<%@ page import="net.ccaper.graffitiTracker.enums.RoleEnum" %>
 
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <p>Not authorized to view this pane</p>

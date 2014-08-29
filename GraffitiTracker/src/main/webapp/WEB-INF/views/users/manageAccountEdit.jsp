@@ -2,7 +2,7 @@
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
-<%@ page import="net.ccaper.GraffitiTracker.objects.SecurityQuestions" %>
+<%@ page import="net.ccaper.graffitiTracker.objects.SecurityQuestions" %>
 <%@ page session="false"%>
 <sec:authorize access="isAnonymous()">
   <div id="simple_content_text">

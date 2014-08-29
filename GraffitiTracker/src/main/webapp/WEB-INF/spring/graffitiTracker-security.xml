@@ -9,7 +9,7 @@
 
   <context:annotation-config />
   <beans:bean name="AppConfig"
-    class="net.ccaper.GraffitiTracker.spring.AppConfig" />
+    class="net.ccaper.graffitiTracker.spring.AppConfig" />
 
   <!-- Automatically registers a login form, BASIC authentication, anonymous 
     authentication, logout services, remember-me and servlet-api-integration. -->
@@ -49,9 +49,9 @@
   </authentication-manager>
   <!--<end id="authentication_manager"/> -->
   
-  <context:component-scan base-package="net.ccaper.GraffitiTracker.serviceImpl, net.ccaper.GraffitiTracker.dao.impl" />
+  <context:component-scan base-package="net.ccaper.graffitiTracker.serviceImpl, net.ccaper.graffitiTracker.dao.impl" />
   
-  <beans:bean id="authenticationListener" class="net.ccaper.GraffitiTracker.mvc.listeners.AuthenticationListener" >
+  <beans:bean id="authenticationListener" class="net.ccaper.graffitiTracker.mvc.listeners.AuthenticationListener" >
   </beans:bean>
   
 </beans:beans>

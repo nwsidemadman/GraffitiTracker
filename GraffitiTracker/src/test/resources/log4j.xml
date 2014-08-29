@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="net.ccaper.GraffitiTracker">
+	<logger name="net.ccaper.graffitiTracker">
 		<level value="info" />
 	</logger>
 	
