@@ -23,6 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Handles the actions for Api calls to the
+ * {@link net.ccaper.graffitiTracker.objects.AppUser}
+ * 
+ * @author ccaper
+ * 
+ */
 @RestController
 @RequestMapping("/api/users")
 @Scope("session")
@@ -35,15 +42,33 @@ public class ApiUserController {
   private LoginAddressService loginAddressService;
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.graffitiTracker.service.AppUserService}.
+   * 
+   * @param appUserService
+   *          the new {@link net.ccaper.graffitiTracker.service.AppUserService}
+   */
   void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.graffitiTracker.service.LoginAddressService}.
+   * 
+   * @param loginAddressService
+   *          the new
+   *          {@link net.ccaper.graffitiTracker.service.LoginAddressService}
+   */
   void setLoginAddressService(LoginAddressService loginAddressService) {
     this.loginAddressService = loginAddressService;
   }
 
+  /**
+   * Gets the all {@link net.ccaper.graffitiTracker.objects.AppUser}.
+   * 
+   * @return the all {@link net.ccaper.graffitiTracker.objects.AppUser}s
+   */
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody
   Map<String, List<AppUser>> getAllUsers() {
@@ -52,6 +77,13 @@ public class ApiUserController {
     return data;
   }
 
+  /**
+   * Gets the user login addresses.
+   * 
+   * @param userId
+   *          the user id
+   * @return the user {@link net.ccaper.graffitiTracker.objects.LoginInet}s
+   */
   @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET)
   public @ResponseBody
   Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
@@ -60,6 +92,14 @@ public class ApiUserController {
     return data;
   }
 
+  /**
+   * Edits the {@link net.ccaper.graffitiTracker.objects.AdminEditAppUser}.
+   * 
+   * @param userId
+   *          the user id
+   * @param editedUser
+   *          the {@link net.ccaper.graffitiTracker.objects.AdminEditAppUser}
+   */
   @RequestMapping(value = "{userId}", method = RequestMethod.PUT)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void editUser(@PathVariable int userId,

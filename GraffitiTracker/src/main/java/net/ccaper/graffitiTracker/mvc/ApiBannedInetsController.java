@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 
+ * @author ccaper Handles the api actions for the
+ *         {@link net.ccaper.graffitiTracker.objects.BannedInet}
+ * 
+ */
 @RestController
 @RequestMapping("/api/banned_inets")
 @Scope("session")
@@ -25,10 +31,24 @@ public class ApiBannedInetsController {
   private BannedInetsService bannedInetsService;
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.graffitiTracker.service.BannedInetsService}.
+   * 
+   * @param bannedInetsService
+   *          the new
+   *          {@link net.ccaper.graffitiTracker.service.BannedInetsService}
+   */
   void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;
   }
 
+  /**
+   * Adds the {@link net.ccaper.graffitiTracker.objects.BannedInet}.
+   * 
+   * @param bannedInet
+   *          the {@link net.ccaper.graffitiTracker.objects.BannedInet}
+   * @return the {@link net.ccaper.graffitiTracker.objects.BannedInet}
+   */
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
