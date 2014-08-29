@@ -103,11 +103,7 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
       String uniqueUrlParam) throws EmptyResultDataAccessException {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
-    try {
-      return getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParamParamMap);
-    } catch (EmptyResultDataAccessException e) {
-      return null;
-    }
+    return getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParamParamMap);
   }
 
   // visible for mocking
