@@ -922,7 +922,7 @@ public class UserControllerTest {
     UserController classUnderTest = new UserController();
     classUnderTest.setAppUserService(userServiceMock);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernameValidator(formUsernameValidator);
     classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/forgotPassword", classUnderTest.sendPasswordLink(
@@ -945,7 +945,7 @@ public class UserControllerTest {
     when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserController classUnderTest = new UserController();
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernameValidator(formUsernameValidator);
     classUnderTest.setUserSecurityService(userSecurityService);
     Map<String, Object> model = new HashMap<String, Object>();
     assertEquals("users/forgotPassword", classUnderTest.sendPasswordLink(
@@ -969,7 +969,7 @@ public class UserControllerTest {
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernameValidator(formUsernameValidator);
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
@@ -1002,7 +1002,7 @@ public class UserControllerTest {
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    classUnderTest.setFormUsernamelValidator(formUsernameValidator);
+    classUnderTest.setFormUsernameValidator(formUsernameValidator);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
         .thenReturn(null);
@@ -1041,7 +1041,7 @@ public class UserControllerTest {
     UserController controllerMock = new UserControllerMock();
     controllerMock.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    controllerMock.setFormUsernameValidator(formUsernameValidator);
     AppUser appUser = new AppUser();
     appUser.setUsername(username);
     AppUserService appUserServiceMock = mock(AppUserService.class);
@@ -1091,7 +1091,7 @@ public class UserControllerTest {
     UserController controllerMock = new UserControllerMock();
     controllerMock.setUserSecurityService(userSecurityService);
     FormUsernameValidator formUsernameValidator = new FormUsernameValidator();
-    controllerMock.setFormUsernamelValidator(formUsernameValidator);
+    controllerMock.setFormUsernameValidator(formUsernameValidator);
     AppUserService appUserServiceMock = mock(AppUserService.class);
     String userEmail = "test@test.com";
     when(appUserServiceMock.getEmailByUsername(usernameForm.getUsername()))
@@ -1296,7 +1296,7 @@ public class UserControllerTest {
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     classUnderTest.setAppUserService(userServiceMock);
-    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    classUnderTest.setFormPasswordSecurityValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     String contextPath = "/test";
     when(requestMock.getContextPath()).thenReturn(contextPath);
@@ -1327,7 +1327,7 @@ public class UserControllerTest {
     when(userSecurityService.isUserAnonymous()).thenReturn(true);
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
-    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidator);
+    classUnderTest.setFormPasswordSecurityValidator(formPasswordSecurityValidator);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     String contextPath = "/test";
     when(requestMock.getContextPath()).thenReturn(contextPath);
@@ -1366,7 +1366,7 @@ public class UserControllerTest {
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     classUnderTest.setAppUserService(appUserServiceMock);
-    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidatorMock);
+    classUnderTest.setFormPasswordSecurityValidator(formPasswordSecurityValidatorMock);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");
@@ -1404,7 +1404,7 @@ public class UserControllerTest {
     UserController classUnderTest = new UserController();
     classUnderTest.setUserSecurityService(userSecurityService);
     classUnderTest.setAppUserService(appUserServiceMock);
-    classUnderTest.setFormPasswordSecuritylValidator(formPasswordSecurityValidatorMock);
+    classUnderTest.setFormPasswordSecurityValidator(formPasswordSecurityValidatorMock);
     HttpServletRequest requestMock = mock(HttpServletRequest.class);
     BindingResult result = new BeanPropertyBindingResult(passwordSecurityForm,
         "paswordSecurityForm");

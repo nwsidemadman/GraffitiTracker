@@ -46,6 +46,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * 
+ * @author ccaper Controller for all user actions.
+ * 
+ */
 @Controller
 @RequestMapping("/users")
 @Scope("session")
@@ -84,68 +89,165 @@ public class UserController {
   private UserSecurityService userSecurityService;
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.GraffitiTracker.service.CaptchaService}.
+   * 
+   * @param captchaService
+   *          the new {@link net.ccaper.GraffitiTracker.service.CaptchaService}
+   */
   void setCaptchaService(CaptchaService captchaService) {
     this.captchaService = captchaService;
   }
 
   // visible for testing
+  /**
+   * Sets the
+   * {@link net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator}.
+   * 
+   * @param formUserValidator
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.mvc.validators.FormUserValidator}
+   */
   void setFormUserValidator(FormUserValidator formUserValidator) {
     this.formUserValidator = formUserValidator;
   }
 
   // visible for testing
+  /**
+   * Sets the
+   * {@link net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator}.
+   * 
+   * @param formEmailValidator
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.mvc.validators.FormEmailValidator}
+   */
   void setFormEmailValidator(FormEmailValidator formEmailValidator) {
     this.formEmailValidator = formEmailValidator;
   }
 
   // visible for testing
-  void setFormUsernamelValidator(FormUsernameValidator formUsernameValidator) {
+  /**
+   * Sets the
+   * {@link net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator}.
+   * 
+   * @param formUsernameValidator
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.mvc.validators.FormUsernameValidator}
+   */
+  void setFormUsernameValidator(FormUsernameValidator formUsernameValidator) {
     this.formUsernameValidator = formUsernameValidator;
   }
 
   // visible for testing
+  /**
+   * Sets the
+   * {@link net.ccaper.GraffitiTracker.mvc.validators.FormManageAccountEditValidator}
+   * .
+   * 
+   * @param formManageAccountEditValidator
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.mvc.validators.FormManageAccountFormValidator}
+   */
   void setFormManageAccountEditValidator(
       FormManageAccountEditValidator formManageAccountEditValidator) {
     this.formManageAccountEditValidator = formManageAccountEditValidator;
   }
 
   // visible for testing
-  void setFormPasswordSecuritylValidator(
+  /**
+   * Sets the
+   * {@link net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator}
+   * .
+   * 
+   * @param formPasswordSecurityValidator
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.mvc.validators.FormPasswordSecurityValidator}
+   */
+  void setFormPasswordSecurityValidator(
       FormPasswordSecurityValidator formPasswordSecurityValidator) {
     this.formPasswordSecurityValidator = formPasswordSecurityValidator;
   }
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.GraffitiTracker.service.AppUserService}.
+   * 
+   * @param appUserService
+   *          the new {@link net.ccaper.GraffitiTracker.service.AppUserService}
+   */
   void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.GraffitiTracker.service.LoginAddressService}.
+   * 
+   * @param loginAddressService
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.service.LoginAddressService}
+   */
   void setLoginAddressService(LoginAddressService loginAddressService) {
     this.loginAddressService = loginAddressService;
   }
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.GraffitiTracker.service.MailService}.
+   * 
+   * @param mailService
+   *          the new {@link net.ccaper.GraffitiTracker.service.MailService}
+   */
   void setMailService(MailService mailService) {
     this.mailService = mailService;
   }
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.GraffitiTracker.service.BannedInetsService}.
+   * 
+   * @param bannedInetsService
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.service.BannedInetsService}
+   */
   void setBannedInetsService(BannedInetsService bannedInetsService) {
     this.bannedInetsService = bannedInetsService;
   }
 
   // visible for testing
+  /**
+   * Sets the velocity engine.
+   * 
+   * @param velocityEngine
+   *          the new velocity engine
+   */
   void setVelocityEngine(VelocityEngine velocityEngine) {
     this.velocityEngine = velocityEngine;
   }
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.GraffitiTracker.service.UserSecurityService}.
+   * 
+   * @param userSecurityService
+   *          the new
+   *          {@link net.ccaper.GraffitiTracker.service.UserSecurityService}
+   */
   void setUserSecurityService(UserSecurityService userSecurityService) {
     this.userSecurityService = userSecurityService;
   }
 
-  // initial create user screen
+  /**
+   * Initial create user screen
+   * 
+   * @param model
+   *          the model
+   * @param session
+   *          the session
+   * @param request
+   *          the request
+   * @return the view name
+   */
   @RequestMapping(value = "/new", method = RequestMethod.GET)
   public String createUserProfile(Model model, HttpSession session,
       HttpServletRequest request) {
@@ -167,8 +269,22 @@ public class UserController {
     return "users/create";
   }
 
-  // handles user response from initial create user screen
-  // redirects user to screen stating confirmation registration email sent
+  /**
+   * Handles user response from initial create user screen redirects user to
+   * screen stating confirmation registration email sent
+   * 
+   * @param request
+   *          the request
+   * @param session
+   *          the session
+   * @param userForm
+   *          the user form
+   * @param bindingResult
+   *          the binding result
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/new", method = RequestMethod.POST)
   public String addAppUserFromForm(HttpServletRequest request,
       HttpSession session, UserForm userForm, BindingResult bindingResult,
@@ -192,6 +308,17 @@ public class UserController {
     return "redirect:/users/registered";
   }
 
+  /**
+   * Handle user form errors.
+   * 
+   * @param session
+   *          the session
+   * @param userForm
+   *          the user form
+   * @param model
+   *          the model
+   * @return the view name
+   */
   private String handleUserFormErrors(HttpSession session, UserForm userForm,
       Map<String, Object> model) {
     TextCaptcha captcha = captchaService.getTextCaptcha();
@@ -206,6 +333,17 @@ public class UserController {
     return "users/create";
   }
 
+  /**
+   * Handle incorrect captcha answer.
+   * 
+   * @param session
+   *          the session
+   * @param userForm
+   *          the user form
+   * @param bindingResult
+   *          the binding result
+   * @return the view name
+   */
   private String handleIncorrectCaptchaAnswer(HttpSession session,
       UserForm userForm, BindingResult bindingResult) {
     TextCaptcha newCaptcha = captchaService.getTextCaptcha();
@@ -217,6 +355,14 @@ public class UserController {
     return "users/create";
   }
 
+  /**
+   * Handle sending confirmation email.
+   * 
+   * @param userForm
+   *          the user form
+   * @param request
+   *          the request
+   */
   private void handleSendingConfirmationEmail(UserForm userForm,
       HttpServletRequest request) {
     appUserService.addRegistrationConfirmation(userForm.getUsername());
@@ -228,6 +374,15 @@ public class UserController {
   }
 
   // visible for mocking
+  /**
+   * Generate confirmation email body with velocity engine.
+   * 
+   * @param userForm
+   *          the user form
+   * @param request
+   *          the request
+   * @return the html from the velocity template
+   */
   String generateConfirmationEmailBodyWithVelocityEngine(UserForm userForm,
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>(3);
@@ -255,6 +410,15 @@ public class UserController {
   }
 
   // visible for mocking
+  /**
+   * Generate forgot username email body with velocity engine.
+   * 
+   * @param username
+   *          the username
+   * @param request
+   *          the request
+   * @return the html from the velocity template
+   */
   String generateForgotUsernameEmailBodyWithVelocityEngine(String username,
       HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>(3);
@@ -270,6 +434,15 @@ public class UserController {
   }
 
   // visible for mocking
+  /**
+   * Generate forgot password email body with velocity engine.
+   * 
+   * @param resetPassowrdUniqueUrlParam
+   *          the reset passowrd unique url param
+   * @param request
+   *          the request
+   * @return the html from the velocity template
+   */
   String generateForgotPasswordEmailBodyWithVelocityEngine(
       String resetPassowrdUniqueUrlParam, HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>(3);
@@ -294,12 +467,30 @@ public class UserController {
   }
 
   // visible for mocking
+  /**
+   * Generate html from velocity template.
+   * 
+   * @param model
+   *          the model
+   * @return the html from the velocity template
+   */
   String generateHtmlFromVelocityTemplate(Map<String, Object> model) {
     return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
         "../../resources/velocityTemplates/emailTemplate.vm", "UTF-8", model);
   }
 
   // visible for mocking
+  /**
+   * Generate email address change email body with velocity engine.
+   * 
+   * @param oldEmail
+   *          the old email
+   * @param newEmail
+   *          the new email
+   * @param request
+   *          the request
+   * @return the html from the velocity template
+   */
   String generateEmailAddressChangeEmailBodyWithVelocityEngine(String oldEmail,
       String newEmail, HttpServletRequest request) {
     Map<String, Object> model = new HashMap<String, Object>(3);
@@ -320,8 +511,14 @@ public class UserController {
     return generateHtmlFromVelocityTemplate(model);
   }
 
-  // when creating new user, handles redirect to give user messages that
-  // confirmation registration email sent
+  /**
+   * When creating new user, handles redirect to give user messages that
+   * confirmation registration email sent
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/registered", method = RequestMethod.GET)
   public String showRegisteredUser(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -332,8 +529,16 @@ public class UserController {
     return "users/registered";
   }
 
-  // when creating new user, handles click in email confirming the registration
-  // of a new user
+  /**
+   * When creating new {@linkg net.ccaper.GraffitiTracker.objects.AppUser},
+   * handles click in email confirming the registration of a new user.
+   * 
+   * @param registrationConfirmationUniqueUrlParam
+   *          the registration confirmation unique url param
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/confirmed", method = RequestMethod.GET)
   public String showConfirmedUser(
       @RequestParam(required = true) String registrationConfirmationUniqueUrlParam,
@@ -357,17 +562,46 @@ public class UserController {
   }
 
   // visible for testing
+  /**
+   * Gets the email link.
+   * 
+   * @param url
+   *          the url
+   * @param oldServletPath
+   *          the old servlet path
+   * @param newServletPath
+   *          the new servlet path
+   * @param uniqeUrlParam
+   *          the uniqe url param
+   * @return the email link
+   */
   String getEmailLink(String url, String oldServletPath, String newServletPath,
       String uniqeUrlParam) {
     return url.replace(oldServletPath, newServletPath + uniqeUrlParam);
   }
 
   // visible for testing
+  /**
+   * Gets the home link.
+   * 
+   * @param url
+   *          the url
+   * @param oldServletPath
+   *          the old servlet path
+   * @return the home link
+   */
   String getHomeLink(String url, String oldServletPath) {
     return url.replace(oldServletPath, HOME_LINK);
   }
 
   // initial forgot username screen
+  /**
+   * Initial forgot username screen
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotUsername", method = RequestMethod.GET, params = "forgotUsername")
   public String forgotUsername(Model model) {
     EmailForm emailForm = new EmailForm();
@@ -381,7 +615,19 @@ public class UserController {
     return "users/forgotUsername";
   }
 
-  // handles user entry of email address for recovering user name
+  /**
+   * Handles user entry of email address for recovering user name.
+   * 
+   * @param emailForm
+   *          the {@link net.ccaper.GraffitiTracker.objects.EmailForm}
+   * @param bindingResult
+   *          the binding result
+   * @param request
+   *          the request
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotUsername", params = "recoverUsername", method = RequestMethod.POST)
   public String sendUsername(EmailForm emailForm, BindingResult bindingResult,
       HttpServletRequest request, Map<String, Object> model) {
@@ -404,7 +650,13 @@ public class UserController {
     return "redirect:/users/sentUsername";
   }
 
-  // for forgotten username, confirmation that email containing username sent
+  /**
+   * For forgotten username, confirmation that email containing username sent.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/sentUsername", method = RequestMethod.GET)
   public String sentUsername(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -415,8 +667,14 @@ public class UserController {
     return "users/sentUsername";
   }
 
-  // gives user initial forgot password screen prompting for username to reset
-  // password
+  /**
+   * Gives user initial forgot password screen prompting for username to reset
+   * password.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
   public String forgotPassword(Model model) {
     UsernameForm usernameForm = new UsernameForm();
@@ -430,8 +688,20 @@ public class UserController {
     return "users/forgotPassword";
   }
 
-  // looks up email for username, sends user an email, and redirects user to
-  // email sent message to reset password
+  /**
+   * Looks up email for username, sends user an email, and redirects user to
+   * email sent message to reset password.
+   * 
+   * @param usernameForm
+   *          the {@link net.ccaper.GraffitiTracker.objects.UsernameForm}
+   * @param bindingResult
+   *          the binding result
+   * @param request
+   *          the request
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotPassword", params = "recoverPassword", method = RequestMethod.POST)
   public String sendPasswordLink(UsernameForm usernameForm,
       BindingResult bindingResult, HttpServletRequest request,
@@ -461,8 +731,14 @@ public class UserController {
     return "redirect:/users/forgotPassword/sentPassword";
   }
 
-  // handles catching redirect to give user message that email was set to reset
-  // password
+  /**
+   * Handles catching redirect to give user message that email was set to reset
+   * password.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotPassword/sentPassword", method = RequestMethod.GET)
   public String sentPassword(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -473,9 +749,19 @@ public class UserController {
     return "users/sentPassword";
   }
 
-  // reset password page after user clicks link in email prompting user for
-  // security question and new password
-  // deletes unique token after hitting this page expiring link in email
+  /**
+   * Reset password page after user clicks link in email prompting user for
+   * security question and new password deletes unique token after hitting this
+   * page expiring link in email.
+   * 
+   * @param resetPasswordUniqueUrlParam
+   *          the reset password unique url param
+   * @param model
+   *          the model
+   * @param request
+   *          the request
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotPassword/resetPassword", method = RequestMethod.GET)
   public String resetPassword(
       @RequestParam(required = true) String resetPasswordUniqueUrlParam,
@@ -504,8 +790,21 @@ public class UserController {
     return "users/resetPassword";
   }
 
-  // updates the password from the user for lost password, redirects to
-  // confirmation page
+  /**
+   * Updates the password from the user for lost password, redirects to
+   * confirmation page.
+   * 
+   * @param passwordSecurityForm
+   *          the
+   *          {@link net.ccaper.GraffitiTracker.objects.PasswordSecurityForm}
+   * @param bindingResult
+   *          the binding result
+   * @param request
+   *          the request
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotPassword/resetPassword", method = RequestMethod.POST)
   public String updatePassword(PasswordSecurityForm passwordSecurityForm,
       BindingResult bindingResult, HttpServletRequest request,
@@ -529,8 +828,14 @@ public class UserController {
     return "redirect:/users/forgotPassword/passwordUpdated";
   }
 
-  // gives the user a confirmation screen that the password has been reset,
-  // completing the forgot password workflow
+  /**
+   * Gives the user a confirmation screen that the password has been reset,
+   * completing the forgot password workflow.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/forgotPassword/passwordUpdated", method = RequestMethod.GET)
   public String passwordUpdated(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -541,11 +846,23 @@ public class UserController {
     return "users/passwordUpdated";
   }
 
+  /**
+   * Terms and conditions.
+   * 
+   * @return the view name
+   */
   @RequestMapping(value = "/termsAndConditions", method = RequestMethod.GET)
   public String termsAndConditions() {
     return "users/termsAndConditions";
   }
 
+  /**
+   * Manage account.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/manageAccount", method = RequestMethod.GET)
   public String manageAccount(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -556,6 +873,13 @@ public class UserController {
     return "users/manageAccount";
   }
 
+  /**
+   * Manage account edit.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.GET)
   public String manageAccountEdit(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -568,6 +892,19 @@ public class UserController {
     return "users/manageAccountEdit";
   }
 
+  /**
+   * Manage account edit submit.
+   * 
+   * @param manageAccountForm
+   *          the {@link net.ccaper.GraffitiTracker.objects.ManageAccountForm}
+   * @param bindingResult
+   *          the binding result
+   * @param model
+   *          the model
+   * @param request
+   *          the request
+   * @return the view name
+   */
   @RequestMapping(value = "/manageAccountEdit", method = RequestMethod.POST)
   public String manageAccountEditSubmit(ManageAccountForm manageAccountForm,
       BindingResult bindingResult, Map<String, Object> model,
@@ -603,6 +940,16 @@ public class UserController {
     return "redirect:/users/manageAccount";
   }
 
+  /**
+   * Handle sending email address change email.
+   * 
+   * @param oldEmail
+   *          the old email
+   * @param newEmail
+   *          the new email
+   * @param request
+   *          the request
+   */
   private void handleSendingEmailAddressChangeEmail(String oldEmail,
       String newEmail, HttpServletRequest request) {
     List<String> recipients = new ArrayList<String>(1);
@@ -615,6 +962,13 @@ public class UserController {
             newEmail, request));
   }
 
+  /**
+   * Manage users.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/manageUsers", method = RequestMethod.GET)
   public String manageUsers(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -625,6 +979,15 @@ public class UserController {
     return "users/manageUsers";
   }
 
+  /**
+   * Gets the user.
+   * 
+   * @param userId
+   *          the user id
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(method = RequestMethod.GET)
   public String getUser(@RequestParam(required = true) int userId,
       Map<String, Object> model) {
@@ -633,6 +996,15 @@ public class UserController {
     return "users/user";
   }
 
+  /**
+   * Gets the shared inets.
+   * 
+   * @param inet
+   *          the inet
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "/usersSharingInets", method = RequestMethod.GET)
   public String getSharedInets(@RequestParam(required = true) String inet,
       Map<String, Object> model) {
