@@ -6,6 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.validation.Errors;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         Validates components shared across multiple objects
+ * 
+ */
 public class CommonValidator {
   static private final int MIN_PASSWORD_LENGTH = 6;
   static private final int MAX_PASSWORD_LENGTH = 64;
@@ -14,6 +21,16 @@ public class CommonValidator {
       .getInstance(false);
   static private final int MAX_SECURITY_ANSWER_LENGTH = 40;
 
+  /**
+   * Validate password.
+   * 
+   * @param errors
+   *          the errors
+   * @param password
+   *          the password
+   * @param confirmPassword
+   *          the confirm password
+   */
   public static void validatePassword(Errors errors, String password,
       String confirmPassword) {
     if (StringUtils.isEmpty(password)) {
@@ -38,6 +55,16 @@ public class CommonValidator {
     }
   }
 
+  /**
+   * Validate email.
+   * 
+   * @param errors
+   *          the errors
+   * @param email
+   *          the email
+   * @param appUserService
+   *          the {@link net.ccaper.graffitiTracker.service.AppUserService}
+   */
   public static void validateEmail(Errors errors, String email,
       AppUserService appUserService) {
     if (StringUtils.isEmpty(email)) {
@@ -54,6 +81,14 @@ public class CommonValidator {
   }
 
   // visible for testing
+  /**
+   * Validate security answer.
+   * 
+   * @param errors
+   *          the errors
+   * @param securityAnswer
+   *          the security answer
+   */
   public static void validateSecurityAnswer(Errors errors, String securityAnswer) {
     if (StringUtils.isEmpty(securityAnswer)) {
       errors.rejectValue("securityAnswer", "invalidSecurityAnswer",

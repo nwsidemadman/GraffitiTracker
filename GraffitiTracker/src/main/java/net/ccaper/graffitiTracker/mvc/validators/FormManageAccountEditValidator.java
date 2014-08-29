@@ -12,6 +12,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         Validator for
+ *         {@link net.ccaper.graffitiTracker.objects.ManageAccountForm}
+ * 
+ */
 @Component
 public class FormManageAccountEditValidator implements Validator {
   private static final Logger logger = LoggerFactory
@@ -20,15 +28,32 @@ public class FormManageAccountEditValidator implements Validator {
   private AppUserService appUserService;
 
   // visible for testing
+  /**
+   * Sets the {@link net.ccaper.graffitiTracker.service.AppUserService}.
+   * 
+   * @param appUserService
+   *          the new {@link net.ccaper.graffitiTracker.service.AppUserService}
+   */
   void setAppUserService(AppUserService appUserService) {
     this.appUserService = appUserService;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.springframework.validation.Validator#supports(java.lang.Class)
+   */
   @Override
   public boolean supports(Class<?> clazz) {
     return AppUser.class.isAssignableFrom(clazz);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.springframework.validation.Validator#validate(java.lang.Object,
+   * org.springframework.validation.Errors)
+   */
   @Override
   public void validate(Object target, Errors errors) {
     ManageAccountForm manageAccountForm = (ManageAccountForm) target;
@@ -39,6 +64,16 @@ public class FormManageAccountEditValidator implements Validator {
   }
 
   // visible for testing
+  /**
+   * Validate password.
+   * 
+   * @param errors
+   *          the errors
+   * @param password
+   *          the password
+   * @param confirmPassword
+   *          the confirm password
+   */
   void validatePassword(Errors errors, String password, String confirmPassword) {
     if (StringUtils.isEmpty(password)) {
       return;
@@ -47,6 +82,14 @@ public class FormManageAccountEditValidator implements Validator {
   }
 
   // visible for testing
+  /**
+   * Validate email.
+   * 
+   * @param errors
+   *          the errors
+   * @param email
+   *          the email
+   */
   void validateEmail(Errors errors, String email) {
     if (StringUtils.isEmpty(email)) {
       return;
@@ -55,6 +98,14 @@ public class FormManageAccountEditValidator implements Validator {
   }
 
   // visible for testing
+  /**
+   * Validate security answer.
+   * 
+   * @param errors
+   *          the errors
+   * @param securityAnswer
+   *          the security answer
+   */
   void validateSecurityAnswer(Errors errors, String securityAnswer) {
     if (StringUtils.isEmpty(securityAnswer)) {
       return;
