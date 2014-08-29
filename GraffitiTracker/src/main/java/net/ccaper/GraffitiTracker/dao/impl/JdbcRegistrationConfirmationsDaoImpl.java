@@ -15,6 +15,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 
+ * @author ccaper Implementation for the JDBC version of the
+ *         {@link net.ccaper.GraffitiTracker.dao.RegistrationCOnfirmationsDao}
+ * 
+ */
 @Repository("registrationConfirmationsDao")
 public class JdbcRegistrationConfirmationsDaoImpl extends
     NamedParameterJdbcDaoSupport implements RegistrationConfirmationsDao {
@@ -64,11 +70,23 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
     }
   };
 
+  /**
+   * Sets the ds.
+   * 
+   * @param dataSource
+   *          the new ds
+   */
   @Autowired
   public void setDs(DataSource dataSource) {
     setDataSource(dataSource);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao#
+   * addRegistrationConfirmationByUsername(java.lang.String)
+   */
   @Override
   public void addRegistrationConfirmationByUsername(String username) {
     Map<String, String> registrationConfirmationParamMap = new HashMap<String, String>(
@@ -79,6 +97,12 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
         registrationConfirmationParamMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao#
+   * getUniqueUrlParamByUsername(java.lang.String)
+   */
   @Override
   public String getUniqueUrlParamByUsername(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
@@ -88,6 +112,12 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
         uniqueUrlParamRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao#
+   * deleteRegistrationConfirmationByUniqueUrlParam(java.lang.String)
+   */
   @Override
   public void deleteRegistrationConfirmationByUniqueUrlParam(
       String uniqueUrlParam) {
@@ -97,6 +127,12 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
         uniqueUrlParamParamMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao#
+   * getUserIdByUniqueUrlParam(java.lang.String)
+   */
   @Override
   public Integer getUserIdByUniqueUrlParam(String uniqueUrlParam)
       throws EmptyResultDataAccessException {
@@ -106,6 +142,13 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
   }
 
   // visible for mocking
+  /**
+   * Gets the user id by unique url param.
+   * 
+   * @param uniqueUrlParamParamMap
+   *          the unique url param param map
+   * @return the user id by unique url param
+   */
   Integer getUserIdByUniqueUrlParam(Map<String, String> uniqueUrlParamParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USER_ID_BY_UNIQUE_URL_PARAM, uniqueUrlParamParamMap,

@@ -21,6 +21,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 
+ * @author ccaper Implementation for the JDBC version of the
+ *         {@link net.ccaper.GraffitiTracker.dao.AppUserDao}
+ * 
+ */
 @Repository("appUserDao")
 public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     AppUserDao {
@@ -230,11 +236,24 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   };
 
+  /**
+   * Sets the ds.
+   * 
+   * @param dataSource
+   *          the new ds
+   */
   @Autowired
   public void setDs(DataSource dataSource) {
     setDataSource(dataSource);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#getAppUserByUsername(java.lang
+   * .String)
+   */
   @Override
   public AppUser getAppUserByUsername(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
@@ -249,6 +268,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     return appUser;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#addAppUser(net.ccaper.GraffitiTracker
+   * .objects.AppUser)
+   */
   @Override
   public void addAppUser(AppUser appUser) {
     Map<String, String> userParamMap = new HashMap<String, String>(5);
@@ -263,6 +289,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     getNamedParameterJdbcTemplate().update(SQL_INSERT_ROLE, roleParamMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#doesUsernameExist(java.lang.String
+   * )
+   */
   @Override
   public boolean doesUsernameExist(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
@@ -271,6 +304,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         SQL_DOES_USERNAME_EXIST, userParamMap, booleanRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#doesEmailExist(java.lang.String)
+   */
   @Override
   public boolean doesEmailExist(String email) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
@@ -279,6 +318,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         userParamMap, booleanRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#updateLoginTimestamps(java.lang
+   * .String)
+   */
   @Override
   public void updateLoginTimestamps(String username) {
     Map<String, String> userParamMap = new HashMap<String, String>(1);
@@ -287,6 +333,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         userParamMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#updateIsActiveByUserid(int,
+   * boolean)
+   */
   @Override
   public void updateIsActiveByUserid(int userid, boolean isActive) {
     Map<String, Object> useridParamMap = new HashMap<String, Object>(2);
@@ -296,12 +348,24 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         useridParamMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#deleteAppUsersWhenRegistrationExpired
+   * ()
+   */
   @Override
   public void deleteAppUsersWhenRegistrationExpired() {
     getNamedParameterJdbcTemplate().update(
         SQL_DELETE_EXPIRED_REGISTRATION_USERS, new HashMap<String, String>(0));
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#getCountNewUsers(int)
+   */
   @Override
   public int getCountNewUsers(int numberOfDays) {
     Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>(1);
@@ -311,6 +375,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         countRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#getCountLogins(int)
+   */
   @Override
   public int getCountLogins(int numberOfDays) {
     Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>(1);
@@ -320,6 +389,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         countRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#getCountUnconfirmedUsers(int)
+   */
   @Override
   public int getCountUnconfirmedUsers(int numberOfDays) {
     Map<String, Integer> numberOfDaysParamMap = new HashMap<String, Integer>(1);
@@ -329,12 +404,24 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         numberOfDaysParamMap, countRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#getSuperAdminEmails()
+   */
   @Override
   public List<String> getSuperAdminEmails() {
     return getNamedParameterJdbcTemplate().query(SQL_SELECT_SUPERADMIN_EMAILS,
         emailRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#getUsernameByEmail(java.lang.
+   * String)
+   */
   @Override
   public String getUsernameByEmail(String email)
       throws EmptyResultDataAccessException {
@@ -344,24 +431,52 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   // visible for mocking
+  /**
+   * Gets the username by email.
+   * 
+   * @param emailParamMap
+   *          the email param map
+   * @return the username by email
+   */
   String getUsernameByEmail(Map<String, String> emailParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USERNAME_BY_EMAIL, emailParamMap, usernameRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#getEmailByUsername(java.lang.
+   * String)
+   */
   @Override
-  public String getEmailByUsername(String username) throws EmptyResultDataAccessException {
+  public String getEmailByUsername(String username)
+      throws EmptyResultDataAccessException {
     Map<String, String> usernameParamMap = new HashMap<String, String>(1);
     usernameParamMap.put(USERNAME_COL, username);
     return getEmailByUsername(usernameParamMap);
   }
 
   // visible for mocking
+  /**
+   * Gets the email by username.
+   * 
+   * @param usernameParamMap
+   *          the username param map
+   * @return the email by username
+   */
   String getEmailByUsername(Map<String, String> usernameParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_EMAIL_BY_USERNAME, usernameParamMap, emailRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#getSecurityAnswerByUserid(int)
+   */
   @Override
   public String getSecurityAnswerByUserid(int userid) {
     Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
@@ -371,6 +486,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         securityAnswerRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#getUsernameByUserid(int)
+   */
   @Override
   public String getUsernameByUserid(int userid) {
     Map<String, Integer> userIdParamMap = new HashMap<String, Integer>(1);
@@ -379,6 +499,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         SQL_SELECT_USERNAME_BY_USER_ID, userIdParamMap, usernameRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#updatePasswordByUserid(int,
+   * java.lang.String)
+   */
   @Override
   public void updatePasswordByUserid(int userid, String passwordEncoded) {
     Map<String, Object> paramMap = new HashMap<String, Object>(2);
@@ -388,6 +514,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         paramMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#updateEmailByUserid(int,
+   * java.lang.String)
+   */
   @Override
   public void updateEmailByUserid(int userid, String email) {
     Map<String, Object> paramMap = new HashMap<String, Object>(2);
@@ -397,6 +529,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         paramMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#updateSecurityQuestionByUserid
+   * (int, java.lang.String)
+   */
   @Override
   public void updateSecurityQuestionByUserid(int userid, String securityQuestion) {
     Map<String, Object> paramMap = new HashMap<String, Object>(2);
@@ -406,6 +545,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         SQL_UPDATE_SECURITY_QUESTION_BY_USER_ID, paramMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.AppUserDao#updateSecurityAnswerByUserid(int,
+   * java.lang.String)
+   */
   @Override
   public void updateSecurityAnswerByUserid(int userid, String securityAnswer) {
     Map<String, Object> paramMap = new HashMap<String, Object>(2);
@@ -415,6 +561,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         SQL_UPDATE_SECURITY_ANSWER_BY_USER_ID, paramMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#getAllUsers()
+   */
   @Override
   public List<AppUser> getAllUsers() {
     List<AppUser> users = getNamedParameterJdbcTemplate().query(
@@ -429,6 +580,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     return users;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#getAppUserById(int)
+   */
   @Override
   public AppUser getAppUserById(int id) throws EmptyResultDataAccessException {
     AppUser user = getAppUserByIdNoRoles(id);
@@ -438,6 +594,17 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   // visible for testing
+  /**
+   * Gets the {@link net.ccaper.GraffitiTracker.objects.AppUser} by id with no
+   * roles.
+   * 
+   * @param id
+   *          the id
+   * @return the {@link net.ccaper.GraffitiTracker.objects.AppUser} by id with
+   *         no roles
+   * @throws EmptyResultDataAccessException
+   *           when empty
+   */
   AppUser getAppUserByIdNoRoles(int id) throws EmptyResultDataAccessException {
     Map<String, Integer> idParamMap = new HashMap<String, Integer>(1);
     idParamMap.put(USER_ID_COL, id);
@@ -446,6 +613,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   // visible for testing
+  /**
+   * Gets the {@link net.ccaper.GraffitiTracker.objects.Role}s by userid.
+   * 
+   * @param id
+   *          the userid
+   * @return the {@link net.ccaper.GraffitiTracker.objects.Role}s by id
+   */
   List<Role> getRolesById(int id) {
     Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
     rolesParamMap.put(ID_FK_COL, id);
@@ -453,6 +627,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
         rolesParamMap, rolesRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#addRolesByUserid(int,
+   * java.util.List)
+   */
   @Override
   public void addRolesByUserid(int id, List<RoleEnum> roleAdditions) {
     String sql = SQL_INSERT_ROLES
@@ -461,6 +641,16 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   // visible for testing
+  /**
+   * Generate insert roles values portion of sql statement.
+   * 
+   * @param id
+   *          the userid
+   * @param roleAdditions
+   *          the {@link net.ccaper.GraffitiTracker.objects.Role} additions
+   * @return the insert {@link net.ccaper.GraffitiTracker.objects.Role}s values
+   *         portion of sql statement
+   */
   static String generateInsertRolesValues(int id, List<RoleEnum> roleAdditions) {
     if (roleAdditions == null) {
       roleAdditions = new ArrayList<RoleEnum>(0);
@@ -472,6 +662,12 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     return StringUtils.join(values, ", ");
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.GraffitiTracker.dao.AppUserDao#deleteRolesByUserid(int,
+   * java.util.List)
+   */
   @Override
   public void deleteRolesByUserid(int id, List<RoleEnum> roleDeletions) {
     String sql = SQL_DELETE_ROLES + generateDeleteRolesIns(roleDeletions);
@@ -481,6 +677,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   // visible for testing
+  /**
+   * Generate delete roles ins portion of the sql statement.
+   * 
+   * @param roleDeletions
+   *          the {@link net.ccaper.GraffitiTracker.objects.Role} deletions
+   * @return the roles ins portion of the sql statement
+   */
   static String generateDeleteRolesIns(List<RoleEnum> roleDeletions) {
     if (roleDeletions == null) {
       roleDeletions = new ArrayList<RoleEnum>(0);

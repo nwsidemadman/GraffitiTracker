@@ -17,6 +17,12 @@ import org.springframework.stereotype.Repository;
 import net.ccaper.GraffitiTracker.dao.LoginAddressDao;
 import net.ccaper.GraffitiTracker.objects.LoginInet;
 
+/**
+ * 
+ * @author ccaper Implementation for the JDBC version of the
+ *         {@link net.ccaper.GraffitiTracker.dao.LoginAddressDao}
+ * 
+ */
 @Repository("loginAddressesDao")
 public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     implements LoginAddressDao {
@@ -86,11 +92,24 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     }
   };
 
+  /**
+   * Sets the ds.
+   * 
+   * @param dataSource
+   *          the new ds
+   */
   @Autowired
   public void setDs(DataSource dataSource) {
     setDataSource(dataSource);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.LoginAddressDao#updateLoginAddressByUsername
+   * (java.lang.String, java.lang.String)
+   */
   @Override
   public void updateLoginAddressByUsername(String username, String ipAddress) {
     Map<String, String> loginAddressParamMap = new HashMap<String, String>(2);
@@ -100,6 +119,12 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
         loginAddressParamMap);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.LoginAddressDao#getLoginAddressByUserId(int)
+   */
   @Override
   public List<LoginInet> getLoginAddressByUserId(int userId) {
     Map<String, Integer> loginAddressParamMap = new HashMap<String, Integer>(1);
@@ -109,6 +134,13 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
         loginInetRowMapper);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.GraffitiTracker.dao.LoginAddressDao#getUsersSharingInet(java
+   * .lang.String)
+   */
   @Override
   public List<ImmutablePair<String, Integer>> getUsersSharingInet(String inet) {
     Map<String, String> loginAddressParamMap = new HashMap<String, String>(1);

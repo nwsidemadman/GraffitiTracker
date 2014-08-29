@@ -16,6 +16,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ * Implementation for JDBC version of the {@link net.ccaper.GraffitiTracker.dao.ResetPassword}
+ *
+ */
 @Repository("resetPasswordDao")
 public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
     implements ResetPasswordDao {
@@ -76,11 +83,19 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
     }
   };
 
+  /**
+   * Sets the ds.
+   *
+   * @param dataSource the new ds
+   */
   @Autowired
   public void setDs(DataSource dataSource) {
     setDataSource(dataSource);
   }
 
+  /* (non-Javadoc)
+   * @see net.ccaper.GraffitiTracker.dao.ResetPasswordDao#addResetPassword(java.lang.String)
+   */
   @Override
   public void addResetPassword(String username) {
     Map<String, String> usernameParamMap = new HashMap<String, String>(1);
@@ -89,6 +104,9 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
         SQL_INSERT_RESET_PASSWORD_BY_USERNAME, usernameParamMap);
   }
 
+  /* (non-Javadoc)
+   * @see net.ccaper.GraffitiTracker.dao.ResetPasswordDao#getUniqueUrlParamByUsername(java.lang.String)
+   */
   @Override
   public String getUniqueUrlParamByUsername(String username) {
     Map<String, String> usernameParamMap = new HashMap<String, String>(1);
@@ -98,6 +116,9 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
         uniqueUrlParamRowMapper);
   }
 
+  /* (non-Javadoc)
+   * @see net.ccaper.GraffitiTracker.dao.ResetPasswordDao#getUserSecurityQuestionByUniqueUrlParam(java.lang.String)
+   */
   @Override
   public UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
       String uniqueUrlParam) throws EmptyResultDataAccessException {
@@ -107,6 +128,12 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
   }
 
   // visible for mocking
+  /**
+   * Gets the user security question by unique url param.
+   *
+   * @param uniqueUrlParamParamMap the unique url param param map
+   * @return the user security question by unique url param
+   */
   UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
       Map<String, String> uniqueUrlParamParamMap) {
     return getNamedParameterJdbcTemplate().queryForObject(
@@ -114,6 +141,9 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
         uniqueUrlParamParamMap, securityQuestionRowMapper);
   }
 
+  /* (non-Javadoc)
+   * @see net.ccaper.GraffitiTracker.dao.ResetPasswordDao#deleteResetPasswordByUniqueUrlParam(java.lang.String)
+   */
   @Override
   public void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam) {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
@@ -122,6 +152,9 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
         uniqueUrlParamParamMap);
   }
 
+  /* (non-Javadoc)
+   * @see net.ccaper.GraffitiTracker.dao.ResetPasswordDao#deleteResetPasswordWhereTimestampExpired()
+   */
   @Override
   public void deleteResetPasswordWhereTimestampExpired() {
     getNamedParameterJdbcTemplate().update(SQL_DELETE_EXPIRED_RESET_PASSWORDS,
