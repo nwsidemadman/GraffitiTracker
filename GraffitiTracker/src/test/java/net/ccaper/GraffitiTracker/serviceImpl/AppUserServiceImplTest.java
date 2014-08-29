@@ -361,10 +361,13 @@ public class AppUserServiceImplTest {
         .thenReturn(userSecurityQuestion);
     AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
     classUnderTest.setResetPasswordDao(daoMock);
-    assertEquals(userSecurityQuestion, classUnderTest.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam));
+    assertEquals(
+        userSecurityQuestion,
+        classUnderTest
+            .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam));
     verify(daoMock).getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
   }
-  
+
   @Test
   public void testGetUserSecurityQuestionByUniqueUrlParam_null()
       throws Exception {
@@ -374,7 +377,56 @@ public class AppUserServiceImplTest {
         .thenThrow(new EmptyResultDataAccessException("test", 1));
     AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
     classUnderTest.setResetPasswordDao(daoMock);
-    assertNull(classUnderTest.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam));
+    assertNull(classUnderTest
+        .getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam));
     verify(daoMock).getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
+  }
+
+  @Test
+  public void testGetUsernameByEmail_happyPath() throws Exception {
+    String email = "test@test.com";
+    String username = "testUsername";
+    AppUserDao daoMock = mock(AppUserDao.class);
+    when(daoMock.getUsernameByEmail(email)).thenReturn(username);
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setAppUserDao(daoMock);
+    assertEquals(username, classUnderTest.getUsernameByEmail(email));
+    verify(daoMock).getUsernameByEmail(email);
+  }
+
+  @Test
+  public void testGetUsernameByEmail_null() throws Exception {
+    String email = "test@test.com";
+    AppUserDao daoMock = mock(AppUserDao.class);
+    when(daoMock.getUsernameByEmail(email)).thenThrow(
+        new EmptyResultDataAccessException("test", 1));
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setAppUserDao(daoMock);
+    assertNull(classUnderTest.getUsernameByEmail(email));
+    verify(daoMock).getUsernameByEmail(email);
+  }
+
+  @Test
+  public void testEmailByUsername_happyPath() throws Exception {
+    String email = "test@test.com";
+    String username = "testUsername";
+    AppUserDao daoMock = mock(AppUserDao.class);
+    when(daoMock.getEmailByUsername(username)).thenReturn(email);
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setAppUserDao(daoMock);
+    assertEquals(email, classUnderTest.getEmailByUsername(username));
+    verify(daoMock).getEmailByUsername(username);
+  }
+
+  @Test
+  public void testEmailByUsername_null() throws Exception {
+    String username = "testUsername";
+    AppUserDao daoMock = mock(AppUserDao.class);
+    when(daoMock.getEmailByUsername(username)).thenThrow(
+        new EmptyResultDataAccessException("test", 1));
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setAppUserDao(daoMock);
+    assertNull(classUnderTest.getEmailByUsername(username));
+    verify(daoMock).getEmailByUsername(username);
   }
 }

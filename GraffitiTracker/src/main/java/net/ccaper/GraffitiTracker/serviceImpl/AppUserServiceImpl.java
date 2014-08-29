@@ -154,12 +154,20 @@ public class AppUserServiceImpl implements AppUserService {
 
   @Override
   public String getUsernameByEmail(String email) {
-    return appUserDao.getUsernameByEmail(email);
+    try {
+      return appUserDao.getUsernameByEmail(email);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   @Override
   public String getEmailByUsername(String username) {
-    return appUserDao.getEmailByUsername(username);
+    try {
+      return appUserDao.getEmailByUsername(username);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   @Override

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
@@ -25,62 +24,6 @@ public class JdbcAppUserDaoImplTest {
 
   @After
   public void tearDown() throws Exception {
-  }
-
-  @Test
-  public void testGetUsernameByEmail_HappyPath() {
-    final String username = "testUsername";
-
-    class JdbcAppUserDaoImplMock extends JdbcAppUserDaoImpl {
-      @Override
-      String getUsernameByEmail(Map<String, String> emailParamMap) {
-        return username;
-      }
-    }
-
-    AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
-    assertEquals(username, jdbcAppUserMock.getUsernameByEmail("test@test.com"));
-  }
-
-  @Test
-  public void testGetUsernameByEmail_EmptyResults() {
-    class JdbcAppUserDaoImplMock extends JdbcAppUserDaoImpl {
-      @Override
-      String getUsernameByEmail(Map<String, String> emailParamMap) {
-        throw new EmptyResultDataAccessException("test", 0);
-      }
-    }
-
-    AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
-    assertEquals(null, jdbcAppUserMock.getUsernameByEmail("test@test.com"));
-  }
-
-  @Test
-  public void testGetEmailByUsername_HappyPath() {
-    final String email = "test@test.com";
-
-    class JdbcAppUserDaoImplMock extends JdbcAppUserDaoImpl {
-      @Override
-      String getEmailByUsername(Map<String, String> usernameParamMap) {
-        return email;
-      }
-    }
-
-    AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
-    assertEquals(email, jdbcAppUserMock.getEmailByUsername("test@test.com"));
-  }
-
-  @Test
-  public void testGetEmailByUsername_EmptyResults() {
-    class JdbcAppUserDaoImplMock extends JdbcAppUserDaoImpl {
-      @Override
-      String getEmailByUsername(Map<String, String> usernameParamMap) {
-        throw new EmptyResultDataAccessException("test", 0);
-      }
-    }
-
-    AppUserDao jdbcAppUserMock = new JdbcAppUserDaoImplMock();
-    assertEquals(null, jdbcAppUserMock.getEmailByUsername("testUsername"));
   }
 
   @Test(expected = EmptyResultDataAccessException.class)

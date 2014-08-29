@@ -30,27 +30,28 @@ public interface AppUserDao {
 
   List<String> getSuperAdminEmails();
 
-  String getUsernameByEmail(String email);
+  String getUsernameByEmail(String email) throws EmptyResultDataAccessException;
 
-  String getEmailByUsername(String username);
+  String getEmailByUsername(String username)
+      throws EmptyResultDataAccessException;
 
   String getSecurityAnswerByUserid(int userid);
 
   String getUsernameByUserid(int userid);
 
   void updatePasswordByUserid(int userid, String passwordEncoded);
-  
+
   void updateEmailByUserid(int userid, String email);
-  
+
   void updateSecurityQuestionByUserid(int userid, String securityQuestion);
-  
+
   void updateSecurityAnswerByUserid(int userid, String securityAnswer);
-  
+
   List<AppUser> getAllUsers();
-  
+
   AppUser getAppUserById(int id) throws EmptyResultDataAccessException;
-  
+
   void addRolesByUserid(int id, List<RoleEnum> roleAdditions);
-  
+
   void deleteRolesByUserid(int id, List<RoleEnum> roleDeletions);
 }

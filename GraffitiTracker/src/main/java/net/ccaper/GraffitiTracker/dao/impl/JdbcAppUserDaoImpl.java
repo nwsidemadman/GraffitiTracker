@@ -336,15 +336,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   @Override
-  // TODO(ccaper): move logic to service layer
-  public String getUsernameByEmail(String email) {
+  public String getUsernameByEmail(String email)
+      throws EmptyResultDataAccessException {
     Map<String, String> emailParamMap = new HashMap<String, String>(1);
     emailParamMap.put(EMAIL_COL, email);
-    try {
-      return getUsernameByEmail(emailParamMap);
-    } catch (EmptyResultDataAccessException e) {
-      return null;
-    }
+    return getUsernameByEmail(emailParamMap);
   }
 
   // visible for mocking
@@ -354,15 +350,10 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   }
 
   @Override
-  // TODO(ccaper): move logic to service layer
-  public String getEmailByUsername(String username) {
+  public String getEmailByUsername(String username) throws EmptyResultDataAccessException {
     Map<String, String> usernameParamMap = new HashMap<String, String>(1);
     usernameParamMap.put(USERNAME_COL, username);
-    try {
-      return getEmailByUsername(usernameParamMap);
-    } catch (EmptyResultDataAccessException e) {
-      return null;
-    }
+    return getEmailByUsername(usernameParamMap);
   }
 
   // visible for mocking
@@ -445,7 +436,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     user.setRoles(roles);
     return user;
   }
-  
+
   // visible for testing
   AppUser getAppUserByIdNoRoles(int id) throws EmptyResultDataAccessException {
     Map<String, Integer> idParamMap = new HashMap<String, Integer>(1);
@@ -453,13 +444,13 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     return getNamedParameterJdbcTemplate().queryForObject(
         SQL_SELECT_USER_BY_ID, idParamMap, appUserAdminViewRowMapper);
   }
-  
+
   // visible for testing
   List<Role> getRolesById(int id) {
     Map<String, Integer> rolesParamMap = new HashMap<String, Integer>(1);
     rolesParamMap.put(ID_FK_COL, id);
-    return getNamedParameterJdbcTemplate().query(
-        SQL_SELECT_ROLES_BY_USER_ID, rolesParamMap, rolesRowMapper);
+    return getNamedParameterJdbcTemplate().query(SQL_SELECT_ROLES_BY_USER_ID,
+        rolesParamMap, rolesRowMapper);
   }
 
   @Override
