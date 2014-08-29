@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("resetPasswordDao")
 public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
-implements ResetPasswordDao {
+    implements ResetPasswordDao {
   private final static String RESET_PASSWORD_TABLE = "reset_password";
   private static final String USER_ID_COL = JdbcAppUserDaoImpl.USER_ID_COL;
   private static final String ID_FK_COL = JdbcAppUserDaoImpl.ID_FK_COL;
@@ -36,25 +36,26 @@ implements ResetPasswordDao {
       .format(
           "SELECT %s FROM %s INNER JOIN %s ON %s.%s = %s.%s WHERE %s.%s = :%s "
               + "AND %s = (SELECT MAX(%s) FROM %s WHERE %s.%s = :%s)",
-              UNIQUE_URL_PARAM_COL, RESET_PASSWORD_TABLE, USERS_TABLE,
-              RESET_PASSWORD_TABLE, ID_FK_COL, USERS_TABLE, USER_ID_COL,
-              USERS_TABLE, USERNAME_COL, USERNAME_COL,
-              RESET_PASSWORD_TIMESTAMP_COL, RESET_PASSWORD_TIMESTAMP_COL,
-              RESET_PASSWORD_TABLE, USERS_TABLE, USERNAME_COL, USERNAME_COL)
-              .toLowerCase();
+          UNIQUE_URL_PARAM_COL, RESET_PASSWORD_TABLE, USERS_TABLE,
+          RESET_PASSWORD_TABLE, ID_FK_COL, USERS_TABLE, USER_ID_COL,
+          USERS_TABLE, USERNAME_COL, USERNAME_COL,
+          RESET_PASSWORD_TIMESTAMP_COL, RESET_PASSWORD_TIMESTAMP_COL,
+          RESET_PASSWORD_TABLE, USERS_TABLE, USERNAME_COL, USERNAME_COL)
+      .toLowerCase();
   private static final String SQL_SELECT_USER_ID_AND_SECURITY_QUESTION_BY_UNIQUE_URL_PARAM = String
       .format(
           "SELECT %s.%s, %s FROM %s INNER JOIN %s on %s.%s = %s.%s WHERE %s = :%s",
           USERS_TABLE, USER_ID_COL, SECURITY_QUESTION_COL,
           RESET_PASSWORD_TABLE, USERS_TABLE, RESET_PASSWORD_TABLE, ID_FK_COL,
           USERS_TABLE, USER_ID_COL, UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL)
-          .toLowerCase();
+      .toLowerCase();
   private static final String SQL_DELETE_BY_UNIQUE_URL_PARAM = String.format(
       "DELETE FROM %s WHERE %s = :%s", RESET_PASSWORD_TABLE,
       UNIQUE_URL_PARAM_COL, UNIQUE_URL_PARAM_COL).toLowerCase();
-  private static final String SQL_DELETE_EXPIRED_RESET_PASSWORDS = String.format(
-      "DELETE %s FROM %s WHERE %s < (NOW() - INTERVAL 1 day)",
-      RESET_PASSWORD_TABLE, RESET_PASSWORD_TABLE, RESET_PASSWORD_TIMESTAMP_COL).toLowerCase();
+  private static final String SQL_DELETE_EXPIRED_RESET_PASSWORDS = String
+      .format("DELETE %s FROM %s WHERE %s < (NOW() - INTERVAL 1 day)",
+          RESET_PASSWORD_TABLE, RESET_PASSWORD_TABLE,
+          RESET_PASSWORD_TIMESTAMP_COL).toLowerCase();
 
   RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
@@ -98,9 +99,8 @@ implements ResetPasswordDao {
   }
 
   @Override
-  // TODO(ccaper): move logic out of dao into service
   public UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
-      String uniqueUrlParam) {
+      String uniqueUrlParam) throws EmptyResultDataAccessException {
     Map<String, String> uniqueUrlParamParamMap = new HashMap<String, String>(1);
     uniqueUrlParamParamMap.put(UNIQUE_URL_PARAM_COL, uniqueUrlParam);
     try {
@@ -128,6 +128,7 @@ implements ResetPasswordDao {
 
   @Override
   public void deleteResetPasswordWhereTimestampExpired() {
-    getNamedParameterJdbcTemplate().update(SQL_DELETE_EXPIRED_RESET_PASSWORDS, new HashMap<String, String>(0));
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_EXPIRED_RESET_PASSWORDS,
+        new HashMap<String, String>(0));
   }
 }

@@ -11,13 +11,16 @@ import java.util.List;
 
 import net.ccaper.GraffitiTracker.dao.AppUserDao;
 import net.ccaper.GraffitiTracker.dao.RegistrationConfirmationsDao;
+import net.ccaper.GraffitiTracker.dao.ResetPasswordDao;
 import net.ccaper.GraffitiTracker.dao.impl.JdbcAppUserDaoImpl;
 import net.ccaper.GraffitiTracker.dao.impl.JdbcRegistrationConfirmationsDaoImpl;
+import net.ccaper.GraffitiTracker.dao.impl.JdbcResetPasswordDaoImpl;
 import net.ccaper.GraffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.GraffitiTracker.enums.RoleEnum;
 import net.ccaper.GraffitiTracker.objects.AdminEditAppUser;
 import net.ccaper.GraffitiTracker.objects.AppUser;
 import net.ccaper.GraffitiTracker.objects.Role;
+import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 import net.ccaper.GraffitiTracker.service.AppUserService;
 import net.ccaper.GraffitiTracker.service.MailService;
 import net.ccaper.GraffitiTracker.utils.DateFormats;
@@ -326,19 +329,52 @@ public class AppUserServiceImplTest {
     when(daoMock.getUserIdByUniqueUrlParam(uniqueUrlParam)).thenReturn(userid);
     AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
     classUnderTest.setRegistrationConfirmationDao(daoMock);
-    assertEquals(userid, classUnderTest.getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam));
+    assertEquals(userid,
+        classUnderTest
+            .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam));
     verify(daoMock).getUserIdByUniqueUrlParam(uniqueUrlParam);
   }
-  
+
   @Test
   public void testGetUserIdByRegistrationConfirmationUniqueUrlParam_null()
       throws Exception {
     String uniqueUrlParam = "test";
     RegistrationConfirmationsDao daoMock = mock(JdbcRegistrationConfirmationsDaoImpl.class);
-    when(daoMock.getUserIdByUniqueUrlParam(uniqueUrlParam)).thenThrow(new EmptyResultDataAccessException("test", 1));
+    when(daoMock.getUserIdByUniqueUrlParam(uniqueUrlParam)).thenThrow(
+        new EmptyResultDataAccessException("test", 1));
     AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
     classUnderTest.setRegistrationConfirmationDao(daoMock);
-    assertNull(classUnderTest.getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam));
+    assertNull(classUnderTest
+        .getUserIdByRegistrationConfirmationUniqueUrlParam(uniqueUrlParam));
     verify(daoMock).getUserIdByUniqueUrlParam(uniqueUrlParam);
+  }
+
+  @Test
+  public void testGetUserSecurityQuestionByUniqueUrlParam_happyPath()
+      throws Exception {
+    String uniqueUrlParam = "test";
+    UserSecurityQuestion userSecurityQuestion = new UserSecurityQuestion();
+    userSecurityQuestion.setSecurityQuestion("testQuestion");
+    userSecurityQuestion.setUserid(5);
+    ResetPasswordDao daoMock = mock(JdbcResetPasswordDaoImpl.class);
+    when(daoMock.getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam))
+        .thenReturn(userSecurityQuestion);
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setResetPasswordDao(daoMock);
+    assertEquals(userSecurityQuestion, classUnderTest.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam));
+    verify(daoMock).getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
+  }
+  
+  @Test
+  public void testGetUserSecurityQuestionByUniqueUrlParam_null()
+      throws Exception {
+    String uniqueUrlParam = "test";
+    ResetPasswordDao daoMock = mock(JdbcResetPasswordDaoImpl.class);
+    when(daoMock.getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam))
+        .thenThrow(new EmptyResultDataAccessException("test", 1));
+    AppUserServiceImpl classUnderTest = new AppUserServiceImpl();
+    classUnderTest.setResetPasswordDao(daoMock);
+    assertNull(classUnderTest.getUserSecurityQuestionByResetPasswordUniqueUrlParam(uniqueUrlParam));
+    verify(daoMock).getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
   }
 }

@@ -1,5 +1,7 @@
 package net.ccaper.GraffitiTracker.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import net.ccaper.GraffitiTracker.objects.UserSecurityQuestion;
 
 public interface ResetPasswordDao {
@@ -7,7 +9,8 @@ public interface ResetPasswordDao {
 
   String getUniqueUrlParamByUsername(String username);
 
-  UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(String uniqueUrlParam);
+  UserSecurityQuestion getUserSecurityQuestionByUniqueUrlParam(
+      String uniqueUrlParam) throws EmptyResultDataAccessException;
 
   void deleteResetPasswordByUniqueUrlParam(String uniqueUrlParam);
 

@@ -44,6 +44,11 @@ public class AppUserServiceImpl implements AppUserService {
   }
 
   // visible for testing
+  void setResetPasswordDao(ResetPasswordDao resetPasswordDao) {
+    this.resetPasswordDao = resetPasswordDao;
+  }
+
+  // visible for testing
   void setRegistrationConfirmationDao(
       RegistrationConfirmationsDao registrationConfirmationDao) {
     this.registrationConfirmationsDao = registrationConfirmationDao;
@@ -170,8 +175,12 @@ public class AppUserServiceImpl implements AppUserService {
   @Override
   public UserSecurityQuestion getUserSecurityQuestionByResetPasswordUniqueUrlParam(
       String uniqueUrlParam) {
-    return resetPasswordDao
-        .getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
+    try {
+      return resetPasswordDao
+          .getUserSecurityQuestionByUniqueUrlParam(uniqueUrlParam);
+    } catch (EmptyResultDataAccessException e) {
+      return null;
+    }
   }
 
   @Override
