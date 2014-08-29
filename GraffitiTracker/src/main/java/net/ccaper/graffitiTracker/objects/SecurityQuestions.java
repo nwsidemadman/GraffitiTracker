@@ -1,5 +1,10 @@
 package net.ccaper.graffitiTracker.objects;
 
+/**
+ * @author ccaper
+ * 
+ *         POJO for list of security questions
+ */
 public class SecurityQuestions {
   public static final String[] QUESTIONS = new String[] {
       "",

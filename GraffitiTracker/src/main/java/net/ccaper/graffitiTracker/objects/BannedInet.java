@@ -1,5 +1,12 @@
 package net.ccaper.graffitiTracker.objects;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         POJO for BannedInet
+ * 
+ */
 public class BannedInet {
   private String inetMinIncl;
   private String inetMaxIncl;
@@ -7,46 +14,106 @@ public class BannedInet {
   private int numberRegistrationAttempts;
   private String notes;
 
+  /**
+   * Gets the inet min incl.
+   * 
+   * @return the inet min incl
+   */
   public String getInetMinIncl() {
     return inetMinIncl;
   }
 
+  /**
+   * Sets the inet min incl.
+   * 
+   * @param inetMinIncl
+   *          the new inet min incl
+   */
   public void setInetMinIncl(String inetMinIncl) {
     this.inetMinIncl = inetMinIncl;
   }
 
+  /**
+   * Gets the inet max incl.
+   * 
+   * @return the inet max incl
+   */
   public String getInetMaxIncl() {
     return inetMaxIncl;
   }
 
+  /**
+   * Sets the inet max incl.
+   * 
+   * @param inetMaxIncl
+   *          the new inet max incl
+   */
   public void setInetMaxIncl(String inetMaxIncl) {
     this.inetMaxIncl = inetMaxIncl;
   }
 
+  /**
+   * Gets the checks if is active.
+   * 
+   * @return the checks if is active
+   */
   public boolean getIsActive() {
     return isActive;
   }
 
+  /**
+   * Sets the checks if is active.
+   * 
+   * @param isActive
+   *          the new checks if is active
+   */
   public void setIsActive(boolean isActive) {
     this.isActive = isActive;
   }
 
+  /**
+   * Gets the number registration attempts.
+   * 
+   * @return the number registration attempts
+   */
   public int getNumberRegistrationAttempts() {
     return numberRegistrationAttempts;
   }
 
+  /**
+   * Sets the number registration attempts.
+   * 
+   * @param numberRegistrationAttempts
+   *          the new number registration attempts
+   */
   public void setNumberRegistrationAttempts(int numberRegistrationAttempts) {
     this.numberRegistrationAttempts = numberRegistrationAttempts;
   }
 
+  /**
+   * Gets the notes.
+   * 
+   * @return the notes
+   */
   public String getNotes() {
     return notes;
   }
 
+  /**
+   * Sets the notes.
+   * 
+   * @param notes
+   *          the new notes
+   */
   public void setNotes(String notes) {
     this.notes = notes;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -58,6 +125,11 @@ public class BannedInet {
     return result;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -80,6 +152,11 @@ public class BannedInet {
     return true;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString() {
     return "BannedInet [inetMinIncl=" + inetMinIncl + ", inetMaxIncl="
