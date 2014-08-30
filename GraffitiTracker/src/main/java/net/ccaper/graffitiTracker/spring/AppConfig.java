@@ -13,12 +13,24 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         Java config for the Spring framework
+ * 
+ */
 @Configuration
 @PropertySource("classpath:/net/ccaper/graffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker.properties")
 public class AppConfig {
   @Autowired
   private Environment properties;
 
+  /**
+   * Data source.
+   * 
+   * @return the data source
+   */
   @Bean(destroyMethod = "close")
   public DataSource dataSource() {
     BasicDataSource dataSource = new BasicDataSource();
@@ -34,22 +46,38 @@ public class AppConfig {
     return dataSource;
   }
 
+  /**
+   * Captcha key.
+   * 
+   * @return the string
+   */
   @Bean(name = "captchaKey")
   public String captchaKey() {
     return properties.getProperty("captcha.key");
   }
 
+  /**
+   * Max number captcha fetch retries.
+   * 
+   * @return the integer
+   */
   @Bean(name = "maxNumberCaptchaFetchRetries")
   public Integer maxNumberCaptchaFetchRetries() {
     return Integer.parseInt(properties
         .getProperty("captcha.maxNumberFetchRetries"));
   }
 
+  /**
+   * Mail sender.
+   * 
+   * @return the java mail sender
+   */
   @Bean(name = "mailSender")
   public JavaMailSender mailSender() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     mailSender.setHost(properties.getProperty("mailserver.host"));
-    mailSender.setPort(Integer.parseInt(properties.getProperty("mailserver.port")));
+    mailSender.setPort(Integer.parseInt(properties
+        .getProperty("mailserver.port")));
     mailSender.setUsername(properties.getProperty("mailserver.username"));
     mailSender.setPassword(properties.getProperty("mailserver.password"));
     Properties javaMailProperties = new Properties();
