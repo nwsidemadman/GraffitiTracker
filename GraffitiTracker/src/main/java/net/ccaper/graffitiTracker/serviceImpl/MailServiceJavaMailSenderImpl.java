@@ -18,6 +18,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         Implementation for the JavaMail version of the mail service
+ * 
+ */
 @Service
 public class MailServiceJavaMailSenderImpl implements MailService {
   private static final Logger logger = LoggerFactory
@@ -27,10 +34,23 @@ public class MailServiceJavaMailSenderImpl implements MailService {
   private JavaMailSender mailSender;
 
   // visible for testing
+  /**
+   * Sets the mail sender.
+   * 
+   * @param mailSender
+   *          the new mail sender
+   */
   void setMailSender(JavaMailSender mailSender) {
     this.mailSender = mailSender;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.graffitiTracker.service.MailService#sendSimpleEmail(java.util
+   * .List, java.lang.String, java.lang.String)
+   */
   @Override
   public void sendSimpleEmail(List<String> recipients, String subject,
       String content) {
@@ -44,6 +64,17 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     }
   }
 
+  /**
+   * Gets the simple mail message.
+   * 
+   * @param recipients
+   *          the recipients
+   * @param subject
+   *          the subject
+   * @param content
+   *          the content
+   * @return the simple mail message
+   */
   SimpleMailMessage getSimpleMailMessage(String[] recipients, String subject,
       String content) {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -54,6 +85,13 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     return message;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.graffitiTracker.service.MailService#sendVelocityEmail(java.util
+   * .List, java.lang.String, java.lang.String)
+   */
   @Override
   public void sendVelocityEmail(List<String> recipients, String subject,
       String content) {
@@ -71,6 +109,19 @@ public class MailServiceJavaMailSenderImpl implements MailService {
     }
   }
 
+  /**
+   * Gets the velocity mime message.
+   * 
+   * @param recipients
+   *          the recipients
+   * @param subject
+   *          the subject
+   * @param content
+   *          the content
+   * @return the velocity mime message
+   * @throws MessagingException
+   *           the messaging exception
+   */
   MimeMessage getVelocityMimeMessage(String[] recipients, String subject,
       String content) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();

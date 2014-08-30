@@ -26,6 +26,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         Implementation of the TextCaptcha version of the captcha service
+ * 
+ */
 @Service("captchaService")
 public class TextCaptchaServiceImpl implements CaptchaService {
   private static final Logger logger = LoggerFactory
@@ -38,11 +45,22 @@ public class TextCaptchaServiceImpl implements CaptchaService {
   @Autowired
   @Qualifier("maxNumberCaptchaFetchRetries")
   private Integer maxNumberGetCaptchaTries;
-  
+
+  /**
+   * Sets the max number get captcha tries.
+   * 
+   * @param maxNumberGetCaptchaTries
+   *          the new max number get captcha tries
+   */
   public void setMaxNumberGetCaptchaTries(int maxNumberGetCaptchaTries) {
     this.maxNumberGetCaptchaTries = maxNumberGetCaptchaTries;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.graffitiTracker.service.CaptchaService#getTextCaptcha()
+   */
   @Override
   public TextCaptcha getTextCaptcha() {
     int numberOfTries = 0;
@@ -55,8 +73,7 @@ public class TextCaptchaServiceImpl implements CaptchaService {
         logger.info(String.format("Try #%s failed fetching text captcha.",
             numberOfTries));
       } catch (IllegalArgumentException e) {
-        logger.error("IllegalArgumentException while parsing TextCaptcha.",
-            e);
+        logger.error("IllegalArgumentException while parsing TextCaptcha.", e);
         return generateRandomDefaultCaptcha();
       } catch (ParserConfigurationException e) {
         logger.error("ParserConfigurationException while parsing TextCaptcha.",
@@ -77,6 +94,19 @@ public class TextCaptchaServiceImpl implements CaptchaService {
   }
 
   // visible for mocking
+  /**
+   * Gets the document from url.
+   * 
+   * @param url
+   *          the url
+   * @return the document from url
+   * @throws ParserConfigurationException
+   *           the parser configuration exception
+   * @throws SAXException
+   *           the SAX exception
+   * @throws IOException
+   *           Signals that an I/O exception has occurred.
+   */
   Document getDocumentFromUrl(URL url) throws ParserConfigurationException,
       SAXException, IOException {
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
@@ -87,6 +117,15 @@ public class TextCaptchaServiceImpl implements CaptchaService {
   }
 
   // visible for testing
+  /**
+   * Gets the text captcha from document.
+   * 
+   * @param doc
+   *          the doc
+   * @return the text captcha from document
+   * @throws IllegalArgumentException
+   *           the illegal argument exception
+   */
   TextCaptcha getTextCaptchaFromDocument(Document doc)
       throws IllegalArgumentException {
     NodeList questionNodes = doc.getElementsByTagName("question");
@@ -115,12 +154,22 @@ public class TextCaptchaServiceImpl implements CaptchaService {
   }
 
   // visible for testing
+  /**
+   * Generate random default captcha for when we can't connect to API.
+   * 
+   * @return the text captcha
+   */
   TextCaptcha generateRandomDefaultCaptcha() {
     int defaultCaptchasSize = 10;
     List<TextCaptcha> defaultCaptchas = generateDefaultCaptchas();
     return defaultCaptchas.get(RANDOM.nextInt(defaultCaptchasSize));
   }
 
+  /**
+   * Generate default captchas for when we can't connect to API
+   * 
+   * @return the list
+   */
   private List<TextCaptcha> generateDefaultCaptchas() {
     List<TextCaptcha> defaultCaptchas = new ArrayList<TextCaptcha>(10);
     defaultCaptchas
@@ -167,6 +216,13 @@ public class TextCaptchaServiceImpl implements CaptchaService {
     return defaultCaptchas;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.graffitiTracker.service.CaptchaService#isCaptchaAnswerCorrect
+   * (net.ccaper.graffitiTracker.objects.TextCaptcha, java.lang.String)
+   */
   @Override
   public boolean isCaptchaAnswerCorrect(TextCaptcha textCaptcha, String answer) {
     if (StringUtils.isEmpty(answer)) {
