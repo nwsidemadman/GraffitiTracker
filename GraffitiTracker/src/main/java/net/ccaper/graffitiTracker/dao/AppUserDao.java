@@ -7,7 +7,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
-// TODO(ccaper): javadoc
 // TODO(ccaper): move js to one file
 // TODO(ccaper): fix log4j to have date
 
