@@ -7,8 +7,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
-// TODO(ccaper): fix log4j to have date
-
 /**
  * 
  * @author ccaper
