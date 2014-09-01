@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 
- * @author ccaper Handles the api actions for the
+ * @author ccaper
+ * 
+ *         Handles the api actions for the
  *         {@link net.ccaper.graffitiTracker.objects.BannedInet}
  * 
  */

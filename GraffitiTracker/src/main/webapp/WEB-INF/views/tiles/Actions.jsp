@@ -13,6 +13,10 @@
         &middot;
         <a href="<s:url value="/users/manageUsers" />">Manage Users</a>
       </sec:authorize>
+      <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
+        &middot;
+        <a href="<s:url value="/banned_inets" />">Banned IPs</a>
+      </sec:authorize>
     </p>
   </div>
 </sec:authorize>
