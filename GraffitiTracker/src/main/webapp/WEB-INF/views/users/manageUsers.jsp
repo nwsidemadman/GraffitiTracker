@@ -1,12 +1,12 @@
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-<sec:authorize access="isAnonymous()">
+<sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
-    <p>You must sign in to view this page.</p>
+    <p>Not authorized to view this page</p>
   </div>
 </sec:authorize>
-<sec:authorize access="isAuthenticated()">
+<sec:authorize access="hasRole('ROLE_SUPERADMIN')">
   <div id="manageUser">
     <p align="center" style="height: 170px; line-height: 170px;">Click a row to select a user from the table below</p>
   </div>
