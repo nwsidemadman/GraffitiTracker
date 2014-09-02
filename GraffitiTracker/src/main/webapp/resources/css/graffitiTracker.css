@@ -300,3 +300,24 @@ div.error {
   color: red;
   font-weight: bold;
 }
+
+#editBannedIp {
+  height: 170px;
+}
+
+#bannedIps {
+  padding-top: 6px;
+  width: 736px;
+  hieght: 100%;
+}
+
+#bannedIps table {
+  font-size: 0.90em;
+}
+
+#bannedIps tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+        font-size: 1em;
+}

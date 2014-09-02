@@ -8,14 +8,17 @@
   </div>
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
-  <div id="listBannedInets">
+  <div id="editBannedIp">
+    <p align="center" style="height: 170px; line-height: 170px;">Click a row to select a banned IP from the table below</p>
+  </div>
+  <div id="bannedIps">
     <table id="bannedInetsTable" class="display" cellspacing="0" width="100%">
         <thead>
             <tr align="left">
                 <th>Min IP</th>
                 <th>Max IP</th>
                 <th>Active</th>
-                <th>Registration Attempts</th>
+                <th>Attempts</th>
                 <th>Notes</th>
             </tr>
         </thead>
@@ -24,7 +27,7 @@
                 <th id="minIp">Min IP</th>
                 <th id="maxIp">Max IP</th>
                 <th id="Active">Active</th>
-                <th id="regAttempts">Registration Attemps</th>
+                <th id="Attempts">Attempts</th>
                 <th id="notes">Notes</th>
             </tr>
         </tfoot>
@@ -36,7 +39,7 @@
       $('#bannedInetsTable tfoot #minIp').html('<input type="text" placeholder="Search" />');
       $('#bannedInetsTable tfoot #maxIp').html('<input type="text" placeholder="Search" />');
       $('#bannedInetsTable tfoot #active').html('<select><option></option><option value="Yes">Yes</option><option value="No">No</option></select>');
-      $('#bannedInetsTable tfoot #regAttempts').html('<input type="text" placeholder="Search" />');
+      $('#bannedInetsTable tfoot #Attempts').html('<input type="text" placeholder="Search" />');
       $('#bannedInetsTable tfoot #notes').html('<input type="text" placeholder="Search" />');
       
       // create the datatable
