@@ -1,5 +1,7 @@
 package net.ccaper.graffitiTracker.service;
 
+import java.util.List;
+
 import net.ccaper.graffitiTracker.objects.BannedInet;
 
 /**
@@ -36,4 +38,11 @@ public interface BannedInetsService {
    *          the {@link net.ccaper.graffitiTracker.objects.BannedInet}
    */
   void insertOrUpdateBannedInets(BannedInet bannedInet);
+  
+  /**
+   * Gets the all banned inets.
+   *
+   * @return the all banned inets
+   */
+  List<BannedInet> getAllBannedInets();
 }

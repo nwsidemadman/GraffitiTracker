@@ -1,5 +1,7 @@
 package net.ccaper.graffitiTracker.dao;
 
+import java.util.List;
+
 import net.ccaper.graffitiTracker.objects.BannedInet;
 
 /**
@@ -30,4 +32,11 @@ public interface BannedInetsDao {
    * @param bannedInet the banned inet
    */
   void insertOrUpdateBannedInets(BannedInet bannedInet);
+  
+  /**
+   * Gets the all banned inets.
+   *
+   * @return the all banned inets
+   */
+  List<BannedInet> getAllBannedInets();
 }

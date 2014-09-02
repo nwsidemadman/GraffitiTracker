@@ -1,5 +1,7 @@
 package net.ccaper.graffitiTracker.serviceImpl;
 
+import java.util.List;
+
 import net.ccaper.graffitiTracker.dao.BannedInetsDao;
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
@@ -63,5 +65,13 @@ public class BannedInetsServiceImpl implements BannedInetsService {
   @Override
   public void insertOrUpdateBannedInets(BannedInet bannedInet) {
     bannedInetsDao.insertOrUpdateBannedInets(bannedInet);
+  }
+
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.service.BannedInetsService#getAllBannedInets()
+   */
+  @Override
+  public List<BannedInet> getAllBannedInets() {
+    return bannedInetsDao.getAllBannedInets();
   }
 }

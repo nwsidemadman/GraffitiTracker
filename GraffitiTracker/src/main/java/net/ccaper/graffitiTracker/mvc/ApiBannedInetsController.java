@@ -1,5 +1,9 @@
 package net.ccaper.graffitiTracker.mvc;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 
@@ -57,5 +61,18 @@ public class ApiBannedInetsController {
   public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
     bannedInetsService.insertOrUpdateBannedInets(bannedInet);
     return bannedInet;
+  }
+  
+  /**
+   * Gets the all banned inets.
+   *
+   * @return the all banned inets
+   */
+  @RequestMapping(method = RequestMethod.GET)
+  public @ResponseBody
+  Map<String, List<BannedInet>> getAllBannedInets() {
+    Map<String, List<BannedInet>> data = new HashMap<String, List<BannedInet>>(1);
+    data.put("data", bannedInetsService.getAllBannedInets());
+    return data;
   }
 }

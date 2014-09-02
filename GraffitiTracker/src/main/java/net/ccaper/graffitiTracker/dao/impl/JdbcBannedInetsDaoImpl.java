@@ -3,6 +3,7 @@ package net.ccaper.graffitiTracker.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -45,16 +46,33 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
           MAX_INET_COL, ACTIVE_COL).toLowerCase();
   private static final String SQL_INSERT_OR_UPDATE_BANNED_INET = String
       .format(
-          "insert into %s (%s, %s, %s) values (inet_aton(:%s), inet_aton(:%s), :%s) "
-              + "on duplicate key update %s = true, %s = concat(%s, concat('; ', :%s))",
+          "INSERT INTO %s (%s, %s, %s) VALUES (inet_aton(:%s), inet_aton(:%s), :%s) "
+              + "ON DUPLICATE KEY UPDATE %s = true, %s = concat(%s, concat('; ', :%s))",
           BANNED_INETS_TABLE, MIN_INET_COL, MAX_INET_COL, NOTES_COL,
           MIN_INET_COL, MAX_INET_COL, NOTES_COL, ACTIVE_COL, NOTES_COL,
           NOTES_COL, NOTES_COL).toLowerCase();
+  private static final String SQL_GET_BANNED_INETS = String.format(
+      "SELECT inet_ntoa(%s) as %s, inet_ntoa(%s) as %s, %s, %s, %s FROM %s", MIN_INET_COL,
+      MIN_INET_COL, MAX_INET_COL, MAX_INET_COL, ACTIVE_COL, NUMBER_REGISTRATION_ATTEMPTS_COL, NOTES_COL,
+      BANNED_INETS_TABLE).toLowerCase();
 
   RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
     @Override
     public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getBoolean(1);
+    }
+  };
+  
+  RowMapper<BannedInet> bannedInetRowMapper = new RowMapper<BannedInet>() {
+    @Override
+    public BannedInet mapRow(ResultSet rs, int rowNum) throws SQLException {
+      BannedInet bannedInet = new BannedInet();
+      bannedInet.setInetMinIncl(rs.getString(MIN_INET_COL));
+      bannedInet.setInetMaxIncl(rs.getString(MAX_INET_COL));
+      bannedInet.setIsActive(rs.getBoolean(ACTIVE_COL));
+      bannedInet.setNumberRegistrationAttempts(rs.getInt(NUMBER_REGISTRATION_ATTEMPTS_COL));
+      bannedInet.setNotes(rs.getString(NOTES_COL));
+      return bannedInet;
     }
   };
 
@@ -113,5 +131,15 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
     bannedInetParamMap.put(NOTES_COL, bannedInet.getNotes());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_OR_UPDATE_BANNED_INET,
         bannedInetParamMap);
+  }
+
+  
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.dao.BannedInetsDao#getAllBannedInets()
+   */
+  @Override
+  public List<BannedInet> getAllBannedInets() {
+    return getNamedParameterJdbcTemplate().query(SQL_GET_BANNED_INETS,
+        bannedInetRowMapper);
   }
 }
