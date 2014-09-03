@@ -73,7 +73,7 @@
         $.ajax({ 
           type: "GET",
           dataType: "html",
-          url: '<s:url value="/banned_inets/editCreateBannedInet" />',
+          url: '<s:url value="/banned_inets/editCreateBannedInet?' + $.param(aData) + '" />',
           success: function(data){
             $('#editBannedIp').html(data);
           }

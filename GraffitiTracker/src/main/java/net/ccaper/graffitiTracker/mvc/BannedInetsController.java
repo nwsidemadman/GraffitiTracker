@@ -2,6 +2,8 @@ package net.ccaper.graffitiTracker.mvc;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.service.AppUserService;
@@ -15,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 
@@ -83,7 +86,7 @@ public class BannedInetsController {
   // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
-  public String editCreateBannedInet(Map<String, Object> model, BannedInet origBannedInet) {
+  public String editCreateBannedInet(Map<String, Object> model, HttpServletRequest request, BannedInet origBannedInet) {
     logger.info("oh hai");
     logger.info("originalBannedInet: " + origBannedInet);
     return "bannedInets/editCreateBannedInet";
