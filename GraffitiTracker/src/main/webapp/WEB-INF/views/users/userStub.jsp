@@ -16,7 +16,7 @@
       <form id="adminEditUser">
         <div>Username: ${appUser.username}</div>
         <div>Roles:
-          <select id="manageUsersSelectRoles" name="roles" multiple size="3">
+          <select id="manageUserSelectRoles" name="roles" multiple size="3">
             <c:set var="roles" value="${appUser.rolesAsTimestampToRoleEnumMap}" />
             <c:forEach var="entry" items="<%=RoleEnum.values()%>">
               <c:set var="roleSet" value="${roles.containsKey(entry)}" />
@@ -30,7 +30,7 @@
             </c:forEach>
           </select>
         </div>
-        <div>Email: <input type="email" id="manageUsersEmail" name="email" value="${appUser.email}"></div>
+        <div>Email: <input type="email" id="manageUserEmail" name="email" value="${appUser.email}"></div>
         <div>Active:
           <input id="manageUsersIsActive" type="radio" name="isActive" value="true" <c:if test="${appUser.isActive}">checked</c:if>>Yes
           <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.isActive == false}">checked</c:if>>No
@@ -38,7 +38,7 @@
         <div>Registered: <fmt:formatDate value="${appUser.registerTimestamp}" pattern="yyyy-MM-dd" /></div>
         <div>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></div>
         <div>Login Count: ${appUser.loginCount }</p>
-        <div><input id="manageUsersSubmit" type="submit" value="Edit"><p>
+        <div><input id="manageUserSubmit" type="submit" value="Edit"><p>
       </form>
     </td>
     <td width="50%">
@@ -71,13 +71,13 @@
     // handle editing user
     $('#adminEditUser').submit(function (e) {
       e.preventDefault();
-      if (!$('#manageUsersSelectRoles').val()) {
+      if (!$('#manageUserSelectRoles').val()) {
         alert("You must select at least one role");
       } else {
         var editedUser = new Object();
-        editedUser.email = $('#manageUsersEmail').val();
+        editedUser.email = $('#manageUserEmail').val();
         editedUser.isActive = $('#manageUsersIsActive:checked').val();
-        editedUser.roles = $('#manageUsersSelectRoles').val();
+        editedUser.roles = $('#manageUserSelectRoles').val();
         $.ajax({ 
           type: "PUT",
           url: '<s:url value="/api/users/${appUser.userId}" />',
