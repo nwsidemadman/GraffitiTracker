@@ -67,6 +67,18 @@
           ]
       });
       
+      // capture a click on the datatable
+      $('#bannedInetsTable tbody').on('click', 'tr', function () {
+        var aData = bannedInetsTableJObject.fnGetData(this);
+        $.ajax({ 
+          type: "GET",
+          dataType: "html",
+          url: '<s:url value="/banned_inets/editCreateBannedInet" />',
+          success: function(data){
+            $('#editBannedIp').html(data);
+          }
+        });
+      });
     });
     </script>
   </div>

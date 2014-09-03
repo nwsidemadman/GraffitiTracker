@@ -6,4 +6,8 @@
   <definition name="bannedInets/listBannedInets" extends="template">
     <put-attribute name="content" value="/WEB-INF/views/bannedInets/listBannedInets.jsp" />
   </definition>
+  <definition name="bannedInets/editCreateBannedInet" extends="stub">
+    <put-attribute name="content"
+      value="/WEB-INF/views/bannedInets/editCreateBannedInetStub.jsp" />
+  </definition>
 </tiles-definitions>

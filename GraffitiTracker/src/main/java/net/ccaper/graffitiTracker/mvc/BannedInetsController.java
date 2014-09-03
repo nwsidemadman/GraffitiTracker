@@ -2,8 +2,8 @@ package net.ccaper.graffitiTracker.mvc;
 
 import java.util.Map;
 
-
 import net.ccaper.graffitiTracker.objects.AppUser;
+import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 import net.ccaper.graffitiTracker.service.UserSecurityService;
@@ -69,6 +69,7 @@ public class BannedInetsController {
     this.userSecurityService = userSecurityService;
   }
 
+  // TODO(ccaper): javadoc
   @RequestMapping(method = RequestMethod.GET)
   public String listBannedInets(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -77,5 +78,14 @@ public class BannedInetsController {
       model.put("appUser", appUser);
     }
     return "bannedInets/listBannedInets";
+  }
+  
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
+  @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
+  public String editCreateBannedInet(Map<String, Object> model, BannedInet origBannedInet) {
+    logger.info("oh hai");
+    logger.info("originalBannedInet: " + origBannedInet);
+    return "bannedInets/editCreateBannedInet";
   }
 }

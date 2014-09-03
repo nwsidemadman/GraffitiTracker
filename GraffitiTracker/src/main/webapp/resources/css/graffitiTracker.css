@@ -321,3 +321,7 @@ div.error {
         box-sizing: border-box;
         font-size: 1em;
 }
+
+#bannedIps tbody {
+  cursor: pointer; cursor: hand;
+}
