@@ -10,7 +10,7 @@ package net.ccaper.graffitiTracker.objects;
 public class BannedInet {
   private String inetMinIncl;
   private String inetMaxIncl;
-  private boolean isActive;
+  private boolean isActive = true;
   private int numberRegistrationAttempts;
   private String notes;
 

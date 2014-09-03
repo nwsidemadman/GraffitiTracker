@@ -86,9 +86,17 @@ public class BannedInetsController {
   // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
-  public String editCreateBannedInet(Map<String, Object> model, HttpServletRequest request, BannedInet origBannedInet) {
-    logger.info("oh hai");
-    logger.info("originalBannedInet: " + origBannedInet);
+  public String editCreateBannedInet(Map<String, Object> model, BannedInet origBannedInet) {
+    logger.info("bannedInet: " + origBannedInet);
+    model.put("origBannedInet", origBannedInet);
     return "bannedInets/editCreateBannedInet";
   }
+  
+  //TODO(ccaper): javadoc
+ // TODO(ccaper): unit test
+ @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.POST)
+ public String editCreateBannedInetSubmit(Map<String, Object> model, BannedInet origBannedInet) {
+   model.put("origBannedInet", origBannedInet);
+   return "bannedInets/editCreateBannedInet";
+ }
 }
