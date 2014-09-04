@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.ccaper.graffitiTracker.mvc.validators.BannedInetValidator;
 import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.service.AppUserService;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +39,8 @@ public class BannedInetsController {
   private AppUserService appUserService;
   @Autowired
   private UserSecurityService userSecurityService;
+  @Autowired
+  private BannedInetValidator bannedInetValidator;
 
   // visible for testing
   /**
@@ -73,6 +77,19 @@ public class BannedInetsController {
     this.userSecurityService = userSecurityService;
   }
 
+  // visible for testing
+  /**
+   * Sets the
+   * {@link net.ccaper.graffitiTracker.mvc.validators.BannedInetValidator}.
+   * 
+   * @param bannedInetValidator
+   *          the new
+   *          {@link net.ccaper.graffitiTracker.mvc.validators.BannedInetValidator}
+   */
+  void setBannedInetValidator(BannedInetValidator bannedInetValidator) {
+    this.bannedInetValidator = bannedInetValidator;
+  }
+
   // TODO(ccaper): javadoc
   @RequestMapping(method = RequestMethod.GET)
   public String listBannedInets(Map<String, Object> model) {
@@ -96,9 +113,23 @@ public class BannedInetsController {
 
   // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  // TODO(ccaper): confirm needed
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.POST)
- public String editCreateBannedInetSubmit(Map<String, Object> model, BannedInet editedBannedInet) {
-    logger.info("editedBannedInet: " + editedBannedInet);
+  public String editCreateBannedInetSubmit(Map<String, Object> model,
+      BannedInet editedBannedInet, BindingResult bindingResult,
+      @RequestParam String origInetMinIncl,
+      @RequestParam String origInetMaxIncl, @RequestParam boolean origIsActive,
+      @RequestParam String origNotes) {
+    bannedInetValidator.validate(editedBannedInet, bindingResult);
+    if (bindingResult.hasErrors()) {
+      return "/banned_inets/editCreateBannedInet";
+    }
+    BannedInet origBannedInet = new BannedInet();
+    origBannedInet.setInetMinIncl(origInetMinIncl);
+    origBannedInet.setInetMaxIncl(origInetMaxIncl);
+    origBannedInet.setIsActive(origIsActive);
+    origBannedInet.setNotes(origNotes);
+    logger.info("all good");
     return "redirect:/banned_inets";
- }
+  }
 }

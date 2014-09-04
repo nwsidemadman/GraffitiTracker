@@ -108,7 +108,7 @@ public class BannedInet {
   public void setNotes(String notes) {
     this.notes = notes;
   }
-
+  
   /*
    * (non-Javadoc)
    * 

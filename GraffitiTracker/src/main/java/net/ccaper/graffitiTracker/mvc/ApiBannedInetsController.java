@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.ccaper.graffitiTracker.objects.BannedInet;
+import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,20 +61,22 @@ public class ApiBannedInetsController {
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
-    bannedInetsService.insertOrUpdateBannedInets(bannedInet);
-    return bannedInet;
+  //public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
+  public BannedInet addBannedInet(@RequestBody OriginalEditedBannedInet originalEditBannedInet) {
+    bannedInetsService.insertOrUpdateBannedInets(originalEditBannedInet.getEditedBannedInet());
+    return originalEditBannedInet.getEditedBannedInet();
   }
-  
+
   /**
    * Gets the all banned inets.
-   *
+   * 
    * @return the all banned inets
    */
   @RequestMapping(method = RequestMethod.GET)
   public @ResponseBody
   Map<String, List<BannedInet>> getAllBannedInets() {
-    Map<String, List<BannedInet>> data = new HashMap<String, List<BannedInet>>(1);
+    Map<String, List<BannedInet>> data = new HashMap<String, List<BannedInet>>(
+        1);
     data.put("data", bannedInetsService.getAllBannedInets());
     return data;
   }

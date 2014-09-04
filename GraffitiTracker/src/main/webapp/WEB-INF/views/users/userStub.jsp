@@ -149,10 +149,13 @@
         bannedInet.isActive = true;
         bannedInet.numberRegistrationAttempts = 0;
         bannedInet.notes = "${appUser.username} (${appUser.userId})";
+        var originalEditedBannedInet = new Object();
+        originalEditedBannedInet.originalBannedInet = null;
+        originalEditedBannedInet.editedBannedInet = bannedInet;
         $.ajax({ 
           type: "POST",
           url: '<s:url value="/api/banned_inets" />',
-          data: JSON.stringify(bannedInet),
+          data: JSON.stringify(originalEditedBannedInet),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           success: function(data){
