@@ -2,6 +2,7 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
   
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 
@@ -52,20 +53,13 @@
           editedBannedInet.isActive = $('#manageUsersIsActive:checked').val();
           editedBannedInet.notes = $('#notes').val();
           var origBannedInet = new Object();
-          if (${editedBannedInet} == null) {
-            origBannedInet.inetMinIncl = null;
-            origBannedInet.inetMaxIncl = null;
-            origBannedInet.isActive = true;
-            origBannedInet.notes = nulll;
-          } else {
-            origBannedInet.inetMinIncl = ${editedBannedInet.inetMinIncl};
-            origBannedInet.inetMaxIncl = ${editedBannedInet.inetMaxIncl};
-            origBannedInet.isActive = ${editedBannedInet.isActive};
-            origBannedInet.notes = ${editedBannedInet.notes};
-          }
+          origBannedInet.inetMinIncl = null;
+          origBannedInet.inetMaxIncl = null;
+          origBannedInet.isActive = ${editedBannedInet.isActive};
+          origBannedInet.notes = null;
           var originalEditedBannedInet = new Object();
           originalEditedBannedInet.originalBannedInet = origBannedInet;
-          originalEditedBannedInet.editedBannedInet = editedbannedInet; 
+          originalEditedBannedInet.editedBannedInet = editedBannedInet; 
           $.ajax({ 
             type: "POST",
             url: '<s:url value="/api/banned_inets" />',
