@@ -43,7 +43,7 @@ public class FormEmailValidator implements Validator {
     if (StringUtils.isEmpty(emailForm.getEmail())) {
       errors.rejectValue("email", "invalidEmail", "Email can not be empty.");
     } else if (!EMAIL_VALIDATOR.isValid(emailForm.getEmail())) {
-      errors.rejectValue("email", "invalidemail", "Email is not valid.");
+      errors.rejectValue("email", "invalidEmail", "Email is not valid.");
     }
   }
 }
