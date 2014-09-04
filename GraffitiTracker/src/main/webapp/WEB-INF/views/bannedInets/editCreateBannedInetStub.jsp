@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
@@ -8,9 +9,10 @@
   </div>
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
+  <c:set var="actionValue" value="${contextPath}/banned_inets/editCreateBannedInet" />
   <div>
     <div>Banned IP</div>
-    <sf:form method="POST" modelAttribute="origBannedInet" >
+    <sf:form method="POST" modelAttribute="editedBannedInet" action="${actionValue}" >
       <fieldset>
         <div>
           <sf:errors path="inetMinIncl" cssClass="error" /><br/>

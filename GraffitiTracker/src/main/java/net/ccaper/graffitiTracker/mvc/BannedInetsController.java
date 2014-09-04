@@ -3,6 +3,7 @@ package net.ccaper.graffitiTracker.mvc;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.BannedInet;
@@ -82,21 +83,22 @@ public class BannedInetsController {
     }
     return "bannedInets/listBannedInets";
   }
-  
+
   // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
-  public String editCreateBannedInet(Map<String, Object> model, BannedInet origBannedInet) {
-    logger.info("bannedInet: " + origBannedInet);
-    model.put("origBannedInet", origBannedInet);
+  public String editCreateBannedInet(Map<String, Object> model,
+      BannedInet origBannedInet, HttpServletRequest request) {
+    model.put("editedBannedInet", origBannedInet);
+    model.put("contextPath", request.getContextPath());
     return "bannedInets/editCreateBannedInet";
   }
-  
-  //TODO(ccaper): javadoc
- // TODO(ccaper): unit test
- @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.POST)
- public String editCreateBannedInetSubmit(Map<String, Object> model, BannedInet origBannedInet) {
-   model.put("origBannedInet", origBannedInet);
-   return "bannedInets/editCreateBannedInet";
+
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
+  @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.POST)
+ public String editCreateBannedInetSubmit(Map<String, Object> model, BannedInet editedBannedInet) {
+    logger.info("editedBannedInet: " + editedBannedInet);
+    return "redirect:/banned_inets";
  }
 }
