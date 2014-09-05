@@ -24,8 +24,8 @@
         </div>
         <div>
           <sf:errors path="inetMaxIncl" cssClass="error" /><br/>
-          <sf:label id="inetMaxIncl" path="inetMaxIncl">Max IP: </sf:label>
-          <sf:input path="inetMaxIncl" size="15" maxlength="15" />
+          <sf:label path="inetMaxIncl">Max IP: </sf:label>
+          <sf:input id="inetMaxIncl" path="inetMaxIncl" size="15" maxlength="15" />
         </div>
         <div>
           <sf:label path="isActive">Active: </sf:label>
@@ -50,7 +50,7 @@
           var editedBannedInet = new Object();
           editedBannedInet.inetMinIncl = $('#inetMinIncl').val();
           editedBannedInet.inetMaxIncl = $('#inetMaxIncl').val();
-          editedBannedInet.isActive = $('#manageUsersIsActive:checked').val();
+          editedBannedInet.isActive = $('#isActive:checked').val();
           editedBannedInet.notes = $('#notes').val();
           var origBannedInet = new Object();
           origBannedInet.inetMinIncl = null;

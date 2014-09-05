@@ -12,6 +12,7 @@ import java.util.Map;
 
 import net.ccaper.graffitiTracker.mvc.ApiBannedInetsController;
 import net.ccaper.graffitiTracker.objects.BannedInet;
+import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 
 import org.junit.After;
@@ -31,14 +32,17 @@ public class ApiBannedInetsControllerTest {
   @Test
   public void testAddBannedInet() throws Exception {
     BannedInetsService bannedInetsServiceMock = mock(BannedInetsService.class);
-    BannedInet bannedInet = new BannedInet();
-    bannedInet.setInetMaxIncl("127.0.0.1");
-    bannedInet.setInetMaxIncl("127.0.0.1");
-    bannedInet.setNotes("test");
+    BannedInet editedBannedInet = new BannedInet();
+    editedBannedInet.setInetMaxIncl("127.0.0.1");
+    editedBannedInet.setInetMaxIncl("127.0.0.1");
+    editedBannedInet.setNotes("test");
     ApiBannedInetsController controller = new ApiBannedInetsController();
     controller.setBannedInetsService(bannedInetsServiceMock);
-    assertEquals(bannedInet, controller.addBannedInet(bannedInet));
-    verify(bannedInetsServiceMock).insertOrUpdateBannedInets(bannedInet);
+    OriginalEditedBannedInet origEditedBannedInet = new OriginalEditedBannedInet();
+    origEditedBannedInet.setEditedBannedInet(editedBannedInet);
+    origEditedBannedInet.setOriginalBannedInet(new BannedInet());
+    assertEquals(editedBannedInet, controller.addBannedInet(origEditedBannedInet));
+    verify(bannedInetsServiceMock).insertOrUpdateBannedInets(editedBannedInet);
   }
   
   @Test
