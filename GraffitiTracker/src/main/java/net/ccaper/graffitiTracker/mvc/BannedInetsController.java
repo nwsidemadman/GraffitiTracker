@@ -106,6 +106,7 @@ public class BannedInetsController {
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
   public String editCreateBannedInet(Map<String, Object> model,
       BannedInet origBannedInet, HttpServletRequest request) {
+    model.put("isNew", origBannedInet.getInetMaxIncl() == null ? true : false);
     model.put("editedBannedInet", origBannedInet);
     model.put("contextPath", request.getContextPath());
     return "bannedInets/editCreateBannedInet";

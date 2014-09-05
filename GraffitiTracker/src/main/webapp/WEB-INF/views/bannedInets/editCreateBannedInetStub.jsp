@@ -4,6 +4,8 @@
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
     <p>Not authorized to view this page</p>
@@ -35,8 +37,11 @@
           <sf:input id="notes" path="notes" size="15" maxlength="15" />
         </div>
         <div>
-          <input name="commit" type="submit" 
-                    value="Submit" />
+          <input id="submit" name="commit" type="submit" 
+                    value="${isNew == true ? "Create" : "Edit" }" />
+          <c:if test="${isNew == false}">
+            <input id="delete" name="delete" type="button" value="Delete" />
+          </c:if>
         </div>
       </fieldset>
     </sf:form>
@@ -68,6 +73,11 @@
               window.location.reload(true);
             }
           });
+        });
+        
+        // handle deleting banned inet
+        $('#editCreateBannedInet').on('click', '#delete', function () {
+          alert("You clicked delete");
         });
       });
     </script>
