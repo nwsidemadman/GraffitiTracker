@@ -8,6 +8,7 @@ import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +62,35 @@ public class ApiBannedInetsController {
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  //public BannedInet addBannedInet(@RequestBody BannedInet bannedInet) {
-  public BannedInet addBannedInet(@RequestBody OriginalEditedBannedInet originalEditBannedInet) {
-    bannedInetsService.insertOrUpdateBannedInets(originalEditBannedInet.getEditedBannedInet());
+  // TODO(ccaper): update tests
+  public BannedInet addBannedInet(
+      @RequestBody OriginalEditedBannedInet originalEditBannedInet) {
+    if (originalEditBannedInet.getOriginalBannedInet() != null
+        && originalEditBannedInet.getOriginalBannedInet().getInetMinIncl() != null
+        && !originalEditBannedInet.getOriginalBannedInet().getInetMinIncl().equals(StringUtils.EMPTY)
+        && didInetsChange(originalEditBannedInet)) {
+      bannedInetsService.inetUpdateBannedInets(originalEditBannedInet);
+    } else {
+      bannedInetsService
+      .insertOrNonInetUpdateBannedInets(originalEditBannedInet
+          .getEditedBannedInet());
+    }
     return originalEditBannedInet.getEditedBannedInet();
+  }
+
+  // TODO(ccaper): unit test
+  // TODO(ccaper): javadoc
+  private boolean didInetsChange(OriginalEditedBannedInet originalEditBannedInet) {
+    if (originalEditBannedInet.getOriginalBannedInet().getInetMinIncl()
+        .equals(originalEditBannedInet.getEditedBannedInet().getInetMinIncl())
+        && originalEditBannedInet
+            .getOriginalBannedInet()
+            .getInetMaxIncl()
+            .equals(
+                originalEditBannedInet.getEditedBannedInet().getInetMaxIncl())) {
+      return false;
+    }
+    return true;
   }
 
   /**

@@ -3,8 +3,6 @@
 <%@ taglib prefix="sec"
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-  
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
@@ -53,10 +51,10 @@
           editedBannedInet.isActive = $('#isActive:checked').val();
           editedBannedInet.notes = $('#notes').val();
           var origBannedInet = new Object();
-          origBannedInet.inetMinIncl = null;
-          origBannedInet.inetMaxIncl = null;
+          origBannedInet.inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
+          origBannedInet.inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
           origBannedInet.isActive = ${editedBannedInet.isActive};
-          origBannedInet.notes = null;
+          origBannedInet.notes = "${editedBannedInet.notes == null ? null : editedBannedInet.notes}";
           var originalEditedBannedInet = new Object();
           originalEditedBannedInet.originalBannedInet = origBannedInet;
           originalEditedBannedInet.editedBannedInet = editedBannedInet; 
@@ -67,7 +65,7 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(data){
-              $('#editBannedIp').html("<p align='center' style='height: 170px; line-height: 170px;'>Click a row to select a banned IP from the table below</p>'");
+              window.location.reload(true);
             }
           });
         });

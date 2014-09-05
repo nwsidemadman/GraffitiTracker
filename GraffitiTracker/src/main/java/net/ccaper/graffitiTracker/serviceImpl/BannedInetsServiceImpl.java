@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.ccaper.graffitiTracker.dao.BannedInetsDao;
 import net.ccaper.graffitiTracker.objects.BannedInet;
+import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,8 @@ public class BannedInetsServiceImpl implements BannedInetsService {
    * (net.ccaper.graffitiTracker.objects.BannedInet)
    */
   @Override
-  public void insertOrUpdateBannedInets(BannedInet bannedInet) {
-    bannedInetsDao.insertOrUpdateBannedInets(bannedInet);
+  public void insertOrNonInetUpdateBannedInets(BannedInet bannedInet) {
+    bannedInetsDao.insertOrNonPKUpdateBannedInets(bannedInet);
   }
 
   /* (non-Javadoc)
@@ -73,5 +74,11 @@ public class BannedInetsServiceImpl implements BannedInetsService {
   @Override
   public List<BannedInet> getAllBannedInets() {
     return bannedInetsDao.getAllBannedInets();
+  }
+
+  @Override
+  // TODO(ccaper): javadoc
+  public void inetUpdateBannedInets(OriginalEditedBannedInet originalEditedBannedInet) {
+    bannedInetsDao.pkUpdateBannedInets(originalEditedBannedInet);
   }
 }

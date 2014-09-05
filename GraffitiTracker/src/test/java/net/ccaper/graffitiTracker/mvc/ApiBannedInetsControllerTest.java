@@ -42,7 +42,7 @@ public class ApiBannedInetsControllerTest {
     origEditedBannedInet.setEditedBannedInet(editedBannedInet);
     origEditedBannedInet.setOriginalBannedInet(new BannedInet());
     assertEquals(editedBannedInet, controller.addBannedInet(origEditedBannedInet));
-    verify(bannedInetsServiceMock).insertOrUpdateBannedInets(editedBannedInet);
+    verify(bannedInetsServiceMock).insertOrNonInetUpdateBannedInets(editedBannedInet);
   }
   
   @Test

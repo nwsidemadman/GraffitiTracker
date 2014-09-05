@@ -3,6 +3,7 @@ package net.ccaper.graffitiTracker.service;
 import java.util.List;
 
 import net.ccaper.graffitiTracker.objects.BannedInet;
+import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 
 /**
  * 
@@ -32,16 +33,20 @@ public interface BannedInetsService {
   void updateNumberRegistrationAttemptsInetInRange(String inet);
 
   /**
-   * Insert or update {@link net.ccaper.graffitiTracker.objects.BannedInet}.
+   * Insert or update {@link net.ccaper.graffitiTracker.objects.BannedInet}
+   * where values changing is not inet portion.
    * 
    * @param bannedInet
    *          the {@link net.ccaper.graffitiTracker.objects.BannedInet}
    */
-  void insertOrUpdateBannedInets(BannedInet bannedInet);
+  void insertOrNonInetUpdateBannedInets(BannedInet bannedInet);
   
+  // TODO(ccaper): javadoc
+  void inetUpdateBannedInets(OriginalEditedBannedInet originalEditedBannedInet);
+
   /**
    * Gets the all banned inets.
-   *
+   * 
    * @return the all banned inets
    */
   List<BannedInet> getAllBannedInets();

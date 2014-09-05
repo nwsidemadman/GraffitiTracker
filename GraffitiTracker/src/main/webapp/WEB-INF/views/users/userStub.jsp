@@ -148,7 +148,7 @@
         bannedInet.inetMaxIncl = ip;
         bannedInet.isActive = true;
         bannedInet.numberRegistrationAttempts = 0;
-        bannedInet.notes = "${appUser.username} (${appUser.userId})";
+        bannedInet.notes = "${appUser.username} (userid: ${appUser.userId})";
         var originalEditedBannedInet = new Object();
         originalEditedBannedInet.originalBannedInet = null;
         originalEditedBannedInet.editedBannedInet = bannedInet;

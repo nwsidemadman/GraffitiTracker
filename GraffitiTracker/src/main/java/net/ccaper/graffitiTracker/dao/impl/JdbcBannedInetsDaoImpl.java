@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import net.ccaper.graffitiTracker.dao.BannedInetsDao;
 import net.ccaper.graffitiTracker.objects.BannedInet;
+import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -28,6 +29,8 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
   static final String BANNED_INETS_TABLE = "banned_inets";
   static final String MIN_INET_COL = "inet_min_incl";
   static final String MAX_INET_COL = "inet_max_incl";
+  private static final String ORIG_MIN_INET_COL = "orig_inet_min_incl";
+  private static final String ORIG_MAX_INET_COL = "orig_inet_max_incl";
   static final String ACTIVE_COL = "active";
   private static final String NUMBER_REGISTRATION_ATTEMPTS_COL = "number_registration_attempts";
   private static final String NOTES_COL = "notes";
@@ -44,17 +47,25 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
           BANNED_INETS_TABLE, NUMBER_REGISTRATION_ATTEMPTS_COL,
           NUMBER_REGISTRATION_ATTEMPTS_COL, INET, MIN_INET_COL, INET,
           MAX_INET_COL, ACTIVE_COL).toLowerCase();
-  private static final String SQL_INSERT_OR_UPDATE_BANNED_INET = String
+  private static final String SQL_INSERT_OR_NON_PK_UPDATE_BANNED_INET = String
       .format(
           "INSERT INTO %s (%s, %s, %s) VALUES (inet_aton(:%s), inet_aton(:%s), :%s) "
-              + "ON DUPLICATE KEY UPDATE %s = true, %s = concat(%s, concat('; ', :%s))",
+              + "ON DUPLICATE KEY UPDATE %s = :%s, %s = :%s",
           BANNED_INETS_TABLE, MIN_INET_COL, MAX_INET_COL, NOTES_COL,
-          MIN_INET_COL, MAX_INET_COL, NOTES_COL, ACTIVE_COL, NOTES_COL,
+          MIN_INET_COL, MAX_INET_COL, NOTES_COL, ACTIVE_COL, ACTIVE_COL,
           NOTES_COL, NOTES_COL).toLowerCase();
+  private static final String SQL_PK_UPDATE_BANNED_INET = String.format(
+      "UPDATE %s SET %s = inet_aton(:%s), %s = inet_aton(:%s), %s = :%s, %s = "
+          + ":%s WHERE %s = inet_aton(:%s) AND %s = inet_aton(:%s)",
+      BANNED_INETS_TABLE, MIN_INET_COL, MIN_INET_COL, MAX_INET_COL,
+      MAX_INET_COL, ACTIVE_COL, ACTIVE_COL, NOTES_COL, NOTES_COL,
+      MIN_INET_COL, ORIG_MIN_INET_COL, MAX_INET_COL, ORIG_MAX_INET_COL)
+      .toLowerCase();
   private static final String SQL_GET_BANNED_INETS = String.format(
-      "SELECT inet_ntoa(%s) as %s, inet_ntoa(%s) as %s, %s, %s, %s FROM %s", MIN_INET_COL,
-      MIN_INET_COL, MAX_INET_COL, MAX_INET_COL, ACTIVE_COL, NUMBER_REGISTRATION_ATTEMPTS_COL, NOTES_COL,
-      BANNED_INETS_TABLE).toLowerCase();
+      "SELECT inet_ntoa(%s) as %s, inet_ntoa(%s) as %s, %s, %s, %s FROM %s",
+      MIN_INET_COL, MIN_INET_COL, MAX_INET_COL, MAX_INET_COL, ACTIVE_COL,
+      NUMBER_REGISTRATION_ATTEMPTS_COL, NOTES_COL, BANNED_INETS_TABLE)
+      .toLowerCase();
 
   RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
     @Override
@@ -62,7 +73,7 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
       return rs.getBoolean(1);
     }
   };
-  
+
   RowMapper<BannedInet> bannedInetRowMapper = new RowMapper<BannedInet>() {
     @Override
     public BannedInet mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -70,7 +81,8 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
       bannedInet.setInetMinIncl(rs.getString(MIN_INET_COL));
       bannedInet.setInetMaxIncl(rs.getString(MAX_INET_COL));
       bannedInet.setIsActive(rs.getBoolean(ACTIVE_COL));
-      bannedInet.setNumberRegistrationAttempts(rs.getInt(NUMBER_REGISTRATION_ATTEMPTS_COL));
+      bannedInet.setNumberRegistrationAttempts(rs
+          .getInt(NUMBER_REGISTRATION_ATTEMPTS_COL));
       bannedInet.setNotes(rs.getString(NOTES_COL));
       return bannedInet;
     }
@@ -124,17 +136,40 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
    * (net.ccaper.graffitiTracker.objects.BannedInet)
    */
   @Override
-  public void insertOrUpdateBannedInets(BannedInet bannedInet) {
-    Map<String, String> bannedInetParamMap = new HashMap<String, String>(3);
+  public void insertOrNonPKUpdateBannedInets(BannedInet bannedInet) {
+    Map<String, Object> bannedInetParamMap = new HashMap<String, Object>(4);
     bannedInetParamMap.put(MIN_INET_COL, bannedInet.getInetMinIncl());
     bannedInetParamMap.put(MAX_INET_COL, bannedInet.getInetMaxIncl());
+    bannedInetParamMap.put(ACTIVE_COL, bannedInet.getIsActive());
     bannedInetParamMap.put(NOTES_COL, bannedInet.getNotes());
-    getNamedParameterJdbcTemplate().update(SQL_INSERT_OR_UPDATE_BANNED_INET,
+    getNamedParameterJdbcTemplate().update(
+        SQL_INSERT_OR_NON_PK_UPDATE_BANNED_INET, bannedInetParamMap);
+  }
+
+  // TODO(ccaper): javadoc
+  @Override
+  public void pkUpdateBannedInets(
+      OriginalEditedBannedInet originalEditedBannedInet) {
+    Map<String, Object> bannedInetParamMap = new HashMap<String, Object>(6);
+    bannedInetParamMap.put(MIN_INET_COL, originalEditedBannedInet
+        .getEditedBannedInet().getInetMinIncl());
+    bannedInetParamMap.put(MAX_INET_COL, originalEditedBannedInet
+        .getEditedBannedInet().getInetMaxIncl());
+    bannedInetParamMap.put(ORIG_MIN_INET_COL, originalEditedBannedInet
+        .getOriginalBannedInet().getInetMinIncl());
+    bannedInetParamMap.put(ORIG_MAX_INET_COL, originalEditedBannedInet
+        .getOriginalBannedInet().getInetMaxIncl());
+    bannedInetParamMap.put(ACTIVE_COL, originalEditedBannedInet
+        .getEditedBannedInet().getIsActive());
+    bannedInetParamMap.put(NOTES_COL, originalEditedBannedInet
+        .getEditedBannedInet().getNotes());
+    getNamedParameterJdbcTemplate().update(SQL_PK_UPDATE_BANNED_INET,
         bannedInetParamMap);
   }
 
-  
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see net.ccaper.graffitiTracker.dao.BannedInetsDao#getAllBannedInets()
    */
   @Override
