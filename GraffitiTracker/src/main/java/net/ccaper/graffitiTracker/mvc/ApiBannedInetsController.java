@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,13 +68,14 @@ public class ApiBannedInetsController {
       @RequestBody OriginalEditedBannedInet originalEditBannedInet) {
     if (originalEditBannedInet.getOriginalBannedInet() != null
         && originalEditBannedInet.getOriginalBannedInet().getInetMinIncl() != null
-        && !originalEditBannedInet.getOriginalBannedInet().getInetMinIncl().equals(StringUtils.EMPTY)
+        && !originalEditBannedInet.getOriginalBannedInet().getInetMinIncl()
+            .equals(StringUtils.EMPTY)
         && didInetsChange(originalEditBannedInet)) {
       bannedInetsService.inetUpdateBannedInets(originalEditBannedInet);
     } else {
       bannedInetsService
-      .insertOrNonInetUpdateBannedInets(originalEditBannedInet
-          .getEditedBannedInet());
+          .insertOrNonInetUpdateBannedInets(originalEditBannedInet
+              .getEditedBannedInet());
     }
     return originalEditBannedInet.getEditedBannedInet();
   }
@@ -105,5 +107,14 @@ public class ApiBannedInetsController {
         1);
     data.put("data", bannedInetsService.getAllBannedInets());
     return data;
+  }
+
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
+  @RequestMapping(value = "{min_inet_incl}/{max_inet_incl}", method = RequestMethod.DELETE)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void deleteBannedInet(@PathVariable String minInetIncl,
+      @PathVariable String maxInetIncl) {
+    bannedInetsService.deleteBannedInet(minInetIncl, maxInetIncl);
   }
 }

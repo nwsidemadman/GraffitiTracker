@@ -58,14 +58,17 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
       "UPDATE %s SET %s = inet_aton(:%s), %s = inet_aton(:%s), %s = :%s, %s = "
           + ":%s WHERE %s = inet_aton(:%s) AND %s = inet_aton(:%s)",
       BANNED_INETS_TABLE, MIN_INET_COL, MIN_INET_COL, MAX_INET_COL,
-      MAX_INET_COL, ACTIVE_COL, ACTIVE_COL, NOTES_COL, NOTES_COL,
-      MIN_INET_COL, ORIG_MIN_INET_COL, MAX_INET_COL, ORIG_MAX_INET_COL)
-      .toLowerCase();
+      MAX_INET_COL, ACTIVE_COL, ACTIVE_COL, NOTES_COL, NOTES_COL, MIN_INET_COL,
+      ORIG_MIN_INET_COL, MAX_INET_COL, ORIG_MAX_INET_COL).toLowerCase();
   private static final String SQL_GET_BANNED_INETS = String.format(
       "SELECT inet_ntoa(%s) as %s, inet_ntoa(%s) as %s, %s, %s, %s FROM %s",
       MIN_INET_COL, MIN_INET_COL, MAX_INET_COL, MAX_INET_COL, ACTIVE_COL,
       NUMBER_REGISTRATION_ATTEMPTS_COL, NOTES_COL, BANNED_INETS_TABLE)
       .toLowerCase();
+  private static final String SQL_DELETE_BANNED_INET = String.format(
+      "DELETE FROM %s where %s = inet_aton(:%s) and %s = inet_aton(:%s)",
+      BANNED_INETS_TABLE, MIN_INET_COL, MIN_INET_COL, MAX_INET_COL,
+      MAX_INET_COL).toLowerCase();
 
   RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
     @Override
@@ -176,5 +179,14 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
   public List<BannedInet> getAllBannedInets() {
     return getNamedParameterJdbcTemplate().query(SQL_GET_BANNED_INETS,
         bannedInetRowMapper);
+  }
+
+  // TODO(ccaper): javadoc
+  @Override
+  public void deleteBannedInet(String minInetIncl, String maxInetIncl) {
+    Map<String, String> paramMap = new HashMap<String, String>(2);
+    paramMap.put(MIN_INET_COL, minInetIncl);
+    paramMap.put(MAX_INET_COL, maxInetIncl);
+    getNamedParameterJdbcTemplate().update(SQL_DELETE_BANNED_INET, paramMap);
   }
 }

@@ -43,4 +43,7 @@ public interface BannedInetsDao {
    * @return the all banned inets
    */
   List<BannedInet> getAllBannedInets();
+  
+  // TODO(ccaper): javadoc
+  void deleteBannedInet(String minInetIncl, String maxInetIncl);
 }

@@ -81,4 +81,10 @@ public class BannedInetsServiceImpl implements BannedInetsService {
   public void inetUpdateBannedInets(OriginalEditedBannedInet originalEditedBannedInet) {
     bannedInetsDao.pkUpdateBannedInets(originalEditedBannedInet);
   }
+
+  // TODO(ccaper): javadoc
+  @Override
+  public void deleteBannedInet(String minInetIncl, String maxInetIncl) {
+    bannedInetsDao.deleteBannedInet(minInetIncl, maxInetIncl);
+  }
 }
