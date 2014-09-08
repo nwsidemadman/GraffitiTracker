@@ -49,10 +49,10 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
           MAX_INET_COL, ACTIVE_COL).toLowerCase();
   private static final String SQL_INSERT_OR_NON_PK_UPDATE_BANNED_INET = String
       .format(
-          "INSERT INTO %s (%s, %s, %s) VALUES (inet_aton(:%s), inet_aton(:%s), :%s) "
+          "INSERT INTO %s (%s, %s, %s, %s) VALUES (inet_aton(:%s), inet_aton(:%s), :%s, :%s) "
               + "ON DUPLICATE KEY UPDATE %s = :%s, %s = :%s",
-          BANNED_INETS_TABLE, MIN_INET_COL, MAX_INET_COL, NOTES_COL,
-          MIN_INET_COL, MAX_INET_COL, NOTES_COL, ACTIVE_COL, ACTIVE_COL,
+          BANNED_INETS_TABLE, MIN_INET_COL, MAX_INET_COL, ACTIVE_COL, NOTES_COL,
+          MIN_INET_COL, MAX_INET_COL, ACTIVE_COL, NOTES_COL, ACTIVE_COL, ACTIVE_COL,
           NOTES_COL, NOTES_COL).toLowerCase();
   private static final String SQL_PK_UPDATE_BANNED_INET = String.format(
       "UPDATE %s SET %s = inet_aton(:%s), %s = inet_aton(:%s), %s = :%s, %s = "

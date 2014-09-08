@@ -4,8 +4,6 @@
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
     <p>Not authorized to view this page</p>
@@ -77,7 +75,17 @@
         
         // handle deleting banned inet
         $('#editCreateBannedInet').on('click', '#delete', function () {
-          alert("You clicked delete");
+          inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
+          inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
+          $.ajax({ 
+            type: "DELETE",
+            url: '<s:url value="/api/banned_inets/' + inetMinIncl + '/' + inetMaxIncl + '/" />',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(){
+              window.location.reload(true);
+            }
+          });
         });
       });
     </script>

@@ -111,9 +111,9 @@ public class ApiBannedInetsController {
 
   // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
-  @RequestMapping(value = "{min_inet_incl}/{max_inet_incl}", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/{minInetIncl}/{maxInetIncl}/", method = RequestMethod.DELETE)
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  void deleteBannedInet(@PathVariable String minInetIncl,
+  public void deleteBannedInet(@PathVariable String minInetIncl,
       @PathVariable String maxInetIncl) {
     bannedInetsService.deleteBannedInet(minInetIncl, maxInetIncl);
   }
