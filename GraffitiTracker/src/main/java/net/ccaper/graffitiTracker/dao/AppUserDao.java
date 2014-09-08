@@ -7,6 +7,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
+// TODO(ccaper): validate create/edit banned inet
+// TODO(ccaper): fix page layout on create/edit banned inet
+// TODO(ccaper): make notes on create/edit banned inet a larger text box
+// TODO(ccaper): add create date to banned inet table, and show in data table
 // TODO(ccaper): remove sort arrows from all datatable columns that shouldn't be sorted
 
 /**
