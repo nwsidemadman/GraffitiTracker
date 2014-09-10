@@ -44,50 +44,50 @@
       </fieldset>
     </sf:form>
     <script type="text/javascript">
-      $(document).ready(function() {
-        // handle editing banned inet
-        $('#editCreateBannedInet').submit(function (e) {
-          e.preventDefault();
-          var editedBannedInet = new Object();
-          editedBannedInet.inetMinIncl = $('#inetMinIncl').val();
-          editedBannedInet.inetMaxIncl = $('#inetMaxIncl').val();
-          editedBannedInet.isActive = $('#isActive:checked').val();
-          editedBannedInet.notes = $('#notes').val();
-          var origBannedInet = new Object();
-          origBannedInet.inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
-          origBannedInet.inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
-          origBannedInet.isActive = ${editedBannedInet.isActive};
-          origBannedInet.notes = "${editedBannedInet.notes == null ? null : editedBannedInet.notes}";
-          var originalEditedBannedInet = new Object();
-          originalEditedBannedInet.originalBannedInet = origBannedInet;
-          originalEditedBannedInet.editedBannedInet = editedBannedInet; 
-          $.ajax({ 
-            type: "POST",
-            url: '<s:url value="/api/banned_inets" />',
-            data: JSON.stringify(originalEditedBannedInet),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(data){
-              window.location.reload(true);
-            }
-          });
-        });
-        
-        // handle deleting banned inet
-        $('#editCreateBannedInet').on('click', '#delete', function () {
-          inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
-          inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
-          $.ajax({ 
-            type: "DELETE",
-            url: '<s:url value="/api/banned_inets/' + inetMinIncl + '/' + inetMaxIncl + '/" />',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function(){
-              window.location.reload(true);
-            }
-          });
+    $(document).ready(function() {
+      // handle editing banned inet
+      $('#editCreateBannedInet').submit(function (e) {
+        e.preventDefault();
+        var editedBannedInet = new Object();
+        editedBannedInet.inetMinIncl = $('#inetMinIncl').val();
+        editedBannedInet.inetMaxIncl = $('#inetMaxIncl').val();
+        editedBannedInet.isActive = $('#isActive:checked').val();
+        editedBannedInet.notes = $('#notes').val();
+        var origBannedInet = new Object();
+        origBannedInet.inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
+        origBannedInet.inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
+        origBannedInet.isActive = ${editedBannedInet.isActive};
+        origBannedInet.notes = "${editedBannedInet.notes == null ? null : editedBannedInet.notes}";
+        var originalEditedBannedInet = new Object();
+        originalEditedBannedInet.originalBannedInet = origBannedInet;
+        originalEditedBannedInet.editedBannedInet = editedBannedInet; 
+        $.ajax({ 
+          type: "POST",
+          url: '<s:url value="/api/banned_inets" />',
+          data: JSON.stringify(originalEditedBannedInet),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(data){
+            window.location.reload(true);
+          }
         });
       });
+      
+      // handle deleting banned inet
+      $('#editCreateBannedInet').on('click', '#delete', function () {
+        inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
+        inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
+        $.ajax({ 
+          type: "DELETE",
+          url: '<s:url value="/api/banned_inets/' + inetMinIncl + '/' + inetMaxIncl + '/" />',
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function(){
+            window.location.reload(true);
+          }
+        });
+      });
+    });
     </script>
   </div>
 </sec:authorize>

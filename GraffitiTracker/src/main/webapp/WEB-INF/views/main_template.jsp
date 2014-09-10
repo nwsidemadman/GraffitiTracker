@@ -11,6 +11,9 @@
   
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
+
 <script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
 </head>
 

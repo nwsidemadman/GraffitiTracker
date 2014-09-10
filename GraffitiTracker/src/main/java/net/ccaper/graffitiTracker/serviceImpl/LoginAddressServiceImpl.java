@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import net.ccaper.graffitiTracker.dao.LoginAddressDao;
 import net.ccaper.graffitiTracker.objects.LoginInet;
 import net.ccaper.graffitiTracker.service.LoginAddressService;
+import net.ccaper.graffitiTracker.utils.InetAddressUtils;
 
 /**
  * 
@@ -44,38 +44,9 @@ public class LoginAddressServiceImpl implements LoginAddressService {
    */
   @Override
   public void updateLoginAddressByUsername(String username, String ipAddress) {
-    if (isIpAddressValid(ipAddress)) {
+    if (InetAddressUtils.isInetValid(ipAddress)) {
       loginAddressDao.updateLoginAddressByUsername(username, ipAddress);
     }
-  }
-
-  // visible for testing
-  /**
-   * Checks if is ip address valid.
-   * 
-   * @param ipAddress
-   *          the ip address
-   * @return true, if is ip address valid
-   */
-  boolean isIpAddressValid(String ipAddress) {
-    String[] ipTokens = StringUtils.split(ipAddress, ".");
-    if (ipTokens.length != 4) {
-      throw new IllegalArgumentException(String.format(
-          "%s is not a valid IPV4 address.", ipAddress));
-    }
-    for (String ipToken : ipTokens) {
-      try {
-        int number = Integer.parseInt(ipToken);
-        if (number < 0 || number > 255) {
-          throw new IllegalArgumentException(String.format(
-              "%s is not a valid IPV4 address.", ipAddress));
-        }
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException(String.format(
-            "%s is not a valid IPV4 address.", ipAddress));
-      }
-    }
-    return true;
   }
 
   /*

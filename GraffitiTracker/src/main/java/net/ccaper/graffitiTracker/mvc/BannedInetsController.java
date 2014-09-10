@@ -3,7 +3,6 @@ package net.ccaper.graffitiTracker.mvc;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import net.ccaper.graffitiTracker.mvc.validators.BannedInetValidator;
 import net.ccaper.graffitiTracker.objects.AppUser;

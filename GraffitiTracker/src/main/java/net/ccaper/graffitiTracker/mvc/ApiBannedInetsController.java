@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
+import net.ccaper.graffitiTracker.utils.InetAddressUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,7 +66,12 @@ public class ApiBannedInetsController {
   @ResponseBody
   // TODO(ccaper): update tests
   public BannedInet addBannedInet(
-      @RequestBody OriginalEditedBannedInet originalEditBannedInet) {
+      @RequestBody OriginalEditedBannedInet originalEditBannedInet,
+      HttpServletResponse response) {
+    if (!isBannedInetValid(originalEditBannedInet.getEditedBannedInet())) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      return originalEditBannedInet.getEditedBannedInet();
+    }
     if (originalEditBannedInet.getOriginalBannedInet() != null
         && originalEditBannedInet.getOriginalBannedInet().getInetMinIncl() != null
         && !originalEditBannedInet.getOriginalBannedInet().getInetMinIncl()
@@ -78,6 +84,22 @@ public class ApiBannedInetsController {
               .getEditedBannedInet());
     }
     return originalEditBannedInet.getEditedBannedInet();
+  }
+
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
+  private boolean isBannedInetValid(BannedInet bannedInet) {
+    if (!InetAddressUtils.isInetValid(bannedInet.getInetMinIncl())) {
+      return false;
+    }
+    if (!InetAddressUtils.isInetValid(bannedInet.getInetMaxIncl())) {
+      return false;
+    }
+    if (InetAddressUtils.stringToNumber(bannedInet.getInetMinIncl()) > InetAddressUtils
+        .stringToNumber(bannedInet.getInetMaxIncl())) {
+      return false;
+    }
+    return true;
   }
 
   // TODO(ccaper): unit test
