@@ -2,13 +2,18 @@ package net.ccaper.graffitiTracker.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-// TODO(ccaper): confirm if needed
+/**
+ * 
+ * @author ccaper
+ * 
+ *         Utils to help with Inet addresses
+ */
 public class InetAddressUtils {
-  // TODO(ccaper): javadoc
   /**
-   * String to number.
-   *
-   * @param ip the ip
+   * Converts a Inet string to a number, mimic'ing mysql inet_aton function
+   * 
+   * @param ip
+   *          the ip
    * @return the double
    */
   public static double stringToNumber(String ip) {
@@ -39,12 +44,12 @@ public class InetAddressUtils {
     }
     return result;
   }
-  
-  
+
   /**
    * Checks if is inet valid.
-   *
-   * @param inet the inet
+   * 
+   * @param inet
+   *          the inet
    * @return true, if is inet is valid
    */
   public static boolean isInetValid(String inet) {

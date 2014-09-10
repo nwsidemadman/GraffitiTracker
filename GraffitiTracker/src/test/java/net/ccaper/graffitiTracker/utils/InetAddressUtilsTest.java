@@ -1,14 +1,12 @@
 package net.ccaper.graffitiTracker.utils;
 
 import static org.junit.Assert.*;
-import net.ccaper.graffitiTracker.serviceImpl.LoginAddressServiceImpl;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-// TODO(ccaper): confirm if needed
 public class InetAddressUtilsTest {
 
   @Before

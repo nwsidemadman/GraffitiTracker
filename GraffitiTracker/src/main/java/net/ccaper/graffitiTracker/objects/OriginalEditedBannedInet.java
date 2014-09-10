@@ -1,7 +1,6 @@
 package net.ccaper.graffitiTracker.objects;
 
 // TODO(ccaper): javadoc
-// TODO(ccaper): confirm needed
 public class OriginalEditedBannedInet {
   private BannedInet originalBannedInet;
   private BannedInet editedBannedInet;
