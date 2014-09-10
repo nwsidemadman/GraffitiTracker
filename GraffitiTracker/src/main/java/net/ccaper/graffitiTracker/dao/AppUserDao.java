@@ -7,6 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
+// TODO(ccaper): check if invalid banned inet submit can be caught on ajax error and notify user
 // TODO(ccaper): validate create/edit banned inet
 // TODO(ccaper): fix page layout on create/edit banned inet
 // TODO(ccaper): make notes on create/edit banned inet a larger text box
