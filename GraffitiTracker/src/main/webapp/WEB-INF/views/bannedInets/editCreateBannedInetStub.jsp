@@ -4,11 +4,6 @@
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
-<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
-
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
     <p>Not authorized to view this page</p>
