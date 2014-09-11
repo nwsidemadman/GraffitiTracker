@@ -4,6 +4,11 @@
   uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
+
 <sec:authorize access="!hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
     <p>Not authorized to view this page</p>
@@ -11,38 +16,39 @@
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
   <c:set var="actionValue" value="${contextPath}/banned_inets/editCreateBannedInet" />
-  <div>
+  <div id="editCreateDeleteBannedInet">
     <div>Banned IP</div>
-    <sf:form id="editCreateBannedInet" method="POST" modelAttribute="editedBannedInet" action="${actionValue}" >
-      <fieldset>
-        <div>
-          <sf:errors path="inetMinIncl" cssClass="error" /><br/>
-          <sf:label path="inetMinIncl">Min IP: </sf:label>
-          <sf:input id="inetMinIncl" path="inetMinIncl" size="15" maxlength="15" />
-        </div>
-        <div>
-          <sf:errors path="inetMaxIncl" cssClass="error" /><br/>
-          <sf:label path="inetMaxIncl">Max IP: </sf:label>
-          <sf:input id="inetMaxIncl" path="inetMaxIncl" size="15" maxlength="15" />
-        </div>
-        <div>
-          <sf:label path="isActive">Active: </sf:label>
-          <sf:radiobutton id="isActive" path="isActive" value="true" /> Yes
-          <sf:radiobutton id="isActive" path="isActive" value="false" /> No
-        </div>
-        <div>
-          <sf:label path="notes">Notes: </sf:label>
-          <sf:input id="notes" path="notes" size="15" maxlength="15" />
-        </div>
-        <div>
-          <input id="submit" name="commit" type="submit" 
-                    value="${isNew == true ? "Create" : "Edit" }" />
-          <c:if test="${isNew == false}">
-            <input id="delete" name="delete" type="button" value="Delete" />
-          </c:if>
-        </div>
-      </fieldset>
-    </sf:form>
+      <sf:form id="editCreateBannedInet" method="POST" modelAttribute="editedBannedInet" action="${actionValue}" >
+        <fieldset>
+          <div>
+            <sf:errors path="inetMinIncl" cssClass="error" /><br/>
+            <sf:label path="inetMinIncl">Min IP: </sf:label>
+            <sf:input id="inetMinIncl" path="inetMinIncl" size="15" maxlength="15" />
+          </div>
+          <div>
+            <sf:errors path="inetMaxIncl" cssClass="error" /><br/>
+            <sf:label path="inetMaxIncl">Max IP: </sf:label>
+            <sf:input id="inetMaxIncl" path="inetMaxIncl" size="15" maxlength="15" />
+          </div>
+          <div>
+            <sf:label path="isActive">Active: </sf:label>
+            <sf:radiobutton id="isActive" path="isActive" value="true" /> Yes
+            <sf:radiobutton id="isActive" path="isActive" value="false" /> No
+          </div>
+          <div>
+            <sf:label path="notes">Notes:</sf:label>
+            <sf:input id="notes" path="notes" size="30" />
+          </div>
+          <div>
+            <input id="bannedInetsSubmit" name="commit" type="submit" 
+            value="${isNew == true ? "Create" : "Edit" }" />
+            <c:if test="${isNew == false}">
+              <input id="bannedInetDelete" name="delete" type="button" value="Delete" />
+            </c:if>
+          </div>
+        </fieldset>
+      </sf:form>
+    </div>
     <script type="text/javascript">
     $(document).ready(function() {
       // handle editing banned inet
@@ -74,7 +80,7 @@
       });
       
       // handle deleting banned inet
-      $('#editCreateBannedInet').on('click', '#delete', function () {
+      $('#editCreateBannedInet').on('click', '#bannedInetDelete', function () {
         inetMinIncl = "${editedBannedInet.inetMinIncl == null ? null : editedBannedInet.inetMinIncl}";
         inetMaxIncl = "${editedBannedInet.inetMaxIncl == null ? null : editedBannedInet.inetMaxIncl}";
         $.ajax({ 

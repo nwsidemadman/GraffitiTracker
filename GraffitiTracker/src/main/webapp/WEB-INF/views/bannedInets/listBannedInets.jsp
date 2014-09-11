@@ -13,7 +13,7 @@
   </div>
   <div id="bannedIps">
     <div id="createNewBannedInet">
-      <input type="button" value="Create New Banned IP" />
+      <input id="createNewBannedInetButton" type="button" value="Create New Banned IP" />
     </div>
     <div>
       <table id="bannedInetsTable" class="display" cellspacing="0" width="100%">
