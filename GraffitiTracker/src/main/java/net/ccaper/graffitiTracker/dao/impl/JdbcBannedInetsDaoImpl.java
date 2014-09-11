@@ -149,7 +149,9 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
         SQL_INSERT_OR_NON_PK_UPDATE_BANNED_INET, bannedInetParamMap);
   }
 
-  // TODO(ccaper): javadoc
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.dao.BannedInetsDao#pkUpdateBannedInets(net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet)
+   */
   @Override
   public void pkUpdateBannedInets(
       OriginalEditedBannedInet originalEditedBannedInet) {
@@ -181,7 +183,9 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
         bannedInetRowMapper);
   }
 
-  // TODO(ccaper): javadoc
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.dao.BannedInetsDao#deleteBannedInet(java.lang.String, java.lang.String)
+   */
   @Override
   public void deleteBannedInet(String minInetIncl, String maxInetIncl) {
     Map<String, String> paramMap = new HashMap<String, String>(2);

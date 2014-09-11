@@ -40,8 +40,14 @@ public interface BannedInetsService {
    *          the {@link net.ccaper.graffitiTracker.objects.BannedInet}
    */
   void insertOrNonInetUpdateBannedInets(BannedInet bannedInet);
-  
-  // TODO(ccaper): javadoc
+
+  /**
+   * Updates the banned inet when either the min inet or max inet has changed
+   * 
+   * @param originalEditedBannedInet
+   *          the holder containing the original banned inet and the edited
+   *          banned inet
+   */
   void inetUpdateBannedInets(OriginalEditedBannedInet originalEditedBannedInet);
 
   /**
@@ -50,7 +56,14 @@ public interface BannedInetsService {
    * @return the all banned inets
    */
   List<BannedInet> getAllBannedInets();
-  
-  // TODO(ccaper): javadoc
+
+  /**
+   * Deletes the banned inet.
+   * 
+   * @param minInetIncl
+   *          the min inet incl
+   * @param maxInetIncl
+   *          the max inet incl
+   */
   void deleteBannedInet(String minInetIncl, String maxInetIncl);
 }

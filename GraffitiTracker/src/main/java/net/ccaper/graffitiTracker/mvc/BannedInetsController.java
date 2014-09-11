@@ -71,7 +71,14 @@ public class BannedInetsController {
     this.userSecurityService = userSecurityService;
   }
 
-  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
+  /**
+   * List banned inets.
+   * 
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(method = RequestMethod.GET)
   public String listBannedInets(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -82,8 +89,19 @@ public class BannedInetsController {
     return "bannedInets/listBannedInets";
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /**
+   * Controller for handling edits and create requests for banned inets. Returns
+   * edit/create form.
+   * 
+   * @param model
+   *          the model
+   * @param origBannedInet
+   *          the orig banned inet, empty if a create request
+   * @param request
+   *          the request
+   * @return the view name
+   */
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
   public String editCreateBannedInet(Map<String, Object> model,
       BannedInet origBannedInet, HttpServletRequest request) {

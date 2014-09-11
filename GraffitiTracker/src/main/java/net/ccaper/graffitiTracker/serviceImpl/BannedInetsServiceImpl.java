@@ -76,13 +76,17 @@ public class BannedInetsServiceImpl implements BannedInetsService {
     return bannedInetsDao.getAllBannedInets();
   }
 
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.service.BannedInetsService#inetUpdateBannedInets(net.ccaper.graffitiTracker.objects.OriginalEditedBannedInet)
+   */
   @Override
-  // TODO(ccaper): javadoc
   public void inetUpdateBannedInets(OriginalEditedBannedInet originalEditedBannedInet) {
     bannedInetsDao.pkUpdateBannedInets(originalEditedBannedInet);
   }
 
-  // TODO(ccaper): javadoc
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.service.BannedInetsService#deleteBannedInet(java.lang.String, java.lang.String)
+   */
   @Override
   public void deleteBannedInet(String minInetIncl, String maxInetIncl) {
     bannedInetsDao.deleteBannedInet(minInetIncl, maxInetIncl);

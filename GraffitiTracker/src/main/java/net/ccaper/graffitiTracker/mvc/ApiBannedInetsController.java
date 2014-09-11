@@ -86,8 +86,15 @@ public class ApiBannedInetsController {
     return originalEditBannedInet.getEditedBannedInet();
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /**
+   * Checks if banned inet is valid, checking if inet min is not greater than
+   * inet max.
+   * 
+   * @param bannedInet
+   *          the banned inet
+   * @return true, if banned inet is valid
+   */
   private boolean isBannedInetValid(BannedInet bannedInet) {
     if (!InetAddressUtils.isInetValid(bannedInet.getInetMinIncl())) {
       return false;
@@ -103,7 +110,13 @@ public class ApiBannedInetsController {
   }
 
   // TODO(ccaper): unit test
-  // TODO(ccaper): javadoc
+  /**
+   * Checks of the inet values changed on a user submission
+   * 
+   * @param originalEditBannedInet
+   *          Holder containing original banned inet and edited banned inet
+   * @return true, if values changed
+   */
   private boolean didInetsChange(OriginalEditedBannedInet originalEditBannedInet) {
     if (originalEditBannedInet.getOriginalBannedInet().getInetMinIncl()
         .equals(originalEditBannedInet.getEditedBannedInet().getInetMinIncl())
@@ -131,8 +144,13 @@ public class ApiBannedInetsController {
     return data;
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /**
+   * Deletes banned inet.
+   *
+   * @param minInetIncl the min inet incl
+   * @param maxInetIncl the max inet incl
+   */
   @RequestMapping(value = "/{minInetIncl}/{maxInetIncl}/", method = RequestMethod.DELETE)
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteBannedInet(@PathVariable String minInetIncl,
