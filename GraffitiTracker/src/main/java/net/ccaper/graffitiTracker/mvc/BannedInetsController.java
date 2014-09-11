@@ -71,7 +71,6 @@ public class BannedInetsController {
     this.userSecurityService = userSecurityService;
   }
 
-  // TODO(ccaper): unit test
   /**
    * List banned inets.
    * 
@@ -89,7 +88,6 @@ public class BannedInetsController {
     return "bannedInets/listBannedInets";
   }
 
-  // TODO(ccaper): unit test
   /**
    * Controller for handling edits and create requests for banned inets. Returns
    * edit/create form.
@@ -105,7 +103,7 @@ public class BannedInetsController {
   @RequestMapping(value = "/editCreateBannedInet", method = RequestMethod.GET)
   public String editCreateBannedInet(Map<String, Object> model,
       BannedInet origBannedInet, HttpServletRequest request) {
-    model.put("isNew", origBannedInet.getInetMaxIncl() == null ? true : false);
+    model.put("isNew", origBannedInet.getInetMinIncl() == null ? true : false);
     model.put("editedBannedInet", origBannedInet);
     model.put("contextPath", request.getContextPath());
     return "bannedInets/editCreateBannedInet";
