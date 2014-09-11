@@ -64,7 +64,6 @@ public class ApiBannedInetsController {
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  // TODO(ccaper): update tests
   public BannedInet addBannedInet(
       @RequestBody OriginalEditedBannedInet originalEditBannedInet,
       HttpServletResponse response) {
@@ -73,9 +72,7 @@ public class ApiBannedInetsController {
       return originalEditBannedInet.getEditedBannedInet();
     }
     if (originalEditBannedInet.getOriginalBannedInet() != null
-        && originalEditBannedInet.getOriginalBannedInet().getInetMinIncl() != null
-        && !originalEditBannedInet.getOriginalBannedInet().getInetMinIncl()
-            .equals(StringUtils.EMPTY)
+        && !StringUtils.isEmpty(originalEditBannedInet.getOriginalBannedInet().getInetMinIncl())
         && didInetsChange(originalEditBannedInet)) {
       bannedInetsService.inetUpdateBannedInets(originalEditBannedInet);
     } else {
@@ -86,7 +83,7 @@ public class ApiBannedInetsController {
     return originalEditBannedInet.getEditedBannedInet();
   }
 
-  // TODO(ccaper): unit test
+  // visible for testing
   /**
    * Checks if banned inet is valid, checking if inet min is not greater than
    * inet max.
@@ -95,7 +92,7 @@ public class ApiBannedInetsController {
    *          the banned inet
    * @return true, if banned inet is valid
    */
-  private boolean isBannedInetValid(BannedInet bannedInet) {
+  static boolean isBannedInetValid(BannedInet bannedInet) {
     if (!InetAddressUtils.isInetValid(bannedInet.getInetMinIncl())) {
       return false;
     }
@@ -109,7 +106,7 @@ public class ApiBannedInetsController {
     return true;
   }
 
-  // TODO(ccaper): unit test
+  // visible for testing
   /**
    * Checks of the inet values changed on a user submission
    * 
@@ -117,7 +114,7 @@ public class ApiBannedInetsController {
    *          Holder containing original banned inet and edited banned inet
    * @return true, if values changed
    */
-  private boolean didInetsChange(OriginalEditedBannedInet originalEditBannedInet) {
+  static boolean didInetsChange(OriginalEditedBannedInet originalEditBannedInet) {
     if (originalEditBannedInet.getOriginalBannedInet().getInetMinIncl()
         .equals(originalEditBannedInet.getEditedBannedInet().getInetMinIncl())
         && originalEditBannedInet
@@ -144,7 +141,6 @@ public class ApiBannedInetsController {
     return data;
   }
 
-  // TODO(ccaper): unit test
   /**
    * Deletes banned inet.
    *
