@@ -49,22 +49,20 @@
 <sec:authorize access="isAuthenticated()">
   <div>
     <s:url var="unauthUrl" value="/static/j_spring_security_logout" />
-    <p>
-    </p>
     <sec:authentication property="authorities" var="roles" />
-    <p>Username: ${appUser.username} (ID: ${appUser.userId})</p>
-    <p>Register Date: <fmt:formatDate value="${appUser.registerTimestamp}" pattern="yyyy-MM-dd" /></p>
-    <p>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></p>
-    <p>Roles:</p>
+    <div>Username: ${appUser.username} (ID: ${appUser.userId})</div>
+    <div>Register Date: <fmt:formatDate value="${appUser.registerTimestamp}" pattern="yyyy-MM-dd" /></div>
+    <div>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></div>
+    <div>Roles:</div>
     <ul id="roles">
-    <c:forEach var="role" items="${appUser.roles}">
-      <li>
-        <fmt:formatDate value="${role.grantedTimestamp}" pattern="yyyy-MM-dd" var="grantedDate"/>
-        <c:out value="${role.role.displayString} (${grantedDate})" />
-      </li>
-    </c:forEach>
+      <c:forEach var="role" items="${appUser.roles}">
+        <li>
+          <fmt:formatDate value="${role.grantedTimestamp}" pattern="yyyy-MM-dd" var="grantedDate"/>
+          <c:out value="${role.role.displayString} (${grantedDate})" />
+        </li>
+      </c:forEach>
     </ul>
-    <p>Number Of Logins: ${appUser.loginCount}</p>
+    <div>Number Of Logins: ${appUser.loginCount}</div>
     <FORM METHOD="LINK" ACTION="<s:url value="${unauthUrl}" />">
       <div><INPUT TYPE="submit" VALUE=" Logout "></div>
     </FORM>

@@ -40,8 +40,7 @@ body {
   width: 495px;
   margin-top: 24px;
   margin-left: 20px;
-  padding: 0px 10px 0px 10px;
-  font-size: 1em;
+  padding: 10px 10px 0px 10px;
   border-top: 1px solid #000000;
   border-bottom: 1px solid #000000;
 }
@@ -95,7 +94,7 @@ body {
   padding-right: 20px;
   padding-bottom: 12px;
   padding-left: 12px;
-  width: 162px;
+  width: 200px;
 }
 
 #footer {
