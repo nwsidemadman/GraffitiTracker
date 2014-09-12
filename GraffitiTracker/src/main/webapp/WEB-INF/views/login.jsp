@@ -47,7 +47,7 @@
     <p><a href="<s:url value="/users/forgotPassword"/>">Forgot Password</a></p>
 
     <script type="text/javascript">
-          document.getElementById('username_or_email').focus();
+          document.getElementById('username').focus();
         </script>
   </div>
 </sec:authorize>
