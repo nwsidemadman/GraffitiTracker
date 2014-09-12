@@ -4,15 +4,24 @@
 <head>
 <title>GraffitiTracker</title>
 
+<link
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
+  rel="stylesheet" type="text/css">
+<link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"
   rel="stylesheet" type="text/css" />
 <link href="<s:url value="/resources" />/css/graffitiTracker.css"
   rel="stylesheet" type="text/css" />
-  
+
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
+<script
+  src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+<script
+  src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
 
 <script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
 </head>

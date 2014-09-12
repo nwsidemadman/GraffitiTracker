@@ -16,6 +16,6 @@
       var d = new Date();
       document.write("&copy; " + d.getFullYear());
     </script>
-    <span id="company_name"><a href="http://whalecopter.s3-website-us-west-2.amazonaws.com/" >Whalecopter Productions</a></span>
+    <span id="company_name"><small><a href="http://whalecopter.s3-website-us-west-2.amazonaws.com/" >Whalecopter Productions</a><small></small></span>
   </p>
 </div>

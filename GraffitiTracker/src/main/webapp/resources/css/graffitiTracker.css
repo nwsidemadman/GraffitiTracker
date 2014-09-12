@@ -4,13 +4,11 @@ body {
   background: #000000;
   color: #333333;
   font-family: 'Lucida Grande', sans-serif;
-  font-size: 0.75em;
   font-size-adjust: none;
   font-stretch: normal;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
-  line-height: 1.25em;
   text-align: center;
 }
 
@@ -100,10 +98,6 @@ body {
   width: 162px;
 }
 
-#side label {
-  font-size: 1.2em;
-}
-
 #footer {
   clear: both;
   background: #000000;
@@ -113,14 +107,15 @@ body {
 }
 
 #info {
+  padding-top: 8px;
   background: #000000;
-  font-size: 1.4em;
+  font-size: 1.2em;
   color: #986F33;
   text-align: center;
   width: 755px;
   font-weight:bold;
   border-top: 5px solid #986F33;
-  line-height: .3;
+  line-height: 1.25;
 }
 
 #info a:link {
@@ -284,10 +279,6 @@ a img,form,fieldset {
 h2 {
   font-weight: normal;
   line-height: 1.2em;
-}
-
-* {
-  padding: 0px;
 }
 
 span.error {
