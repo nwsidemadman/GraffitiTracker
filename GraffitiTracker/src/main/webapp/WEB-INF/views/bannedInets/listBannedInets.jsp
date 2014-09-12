@@ -23,6 +23,7 @@
                   <th>Max IP</th>
                   <th>Active</th>
                   <th>Attempts</th>
+                  <th>Created</th>
                   <th>Notes</th>
               </tr>
           </thead>
@@ -30,8 +31,9 @@
               <tr align="left">
                   <th id="minIp">Min IP</th>
                   <th id="maxIp">Max IP</th>
-                  <th id="Active">Active</th>
-                  <th id="Attempts">Attempts</th>
+                  <th id="active">Active</th>
+                  <th id="attempts">Attempts</th>
+                  <th id="created">Created</th>
                   <th id="notes">Notes</th>
               </tr>
           </tfoot>
@@ -43,7 +45,8 @@
         $('#bannedInetsTable tfoot #minIp').html('<input type="text" placeholder="Search" />');
         $('#bannedInetsTable tfoot #maxIp').html('<input type="text" placeholder="Search" />');
         $('#bannedInetsTable tfoot #active').html('<select><option></option><option value="Yes">Yes</option><option value="No">No</option></select>');
-        $('#bannedInetsTable tfoot #Attempts').html('<input type="text" placeholder="Search" />');
+        $('#bannedInetsTable tfoot #attempts').html('<input type="text" placeholder="Search" />');
+        $('#bannedInetsTable tfoot #created').html('<input type="text" placeholder="Search" />');
         $('#bannedInetsTable tfoot #notes').html('<input type="text" placeholder="Search" />');
         
         // create the datatable
@@ -67,6 +70,14 @@
                   }
                 },
                 { "data": "numberRegistrationAttempts"},
+                { "data" : "createdTimestamp",
+                  "mRender": function ( oObj ) {
+                    if (oObj == null) {
+                      return "N/A";
+                    }
+                    return dateFormat_yyyymmdd(oObj);
+                  }
+                },
                 { "data": "notes"}
             ]
         });
@@ -74,6 +85,7 @@
         // capture a click on the datatable
         $('#bannedInetsTable tbody').on('click', 'tr', function () {
           var aData = bannedInetsTableJObject.fnGetData(this);
+          delete aData.createdTimestamp;
           $.ajax({ 
             type: "GET",
             dataType: "html",

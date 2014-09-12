@@ -1,5 +1,7 @@
 package net.ccaper.graffitiTracker.objects;
 
+import java.sql.Timestamp;
+
 /**
  * 
  * @author ccaper
@@ -12,6 +14,7 @@ public class BannedInet {
   private String inetMaxIncl;
   private boolean isActive = true;
   private int numberRegistrationAttempts;
+  private Timestamp createdTimestamp;
   private String notes;
 
   /**
@@ -109,6 +112,25 @@ public class BannedInet {
     this.notes = notes;
   }
   
+  
+  /**
+   * Sets the created timestamp.
+   *
+   * @param createdTimestamp the new created timestamp
+   */
+  public void setCreatedTimestamp(Timestamp createdTimestamp) {
+    this.createdTimestamp = createdTimestamp;
+  }
+  
+  /**
+   * Gets the created timestamp.
+   *
+   * @return the created timestamp
+   */
+  public Timestamp getCreatedTimestamp() {
+    return createdTimestamp;
+  }
+  
   /*
    * (non-Javadoc)
    * 
@@ -162,6 +184,6 @@ public class BannedInet {
     return "BannedInet [inetMinIncl=" + inetMinIncl + ", inetMaxIncl="
         + inetMaxIncl + ", isActive=" + isActive
         + ", numberRegistrationAttempts=" + numberRegistrationAttempts
-        + ", notes=" + notes + "]";
+        + ", notes=" + notes + ", createdTimestamp=" + createdTimestamp + "]";
   }
 }

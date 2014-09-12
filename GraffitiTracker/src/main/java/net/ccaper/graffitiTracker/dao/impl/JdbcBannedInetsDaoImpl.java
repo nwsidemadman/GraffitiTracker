@@ -32,6 +32,7 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
   private static final String ORIG_MIN_INET_COL = "orig_inet_min_incl";
   private static final String ORIG_MAX_INET_COL = "orig_inet_max_incl";
   static final String ACTIVE_COL = "active";
+  private static final String CREATED_TIMESTAMP_COL = "created_timestamp";
   private static final String NUMBER_REGISTRATION_ATTEMPTS_COL = "number_registration_attempts";
   private static final String NOTES_COL = "notes";
   private static final String INET = "inet";
@@ -61,8 +62,8 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
       MAX_INET_COL, ACTIVE_COL, ACTIVE_COL, NOTES_COL, NOTES_COL, MIN_INET_COL,
       ORIG_MIN_INET_COL, MAX_INET_COL, ORIG_MAX_INET_COL).toLowerCase();
   private static final String SQL_GET_BANNED_INETS = String.format(
-      "SELECT inet_ntoa(%s) as %s, inet_ntoa(%s) as %s, %s, %s, %s FROM %s",
-      MIN_INET_COL, MIN_INET_COL, MAX_INET_COL, MAX_INET_COL, ACTIVE_COL,
+      "SELECT inet_ntoa(%s) as %s, inet_ntoa(%s) as %s, %s, %s, %s, %s FROM %s",
+      MIN_INET_COL, MIN_INET_COL, MAX_INET_COL, MAX_INET_COL, ACTIVE_COL, CREATED_TIMESTAMP_COL,
       NUMBER_REGISTRATION_ATTEMPTS_COL, NOTES_COL, BANNED_INETS_TABLE)
       .toLowerCase();
   private static final String SQL_DELETE_BANNED_INET = String.format(
@@ -84,6 +85,7 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
       bannedInet.setInetMinIncl(rs.getString(MIN_INET_COL));
       bannedInet.setInetMaxIncl(rs.getString(MAX_INET_COL));
       bannedInet.setIsActive(rs.getBoolean(ACTIVE_COL));
+      bannedInet.setCreatedTimestamp(rs.getTimestamp(CREATED_TIMESTAMP_COL));
       bannedInet.setNumberRegistrationAttempts(rs
           .getInt(NUMBER_REGISTRATION_ATTEMPTS_COL));
       bannedInet.setNotes(rs.getString(NOTES_COL));
