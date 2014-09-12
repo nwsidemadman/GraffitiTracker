@@ -78,7 +78,9 @@
                     return dateFormat_yyyymmdd(oObj);
                   }
                 },
-                { "data": "notes"}
+                { "data": "notes",
+                  'bSortable': false
+                }
             ]
         });
         
