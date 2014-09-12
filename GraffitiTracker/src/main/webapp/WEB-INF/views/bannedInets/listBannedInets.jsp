@@ -107,6 +107,45 @@
             }
           });
         });
+        
+        // Apply the search
+        var bannedInetsTableDTObject = bannedInetsTableJObject.api();
+        $( 'input', bannedInetsTableDTObject.column( 0 ).footer() ).on( 'keyup change', function () {
+          bannedInetsTableDTObject
+                .column( 0 )
+                .search( this.value )
+                .draw();
+        } );
+        $( 'input', bannedInetsTableDTObject.column( 1 ).footer() ).on( 'keyup change', function () {
+          bannedInetsTableDTObject
+                .column( 1 )
+                .search( this.value )
+                .draw();
+        } );
+        $( 'select', bannedInetsTableDTObject.column( 2 ).footer() ).on( 'change', function () {
+          bannedInetsTableDTObject
+                .column( 2 )
+                .search( this.value )
+                .draw();
+        } );
+        $( 'input', bannedInetsTableDTObject.column( 3 ).footer() ).on( 'keyup change', function () {
+          bannedInetsTableDTObject
+                .column( 3 )
+                .search( this.value )
+                .draw();
+        } );
+        $( 'input', bannedInetsTableDTObject.column( 4 ).footer() ).on( 'keyup change', function () {
+          bannedInetsTableDTObject
+                .column( 4 )
+                .search( this.value )
+                .draw();
+        } );
+        $( 'input', bannedInetsTableDTObject.column( 5 ).footer() ).on( 'keyup change', function () {
+          bannedInetsTableDTObject
+                .column( 5 )
+                .search( this.value )
+                .draw();
+        } );
       });
       </script>
     </div>

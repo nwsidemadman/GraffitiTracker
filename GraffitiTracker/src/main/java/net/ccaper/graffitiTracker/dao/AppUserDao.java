@@ -8,7 +8,6 @@ import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
 // TODO(ccaper): check if invalid banned inet submit can be caught on ajax error and notify user
-// TODO(ccaper): add key up js to list banned inets on search
 // TODO(ccaper): remove sort arrows from all datatable columns that shouldn't be sorted
 
 /**
