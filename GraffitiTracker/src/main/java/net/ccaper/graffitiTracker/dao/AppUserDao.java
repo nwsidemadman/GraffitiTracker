@@ -8,7 +8,6 @@ import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
 // TODO(ccaper): check if invalid banned inet submit can be caught on ajax error and notify user
-// TODO(ccaper): check banned.jsp for bootstrap layout
 
 /**
  * 
