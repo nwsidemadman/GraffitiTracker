@@ -6,32 +6,32 @@
 
 <sec:authorize access="isAnonymous()">
   <c:set var="actionValue" value="${contextPath}/users/forgotPassword/resetPassword" />
-  <div>
+  <div id="resetPassword">
     <c:if test="${exists == true}">
       <h2>Reset Password</h2>
       <sf:form method="POST" modelAttribute="passwordSecurityForm" action="${actionValue}">
         <fieldset>
           <sf:hidden path="userid" />
           <sf:hidden path="securityQuestion" />
-          <p>
+          <div>
             <sf:errors path="securityAnswer" cssClass="error" /><br/>
             <sf:label path="securityAnswer"><c:out value="${passwordSecurityForm.securityQuestion}" /></sf:label>
             <sf:input path="securityAnswer" size="40" maxlength="40" />
-          </p>
-          <p>
+          </div>
+          <div>
             <sf:errors path="password" cssClass="error" /><br/>
             <sf:label path="password">Password:</sf:label>
             <sf:password path="password" size="30" showPassword="false" maxlength="64"/> 
             <small>6 characters or more</small><br/>
-          </p>
-          <p>
+          </div>
+          <div>
             <sf:errors path="confirmPassword" cssClass="error" /><br/>
             <sf:label path="confirmPassword">Confirm Password:</sf:label>
             <sf:password path="confirmPassword" size="30" showPassword="false" maxlength="64"/> 
-          </p>
-          <p>
+          </div>
+          <div>
             <input name="commit" type="submit" value="Reset Password" />
-          </p>
+          </div>
         </fieldset>
       </sf:form>
     </c:if>
@@ -40,7 +40,6 @@
     </c:if>
   </div>
 </sec:authorize>
-
 <sec:authorize access="isAuthenticated()">
   <div id="simple_content_text">
     <p>You are already a registered user.</p>

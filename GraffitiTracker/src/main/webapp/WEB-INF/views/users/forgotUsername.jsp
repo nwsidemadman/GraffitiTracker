@@ -5,26 +5,24 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <sec:authorize access="isAnonymous()">
-  <div>
+  <div id="forgotUsername">
     <h2>Forgot Username</h2>
-
     <sf:form method="POST" modelAttribute="emailForm" >
       <fieldset> 
-        <p>
+        <div>
           <sf:errors path="email" cssClass="error" /><br/>
           <sf:label path="email">Email address used on account registration:</sf:label>
           <sf:input path="email" size="30" maxlength="100"/> 
           <sf:hidden path="recoverUsername" />
-        </p>
-        <p>
+        </div>
+        <div>
           <input name="commit" type="submit" 
                     value="Recover Username" />
-        </p>
+        </div>
       </fieldset>
     </sf:form>
   </div>
 </sec:authorize>
-
 <sec:authorize access="isAuthenticated()">
   <div id="simple_content_text">
     <p>You are already a registered user.</p>

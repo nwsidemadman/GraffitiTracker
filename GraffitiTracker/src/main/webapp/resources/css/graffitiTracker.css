@@ -178,6 +178,22 @@ body {
 }
 
 #createAccount {
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+#fortgotUsername {
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+#fortgotPassword {
+  margin-top: 20px;
+  font-size: 12px;
+}
+
+#resetPassword {
+  margin-top: 20px;
   font-size: 12px;
 }
 

@@ -5,21 +5,20 @@
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ page session="false"%>
 <sec:authorize access="isAnonymous()">
-  <div>
+  <div id="forgotPassword">
     <h2>Forgot Password</h2>
-
     <sf:form method="POST" modelAttribute="usernameForm" >
       <fieldset> 
-        <p>
+        <div>
           <sf:errors path="username" cssClass="error" /><br/>
           <sf:label path="username">Username:</sf:label>
           <sf:input path="username" size="6" maxlength="20"/> 
           <sf:hidden path="recoverPassword" />
-        </p>
-        <p>
+        </div>
+        <div>
           <input name="commit" type="submit" 
                     value="Recover Password" />
-        </p>
+        </div>
       </fieldset>
     </sf:form>
   </div>
