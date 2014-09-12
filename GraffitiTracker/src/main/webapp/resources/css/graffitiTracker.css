@@ -316,14 +316,14 @@ div.error {
 }
 
 #bannedIps table {
-  font-size: 0.90em;
+  font-size: 10px;
 }
 
 #bannedIps tfoot input {
         width: 100%;
         padding: 3px;
         box-sizing: border-box;
-        font-size: 1em;
+        font-size: 10px;
 }
 
 #bannedIps tbody {
@@ -332,19 +332,18 @@ div.error {
 
 #editBannedIp {
   height: 170px;
-  font-size: 0.9em;
+  font-size: 10px;
 }
 
 #inetMinIncl, #inetMaxIncl, #notes, #bannedInetsSubmit, #bannedInetDelete, #createNewBannedInetButton {
-  font-size: 1.05em;
+  font-size: 10px;
 }
 
 #editCreateDeleteBannedInet table {
-  font-size: 0.90em;
+  font-size: 10px;
 }
 
 #editCreateDeleteBannedInet {
   padding-top: 8px;
   padding-left: 2px;
-  line-height: 1;
 }
