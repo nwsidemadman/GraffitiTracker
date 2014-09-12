@@ -70,12 +70,10 @@ body {
   width: 535px;
   background: #FFFFFF;
   padding: 1px 10px 10px 10px;
-  font-size: 1em;
-  line-height: 10%;
 }
 
 #simple_content_text {
-  line-height: 100%;
+  margin-top: 20px;
 }
 
 #roles {
@@ -177,6 +175,10 @@ body {
 
 #captcha_question {
   line-height: 100%;
+}
+
+#createAccount {
+  font-size: 12px;
 }
 
 #usersTable tbody {

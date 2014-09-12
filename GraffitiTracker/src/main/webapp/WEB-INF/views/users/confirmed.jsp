@@ -6,7 +6,7 @@
 <sec:authorize access="isAnonymous()">
   <div id="simple_content_text">
     <c:if test="${confirmed == true}">
-      <h2>Your registration is now complete.</h2>
+      <p>Your registration is now complete.</p>
       <p>Please sign in!</p>
     </c:if>
     <c:if test="${confirmed == false}">

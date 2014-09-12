@@ -5,7 +5,7 @@
 
 <sec:authorize access="isAnonymous()">
   <div id="simple_content_text">
-    <h2>Thank you for registering!</h2>
+    <p>Thank you for registering!</p>
     <p>You can not sign in until your registration is confirmed.</p>
     <p>You will receive an email shortly that contains a registration confirmation link.</p>
     <p>You MUST click on the link within 48 hours of registration to complete your registration.</p>
