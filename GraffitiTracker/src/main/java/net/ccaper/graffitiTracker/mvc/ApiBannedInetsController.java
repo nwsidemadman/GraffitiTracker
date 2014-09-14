@@ -12,6 +12,7 @@ import net.ccaper.graffitiTracker.service.BannedInetsService;
 import net.ccaper.graffitiTracker.utils.InetAddressUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class ApiBannedInetsController {
    */
   @RequestMapping(method = RequestMethod.POST)
   @ResponseStatus(HttpStatus.CREATED)
-  @ResponseBody
+  @JsonView
   public BannedInet addBannedInet(
       @RequestBody OriginalEditedBannedInet originalEditBannedInet,
       HttpServletResponse response) {
@@ -72,8 +73,8 @@ public class ApiBannedInetsController {
       return originalEditBannedInet.getEditedBannedInet();
     }
     if (originalEditBannedInet.getOriginalBannedInet() != null
-        && !StringUtils.isEmpty(originalEditBannedInet.getOriginalBannedInet().getInetMinIncl())
-        && didInetsChange(originalEditBannedInet)) {
+        && !StringUtils.isEmpty(originalEditBannedInet.getOriginalBannedInet()
+            .getInetMinIncl()) && didInetsChange(originalEditBannedInet)) {
       bannedInetsService.inetUpdateBannedInets(originalEditBannedInet);
     } else {
       bannedInetsService
@@ -133,8 +134,8 @@ public class ApiBannedInetsController {
    * @return the all banned inets
    */
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody
-  Map<String, List<BannedInet>> getAllBannedInets() {
+  @JsonView
+  public Map<String, List<BannedInet>> getAllBannedInets() {
     Map<String, List<BannedInet>> data = new HashMap<String, List<BannedInet>>(
         1);
     data.put("data", bannedInetsService.getAllBannedInets());
@@ -143,9 +144,11 @@ public class ApiBannedInetsController {
 
   /**
    * Deletes banned inet.
-   *
-   * @param minInetIncl the min inet incl
-   * @param maxInetIncl the max inet incl
+   * 
+   * @param minInetIncl
+   *          the min inet incl
+   * @param maxInetIncl
+   *          the max inet incl
    */
   @RequestMapping(value = "/{minInetIncl}/{maxInetIncl}/", method = RequestMethod.DELETE)
   @ResponseStatus(HttpStatus.NO_CONTENT)

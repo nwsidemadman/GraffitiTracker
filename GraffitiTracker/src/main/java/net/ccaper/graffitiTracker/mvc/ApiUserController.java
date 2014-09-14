@@ -10,6 +10,7 @@ import net.ccaper.graffitiTracker.objects.LoginInet;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.LoginAddressService;
 
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,8 @@ public class ApiUserController {
    * @return the all {@link net.ccaper.graffitiTracker.objects.AppUser}s
    */
   @RequestMapping(method = RequestMethod.GET)
-  public @ResponseBody
-  Map<String, List<AppUser>> getAllUsers() {
+  @JsonView
+  public Map<String, List<AppUser>> getAllUsers() {
     Map<String, List<AppUser>> data = new HashMap<String, List<AppUser>>(1);
     data.put("data", appUserService.getAllUsers());
     return data;
@@ -85,8 +86,9 @@ public class ApiUserController {
    * @return the user {@link net.ccaper.graffitiTracker.objects.LoginInet}s
    */
   @RequestMapping(value = "/{userId}/logins", method = RequestMethod.GET)
-  public @ResponseBody
-  Map<String, List<LoginInet>> getUserLoginAddresses(@PathVariable int userId) {
+  @JsonView
+  public Map<String, List<LoginInet>> getUserLoginAddresses(
+      @PathVariable int userId) {
     Map<String, List<LoginInet>> data = new HashMap<String, List<LoginInet>>(1);
     data.put("data", loginAddressService.getLoginAddressesByUserId(userId));
     return data;

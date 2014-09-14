@@ -8,11 +8,11 @@
   <packaging>war</packaging>
   <version>1.1.11-BUILD-SNAPSHOT</version>
   <properties>
-    <java-version>1.6</java-version>
+    <java-version>1.7</java-version>
     <org.springframework-version>4.0.0.RELEASE</org.springframework-version>
-    <org.springframework-security-version>3.2.0.RELEASE</org.springframework-security-version>
-    <org.aspectj-version>1.7.4</org.aspectj-version>
-    <org.slf4j-version>1.7.5</org.slf4j-version>
+    <org.springframework-security-version>3.2.5.RELEASE</org.springframework-security-version>
+    <org.aspectj-version>1.8.2</org.aspectj-version>
+    <org.slf4j-version>1.7.7</org.slf4j-version>
   </properties>
   <dependencies>
     <!-- Spring -->
@@ -145,18 +145,12 @@
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
-      <scope>provided</scope>
-    </dependency>
 
     <!-- Apache Tiles -->
     <dependency>
       <groupId>org.apache.tiles</groupId>
       <artifactId>tiles-jsp</artifactId>
-      <version>3.0.3</version>
+      <version>3.0.4</version>
     </dependency>
 
     <!-- Commons Database Connection Pooling -->
@@ -170,7 +164,7 @@
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.27</version>
+      <version>5.1.32</version>
     </dependency>
 
     <!-- Apache Commons Validator -->
@@ -184,7 +178,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.1</version>
+      <version>3.3.2</version>
     </dependency>
 
     <!-- Apache Commons Codec -->
@@ -203,16 +197,16 @@
     </dependency>
     <!-- Used for REST Service JSON translation -->
     <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>2.2.3</version>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.13</version>
     </dependency>
 
     <!-- Javax Mail -->
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
-      <version>1.4</version>
+      <version>1.4.7</version>
     </dependency>
 
     <!--  Apache Velocity -->
@@ -232,7 +226,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <version>1.8.4</version>
+      <version>1.9.5</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -256,10 +250,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
+        <version>3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <compilerArgument>-Xlint:all</compilerArgument>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
@@ -268,7 +262,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>1.3.2</version>
         <configuration>
           <mainClass>org.test.int1.Main</mainClass>
         </configuration>
