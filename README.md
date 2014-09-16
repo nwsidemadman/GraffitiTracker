@@ -3,7 +3,7 @@ GraffitiTracker
 
 Status
 ------
-Basic infrastructure in place.  Login, username, password recovery feature complete.
+Basic infrastructure in place.  Login, username, password recovery feature complete. User account edits complete. Super admin user account edits complete.  Super admin ip banning complete.
 
 Summary
 -------
@@ -11,8 +11,8 @@ Tracks crowd sourced graffiti through metadata characteristics, by date and loca
 
 Feature/Infrastructure Overview
 ----------------
--Implemented using Spring 4.0  
--Spring MVC for servlet/JSP  
+-Implemented using Spring 4.1.0  
+-Spring MVC for servlet/JSP and REST resources 
 -Spring Security for login, custom role management, page access based per user role, and HTTP/HTTPS protocol trafficking  
 -MySQL for data persitence  
 -Spring OR/M for object to data mapping  
@@ -31,7 +31,10 @@ Feature/Infrastructure Overview
 -Password reset through answering user defined security answer and emailed unique, expiring URL link for security, with silent failures for security  
 -Daily email sent to super admin users containing basic site usage statistics  
 -Application deployed with Amazon's AWS Relational Database Services and Amazon's AWS Elastic Beanstalk (auto-scaling web server)  
--User inputs validated and errors displayed  
+-User inputs validated and errors displayed
+-Bootstrap framework implemented for layout
+-Datatables used for table display
+-Ajax calls implemented with JSON and HTML responses where practical
 
 To Build With Maven
 -------------------
