@@ -31,10 +31,10 @@ Feature/Infrastructure Overview
 -Password reset through answering user defined security answer and emailed unique, expiring URL link for security, with silent failures for security  
 -Daily email sent to super admin users containing basic site usage statistics  
 -Application deployed with Amazon's AWS Relational Database Services and Amazon's AWS Elastic Beanstalk (auto-scaling web server)  
--User inputs validated and errors displayed
--Bootstrap framework implemented for layout
--Datatables used for table display
--Ajax calls implemented with JSON and HTML responses where practical
+-User inputs validated and errors displayed  
+-Bootstrap framework implemented for layout  
+-Datatables used for table display  
+-Ajax calls implemented with JSON and HTML responses where practical  
 
 To Build With Maven
 -------------------
