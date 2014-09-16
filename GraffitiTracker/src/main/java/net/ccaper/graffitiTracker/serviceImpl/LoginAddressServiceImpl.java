@@ -5,6 +5,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import net.ccaper.graffitiTracker.utils.InetAddressUtils;
  */
 @Service("loginAddressService")
 public class LoginAddressServiceImpl implements LoginAddressService {
+  private static final Logger logger = LoggerFactory
+      .getLogger(LoginAddressServiceImpl.class);
   @Autowired
   private LoginAddressDao loginAddressDao;
 
@@ -46,6 +50,8 @@ public class LoginAddressServiceImpl implements LoginAddressService {
   public void updateLoginAddressByUsername(String username, String ipAddress) {
     if (InetAddressUtils.isInetValid(ipAddress)) {
       loginAddressDao.updateLoginAddressByUsername(username, ipAddress);
+    } else {
+      logger.error(String.format("The ip address '%s' is not valid.", ipAddress));
     }
   }
 

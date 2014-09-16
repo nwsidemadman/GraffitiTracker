@@ -239,6 +239,10 @@ body {
   font-size: 10px;
 }
 
+#userLoginsTableHeader {
+  font-weight: bold;
+}
+
 #userLoginsTable td:first-child, #userLoginsTable td:last-child {
   cursor: pointer; cursor: hand;
 }

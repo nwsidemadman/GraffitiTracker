@@ -44,6 +44,11 @@
     <td width="50%">
       <table width="100%">
         <tr>
+          <td id="userLoginsTableHeader">
+            User Login Information
+          </td>
+        </tr>
+        <tr>
           <td>
             <table id="userLoginsTable" class="display" cellspacing="0" width="100%">
               <thead>

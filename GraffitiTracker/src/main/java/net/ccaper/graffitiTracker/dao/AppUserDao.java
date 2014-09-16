@@ -7,8 +7,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import net.ccaper.graffitiTracker.enums.RoleEnum;
 import net.ccaper.graffitiTracker.objects.AppUser;
 
-// TODO(ccaper): user login ip's not working, fix
-// TODO(ccaper): add descriptive header to user login ips
 // TODO(ccaper): check if invalid banned inet submit can be caught on ajax error and notify user
 
 /**
