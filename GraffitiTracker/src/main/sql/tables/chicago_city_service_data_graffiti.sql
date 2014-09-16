@@ -11,8 +11,8 @@ CREATE TABLE `chicago_city_service_data_graffiti` (
   `lat` float(17, 14) NOT NULL,
   `long` float(17, 14) NOT NULL,
   `media_url` varchar(256),
-  `system_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `system_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `system_created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `system_updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(`id`),
   UNIQUE KEY `service_request_id_UNIQUE` (`service_request_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
