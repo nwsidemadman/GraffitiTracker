@@ -2,9 +2,7 @@ package net.ccaper.graffitiTracker.dao.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +29,11 @@ public class RestChicagoCityServiceServerDaoImpl implements
       PAGE_SIZE_ARG, PAGE_SIZE_ARG, PAGE_ARG, PAGE_ARG);
   private static final String PAGE_SIZE = "500";
 
-  // TODO(ccaper): unit test
   // TODO(ccaper): javadoc
   @Override
   public List<ChicagoCityServiceGraffiti> getGraffiti(Date startDate,
       Date endDate) {
-    if (startDate != null && endDate != null && endDate.before(startDate)) {
+    if ((startDate != null && endDate != null) && endDate.before(startDate)) {
       throw new IllegalArgumentException(String.format(
           "startDate '%s' must be <= to endDate '%s'",
           DateFormats.W3_DATE_FORMAT.format(startDate),
@@ -78,25 +75,5 @@ public class RestChicagoCityServiceServerDaoImpl implements
       chicagoServicesDateRangeUrl += String.format("&%s={%s}", arg, arg);
       vars.put(arg, DateFormats.W3_DATE_FORMAT.format(date));
     }
-  }
-
-  public static void main(String[] args) {
-    RestChicagoCityServiceServerDaoImpl dao = new RestChicagoCityServiceServerDaoImpl();
-    System.out.println("start");
-    Calendar cal = GregorianCalendar.getInstance();
-    cal.set(2014, 8, 13, 0, 0);
-    Date startDate = cal.getTime();
-    cal.set(2014, 8, 14, 0, 0);
-    Date endDate = cal.getTime();
-    System.out.println("StartDate: "
-        + DateFormats.W3_DATE_FORMAT.format(startDate));
-    System.out
-        .println("EndDate: " + DateFormats.W3_DATE_FORMAT.format(endDate));
-    List<ChicagoCityServiceGraffiti> data = dao.getGraffiti(startDate, endDate);
-    for (ChicagoCityServiceGraffiti datum : data) {
-      System.out.println(datum);
-    }
-    System.out.println(String.format("%s items retrieved.", data.size()));
-    System.out.println("end");
   }
 }

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServiceServerDao;
@@ -38,17 +39,55 @@ public class RestChicagoCityServiceServerDaoImplTest {
   }
   
   @Test
-  public void testGetGraffiti_happyPathEmptyData() throws Exception {
+  public void testGetGraffiti_happyPathNonNullDates() throws Exception {
+    final ChicagoCityServiceGraffiti result = new ChicagoCityServiceGraffiti();
+    result.setId(5);
     class RestChicagoCityServiceServerDaoImplMock extends RestChicagoCityServiceServerDaoImpl {
+      private int i = 0;
       @Override
       ChicagoCityServiceGraffiti[] getGraffitiData(
           Map<String, String> urlVariables) {
-        return new ChicagoCityServiceGraffiti[0];
+        if (i == 0) {
+          ++i;
+          ChicagoCityServiceGraffiti[] results = {result};
+          return results;
+        } else {
+          return new ChicagoCityServiceGraffiti[0];
+        }
       }
     }
     
     RestChicagoCityServiceServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
-    assertEquals(0, classUnderTest.getGraffiti(null, null).size());
+    Calendar cal = GregorianCalendar.getInstance();
+    cal.set(2014, 8, 15, 0, 0);
+    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(cal.getTime(), cal.getTime());
+    assertEquals(1, results.size());
+    assertTrue(results.contains(result));
+  }
+  
+  @Test
+  public void testGetGraffiti_happyPathNullStart() throws Exception {
+    final ChicagoCityServiceGraffiti result = new ChicagoCityServiceGraffiti();
+    result.setId(5);
+    class RestChicagoCityServiceServerDaoImplMock extends RestChicagoCityServiceServerDaoImpl {
+      private int i = 0;
+      @Override
+      ChicagoCityServiceGraffiti[] getGraffitiData(
+          Map<String, String> urlVariables) {
+        if (i == 0) {
+          ++i;
+          ChicagoCityServiceGraffiti[] results = {result};
+          return results;
+        } else {
+          return new ChicagoCityServiceGraffiti[0];
+        }
+      }
+    }
+    
+    RestChicagoCityServiceServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
+    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(null, null);
+    assertEquals(1, results.size());
+    assertTrue(results.contains(result));
   }
 
   @Test
