@@ -49,7 +49,7 @@ public enum ChicagoCityServiceStatusEnum {
    * @param dbString the db string
    * @return the chicago city service status enum from db string
    */
-  public static ChicagoCityServiceStatusEnum getChicagoCityServiceStatusEnumFromDbString(
+  public static ChicagoCityServiceStatusEnum getChicagoCityServiceStatusEnumFromDbOrServerString(
       String dbString) {
     for (ChicagoCityServiceStatusEnum chicagoCityServiceStatusEnum : ChicagoCityServiceStatusEnum
         .values()) {
@@ -60,7 +60,7 @@ public enum ChicagoCityServiceStatusEnum {
     throw new IllegalArgumentException(
         String
             .format(
-                "The db string %s does not map to a valid ChicagoCityServiceStatusEnum.",
+                "The db string '%s' does not map to a valid ChicagoCityServiceStatusEnum.",
                 dbString));
   }
 }
