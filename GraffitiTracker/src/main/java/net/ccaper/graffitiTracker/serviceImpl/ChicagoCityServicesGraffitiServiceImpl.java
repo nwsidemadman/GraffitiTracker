@@ -68,7 +68,6 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     return chicagoCityServicesServerDao.getGraffiti(startDate, endDate);
   }
 
-  // TODO(ccaper): unit test
   /*
    * (non-Javadoc)
    * 
