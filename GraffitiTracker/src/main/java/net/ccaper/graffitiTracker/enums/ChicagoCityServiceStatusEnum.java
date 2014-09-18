@@ -42,7 +42,6 @@ public enum ChicagoCityServiceStatusEnum {
     return displayString;
   }
 
-  // TODO(ccaper): unit test
   /**
    * Gets the chicago city service status enum from db string.
    *
