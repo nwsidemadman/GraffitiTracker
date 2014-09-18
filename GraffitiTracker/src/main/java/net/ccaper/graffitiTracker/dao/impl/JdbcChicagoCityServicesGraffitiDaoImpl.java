@@ -23,8 +23,8 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
   private static final String REQUESTED_DATETIME_COL = "requested_datetime";
   private static final String UPDATED_DATETIME_COL = "updated_datetime";
   private static final String ADDRESS_COL = "address";
-  private static final String LATITUDE_COL = "lat";
-  private static final String LONGITUDE_COL = "long";
+  private static final String LATITUDE_COL = "latitude";
+  private static final String LONGITUDE_COL = "longitude";
   private static final String MEDIA_URL_COL = "media_url";
   private static final String SYSTEM_CREATED_TIMESTAMP_COL = "system_created_timestamp";
   private static final String SYSTEM_UPDATED_TIMESTAMP_COL = "system_updated_timestamp";

@@ -8,6 +8,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +22,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * 
  */
 @Configuration
+// only needed for temp running of loader, remove when sorted, and removde spring congfig xml
+@ImportResource("classpath:/net/ccaper/graffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker-config.xml")
 @PropertySource("classpath:/net/ccaper/graffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker.properties")
 public class AppConfig {
   @Autowired

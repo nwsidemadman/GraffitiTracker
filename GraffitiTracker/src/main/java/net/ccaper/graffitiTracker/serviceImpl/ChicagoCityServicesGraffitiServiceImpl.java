@@ -5,7 +5,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
@@ -14,6 +18,7 @@ import net.ccaper.graffitiTracker.dao.impl.JdbcChicagoCityServicesGraffitiDaoImp
 import net.ccaper.graffitiTracker.dao.impl.RestChicagoCityServicesServerDaoImpl;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
+import net.ccaper.graffitiTracker.spring.AppConfig;
 
 @Service("chicagoCityServicesGraffitiService")
 public class ChicagoCityServicesGraffitiServiceImpl implements
@@ -46,23 +51,32 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
   @Override
   public void storeChicagoCityServiceData(List<ChicagoCityServiceGraffiti> data) {
     for (ChicagoCityServiceGraffiti datum : data) {
-      chicagoCityServicesGraffitiDao.storeChicagoCityServicesGraffiti(datum);
+      if (datum.getMediaUrl() != null) {
+        chicagoCityServicesGraffitiDao.storeChicagoCityServicesGraffiti(datum);
+      }
     }
   }
-  
+
   public static void main(String[] args) {
-    ChicagoCityServicesGraffitiServiceImpl service = new ChicagoCityServicesGraffitiServiceImpl();
-    ChicagoCityServicesServerDao restServerDao = new RestChicagoCityServicesServerDaoImpl();
-    service.setChicagoCityServicesServerDao(restServerDao);
-    ChicagoCityServicesGraffitiDao graffitiDao = new JdbcChicagoCityServicesGraffitiDaoImpl();
-    service.setChicagoCityServicesGraffitiDao(graffitiDao);
-    Calendar cal = GregorianCalendar.getInstance();
-    cal.set(2014, 8, 13, 0, 0);
-    Date startDate = cal.getTime();
-    cal.roll(Calendar.DAY_OF_MONTH, 1);
-    Date endDate = cal.getTime();
-    List<ChicagoCityServiceGraffiti> results = service
-        .getChicagoCityServiceDataFromServer(startDate, endDate);
-    service.storeChicagoCityServiceData(results);
+    AnnotationConfigApplicationContext context = null;
+    try {
+      context = new AnnotationConfigApplicationContext(AppConfig.class);
+      ChicagoCityServicesGraffitiService service = context.getBean(ChicagoCityServicesGraffitiServiceImpl.class);
+      Calendar cal = GregorianCalendar.getInstance();
+      cal.set(2014, 7, 1, 0, 0);
+      Date startDate = cal.getTime();
+      cal.set(2014, 8, 18, 0, 0);
+      Date endDate = cal.getTime();
+      List<ChicagoCityServiceGraffiti> results = service
+          .getChicagoCityServiceDataFromServer(startDate, endDate);
+      service.storeChicagoCityServiceData(results);
+      ((ConfigurableApplicationContext) context).close();
+    } catch (Exception e) {
+      System.out.println("Error.");
+      e.printStackTrace();
+      System.exit(1);
+    } finally {
+      context.close();
+    }
   }
 }
