@@ -8,7 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import net.ccaper.graffitiTracker.enums.ChicagoCityServiceStatusEnum;
 
-// TODO(ccaper): javadoc
+/**
+ * 
+ * @author ccaper
+ * 
+ *         POJO representing a Chicago city services request for graffiti
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChicagoCityServiceGraffiti {
   @JsonIgnore
@@ -36,122 +42,247 @@ public class ChicagoCityServiceGraffiti {
   @JsonIgnore
   private Timestamp systemUpdatedTimestamp;
 
+  /**
+   * Gets the id.
+   *
+   * @return the id
+   */
   public int getId() {
     return id;
   }
 
+  /**
+   * Sets the id.
+   *
+   * @param id
+   *          the new id
+   */
   public void setId(int id) {
     this.id = id;
   }
 
+  /**
+   * Gets the service request id.
+   *
+   * @return the service request id
+   */
   public String getServiceRequestId() {
     return serviceRequestId;
   }
 
+  /**
+   * Sets the service request id.
+   *
+   * @param serviceRequestId
+   *          the new service request id
+   */
   public void setServiceRequestId(String serviceRequestId) {
     this.serviceRequestId = serviceRequestId;
   }
 
+  /**
+   * Gets the status.
+   *
+   * @return the status
+   */
   public ChicagoCityServiceStatusEnum getStatus() {
     return status;
   }
 
+  /**
+   * Sets the status.
+   *
+   * @param status
+   *          the new status
+   */
   @JsonIgnore
   public void setStatus(ChicagoCityServiceStatusEnum status) {
     this.status = status;
   }
 
+  /**
+   * Sets the status.
+   *
+   * @param statusString
+   *          the new status
+   */
   public void setStatus(String statusString) {
-    try {
     status = ChicagoCityServiceStatusEnum
         .getChicagoCityServiceStatusEnumFromDbOrServerString(statusString);
-    } catch (IllegalArgumentException e) {
-      System.err.println(String.format("Service request '%s' contains invalid status of '%s'", serviceRequestId, status));
-      status = null;
-    }
   }
 
+  /**
+   * Gets the status notes.
+   *
+   * @return the status notes
+   */
   public String getStatusNotes() {
     return statusNotes;
   }
 
+  /**
+   * Sets the status notes.
+   *
+   * @param statusNotes
+   *          the new status notes
+   */
   public void setStatusNotes(String statusNotes) {
     this.statusNotes = statusNotes;
   }
 
+  /**
+   * Gets the requested date time.
+   *
+   * @return the requested date time
+   */
   public Timestamp getRequestedDateTime() {
     return requestedDateTime;
   }
 
+  /**
+   * Sets the requested date time.
+   *
+   * @param requestedDateTime
+   *          the new requested date time
+   */
   public void setRequestedDateTime(Timestamp requestedDateTime) {
     this.requestedDateTime = requestedDateTime;
   }
 
+  /**
+   * Gets the updated date time.
+   *
+   * @return the updated date time
+   */
   public Timestamp getUpdatedDateTime() {
     return updatedDateTime;
   }
 
+  /**
+   * Sets the updated date time.
+   *
+   * @param updatedDateTime
+   *          the new updated date time
+   */
   public void setUpdatedDateTime(Timestamp updatedDateTime) {
     this.updatedDateTime = updatedDateTime;
   }
 
+  /**
+   * Gets the address.
+   *
+   * @return the address
+   */
   public String getAddress() {
     return address;
   }
 
+  /**
+   * Sets the address.
+   *
+   * @param address
+   *          the new address
+   */
   public void setAddress(String address) {
     this.address = address;
   }
 
+  /**
+   * Gets the latitude.
+   *
+   * @return the latitude
+   */
   public double getLatitude() {
     return latitude;
   }
 
+  /**
+   * Sets the latitude.
+   *
+   * @param latitude
+   *          the new latitude
+   */
   public void setLatitude(double latitude) {
     this.latitude = latitude;
   }
 
+  /**
+   * Gets the longitude.
+   *
+   * @return the longitude
+   */
   public double getLongitude() {
     return longitude;
   }
 
+  /**
+   * Sets the longitude.
+   *
+   * @param longitude
+   *          the new longitude
+   */
   public void setLongitude(double longitude) {
     this.longitude = longitude;
   }
 
+  /**
+   * Gets the media url.
+   *
+   * @return the media url
+   */
   public String getMediaUrl() {
     return mediaUrl;
   }
 
+  /**
+   * Sets the media url.
+   *
+   * @param mediaUrl
+   *          the new media url
+   */
   public void setMediaUrl(String mediaUrl) {
     this.mediaUrl = mediaUrl;
   }
 
+  /**
+   * Gets the system created timestamp. This is the timestamp of the data when
+   * it was brought into the GraffitiTracker system.
+   *
+   * @return the system created timestamp
+   */
   public Timestamp getSystemCreatedTimestamp() {
     return systemCreatedTimestamp;
   }
 
+  /**
+   * Sets the system created timestamp. This is the timestamp of the data when
+   * it was brought into the GraffitiTracker system.
+   *
+   * @param systemCreatedTimestamp
+   *          the new system created timestamp
+   */
   public void setSystemCreatedTimestamp(Timestamp systemCreatedTimestamp) {
     this.systemCreatedTimestamp = systemCreatedTimestamp;
   }
 
+  /**
+   * Gets the system updated timestamp. This is the timestamp of when the data
+   * was updated in the graffiti tracker system.
+   *
+   * @return the system updated timestamp
+   */
   public Timestamp getSystemUpdatedTimestamp() {
     return systemUpdatedTimestamp;
   }
 
+  /**
+   * Sets the system updated timestamp. This is the timestamp of when the data
+   * was updated in the graffiti tracker system.
+   *
+   * @param systemUpdatedTimestamp
+   *          the new system updated timestamp
+   */
   public void setSystemUpdatedTimestamp(Timestamp systemUpdatedTimestamp) {
     this.systemUpdatedTimestamp = systemUpdatedTimestamp;
-  }
-
-  @Override
-  public String toString() {
-    return "ChicagoCityServiceGraffiti [id=" + id + ", serviceRequestId="
-        + serviceRequestId + ", status=" + status.getDisplayString()
-        + ", statusNotes=" + statusNotes + ", requestedDateTime="
-        + requestedDateTime + ", updatedDateTime=" + updatedDateTime
-        + ", address=" + address + ", lat=" + latitude + ", longitude=" + longitude
-        + ", mediaUrl=" + mediaUrl + ", systemCreatedTimestamp="
-        + systemCreatedTimestamp + ", systemUpdatedTimestamp="
-        + systemUpdatedTimestamp + "]";
   }
 }
