@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
+import net.ccaper.graffitiTracker.dao.impl.JdbcChicagoCityServicesGraffitiDaoImpl;
 import net.ccaper.graffitiTracker.dao.impl.RestChicagoCityServicesServerDaoImpl;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
@@ -42,10 +43,19 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     return chicagoCityServicesServerDao.getGraffiti(startDate, endDate);
   }
 
+  @Override
+  public void storeChicagoCityServiceData(List<ChicagoCityServiceGraffiti> data) {
+    for (ChicagoCityServiceGraffiti datum : data) {
+      chicagoCityServicesGraffitiDao.storeChicagoCityServicesGraffiti(datum);
+    }
+  }
+  
   public static void main(String[] args) {
     ChicagoCityServicesGraffitiServiceImpl service = new ChicagoCityServicesGraffitiServiceImpl();
-    ChicagoCityServicesServerDao dao = new RestChicagoCityServicesServerDaoImpl();
-    service.setChicagoCityServicesServerDao(dao);
+    ChicagoCityServicesServerDao restServerDao = new RestChicagoCityServicesServerDaoImpl();
+    service.setChicagoCityServicesServerDao(restServerDao);
+    ChicagoCityServicesGraffitiDao graffitiDao = new JdbcChicagoCityServicesGraffitiDaoImpl();
+    service.setChicagoCityServicesGraffitiDao(graffitiDao);
     Calendar cal = GregorianCalendar.getInstance();
     cal.set(2014, 8, 13, 0, 0);
     Date startDate = cal.getTime();
@@ -53,15 +63,6 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     Date endDate = cal.getTime();
     List<ChicagoCityServiceGraffiti> results = service
         .getChicagoCityServiceDataFromServer(startDate, endDate);
-    for (ChicagoCityServiceGraffiti result : results) {
-      System.out.println(result);
-    }
-    System.out.println("Number of records: " + results.size());
-  }
-
-  @Override
-  public void storeChicagoCityServiceData(List<ChicagoCityServiceGraffiti> data) {
-    // TODO Auto-generated method stub
-
+    service.storeChicagoCityServiceData(results);
   }
 }
