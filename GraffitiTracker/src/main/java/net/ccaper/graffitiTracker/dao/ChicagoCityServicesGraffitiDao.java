@@ -1,5 +1,7 @@
 package net.ccaper.graffitiTracker.dao;
 
+import java.util.List;
+
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 
 /**
@@ -18,4 +20,7 @@ public interface ChicagoCityServicesGraffitiDao {
    *          the graffiti request
    */
   void storeChicagoCityServicesGraffiti(ChicagoCityServiceGraffiti graffiti);
+
+  // TODO(ccaper): javadoc
+  List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti();
 }

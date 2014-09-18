@@ -1,15 +1,20 @@
 package net.ccaper.graffitiTracker.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
+import net.ccaper.graffitiTracker.enums.ChicagoCityServiceStatusEnum;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 
 /**
@@ -51,6 +56,42 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
           REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, UPDATED_DATETIME_COL,
           ADDRESS_COL, ADDRESS_COL, LATITUDE_COL, LATITUDE_COL, LONGITUDE_COL,
           LONGITUDE_COL, MEDIA_URL_COL, MEDIA_URL_COL).toLowerCase();
+  // TODO(ccaper): remove limit
+  private static final String SQL_GET_ALL_GRAFFITI = String.format(
+      "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s LIMIT 10",
+      SERVICE_REQUEST_ID_COL, ID_COL, STATUS_COL, STATUS_NOTES_COL,
+      REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, ADDRESS_COL, LATITUDE_COL,
+      LONGITUDE_COL, MEDIA_URL_COL, SYSTEM_CREATED_TIMESTAMP_COL,
+      SYSTEM_UPDATED_TIMESTAMP_COL, CHICAGO_CITY_SERVICE_GRAFFITI_TABLE)
+      .toLowerCase();
+
+  private RowMapper<ChicagoCityServiceGraffiti> chicagoCityServiceGraffitiRowMapper = new RowMapper<ChicagoCityServiceGraffiti>() {
+    @Override
+    public ChicagoCityServiceGraffiti mapRow(ResultSet rs, int rowNum)
+        throws SQLException {
+      ChicagoCityServiceGraffiti chicagoCityServiceGraffiti = new ChicagoCityServiceGraffiti();
+      chicagoCityServiceGraffiti.setId(rs.getInt(ID_COL));
+      chicagoCityServiceGraffiti.setServiceRequestId(rs
+          .getString(SERVICE_REQUEST_ID_COL));
+      chicagoCityServiceGraffiti.setStatus(ChicagoCityServiceStatusEnum
+          .getChicagoCityServiceStatusEnumFromDbOrServerString(rs
+              .getString(STATUS_COL)));
+      chicagoCityServiceGraffiti.setStatusNotes(rs.getString(STATUS_NOTES_COL));
+      chicagoCityServiceGraffiti.setRequestedDateTime(rs
+          .getTimestamp(REQUESTED_DATETIME_COL));
+      chicagoCityServiceGraffiti.setUpdatedDateTime(rs
+          .getTimestamp(UPDATED_DATETIME_COL));
+      chicagoCityServiceGraffiti.setAddress(rs.getString(ADDRESS_COL));
+      chicagoCityServiceGraffiti.setLatitude(rs.getFloat(LATITUDE_COL));
+      chicagoCityServiceGraffiti.setLongitude(rs.getFloat(LONGITUDE_COL));
+      chicagoCityServiceGraffiti.setMediaUrl(rs.getString(MEDIA_URL_COL));
+      chicagoCityServiceGraffiti.setSystemCreatedTimestamp(rs
+          .getTimestamp(SYSTEM_CREATED_TIMESTAMP_COL));
+      chicagoCityServiceGraffiti.setUpdatedDateTime(rs
+          .getTimestamp(SYSTEM_UPDATED_TIMESTAMP_COL));
+      return chicagoCityServiceGraffiti;
+    }
+  };
 
   /**
    * Sets the ds.
@@ -87,5 +128,11 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     graffitiParamMap.put(MEDIA_URL_COL, graffiti.getMediaUrl());
     getNamedParameterJdbcTemplate().update(SQL_INSERT_GRAFFITI,
         graffitiParamMap);
+  }
+
+  // TODO(ccaper): javadoc
+  @Override
+  public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti() {
+    return getNamedParameterJdbcTemplate().query(SQL_GET_ALL_GRAFFITI, chicagoCityServiceGraffitiRowMapper);
   }
 }
