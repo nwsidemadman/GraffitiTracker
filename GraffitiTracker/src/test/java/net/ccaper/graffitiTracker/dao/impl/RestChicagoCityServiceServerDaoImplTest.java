@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.ccaper.graffitiTracker.dao.ChicagoCityServiceServerDao;
+import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.utils.DateFormats;
 
@@ -34,7 +34,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
     Date startDate = cal.getTime();
     cal.roll(Calendar.DAY_OF_MONTH, -1);
     Date endDate = cal.getTime();
-    ChicagoCityServiceServerDao classUnderTest = new RestChicagoCityServiceServerDaoImpl();
+    ChicagoCityServicesServerDao classUnderTest = new RestChicagoCityServicesServerDaoImpl();
     classUnderTest.getGraffiti(startDate, endDate);
   }
   
@@ -42,7 +42,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
   public void testGetGraffiti_happyPathNonNullDates() throws Exception {
     final ChicagoCityServiceGraffiti result = new ChicagoCityServiceGraffiti();
     result.setId(5);
-    class RestChicagoCityServiceServerDaoImplMock extends RestChicagoCityServiceServerDaoImpl {
+    class RestChicagoCityServiceServerDaoImplMock extends RestChicagoCityServicesServerDaoImpl {
       private int i = 0;
       @Override
       ChicagoCityServiceGraffiti[] getGraffitiData(
@@ -57,7 +57,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
       }
     }
     
-    RestChicagoCityServiceServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
+    RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
     Calendar cal = GregorianCalendar.getInstance();
     cal.set(2014, 8, 15, 0, 0);
     List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(cal.getTime(), cal.getTime());
@@ -69,7 +69,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
   public void testGetGraffiti_happyPathNullStart() throws Exception {
     final ChicagoCityServiceGraffiti result = new ChicagoCityServiceGraffiti();
     result.setId(5);
-    class RestChicagoCityServiceServerDaoImplMock extends RestChicagoCityServiceServerDaoImpl {
+    class RestChicagoCityServiceServerDaoImplMock extends RestChicagoCityServicesServerDaoImpl {
       private int i = 0;
       @Override
       ChicagoCityServiceGraffiti[] getGraffitiData(
@@ -84,7 +84,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
       }
     }
     
-    RestChicagoCityServiceServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
+    RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
     List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(null, null);
     assertEquals(1, results.size());
     assertTrue(results.contains(result));
@@ -93,28 +93,28 @@ public class RestChicagoCityServiceServerDaoImplTest {
   @Test
   public void testSetDateInChicagoServicesDateRangeUrl_NullDate()
       throws Exception {
-    RestChicagoCityServiceServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImpl();
+    RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServicesServerDaoImpl();
     Map<String, String> vars = new HashMap<String, String>();
-    String before = RestChicagoCityServiceServerDaoImpl.chicagoServicesDateRangeUrl;
+    String before = RestChicagoCityServicesServerDaoImpl.chicagoServicesDateRangeUrl;
     classUnderTest.setDateInChicagoServicesDateRangeUrl(null, "test", vars);
     assertEquals(before,
-        RestChicagoCityServiceServerDaoImpl.chicagoServicesDateRangeUrl);
+        RestChicagoCityServicesServerDaoImpl.chicagoServicesDateRangeUrl);
     assertTrue(vars.isEmpty());
   }
 
   @Test
   public void testSetDateInChicagoServicesDateRangeUrl_HappyPath()
       throws Exception {
-    RestChicagoCityServiceServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImpl();
+    RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServicesServerDaoImpl();
     Map<String, String> vars = new HashMap<String, String>();
-    String before = RestChicagoCityServiceServerDaoImpl.chicagoServicesDateRangeUrl;
+    String before = RestChicagoCityServicesServerDaoImpl.chicagoServicesDateRangeUrl;
     Calendar cal = GregorianCalendar.getInstance();
     cal.set(2014, 8, 15, 0, 0);
     String arg = "test";
     classUnderTest.setDateInChicagoServicesDateRangeUrl(cal.getTime(), arg,
         vars);
     assertEquals(String.format("%s&%s={%s}", before, arg, arg),
-        RestChicagoCityServiceServerDaoImpl.chicagoServicesDateRangeUrl);
+        RestChicagoCityServicesServerDaoImpl.chicagoServicesDateRangeUrl);
     assertEquals(1, vars.size());
     assertTrue(vars.containsKey(arg));
     assertEquals(DateFormats.W3_DATE_FORMAT.format(cal.getTime()),

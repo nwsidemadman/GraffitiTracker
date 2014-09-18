@@ -7,14 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import net.ccaper.graffitiTracker.dao.ChicagoCityServiceServerDao;
+import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.utils.DateFormats;
 
-public class RestChicagoCityServiceServerDaoImpl implements
-    ChicagoCityServiceServerDao {
+@Repository("chicagoCityServicesServerDao")
+public class RestChicagoCityServicesServerDaoImpl implements
+    ChicagoCityServicesServerDao {
   private static final String GRAFFITI_SERVICE_CODE = "4fd3b167e750846744000005";
   private static final String SERVICE_CODE_ARG = "service_code";
   private static final String PAGE_ARG = "page";

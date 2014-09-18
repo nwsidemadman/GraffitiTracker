@@ -5,6 +5,6 @@ import java.util.List;
 
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 
-public interface ChicagoCityServiceServerDao {
+public interface ChicagoCityServicesServerDao {
   List<ChicagoCityServiceGraffiti> getGraffiti(Date startDate, Date endDate);
 }
