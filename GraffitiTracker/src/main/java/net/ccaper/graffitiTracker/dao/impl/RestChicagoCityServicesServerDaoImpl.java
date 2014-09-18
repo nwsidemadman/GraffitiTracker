@@ -14,6 +14,13 @@ import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.utils.DateFormats;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         REST implementation of the ChicagoCityServicesServerDao.
+ *
+ */
 @Repository("chicagoCityServicesServerDao")
 public class RestChicagoCityServicesServerDaoImpl implements
     ChicagoCityServicesServerDao {
@@ -31,7 +38,13 @@ public class RestChicagoCityServicesServerDaoImpl implements
       PAGE_SIZE_ARG, PAGE_SIZE_ARG, PAGE_ARG, PAGE_ARG);
   private static final String PAGE_SIZE = "500";
 
-  // TODO(ccaper): javadoc
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao#getGraffiti
+   * (java.util.Date, java.util.Date)
+   */
   @Override
   public List<ChicagoCityServiceGraffiti> getGraffiti(Date startDate,
       Date endDate) {
@@ -63,14 +76,29 @@ public class RestChicagoCityServicesServerDaoImpl implements
 
   // isolated for testing
   // visisble for testing
-  ChicagoCityServiceGraffiti[] getGraffitiData(
-      Map<String, String> urlVariables) {
+  /**
+   * REST template call that gets the graffiti data.
+   *
+   * @param urlVariables
+   *          the url variables for substitution in the url query string
+   * @return the graffiti data
+   */
+  ChicagoCityServiceGraffiti[] getGraffitiData(Map<String, String> urlVariables) {
     return new RestTemplate().getForObject(chicagoServicesDateRangeUrl,
         ChicagoCityServiceGraffiti[].class, urlVariables);
   }
 
-  // TODO(ccaper): javadoc
   // visible for testing
+  /**
+   * Sets the date in chicago services date range url.
+   *
+   * @param date
+   *          the date
+   * @param arg
+   *          the argument/key used url query string
+   * @param vars
+   *          the variable values used for substitution in the url query string
+   */
   void setDateInChicagoServicesDateRangeUrl(Date date, String arg,
       Map<String, String> vars) {
     if (date != null) {
