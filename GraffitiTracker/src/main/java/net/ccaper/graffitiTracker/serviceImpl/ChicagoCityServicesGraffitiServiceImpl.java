@@ -114,4 +114,10 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
       context.close();
     }
   }
+
+  // TODO(ccaper): javadoc
+  @Override
+  public List<ChicagoCityServiceGraffiti> getAllGraffiti() {
+    return chicagoCityServicesGraffitiDao.getAllChicagoCityServicesGraffiti();
+  }
 }

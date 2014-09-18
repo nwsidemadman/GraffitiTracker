@@ -29,7 +29,7 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     NamedParameterJdbcDaoSupport implements ChicagoCityServicesGraffitiDao {
   private static final String CHICAGO_CITY_SERVICE_GRAFFITI_TABLE = "chicago_city_service_data_graffiti";
   private static final String SERVICE_REQUEST_ID_COL = "service_request_id";
-  private static final String ID_COL = "id_col";
+  private static final String ID_COL = "id";
   private static final String STATUS_COL = "status";
   private static final String STATUS_NOTES_COL = "status_notes";
   private static final String REQUESTED_DATETIME_COL = "requested_datetime";

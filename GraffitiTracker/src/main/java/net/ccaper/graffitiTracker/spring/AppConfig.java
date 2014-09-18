@@ -23,7 +23,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  */
 @Configuration
 // only needed for temp running of loader, remove when sorted, and removde spring congfig xml
-@ImportResource("classpath:/net/ccaper/graffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker-config.xml")
+//@ImportResource("classpath:/net/ccaper/graffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker-config.xml")
 @PropertySource("classpath:/net/ccaper/graffitiTracker/${CLASSPATH_PROP_ENV:local}/GraffitiTracker.properties")
 public class AppConfig {
   @Autowired

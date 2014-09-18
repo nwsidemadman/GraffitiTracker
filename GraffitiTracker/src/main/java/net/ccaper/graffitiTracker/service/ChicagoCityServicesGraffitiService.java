@@ -33,4 +33,7 @@ public interface ChicagoCityServicesGraffitiService {
    *          the data
    */
   void storeChicagoCityServiceGraffitiRequests(List<ChicagoCityServiceGraffiti> data);
+  
+  // TODO(ccaper): javadoc
+  List<ChicagoCityServiceGraffiti> getAllGraffiti();
 }
