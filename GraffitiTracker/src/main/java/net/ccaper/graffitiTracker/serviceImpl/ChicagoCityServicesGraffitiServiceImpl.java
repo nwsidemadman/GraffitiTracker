@@ -43,13 +43,13 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
   }
 
   @Override
-  public List<ChicagoCityServiceGraffiti> getChicagoCityServiceDataFromServer(
+  public List<ChicagoCityServiceGraffiti> getChicagoCityServiceGraffitiRequestsFromServer(
       Date startDate, Date endDate) {
     return chicagoCityServicesServerDao.getGraffiti(startDate, endDate);
   }
 
   @Override
-  public void storeChicagoCityServiceData(List<ChicagoCityServiceGraffiti> data) {
+  public void storeChicagoCityServiceGraffitiRequests(List<ChicagoCityServiceGraffiti> data) {
     for (ChicagoCityServiceGraffiti datum : data) {
       if (datum.getMediaUrl() != null) {
         chicagoCityServicesGraffitiDao.storeChicagoCityServicesGraffiti(datum);
@@ -68,8 +68,8 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
       cal.set(2014, 8, 18, 0, 0);
       Date endDate = cal.getTime();
       List<ChicagoCityServiceGraffiti> results = service
-          .getChicagoCityServiceDataFromServer(startDate, endDate);
-      service.storeChicagoCityServiceData(results);
+          .getChicagoCityServiceGraffitiRequestsFromServer(startDate, endDate);
+      service.storeChicagoCityServiceGraffitiRequests(results);
       ((ConfigurableApplicationContext) context).close();
     } catch (Exception e) {
       System.out.println("Error.");
