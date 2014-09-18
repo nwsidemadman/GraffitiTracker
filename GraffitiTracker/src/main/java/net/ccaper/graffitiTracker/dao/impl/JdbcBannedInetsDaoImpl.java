@@ -71,14 +71,14 @@ public class JdbcBannedInetsDaoImpl extends NamedParameterJdbcDaoSupport
       BANNED_INETS_TABLE, MIN_INET_COL, MIN_INET_COL, MAX_INET_COL,
       MAX_INET_COL).toLowerCase();
 
-  RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
+  private RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
     @Override
     public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getBoolean(1);
     }
   };
 
-  RowMapper<BannedInet> bannedInetRowMapper = new RowMapper<BannedInet>() {
+  private RowMapper<BannedInet> bannedInetRowMapper = new RowMapper<BannedInet>() {
     @Override
     public BannedInet mapRow(ResultSet rs, int rowNum) throws SQLException {
       BannedInet bannedInet = new BannedInet();

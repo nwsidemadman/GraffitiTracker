@@ -64,14 +64,14 @@ public class JdbcResetPasswordDaoImpl extends NamedParameterJdbcDaoSupport
           RESET_PASSWORD_TABLE, RESET_PASSWORD_TABLE,
           RESET_PASSWORD_TIMESTAMP_COL).toLowerCase();
 
-  RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
+  private RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new String(rs.getString(UNIQUE_URL_PARAM_COL));
     }
   };
 
-  RowMapper<UserSecurityQuestion> securityQuestionRowMapper = new RowMapper<UserSecurityQuestion>() {
+  private RowMapper<UserSecurityQuestion> securityQuestionRowMapper = new RowMapper<UserSecurityQuestion>() {
     @Override
     public UserSecurityQuestion mapRow(ResultSet rs, int rowNum)
         throws SQLException {

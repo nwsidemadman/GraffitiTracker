@@ -71,7 +71,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
           USER_ID_COL, LOGIN_ADDRESSES_TABLE, INET_ADDRESS_COL,
           INET_ADDRESS_COL).toLowerCase();
 
-  RowMapper<LoginInet> loginInetRowMapper = new RowMapper<LoginInet>() {
+  private RowMapper<LoginInet> loginInetRowMapper = new RowMapper<LoginInet>() {
     @Override
     public LoginInet mapRow(ResultSet rs, int rowNum) throws SQLException {
       LoginInet loginInet = new LoginInet();
@@ -83,7 +83,7 @@ public class JdbcLoginAddressDaoImpl extends NamedParameterJdbcDaoSupport
     }
   };
 
-  RowMapper<ImmutablePair<String, Integer>> userRowMapper = new RowMapper<ImmutablePair<String, Integer>>() {
+  private RowMapper<ImmutablePair<String, Integer>> userRowMapper = new RowMapper<ImmutablePair<String, Integer>>() {
     @Override
     public ImmutablePair<String, Integer> mapRow(ResultSet rs, int rowNum)
         throws SQLException {

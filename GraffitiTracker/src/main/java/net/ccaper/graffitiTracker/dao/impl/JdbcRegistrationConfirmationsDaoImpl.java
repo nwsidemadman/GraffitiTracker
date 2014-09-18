@@ -49,21 +49,14 @@ public class JdbcRegistrationConfirmationsDaoImpl extends
           REGISTRATION_CONFIRMATIONS_TABLE, UNIQUE_URL_PARAM_COL,
           UNIQUE_URL_PARAM_COL).toLowerCase();
 
-  RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
+  private RowMapper<String> uniqueUrlParamRowMapper = new RowMapper<String>() {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new String(rs.getString(UNIQUE_URL_PARAM_COL));
     }
   };
 
-  RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
-    @Override
-    public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new Integer(rs.getInt(1));
-    }
-  };
-
-  RowMapper<Integer> useridRowMapper = new RowMapper<Integer>() {
+  private RowMapper<Integer> useridRowMapper = new RowMapper<Integer>() {
     @Override
     public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new Integer(rs.getInt(ID_FK_COL));

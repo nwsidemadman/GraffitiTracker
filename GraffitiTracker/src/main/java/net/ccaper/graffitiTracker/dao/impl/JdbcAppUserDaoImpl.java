@@ -156,7 +156,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       "DELETE FROM %s WHERE %s = :%s and %s in ", ROLES_TABLE, ID_FK_COL,
       ID_FK_COL, ROLE_COL).toLowerCase();
 
-  RowMapper<AppUser> appUserRowMapper = new RowMapper<AppUser>() {
+  private RowMapper<AppUser> appUserRowMapper = new RowMapper<AppUser>() {
     @Override
     public AppUser mapRow(ResultSet rs, int rowNum) throws SQLException {
       AppUser appUser = new AppUser();
@@ -175,7 +175,7 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   };
 
-  RowMapper<AppUser> appUserAdminViewRowMapper = new RowMapper<AppUser>() {
+  private RowMapper<AppUser> appUserAdminViewRowMapper = new RowMapper<AppUser>() {
     @Override
     public AppUser mapRow(ResultSet rs, int rowNum) throws SQLException {
       AppUser appUser = new AppUser();
@@ -191,21 +191,21 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   };
 
-  RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
+  private RowMapper<Integer> countRowMapper = new RowMapper<Integer>() {
     @Override
     public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
       return new Integer(rs.getInt(1));
     }
   };
 
-  RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
+  private RowMapper<Boolean> booleanRowMapper = new RowMapper<Boolean>() {
     @Override
     public Boolean mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getBoolean(1);
     }
   };
 
-  RowMapper<Role> rolesRowMapper = new RowMapper<Role>() {
+  private RowMapper<Role> rolesRowMapper = new RowMapper<Role>() {
     @Override
     public Role mapRow(ResultSet rs, int rowNum) throws SQLException {
       Role role = new Role();
@@ -215,21 +215,21 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
     }
   };
 
-  RowMapper<String> emailRowMapper = new RowMapper<String>() {
+  private RowMapper<String> emailRowMapper = new RowMapper<String>() {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getString(EMAIL_COL);
     }
   };
 
-  RowMapper<String> usernameRowMapper = new RowMapper<String>() {
+  private RowMapper<String> usernameRowMapper = new RowMapper<String>() {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getString(USERNAME_COL);
     }
   };
 
-  RowMapper<String> securityAnswerRowMapper = new RowMapper<String>() {
+  private RowMapper<String> securityAnswerRowMapper = new RowMapper<String>() {
     @Override
     public String mapRow(ResultSet rs, int rowNum) throws SQLException {
       return rs.getString(SECURITY_ANSWER_COL);
