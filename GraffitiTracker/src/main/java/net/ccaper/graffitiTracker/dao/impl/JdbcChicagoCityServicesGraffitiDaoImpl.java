@@ -12,6 +12,13 @@ import org.springframework.stereotype.Repository;
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 
+/**
+ * 
+ * @author ccaper
+ * 
+ *         JDBC implementation for ChicagoCityServicesGraffitiDao.
+ *
+ */
 @Repository("chicagoCityServicesGraffitiDao")
 public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     NamedParameterJdbcDaoSupport implements ChicagoCityServicesGraffitiDao {
@@ -56,6 +63,13 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     setDataSource(dataSource);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao#
+   * storeChicagoCityServicesGraffiti
+   * (net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti)
+   */
   @Override
   public void storeChicagoCityServicesGraffiti(
       ChicagoCityServiceGraffiti graffiti) {
