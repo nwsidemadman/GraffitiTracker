@@ -6,7 +6,7 @@
 <sec:authorize access="isAuthenticated()">
   <div id="inner_actions">
     <p>
-      Upload Graffiti
+      <a href="<s:url value="/maps/map" />">Map</a>
       &middot;
       <a href="<s:url value="/users/manageAccount" />">Manage Account</a>
       <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
