@@ -13,14 +13,6 @@
   <div id="simple_content_text">
     <div id="map-canvas"></div>
   </div>
-  <style>
-    html, body, #map-canvas {
-      height: 250px;
-      margin: 0px;
-      padding: 0px
-    }
-  </style>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
   <script>
   function initialize() {
     var chicago = new google.maps.LatLng(41.8781136, -87.6297982);

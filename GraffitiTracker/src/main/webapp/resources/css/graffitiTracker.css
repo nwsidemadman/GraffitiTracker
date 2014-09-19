@@ -352,6 +352,12 @@ div.error {
   padding-left: 2px;
 }
 
+#map-canvas {
+  height: 250px;
+  margin: 0px;
+  padding: 0px
+}
+
 #mapInfoWindow {
   line-height: .3;
   padding: 5px;

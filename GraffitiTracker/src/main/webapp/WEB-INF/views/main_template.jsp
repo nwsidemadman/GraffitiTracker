@@ -22,6 +22,7 @@
   src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
 <script
   src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 
 <script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
 </head>
