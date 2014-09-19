@@ -12,26 +12,26 @@
   </div>
   <div id="manageUsers">
     <table id="usersTable" class="display" cellspacing="0" width="100%">
-        <thead>
-            <tr align="left">
-                <th>Username</th>
-                <th>Active</th>
-                <th>Roles</th>
-                <th>Registered</th>
-                <th>Last Login</th>
-                <th>Logins</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr align="left">
-                <th id="username">Username</th>
-                <th id="active">Active</th>
-                <th id="roles">Roles</th>
-                <th id="registered">Registered</th>
-                <th id="lastLogin">Last Login</th>
-                <th id="logins">Logins</th>
-            </tr>
-        </tfoot>
+      <thead>
+        <tr align="left">
+          <th>Username</th>
+          <th>Active</th>
+          <th>Roles</th>
+          <th>Registered</th>
+          <th>Last Login</th>
+          <th>Logins</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr align="left">
+          <th id="username">Username</th>
+          <th id="active">Active</th>
+          <th id="roles">Roles</th>
+          <th id="registered">Registered</th>
+          <th id="lastLogin">Last Login</th>
+          <th id="logins">Logins</th>
+        </tr>
+      </tfoot>
     </table>
     <script type="text/javascript">
     $(document).ready(function() {
