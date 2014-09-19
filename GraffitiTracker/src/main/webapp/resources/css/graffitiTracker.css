@@ -365,11 +365,14 @@ div.error {
 
 #graffitiData {
   padding-top: 5px;
-  line-height: 1;
   width: 736px;
   font-size: 10px;
 }
 
 #graffitiData table {
   font-size: 10px;
+}
+
+#overMaxSearch {
+  font-weight: bold;
 }

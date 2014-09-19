@@ -13,7 +13,12 @@
   <div id="simple_content_text"></div>
   <div id="map-canvas"></div>
   <div id="graffitiData">
-    <p><input id="newMapSearch" type="button" value="New Search" /></p>
+    <p>
+      <input id="newMapSearch" type="button" value="New Search" />
+      <c:if test="${graffiti.size() >= 100}" >
+        <span id="overMaxSearch">Search returned more than allowed, please refine your search.</span>
+      </c:if>
+    </p>
     <table id="graffitiTable" class="display" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -90,7 +95,7 @@
     var graffitiTableJObject = $('#graffitiTable').dataTable( {
       "sDom": '<"H"lr>t<"F"i>',
       "scrollX": false,
-      "scrollY": "135px",
+      "scrollY": "128px",
       "scrollCollapse": true,
       "paging": false,
       "aoColumnDefs": [
