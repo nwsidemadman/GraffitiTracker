@@ -351,3 +351,8 @@ div.error {
   padding-top: 8px;
   padding-left: 2px;
 }
+
+#mapInfoWindow {
+  line-height: .3;
+  padding: 5px;
+}

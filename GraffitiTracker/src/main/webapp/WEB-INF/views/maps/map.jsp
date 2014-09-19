@@ -10,10 +10,12 @@
   </div>
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
-  <div id="map-canvas"></div>
+  <div id="simple_content_text">
+    <div id="map-canvas"></div>
+  </div>
   <style>
     html, body, #map-canvas {
-      height: 100%;
+      height: 250px;
       margin: 0px;
       padding: 0px
     }
@@ -28,12 +30,28 @@
     }
     var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
+    var marker;
+    var infowindow = new google.maps.InfoWindow();
     <c:forEach var="item" items="${graffiti}">
-    var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(<c:out value="${item.latitude }" />, <c:out value="${item.longitude }" />),
-        map: map,
-        title: '<c:out value="${item.address }" />'
-    });
+      marker = new google.maps.Marker({
+          position: new google.maps.LatLng(<c:out value="${item.latitude}" />, <c:out value="${item.longitude}" />),
+          map: map,
+          icon: 'https://raw.githubusercontent.com/stucka/cheap_markers/master/images/small_red.png',
+          title: '<c:out value="${item.address }" />'
+      });
+      google.maps.event.addListener(marker, 'click', (function(marker) {
+        return function() {
+          var contentString = '<div id="mapInfoWindow">';
+          contentString += '<p>Status: <c:out value="${item.status.displayString}" /><p>';
+          contentString += '<p>Address: <c:out value="${item.address}" /><p>';
+          contentString += '<p>Date: <fmt:formatDate value="${item.requestedDateTime}" pattern="yyyy-MM-dd" /></p>';
+          contentString += '<p><a target="_blank" href="http://servicetracker.cityofchicago.org/requests/<c:out value="${item.serviceRequestId}" />">Service Request</a></p>';
+          contentString += '<p><a target="_blank" href="<c:out value="${item.mediaUrl}" />"><img src="<c:out value="${item.mediaUrl}" />" width="75" height="75"></a></p>';
+          contentString += '</div>';
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+      })(marker));
     </c:forEach>
   }
   google.maps.event.addDomListener(window, 'load', initialize);
