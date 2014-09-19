@@ -355,10 +355,19 @@ div.error {
 #map-canvas {
   height: 250px;
   margin: 0px;
-  padding: 0px
+  padding: 0px;
 }
 
 #mapInfoWindow {
   line-height: .3;
   padding: 5px;
+}
+
+#graffitiData {
+  width: 736px;
+  font-size: 10px;
+}
+
+#graffitiData table {
+  font-size: 10px;
 }
