@@ -1,11 +1,13 @@
 package net.ccaper.graffitiTracker.mvc;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.BannedInet;
+import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
@@ -81,7 +83,10 @@ public class MapsController {
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
-    model.put("graffiti", chicagoCityServicesGraffitiService.getAllGraffiti());
+    List<ChicagoCityServiceGraffiti> dataList = chicagoCityServicesGraffitiService.getAllGraffiti();
+    ChicagoCityServiceGraffiti[] data = new ChicagoCityServiceGraffiti[dataList.size()];
+    data = dataList.toArray(data);
+    model.put("graffiti", data);
     return "maps/map";
   }
 }
