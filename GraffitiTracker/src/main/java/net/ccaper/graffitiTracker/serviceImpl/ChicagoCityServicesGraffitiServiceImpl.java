@@ -115,12 +115,6 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     }
   }
 
-  // TODO(ccaper): javadoc
-  @Override
-  public List<ChicagoCityServiceGraffiti> getAllGraffiti() {
-    return chicagoCityServicesGraffitiDao.getAllChicagoCityServicesGraffiti();
-  }
-  
 //TODO(ccaper): javadoc
  @Override
  public List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status) {

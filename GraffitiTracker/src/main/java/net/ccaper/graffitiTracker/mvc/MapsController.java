@@ -73,26 +73,7 @@ public class MapsController {
     this.chicagoCityServicesGraffitiService = chicagoCityServicesGraffitiService;
   }
 
-  // TODO(ccaper): unit test
-  /**
-   * Produce a map
-   * 
-   * @param model
-   *          the model
-   * @return the view name
-   */
   @RequestMapping(value="map", method = RequestMethod.GET)
-  public String produceMap(Map<String, Object> model) {
-    if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
-    }
-    model.put("graffiti", chicagoCityServicesGraffitiService.getAllGraffiti());
-    return "maps/map";
-  }
-  
-  @RequestMapping(value="map2", method = RequestMethod.GET)
   public String StringProduceMap2a(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
       String username = userSecurityService.getUsernameFromSecurity();
@@ -102,10 +83,10 @@ public class MapsController {
     MapForm mapForm = new MapForm();
     model.put("mapForm", mapForm);
     model.put("graffiti", new ArrayList<ChicagoCityServiceGraffiti>(0));
-    return "maps/map2a";
+    return "maps/mapFilter";
   }
   
-  @RequestMapping(value="map2", method = RequestMethod.POST)
+  @RequestMapping(value="map", method = RequestMethod.POST)
   public String produceMap2b(MapForm mapForm, Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
       String username = userSecurityService.getUsernameFromSecurity();
@@ -118,6 +99,6 @@ public class MapsController {
       status.remove("NONE");
     }
     model.put("graffiti", chicagoCityServicesGraffitiService.getAllGraffiti(status));
-    return "maps/map2";
+    return "maps/map";
   }
 }

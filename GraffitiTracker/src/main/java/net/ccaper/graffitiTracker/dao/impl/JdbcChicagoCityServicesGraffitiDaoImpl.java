@@ -131,13 +131,6 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
 
   // TODO(ccaper): javadoc
   @Override
-  public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti() {
-    return getNamedParameterJdbcTemplate().query(SQL_GET_ALL_GRAFFITI,
-        chicagoCityServiceGraffitiRowMapper);
-  }
-
-  // TODO(ccaper): javadoc
-  @Override
   public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti(List<String> status) {
     String sqlWithWhere = SQL_GET_ALL_GRAFFITI;
     if (status.size() > 0) {

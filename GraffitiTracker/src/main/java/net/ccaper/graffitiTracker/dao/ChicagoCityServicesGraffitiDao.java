@@ -22,8 +22,5 @@ public interface ChicagoCityServicesGraffitiDao {
   void storeChicagoCityServicesGraffiti(ChicagoCityServiceGraffiti graffiti);
 
   // TODO(ccaper): javadoc
-  List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti();
-
-  // TODO(ccaper): javadoc
   List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti(List<String> status);
 }

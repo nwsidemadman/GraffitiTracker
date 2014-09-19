@@ -13,6 +13,12 @@
   <div id="simple_content_text"></div>
   <div id="map-canvas"></div>
   <div id="graffitiData">
+    <p>
+      <input id="newMapSearch" type="button" value="New Search" />
+      <c:if test="${graffiti.size() >= 100}" >
+        <span id="overMaxSearch">Search returned more than allowed, please refine your search.</span>
+      </c:if>
+    </p>
     <table id="graffitiTable" class="display" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -89,7 +95,7 @@
     var graffitiTableJObject = $('#graffitiTable').dataTable( {
       "sDom": '<"H"lr>t<"F"i>',
       "scrollX": false,
-      "scrollY": "160px",
+      "scrollY": "128px",
       "scrollCollapse": true,
       "paging": false,
       "aoColumnDefs": [
@@ -111,6 +117,11 @@
             .search( this.value )
             .draw();
     } );
+    
+    // handle new search
+    $('#graffitiData').on('click', '#newMapSearch', function () {
+      window.location.replace('<s:url value="/maps/mapFilter" />')
+    });
   });
   </script>
 </sec:authorize>

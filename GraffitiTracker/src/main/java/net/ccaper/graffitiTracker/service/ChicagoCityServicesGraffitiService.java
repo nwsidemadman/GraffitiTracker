@@ -36,8 +36,5 @@ public interface ChicagoCityServicesGraffitiService {
       List<ChicagoCityServiceGraffiti> data);
 
   // TODO(ccaper): javadoc
-  List<ChicagoCityServiceGraffiti> getAllGraffiti();
-
-  // TODO(ccaper): javadoc
   List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status);
 }
