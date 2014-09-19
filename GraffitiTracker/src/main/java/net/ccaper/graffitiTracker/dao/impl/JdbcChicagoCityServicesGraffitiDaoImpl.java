@@ -56,9 +56,8 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
           REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, UPDATED_DATETIME_COL,
           ADDRESS_COL, ADDRESS_COL, LATITUDE_COL, LATITUDE_COL, LONGITUDE_COL,
           LONGITUDE_COL, MEDIA_URL_COL, MEDIA_URL_COL).toLowerCase();
-  // TODO(ccaper): remove limit
   private static final String SQL_GET_ALL_GRAFFITI = String.format(
-      "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s LIMIT 10",
+      "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s",
       SERVICE_REQUEST_ID_COL, ID_COL, STATUS_COL, STATUS_NOTES_COL,
       REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, ADDRESS_COL, LATITUDE_COL,
       LONGITUDE_COL, MEDIA_URL_COL, SYSTEM_CREATED_TIMESTAMP_COL,
@@ -133,6 +132,34 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
   // TODO(ccaper): javadoc
   @Override
   public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti() {
-    return getNamedParameterJdbcTemplate().query(SQL_GET_ALL_GRAFFITI, chicagoCityServiceGraffitiRowMapper);
+    return getNamedParameterJdbcTemplate().query(SQL_GET_ALL_GRAFFITI,
+        chicagoCityServiceGraffitiRowMapper);
+  }
+
+  // TODO(ccaper): javadoc
+  @Override
+  public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti(List<String> status) {
+    String sqlWithWhere = SQL_GET_ALL_GRAFFITI;
+    if (status.size() > 0) {
+      sqlWithWhere += " WHERE ";
+      int i = 0;
+      if (status.size() > 1) {
+        sqlWithWhere += "(";
+      }
+      for (String statum : status) {
+        if (i>0) {
+          sqlWithWhere += " OR ";
+        }
+        sqlWithWhere += String.format("%s='%s'", STATUS_COL, statum);
+        ++i;
+      }
+      if (status.size() > 1) {
+        sqlWithWhere += ")";
+      }
+    }
+    sqlWithWhere += " LIMIT 100";
+    sqlWithWhere = sqlWithWhere.toLowerCase();
+    return getNamedParameterJdbcTemplate().query(sqlWithWhere,
+        chicagoCityServiceGraffitiRowMapper);
   }
 }

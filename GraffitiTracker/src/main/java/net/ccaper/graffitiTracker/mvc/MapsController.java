@@ -1,5 +1,8 @@
 package net.ccaper.graffitiTracker.mvc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
+import net.ccaper.graffitiTracker.objects.MapForm;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
 import net.ccaper.graffitiTracker.service.UserSecurityService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +88,36 @@ public class MapsController {
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
-    List<ChicagoCityServiceGraffiti> dataList = chicagoCityServicesGraffitiService.getAllGraffiti();
-    ChicagoCityServiceGraffiti[] data = new ChicagoCityServiceGraffiti[dataList.size()];
-    data = dataList.toArray(data);
-    model.put("graffiti", data);
+    model.put("graffiti", chicagoCityServicesGraffitiService.getAllGraffiti());
     return "maps/map";
+  }
+  
+  @RequestMapping(value="map2", method = RequestMethod.GET)
+  public String StringProduceMap2a(Map<String, Object> model) {
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUserByUsername(username);
+      model.put("appUser", appUser);
+    }
+    MapForm mapForm = new MapForm();
+    model.put("mapForm", mapForm);
+    model.put("graffiti", new ArrayList<ChicagoCityServiceGraffiti>(0));
+    return "maps/map2a";
+  }
+  
+  @RequestMapping(value="map2", method = RequestMethod.POST)
+  public String produceMap2b(MapForm mapForm, Map<String, Object> model) {
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUserByUsername(username);
+      model.put("appUser", appUser);
+    }
+    List<String> status = new ArrayList<String>(3);
+    if (!StringUtils.isEmpty(mapForm.getStatus())) {
+      status = new LinkedList<String>(Arrays.asList(StringUtils.split(mapForm.getStatus(), ",")));
+      status.remove("NONE");
+    }
+    model.put("graffiti", chicagoCityServicesGraffitiService.getAllGraffiti(status));
+    return "maps/map2";
   }
 }
