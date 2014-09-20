@@ -6,14 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
 import net.ccaper.graffitiTracker.objects.AppUser;
-import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.objects.MapForm;
 import net.ccaper.graffitiTracker.service.AppUserService;
-import net.ccaper.graffitiTracker.service.BannedInetsService;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
 import net.ccaper.graffitiTracker.service.UserSecurityService;
 
@@ -73,8 +70,10 @@ public class MapsController {
     this.chicagoCityServicesGraffitiService = chicagoCityServicesGraffitiService;
   }
 
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
   @RequestMapping(value="map", method = RequestMethod.GET)
-  public String StringProduceMap2a(Map<String, Object> model) {
+  public String mapFilter(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
       String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
@@ -85,9 +84,11 @@ public class MapsController {
     model.put("graffiti", new ArrayList<ChicagoCityServiceGraffiti>(0));
     return "maps/mapFilter";
   }
-  
+
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
   @RequestMapping(value="map", method = RequestMethod.POST)
-  public String produceMap2b(MapForm mapForm, Map<String, Object> model) {
+  public String map(MapForm mapForm, Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
       String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
