@@ -120,7 +120,7 @@
     
     // handle new search
     $('#graffitiData').on('click', '#newMapSearch', function () {
-      window.location.replace('<s:url value="/maps/mapFilter" />')
+      window.location.replace('<s:url value="/maps/map" />')
     });
   });
   </script>
