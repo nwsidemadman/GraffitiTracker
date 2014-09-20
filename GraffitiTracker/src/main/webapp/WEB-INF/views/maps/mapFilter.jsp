@@ -17,7 +17,7 @@
       <fieldset>
         <div>
           <sf:label path="status">Status: </sf:label>
-          <sf:select multiple="true" path="status" >
+          <sf:select multiple="true" path="status" size="3">
             <sf:option value="NONE" label="" />
             <sf:option value="open" label="Open"/>
             <sf:option value="closed" label="Closed"/>
