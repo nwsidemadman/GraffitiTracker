@@ -24,7 +24,7 @@
           </sf:select>
         </div>
         <div id="date-range" class="selectbox">
-          <p>Date Range: <span>Click to select range, default today</span> <b class="caret"></b></p>
+          <p>Date Range: <span>Click to select range, default today</span> <i class="fa fa-calendar"></i></p>
         </div>
         <div>
           <input id="filterMapSubmit" name="commit" type="submit" value="Submit" />
