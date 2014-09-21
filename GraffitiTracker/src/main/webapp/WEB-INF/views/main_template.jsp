@@ -4,11 +4,11 @@
 <head>
 <title>GraffitiTracker</title>
 
-<link rel="stylesheet"
-  href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
 <link
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
   rel="stylesheet" type="text/css">
+<link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 <link rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"
@@ -21,7 +21,6 @@
   rel="stylesheet" type="text/css" />
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script
   src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>

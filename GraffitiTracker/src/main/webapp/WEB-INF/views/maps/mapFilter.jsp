@@ -23,9 +23,8 @@
             <sf:option value="closed" label="Closed"/>
           </sf:select>
         </div>
-        <div id="date-range" class="selectbox pull-right">
-          <i class="fa fa-calendar"></i>
-          <span>August 22, 2014 - September 20, 2014</span> <b class="caret"></b>
+        <div id="date-range" class="selectbox">
+          <p>Date Range: <span>Click to select range, default today</span> <b class="caret"></b></p>
         </div>
         <div>
           <input id="filterMapSubmit" name="commit" type="submit" value="Submit" />
@@ -111,7 +110,7 @@
       'Year To Date': [moment().startOf('year'), new Date()],
       'Last Year': [moment().startOf('year').subtract(1, 'year'), moment().endOf('year').subtract(1, 'year')]
     },
-    opens: 'left',
+    opens: 'right',
     format: 'YYYY-MM-DD',
     startDate: new Date(),
     endDate: new Date(),
@@ -119,7 +118,7 @@
   }, 
     
   function(start, end, label) {
-    alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    $('#date-range span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
   });
   </script>
 </sec:authorize>
