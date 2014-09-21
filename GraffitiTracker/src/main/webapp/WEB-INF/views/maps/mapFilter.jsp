@@ -24,7 +24,9 @@
           </sf:select>
         </div>
         <div id="date-range" class="selectbox">
-          <p>Date Range: <span>Click to select range, default today</span> <i class="fa fa-calendar"></i></p>
+          <p><sf:label path="startDate">Date Range:</sf:label> <span>Click to select range, default today</span> <i class="fa fa-calendar"></i></p>
+          <sf:hidden path="startDate" id="startDate"/>
+          <sf:hidden path="endDate" id="endDate"/>
         </div>
         <div>
           <input id="filterMapSubmit" name="commit" type="submit" value="Submit" />
@@ -114,11 +116,16 @@
     format: 'YYYY-MM-DD',
     startDate: new Date(),
     endDate: new Date(),
-    maxDate: new Date()
-  }, 
+    maxDate: new Date(),
+  },
     
   function(start, end, label) {
     $('#date-range span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+    $("#startDate").val(start);
+    $("#endDate").val(end);
   });
+  
+  $("#startDate").val(new Date());
+  $("#endDate").val(new Date());
   </script>
 </sec:authorize>
