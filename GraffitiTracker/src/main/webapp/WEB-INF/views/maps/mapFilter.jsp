@@ -23,6 +23,10 @@
             <sf:option value="closed" label="Closed"/>
           </sf:select>
         </div>
+        <div id="date-range" class="selectbox pull-right">
+          <i class="fa fa-calendar"></i>
+          <span>August 22, 2014 - September 20, 2014</span> <b class="caret"></b>
+        </div>
         <div>
           <input id="filterMapSubmit" name="commit" type="submit" value="Submit" />
         </div>
@@ -93,6 +97,28 @@
             .search( this.value )
             .draw();
     } );
+  });
+  
+  //activate date range input
+  $('#date-range').daterangepicker({
+    ranges: {
+      'Today': [new Date(), new Date()],
+      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
+      'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
+      'Month To Date': [moment().startOf('month'), new Date()],
+      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+      'Year To Date': [moment().startOf('year'), new Date()],
+      'Last Year': [moment().startOf('year').subtract(1, 'year'), moment().endOf('year').subtract(1, 'year')]
+    },
+    opens: 'left',
+    format: 'YYYY-MM-DD',
+    startDate: '2014-05-22',
+    endDate: '2014-09-20'
+  }, 
+    
+  function(start, end, label) {
+    alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
   });
   </script>
 </sec:authorize>

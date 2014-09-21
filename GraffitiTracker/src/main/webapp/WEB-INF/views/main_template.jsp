@@ -4,6 +4,8 @@
 <head>
 <title>GraffitiTracker</title>
 
+<link rel="stylesheet"
+  href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
 <link
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"
   rel="stylesheet" type="text/css">
@@ -11,10 +13,15 @@
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css"
   rel="stylesheet" type="text/css" />
+  
+<link href="<s:url value="/resources" />/css/daterangepicker-bs3.css"
+  rel="stylesheet" type="text/css" />
+  
 <link href="<s:url value="/resources" />/css/graffitiTracker.css"
   rel="stylesheet" type="text/css" />
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 <script
   src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
@@ -23,6 +30,9 @@
 <script
   src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/additional-methods.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+<script src="<s:url value="/resources" />/js/moment.min.js"></script>
+<script src="<s:url value="/resources" />/js/daterangepicker.js"></script>
 
 <script src="<s:url value="/resources" />/js/graffitiTracker.js"></script>
 </head>
