@@ -113,8 +113,9 @@
     },
     opens: 'left',
     format: 'YYYY-MM-DD',
-    startDate: '2014-05-22',
-    endDate: '2014-09-20'
+    startDate: new Date(),
+    endDate: new Date(),
+    maxDate: new Date()
   }, 
     
   function(start, end, label) {
