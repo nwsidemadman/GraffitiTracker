@@ -19,8 +19,8 @@
           <sf:label path="status">Status: </sf:label>
           <sf:select multiple="true" path="status" size="3">
             <sf:option value="NONE" label="" />
-            <sf:option value="open" label="Open"/>
-            <sf:option value="closed" label="Closed"/>
+            <sf:option value="'open'" label="Open"/>
+            <sf:option value="'closed'" label="Closed"/>
           </sf:select>
         </div>
         <div id="date-range" class="selectbox">
@@ -100,6 +100,10 @@
     } );
   });
   
+  var today = new Date();
+  $("#startDate").val(today.getTime());
+  $("#endDate").val(today.getTime());
+  
   //activate date range input
   $('#date-range').daterangepicker({
     ranges: {
@@ -114,18 +118,15 @@
     },
     opens: 'right',
     format: 'YYYY-MM-DD',
-    startDate: new Date(),
-    endDate: new Date(),
-    maxDate: new Date(),
+    startDate: today,
+    endDate: today,
+    maxDate: today,
   },
     
   function(start, end, label) {
     $('#date-range span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-    $("#startDate").val(start);
-    $("#endDate").val(end);
+    $("#startDate").val(start.getTime());
+    $("#endDate").val(end.getTime());
   });
-  
-  $("#startDate").val(new Date());
-  $("#endDate").val(new Date());
   </script>
 </sec:authorize>

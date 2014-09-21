@@ -1,13 +1,12 @@
 package net.ccaper.graffitiTracker.objects;
 
+import java.sql.Timestamp;
+
 // TODO(ccaper): javadoc
 public class MapForm {
-  // TODO(ccaper): make this enum
   private String status;
-  // TODO(ccaper): make this timestamp
-  private String startDate;
-  // TODO(ccaper): make this timestamp
-  private String endDate;
+  private long startDate;
+  private long endDate;
 
   public String getStatus() {
     return status;
@@ -17,19 +16,27 @@ public class MapForm {
     this.status = status;
   }
 
-  public String getStartDate() {
+  public long getStartDate() {
     return startDate;
   }
 
-  public void setStartDate(String startDate) {
+  public Timestamp getStartDateAsTimestamp() {
+    return new Timestamp(startDate);
+  }
+
+  public void setStartDate(long startDate) {
     this.startDate = startDate;
   }
 
-  public String getEndDate() {
+  public long getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(String endDate) {
+  public Timestamp getEndDateAsTimestamp() {
+    return new Timestamp(endDate);
+  }
+
+  public void setEndDate(long endDate) {
     this.endDate = endDate;
   }
 }

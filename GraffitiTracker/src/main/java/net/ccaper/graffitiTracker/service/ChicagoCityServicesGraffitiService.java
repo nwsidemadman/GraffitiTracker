@@ -1,5 +1,6 @@
 package net.ccaper.graffitiTracker.service;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -10,13 +11,13 @@ import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
  * @author ccaper
  * 
  *         Service for handling Chicago city service requests for graffiti.
- *
+ * 
  */
 public interface ChicagoCityServicesGraffitiService {
 
   /**
    * Gets the chicago city service requests for graffiti from server.
-   *
+   * 
    * @param startDate
    *          the start date
    * @param endDate
@@ -28,7 +29,7 @@ public interface ChicagoCityServicesGraffitiService {
 
   /**
    * Store chicago city service graffiti data.
-   *
+   * 
    * @param data
    *          the data
    */
@@ -36,5 +37,6 @@ public interface ChicagoCityServicesGraffitiService {
       List<ChicagoCityServiceGraffiti> data);
 
   // TODO(ccaper): javadoc
-  List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status);
+  List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status,
+      Timestamp startDate, Timestamp endDate);
 }

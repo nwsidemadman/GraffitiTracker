@@ -1,5 +1,6 @@
 package net.ccaper.graffitiTracker.serviceImpl;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -21,7 +22,7 @@ import net.ccaper.graffitiTracker.spring.AppConfig;
  * @author ccaper
  * 
  *         Implementation for the ChicagoCityServicesGraffitiService
- *
+ * 
  */
 @Service("chicagoCityServicesGraffitiService")
 public class ChicagoCityServicesGraffitiServiceImpl implements
@@ -34,7 +35,7 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
   // visible for testing
   /**
    * Sets the chicago city services server dao.
-   *
+   * 
    * @param chicagoCityServicesServerDao
    *          the new chicago city services server dao
    */
@@ -46,7 +47,7 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
   // visible for testing
   /**
    * Sets the chicago city services graffiti dao.
-   *
+   * 
    * @param chicagoCityServicesGraffitiDao
    *          the new chicago city services graffiti dao
    */
@@ -84,13 +85,21 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     }
   }
 
+  // TODO(ccaper): javadoc
+  @Override
+  public List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status, Timestamp startDate, Timestamp endDate) {
+    return chicagoCityServicesGraffitiDao
+        .getAllChicagoCityServicesGraffiti(status, startDate, endDate);
+  }
+
   /**
    * The main method.
-   *
+   * 
    * @param args
    *          the arguments
    */
-  // TODO(ccaper): remove after feature added to web app
+  // TODO(ccaper): remove after feature added to web app, remove app config line
+  // too
   public static void main(String[] args) {
     AnnotationConfigApplicationContext context = null;
     try {
@@ -114,10 +123,4 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
       context.close();
     }
   }
-
-//TODO(ccaper): javadoc
- @Override
- public List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status) {
-   return chicagoCityServicesGraffitiDao.getAllChicagoCityServicesGraffiti(status);
- }
 }
