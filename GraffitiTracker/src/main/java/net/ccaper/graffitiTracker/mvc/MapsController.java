@@ -76,7 +76,6 @@ public class MapsController {
     this.chicagoCityServicesGraffitiService = chicagoCityServicesGraffitiService;
   }
 
-  // TODO(ccaper): unit test
   /**
    * Gets the map form for selecting criteria to map.
    *
@@ -91,8 +90,7 @@ public class MapsController {
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
-    MapForm mapForm = new MapForm();
-    model.put("mapForm", mapForm);
+    model.put("mapForm", new MapForm());
     model.put("graffiti", new ArrayList<ChicagoCityServiceGraffiti>(0));
     return "maps/mapFilter";
   }
