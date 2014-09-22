@@ -2,7 +2,6 @@ package net.ccaper.graffitiTracker.mvc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -89,26 +88,23 @@ public class MapsController {
   // TODO(ccaper): unit test
   @RequestMapping(value = "map", method = RequestMethod.POST)
   public String map(MapForm mapForm, Map<String, Object> model) {
-    logger.info("Start: " + new Date(Long.parseLong(mapForm.getStartDate())));
-    logger.info("End: " + new Date(Long.parseLong(mapForm.getEndDate())));
-    return "maps/mapFilter";
-//    if (!userSecurityService.isUserAnonymous()) {
-//      String username = userSecurityService.getUsernameFromSecurity();
-//      AppUser appUser = appUserService.getUserByUsername(username);
-//      model.put("appUser", appUser);
-//    }
-//    List<String> status = new ArrayList<String>(3);
-//    if (!StringUtils.isEmpty(mapForm.getStatus())) {
-//      status = new LinkedList<String>(Arrays.asList(StringUtils.split(
-//          mapForm.getStatus(), ",")));
-//      status.remove("NONE");
-//    }
-//    model
-//        .put(
-//            "graffiti",
-//            chicagoCityServicesGraffitiService.getAllGraffiti(status,
-//                mapForm.getStartDateAsTimestamp(),
-//                mapForm.getEndDateAsTimestamp()));
-//    return "maps/map";
+    if (!userSecurityService.isUserAnonymous()) {
+      String username = userSecurityService.getUsernameFromSecurity();
+      AppUser appUser = appUserService.getUserByUsername(username);
+      model.put("appUser", appUser);
+    }
+    List<String> status = new ArrayList<String>(3);
+    if (!StringUtils.isEmpty(mapForm.getStatus())) {
+      status = new LinkedList<String>(Arrays.asList(StringUtils.split(
+          mapForm.getStatus(), ",")));
+      status.remove("NONE");
+    }
+    model
+        .put(
+            "graffiti",
+            chicagoCityServicesGraffitiService.getAllGraffiti(status,
+                mapForm.getStartDateAsTimestamp(),
+                mapForm.getEndDateAsTimestamp()));
+    return "maps/map";
   }
 }

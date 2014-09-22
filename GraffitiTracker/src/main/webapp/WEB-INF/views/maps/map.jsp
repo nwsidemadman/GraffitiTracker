@@ -117,6 +117,12 @@
             .search( this.value )
             .draw();
     } );
+    $( 'input', graffitiTableDTObject.column( 2 ).footer() ).on( 'keyup change', function () {
+      graffitiTableDTObject
+            .column( 2 )
+            .search( this.value )
+            .draw();
+    } );
     
     // handle new search
     $('#graffitiData').on('click', '#newMapSearch', function () {

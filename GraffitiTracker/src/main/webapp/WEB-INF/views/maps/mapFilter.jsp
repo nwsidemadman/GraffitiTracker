@@ -98,6 +98,12 @@
             .search( this.value )
             .draw();
     } );
+    $( 'input', graffitiTableDTObject.column( 2 ).footer() ).on( 'keyup change', function () {
+      graffitiTableDTObject
+            .column( 2 )
+            .search( this.value )
+            .draw();
+    } );
   });
   
   var today = new Date();
@@ -125,8 +131,8 @@
     
   function(start, end, label) {
     $('#date-range span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-    $("#startDate").val(Date.parse(startDate));
-    $("#endDate").val(Date.parse(endDate));
+    $("#startDate").val(start.valueOf());
+    $("#endDate").val(end.valueOf());
   });
   </script>
 </sec:authorize>

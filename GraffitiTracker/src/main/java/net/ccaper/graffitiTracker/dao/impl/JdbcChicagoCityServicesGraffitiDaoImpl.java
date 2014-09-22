@@ -10,8 +10,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -31,8 +29,6 @@ import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 @Repository("chicagoCityServicesGraffitiDao")
 public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     NamedParameterJdbcDaoSupport implements ChicagoCityServicesGraffitiDao {
-  private static final Logger logger = LoggerFactory
-      .getLogger(JdbcChicagoCityServicesGraffitiDaoImpl.class);
   private static final String CHICAGO_CITY_SERVICE_GRAFFITI_TABLE = "chicago_city_service_data_graffiti";
   private static final String SERVICE_REQUEST_ID_COL = "service_request_id";
   private static final String ID_COL = "id";
@@ -142,13 +138,12 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     String sqlWithWhere = SQL_GET_ALL_GRAFFITI;
     sqlWithWhere += String.format(" WHERE DATE(%s) BETWEEN DATE('%s') AND DATE('%s')", REQUESTED_DATETIME_COL, startDate, endDate);
     if (status.size() > 0) {
-      sqlWithWhere += String.format(" AND WHERE %s IN (", STATUS_COL);
+      sqlWithWhere += String.format(" AND %s IN (", STATUS_COL);
       sqlWithWhere += StringUtils.join(status, ", ");
       sqlWithWhere += ")";
     }
     sqlWithWhere += " LIMIT 100";
     sqlWithWhere = sqlWithWhere.toLowerCase();
-    logger.info("sql: " + sqlWithWhere);
     return getNamedParameterJdbcTemplate().query(sqlWithWhere,
         chicagoCityServiceGraffitiRowMapper);
   }
