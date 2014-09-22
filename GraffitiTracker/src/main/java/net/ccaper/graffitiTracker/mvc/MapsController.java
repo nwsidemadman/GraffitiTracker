@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.objects.MapForm;
 import net.ccaper.graffitiTracker.service.AppUserService;
@@ -86,9 +85,8 @@ public class MapsController {
   @RequestMapping(value = "map", method = RequestMethod.GET)
   public String mapFilter(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     model.put("mapForm", new MapForm());
     model.put("graffiti", new ArrayList<ChicagoCityServiceGraffiti>(0));
@@ -107,9 +105,8 @@ public class MapsController {
   @RequestMapping(value = "map", method = RequestMethod.POST)
   public String graffitiMap(MapForm mapForm, Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     List<String> status = stripNoneChoice(mapForm.getStatus());
     model
