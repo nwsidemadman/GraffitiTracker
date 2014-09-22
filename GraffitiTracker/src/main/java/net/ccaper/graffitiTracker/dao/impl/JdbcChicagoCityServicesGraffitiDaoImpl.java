@@ -32,7 +32,8 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
   private static final String CHICAGO_CITY_SERVICE_GRAFFITI_TABLE = "chicago_city_service_data_graffiti";
   private static final String SERVICE_REQUEST_ID_COL = "service_request_id";
   private static final String ID_COL = "id";
-  private static final String STATUS_COL = "status";
+  // visible for testing
+  static final String STATUS_COL = "status";
   private static final String STATUS_NOTES_COL = "status_notes";
   private static final String REQUESTED_DATETIME_COL = "requested_datetime";
   private static final String UPDATED_DATETIME_COL = "updated_datetime";
@@ -58,7 +59,8 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
           REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, UPDATED_DATETIME_COL,
           ADDRESS_COL, ADDRESS_COL, LATITUDE_COL, LATITUDE_COL, LONGITUDE_COL,
           LONGITUDE_COL, MEDIA_URL_COL, MEDIA_URL_COL).toLowerCase();
-  private static final String SQL_GET_ALL_GRAFFITI = String.format(
+  // visible for testing
+  static final String SQL_GET_ALL_GRAFFITI = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s",
       SERVICE_REQUEST_ID_COL, ID_COL, STATUS_COL, STATUS_NOTES_COL,
       REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, ADDRESS_COL, LATITUDE_COL,
@@ -131,7 +133,6 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
         graffitiParamMap);
   }
 
-  // TODO(ccaper): unit test
   /*
    * (non-Javadoc)
    * 
@@ -142,18 +143,59 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
   @Override
   public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti(
       List<String> status, Timestamp startDate, Timestamp endDate) {
-    String sqlWithWhere = SQL_GET_ALL_GRAFFITI;
-    sqlWithWhere += String.format(
-        " WHERE DATE(%s) BETWEEN DATE('%s') AND DATE('%s')",
-        REQUESTED_DATETIME_COL, startDate, endDate);
-    if (status.size() > 0) {
-      sqlWithWhere += String.format(" AND %s IN (", STATUS_COL);
-      sqlWithWhere += StringUtils.join(status, ", ");
-      sqlWithWhere += ")";
+    return getNamedParameterJdbcTemplate().query(
+        buildQueryStringFromUserCriteria(status, startDate, endDate),
+        chicagoCityServiceGraffitiRowMapper);
+  }
+
+  // visible for testing
+  /**
+   * Builds the query string from user criteria.
+   *
+   * @param status the status
+   * @param startDate the start date
+   * @param endDate the end date
+   * @return the query string
+   */
+  static String buildQueryStringFromUserCriteria(List<String> status,
+      Timestamp startDate, Timestamp endDate) {
+    String sqlWithWhere = String.format(
+        "%s WHERE %s",
+        SQL_GET_ALL_GRAFFITI, buildRequestDatePortionQueryString(startDate, endDate));
+    String statusQuery = buildStatusPortionQueryString(status);
+    if (StringUtils.isNotEmpty(statusQuery)) {
+      sqlWithWhere += statusQuery;
     }
     sqlWithWhere += " LIMIT 100";
-    sqlWithWhere = sqlWithWhere.toLowerCase();
-    return getNamedParameterJdbcTemplate().query(sqlWithWhere,
-        chicagoCityServiceGraffitiRowMapper);
+    return sqlWithWhere.toLowerCase();
+  }
+  
+  // visible for testing
+  /**
+   * Builds the request date portion query string from user criteria.
+   *
+   * @param startDate the start date
+   * @param endDate the end date
+   * @return the request date portion of the query string
+   */
+  static String buildRequestDatePortionQueryString(Timestamp startDate, Timestamp endDate) {
+    return String.format("DATE(%s) BETWEEN DATE('%s') AND DATE('%s')", REQUESTED_DATETIME_COL, startDate, endDate);
+  }
+  
+  // visible for testing
+  /**
+   * Builds the status portion query string from user criteria.
+   *
+   * @param status the status
+   * @return status portion of the query string
+   */
+  static String buildStatusPortionQueryString(List<String> status) {
+    String sql = "";
+    if (status != null && status.size() > 0) {
+      sql += String.format(" AND %s IN (", STATUS_COL);
+      sql += StringUtils.join(status, ", ");
+      sql += ")";
+    }
+    return sql;
   }
 }
