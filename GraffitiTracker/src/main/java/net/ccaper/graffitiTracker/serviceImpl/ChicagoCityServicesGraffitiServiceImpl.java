@@ -80,13 +80,16 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
    * storeChicagoCityServiceGraffitiRequests(java.util.List)
    */
   @Override
-  public void storeChicagoCityServiceGraffitiRequests(
+  public int storeChicagoCityServiceGraffitiRequests(
       List<ChicagoCityServiceGraffiti> data) {
+    int counter = 0;
     for (ChicagoCityServiceGraffiti datum : data) {
       if (datum.getMediaUrl() != null) {
         chicagoCityServicesGraffitiDao.storeChicagoCityServicesGraffiti(datum);
+        ++counter;
       }
     }
+    return counter;
   }
 
   /*
@@ -100,37 +103,5 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
       Timestamp startDate, Timestamp endDate) {
     return chicagoCityServicesGraffitiDao.getAllChicagoCityServicesGraffiti(
         status, startDate, endDate);
-  }
-
-  /**
-   * The main method.
-   * 
-   * @param args
-   *          the arguments
-   */
-  // TODO(ccaper): remove after feature added to web app, remove app config line
-  // too
-  public static void main(String[] args) {
-    AnnotationConfigApplicationContext context = null;
-    try {
-      context = new AnnotationConfigApplicationContext(AppConfig.class);
-      ChicagoCityServicesGraffitiService service = context
-          .getBean(ChicagoCityServicesGraffitiServiceImpl.class);
-      Calendar cal = GregorianCalendar.getInstance();
-      cal.set(2014, 7, 1, 0, 0);
-      Date startDate = cal.getTime();
-      cal.set(2014, 8, 18, 0, 0);
-      Date endDate = cal.getTime();
-      List<ChicagoCityServiceGraffiti> results = service
-          .getChicagoCityServiceGraffitiRequestsFromServer(startDate, endDate);
-      service.storeChicagoCityServiceGraffitiRequests(results);
-      ((ConfigurableApplicationContext) context).close();
-    } catch (Exception e) {
-      System.out.println("Error.");
-      e.printStackTrace();
-      System.exit(1);
-    } finally {
-      context.close();
-    }
   }
 }

@@ -6,4 +6,7 @@
   <definition name="city_services/update" extends="template">
     <put-attribute name="content" value="/WEB-INF/views/city_services/update.jsp" />
   </definition>
+  <definition name="city_services/updateStatus" extends="template">
+    <put-attribute name="content" value="/WEB-INF/views/city_services/updateStatus.jsp" />
+  </definition>
 </tiles-definitions>

@@ -1,8 +1,10 @@
 package net.ccaper.graffitiTracker.mvc;
 
+import java.util.List;
 import java.util.Map;
 
 import net.ccaper.graffitiTracker.objects.AppUser;
+import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.objects.CityServiceUpdateForm;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
@@ -83,5 +85,23 @@ public class CityServicesController {
     CityServiceUpdateForm cityServiceUpdateForm = new CityServiceUpdateForm();
     model.put("cityServiceUpdateForm", cityServiceUpdateForm);
     return "city_services/update";
+  }
+
+  // TODO(ccaper): unit test
+  // TODO(ccaper): javadoc
+  @RequestMapping(value = "/update", method = RequestMethod.POST)
+  public String updateCityServiceData(
+      CityServiceUpdateForm citySerivceUpdateForm, Map<String, Object> model) {
+    if (!userSecurityService.isUserAnonymous()) {
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
+    }
+    List<ChicagoCityServiceGraffiti> data = chicagoCityServicesGraffitiService
+        .getChicagoCityServiceGraffitiRequestsFromServer(
+            citySerivceUpdateForm.getStartDateAsDate(),
+            citySerivceUpdateForm.getEndDateAsDate());
+    model.put("dataSizeStored", chicagoCityServicesGraffitiService.storeChicagoCityServiceGraffitiRequests(data));
+    model.put("dataSizeServer", data.size());
+    return "city_services/updateStatus";
   }
 }

@@ -107,25 +107,25 @@
   });
   
   var today = new Date();
-  $("#startDate").val(today.getTime());
-  $("#endDate").val(today.getTime());
+  $("#startDate").val(moment().startOf('day').valueOf());
+  $("#endDate").val(moment().endOf('day').valueOf());
   
   //activate date range input
   $('#date-range').daterangepicker({
     ranges: {
-      'Today': [today, today],
+      'Today': [moment().startOf('day'), today.endOf('day')],
       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-      'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
-      'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
-      'Month To Date': [moment().startOf('month'), new Date()],
+      'Last 7 Days': [moment().subtract(6, 'days'), moment().endOf('day')],
+      'Last 30 Days': [moment().subtract(29, 'days'), moment().endOf('day')],
+      'Month To Date': [moment().startOf('month'), moment().endOf('day')],
       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-      'Year To Date': [moment().startOf('year'), new Date()],
+      'Year To Date': [moment().startOf('year'), moment().endOf('day')],
       'Last Year': [moment().startOf('year').subtract(1, 'year'), moment().endOf('year').subtract(1, 'year')]
     },
     opens: 'right',
     format: 'YYYY-MM-DD',
-    startDate: today,
-    endDate: today,
+    startDate: moment().startOf('day'),
+    endDate: moment().endOf('day'),
     maxDate: today,
   },
     

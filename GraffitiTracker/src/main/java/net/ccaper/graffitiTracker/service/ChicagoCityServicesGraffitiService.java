@@ -27,13 +27,14 @@ public interface ChicagoCityServicesGraffitiService {
   List<ChicagoCityServiceGraffiti> getChicagoCityServiceGraffitiRequestsFromServer(
       Date startDate, Date endDate);
 
+  //TODO(ccaper): update javadoc
   /**
    * Store chicago city service graffiti data.
    * 
    * @param data
    *          the data
    */
-  void storeChicagoCityServiceGraffitiRequests(
+  int storeChicagoCityServiceGraffitiRequests(
       List<ChicagoCityServiceGraffiti> data);
 
   
