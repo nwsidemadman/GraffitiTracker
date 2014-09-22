@@ -23,7 +23,7 @@ public class CityServiceUpdateForm {
    * @return the start date as Date
    */
   public Date getStartDateAsDate() {
-    if (startDate == 0L) {
+    if (startDate == -64800000L) {
       return null;
     }
     return new Date(startDate);
@@ -55,7 +55,7 @@ public class CityServiceUpdateForm {
    * @return the end date as Date
    */
   public Date getEndDateAsDate() {
-    if (startDate == 0L) {
+    if (startDate == -64800000L) {
       return null;
     }
     return new Date(endDate);
