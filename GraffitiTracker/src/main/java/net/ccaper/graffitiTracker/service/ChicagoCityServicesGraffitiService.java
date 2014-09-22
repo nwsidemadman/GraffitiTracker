@@ -36,7 +36,15 @@ public interface ChicagoCityServicesGraffitiService {
   void storeChicagoCityServiceGraffitiRequests(
       List<ChicagoCityServiceGraffiti> data);
 
-  // TODO(ccaper): javadoc
+  
+  /**
+   * Gets the all graffiti from repository matching criteria.
+   *
+   * @param status the status (open/closed)
+   * @param startDate the start date
+   * @param endDate the end date
+   * @return the graffiti matching criteria
+   */
   List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status,
       Timestamp startDate, Timestamp endDate);
 }
