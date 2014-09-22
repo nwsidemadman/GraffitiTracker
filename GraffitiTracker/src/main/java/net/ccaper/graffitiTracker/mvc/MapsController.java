@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 
  * @author ccaper
  * 
+ *         Controller for maps.
+ * 
  */
 @Controller
 @RequestMapping("/maps")
@@ -63,14 +65,25 @@ public class MapsController {
     this.userSecurityService = userSecurityService;
   }
 
-  // TODO(ccaper): javadoc
+  /**
+   * Sets the chicago city services graffiti service.
+   *
+   * @param chicagoCityServicesGraffitiService
+   *          the new chicago city services graffiti service
+   */
   void setChicagoCityServicesGraffitiService(
       ChicagoCityServicesGraffitiService chicagoCityServicesGraffitiService) {
     this.chicagoCityServicesGraffitiService = chicagoCityServicesGraffitiService;
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /**
+   * Gets the map form for selecting criteria to map.
+   *
+   * @param model
+   *          the model
+   * @return the view name
+   */
   @RequestMapping(value = "map", method = RequestMethod.GET)
   public String mapFilter(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -84,10 +97,18 @@ public class MapsController {
     return "maps/mapFilter";
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /**
+   * Based on options selected on the map form, generates a Graffiti map.
+   *
+   * @param mapForm
+   *          the map form holding the user's selections
+   * @param model
+   *          the model
+   * @return the the view name
+   */
   @RequestMapping(value = "map", method = RequestMethod.POST)
-  public String map(MapForm mapForm, Map<String, Object> model) {
+  public String graffitiMap(MapForm mapForm, Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
       String username = userSecurityService.getUsernameFromSecurity();
       AppUser appUser = appUserService.getUserByUsername(username);
