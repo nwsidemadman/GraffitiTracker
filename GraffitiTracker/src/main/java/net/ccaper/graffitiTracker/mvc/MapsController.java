@@ -89,8 +89,8 @@ public class MapsController {
   // TODO(ccaper): unit test
   @RequestMapping(value = "map", method = RequestMethod.POST)
   public String map(MapForm mapForm, Map<String, Object> model) {
-    logger.info("Start: " + new Date(mapForm.getStartDate()));
-    logger.info("End: " + new Date(mapForm.getEndDate()));
+    logger.info("Start: " + new Date(Long.parseLong(mapForm.getStartDate())));
+    logger.info("End: " + new Date(Long.parseLong(mapForm.getEndDate())));
     return "maps/mapFilter";
 //    if (!userSecurityService.isUserAnonymous()) {
 //      String username = userSecurityService.getUsernameFromSecurity();

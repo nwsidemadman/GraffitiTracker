@@ -107,7 +107,7 @@
   //activate date range input
   $('#date-range').daterangepicker({
     ranges: {
-      'Today': [new Date(), new Date()],
+      'Today': [today, today],
       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
       'Last 7 Days': [moment().subtract(6, 'days'), new Date()],
       'Last 30 Days': [moment().subtract(29, 'days'), new Date()],
@@ -125,8 +125,8 @@
     
   function(start, end, label) {
     $('#date-range span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-    $("#startDate").val(start.getTime());
-    $("#endDate").val(end.getTime());
+    $("#startDate").val(Date.parse(startDate));
+    $("#endDate").val(Date.parse(endDate));
   });
   </script>
 </sec:authorize>

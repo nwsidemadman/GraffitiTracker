@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 // TODO(ccaper): javadoc
 public class MapForm {
   private String status;
-  private long startDate;
-  private long endDate;
+  private String startDate;
+  private String endDate;
 
   public String getStatus() {
     return status;
@@ -16,27 +16,27 @@ public class MapForm {
     this.status = status;
   }
 
-  public long getStartDate() {
+  public String getStartDate() {
     return startDate;
   }
 
-  public Timestamp getStartDateAsTimestamp() {
-    return new Timestamp(startDate);
-  }
+//  public Timestamp getStartDateAsTimestamp() {
+//    return new Timestamp(startDate);
+//  }
 
-  public void setStartDate(long startDate) {
+  public void setStartDate(String startDate) {
     this.startDate = startDate;
   }
 
-  public long getEndDate() {
+  public String getEndDate() {
     return endDate;
   }
 
-  public Timestamp getEndDateAsTimestamp() {
-    return new Timestamp(endDate);
-  }
+//  public Timestamp getEndDateAsTimestamp() {
+//    return new Timestamp(endDate);
+//  }
 
-  public void setEndDate(long endDate) {
+  public void setEndDate(String endDate) {
     this.endDate = endDate;
   }
 }
