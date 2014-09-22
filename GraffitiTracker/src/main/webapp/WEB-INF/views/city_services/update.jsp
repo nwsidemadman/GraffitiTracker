@@ -31,7 +31,7 @@
   //activate date range input
   $('#date-range').daterangepicker({
     ranges: {
-      'Today': [moment().startOf('day'), today.endOf('day')],
+      'Today': [moment().startOf('day'), moment().endOf('day')],
       'Last 2 Days': [moment().subtract(2, 'days'), moment().endOf('day')],
       'Last 7 Days': [moment().subtract(6, 'days'), moment().endOf('day')],
       'Last 30 Days': [moment().subtract(29, 'days'), moment().endOf('day')],
