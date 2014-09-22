@@ -2,7 +2,6 @@ package net.ccaper.graffitiTracker.mvc;
 
 import java.util.Map;
 
-import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.UserSecurityService;
 
@@ -59,9 +58,8 @@ public class HomeController {
   @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
   public String showHomePage(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     return "home";
   }
@@ -76,9 +74,8 @@ public class HomeController {
   @RequestMapping(value = "/contact", method = RequestMethod.GET)
   public String contact(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     return "contact";
   }
@@ -93,9 +90,8 @@ public class HomeController {
   @RequestMapping(value = "/about", method = RequestMethod.GET)
   public String about(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     return "about";
   }
@@ -110,9 +106,8 @@ public class HomeController {
   @RequestMapping(value = "/legal", method = RequestMethod.GET)
   public String legal(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     return "legal";
   }
@@ -127,9 +122,8 @@ public class HomeController {
   @RequestMapping(value = "/privacy", method = RequestMethod.GET)
   public String privacy(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     return "privacy";
   }
