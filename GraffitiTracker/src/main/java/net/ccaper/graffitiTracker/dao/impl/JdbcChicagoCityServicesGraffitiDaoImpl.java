@@ -131,12 +131,20 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
         graffitiParamMap);
   }
 
-  // TODO(ccaper): javadoc
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao#
+   * getAllChicagoCityServicesGraffiti(java.util.List, java.sql.Timestamp,
+   * java.sql.Timestamp)
+   */
   @Override
   public List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti(
       List<String> status, Timestamp startDate, Timestamp endDate) {
     String sqlWithWhere = SQL_GET_ALL_GRAFFITI;
-    sqlWithWhere += String.format(" WHERE DATE(%s) BETWEEN DATE('%s') AND DATE('%s')", REQUESTED_DATETIME_COL, startDate, endDate);
+    sqlWithWhere += String.format(
+        " WHERE DATE(%s) BETWEEN DATE('%s') AND DATE('%s')",
+        REQUESTED_DATETIME_COL, startDate, endDate);
     if (status.size() > 0) {
       sqlWithWhere += String.format(" AND %s IN (", STATUS_COL);
       sqlWithWhere += StringUtils.join(status, ", ");
