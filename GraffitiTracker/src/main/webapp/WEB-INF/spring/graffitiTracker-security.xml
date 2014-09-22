@@ -29,6 +29,8 @@
     <intercept-url pattern="/users/new" />
     <intercept-url pattern="/banned_inets" access="hasRole('ROLE_SUPERADMIN')" />
     <intercept-url pattern="/banned_inets/*" access="hasRole('ROLE_SUPERADMIN')" />
+    <intercept-url pattern="/city_services" access="hasRole('ROLE_SUPERADMIN')" />
+    <intercept-url pattern="/city_services/*" access="hasRole('ROLE_SUPERADMIN')" />
     <remember-me key="graffitiTrackerKey"
       token-validity-seconds="2419200" />
     <intercept-url pattern="/users/termsAndConditions" requires-channel="http" />
