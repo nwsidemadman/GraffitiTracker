@@ -27,8 +27,12 @@ import net.ccaper.graffitiTracker.spring.AppConfig;
 @Service("chicagoCityServicesGraffitiService")
 public class ChicagoCityServicesGraffitiServiceImpl implements
     ChicagoCityServicesGraffitiService {
+
+  /** The chicago city services server dao. */
   @Autowired
   private ChicagoCityServicesServerDao chicagoCityServicesServerDao;
+
+  /** The chicago city services graffiti dao. */
   @Autowired
   private ChicagoCityServicesGraffitiDao chicagoCityServicesGraffitiDao;
 
@@ -85,11 +89,17 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     }
   }
 
-  // TODO(ccaper): javadoc
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService#
+   * getAllGraffiti(java.util.List, java.sql.Timestamp, java.sql.Timestamp)
+   */
   @Override
-  public List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status, Timestamp startDate, Timestamp endDate) {
-    return chicagoCityServicesGraffitiDao
-        .getAllChicagoCityServicesGraffiti(status, startDate, endDate);
+  public List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status,
+      Timestamp startDate, Timestamp endDate) {
+    return chicagoCityServicesGraffitiDao.getAllChicagoCityServicesGraffiti(
+        status, startDate, endDate);
   }
 
   /**
