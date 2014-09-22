@@ -95,7 +95,6 @@ public class MapsController {
     return "maps/mapFilter";
   }
 
-  // TODO(ccaper): unit test
   /**
    * Based on options selected on the map form, generates a Graffiti map.
    *
@@ -112,12 +111,7 @@ public class MapsController {
       AppUser appUser = appUserService.getUserByUsername(username);
       model.put("appUser", appUser);
     }
-    List<String> status = new ArrayList<String>(3);
-    if (!StringUtils.isEmpty(mapForm.getStatus())) {
-      status = new LinkedList<String>(Arrays.asList(StringUtils.split(
-          mapForm.getStatus(), ",")));
-      status.remove("NONE");
-    }
+    List<String> status = stripNoneChoice(mapForm.getStatus());
     model
         .put(
             "graffiti",
@@ -125,5 +119,22 @@ public class MapsController {
                 mapForm.getStartDateAsTimestamp(),
                 mapForm.getEndDateAsTimestamp()));
     return "maps/map";
+  }
+  
+  // visible for testing
+  /**
+   * Strip none choice from multi select.
+   *
+   * @param choicesString the multi select choices as string
+   * @return the list of choices with NONE stripped
+   */
+  List<String> stripNoneChoice(String choicesString) {
+    List<String> choices = new ArrayList<String>(0);
+    if (!StringUtils.isEmpty(choicesString)) {
+      choices = new LinkedList<String>(Arrays.asList(StringUtils.split(
+          choicesString, ",")));
+      choices.remove("NONE");
+    }
+    return choices;
   }
 }
