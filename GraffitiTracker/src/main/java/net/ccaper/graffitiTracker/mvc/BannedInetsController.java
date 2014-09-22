@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.BannedInet;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.BannedInetsService;
@@ -81,9 +80,8 @@ public class BannedInetsController {
   @RequestMapping(method = RequestMethod.GET)
   public String listBannedInets(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
-      String username = userSecurityService.getUsernameFromSecurity();
-      AppUser appUser = appUserService.getUserByUsername(username);
-      model.put("appUser", appUser);
+      model.put("appUser", appUserService.getUserByUsername(userSecurityService
+          .getUsernameFromSecurity()));
     }
     return "bannedInets/listBannedInets";
   }
