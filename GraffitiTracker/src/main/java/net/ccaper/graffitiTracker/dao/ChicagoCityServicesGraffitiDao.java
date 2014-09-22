@@ -22,7 +22,15 @@ public interface ChicagoCityServicesGraffitiDao {
    */
   void storeChicagoCityServicesGraffiti(ChicagoCityServiceGraffiti graffiti);
 
-  // TODO(ccaper): javadoc
+  
+  /**
+   * Gets the all chicago city services graffiti that match criteria.
+   *
+   * @param status the status
+   * @param startDate the start date
+   * @param endDat the end date
+   * @return the graffiti matching criteria
+   */
   List<ChicagoCityServiceGraffiti> getAllChicagoCityServicesGraffiti(
-      List<String> status, Timestamp startDate, Timestamp endDat);
+      List<String> status, Timestamp startDate, Timestamp endDate);
 }
