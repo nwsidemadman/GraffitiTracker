@@ -87,7 +87,7 @@
   
   $(document).ready(function() {
     // define the search boxes to appear at bottom of datatable
-    $('#graffitiTable tfoot #graffitiStatus').html('<select><option></option><option value="Open">Open</option><option value="Closed">Closed</option></select>');
+    $('#graffitiTable tfoot #graffitiStatus').html('<select><option></option><option value="Open">Open</option><option value="Closed">Closed</option><option value="Submitted">Submitted</option></select>');
     $('#graffitiTable tfoot #graffitiRequestedDate').html('<input type="text" placeholder="Search" />');
     $('#graffitiTable tfoot #graffitiAddress').html('<input type="text" placeholder="Search" />');
     
