@@ -1,5 +1,6 @@
 package net.ccaper.graffitiTracker.mvc;
 
+import java.util.Date;
 import java.util.Map;
 
 import net.ccaper.graffitiTracker.objects.CityServiceUpdateForm;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,7 +75,8 @@ public class CityServicesController {
   /**
    * Gets the data update form.
    *
-   * @param model the model
+   * @param model
+   *          the model
    * @return the view name
    */
   @RequestMapping(value = "/update", method = RequestMethod.GET)
@@ -87,12 +90,13 @@ public class CityServicesController {
     return "city_services/update";
   }
 
-  // TODO(ccaper): unit test
   /**
    * Update city service data from user choices.
    *
-   * @param cityServiceUpdateForm the city service update form
-   * @param model the model
+   * @param cityServiceUpdateForm
+   *          the city service update form
+   * @param model
+   *          the model
    * @return the view name
    */
   @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -102,9 +106,18 @@ public class CityServicesController {
       model.put("appUser", appUserService.getUserByUsername(userSecurityService
           .getUsernameFromSecurity()));
     }
-    // TODO(ccaper): make asynch and send email with results
-    chicagoCityServicesGraffitiService.getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(cityServiceUpdateForm.getStartDateAsDate(),
-            cityServiceUpdateForm.getEndDateAsDate());
+    // TODO(ccaper): send email with results
+    getDateFromServerAndStoreInRepoAsynch(
+        cityServiceUpdateForm.getStartDateAsDate(),
+        cityServiceUpdateForm.getEndDateAsDate());
     return "city_services/updateStatus";
+  }
+
+  @Async
+  private void getDateFromServerAndStoreInRepoAsynch(Date startDate,
+      Date endDate) {
+    chicagoCityServicesGraffitiService
+        .getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
+            startDate, endDate);
   }
 }
