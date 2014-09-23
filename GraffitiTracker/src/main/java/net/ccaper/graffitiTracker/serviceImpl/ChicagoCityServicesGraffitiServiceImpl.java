@@ -118,6 +118,16 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     List<ChicagoCityServiceGraffiti> temp;
     int totalRecordsServer = 0;
     int totalRecordsSaved = 0;
+    logger
+        .info(String
+            .format(
+                "Beginning fetch and store of city service data using date range %s - %s",
+                startDate == null ? "null"
+                    : DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT
+                        .format(startDate),
+                endDate == null ? "null"
+                    : DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT
+                        .format(endDate)));
     do {
       temp = chicagoCityServicesServerDao.getGraffiti(startDate, endDate, page);
       logger.info(String.format(
@@ -151,9 +161,12 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
   /**
    * Email fetch and store results.
    *
-   * @param recipients the recipients to notify
-   * @param totalRecordsServer the total records on server from fetch
-   * @param totalRecordsSaved the total records saved in repo from fetch
+   * @param recipients
+   *          the recipients to notify
+   * @param totalRecordsServer
+   *          the total records on server from fetch
+   * @param totalRecordsSaved
+   *          the total records saved in repo from fetch
    */
   private void emailFetchAndStoreResults(List<String> recipients,
       int totalRecordsServer, int totalRecordsSaved) {

@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class CityServiceUpdateForm {
   // visible for testing
-  static final long BEGINNING_OF_TIME = 64800000L;
+  static final long BEGINNING_OF_TIME = -64800000L;
   private long startDate;
   private long endDate;
 
