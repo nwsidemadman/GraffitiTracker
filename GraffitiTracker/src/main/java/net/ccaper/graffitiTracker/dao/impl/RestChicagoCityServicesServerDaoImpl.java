@@ -71,7 +71,7 @@ public class RestChicagoCityServicesServerDaoImpl implements
   }
 
   // isolated for testing
-  // visisble for testing
+  // visible for testing
   /**
    * REST template call that gets the graffiti data.
    * 
