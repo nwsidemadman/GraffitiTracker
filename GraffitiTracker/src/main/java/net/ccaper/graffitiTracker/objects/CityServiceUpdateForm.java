@@ -11,6 +11,8 @@ import java.util.Date;
  *
  */
 public class CityServiceUpdateForm {
+  // visible for testing
+  static final long BEGINNING_OF_TIME = 64800000L;
   private long startDate;
   private long endDate;
 
@@ -23,14 +25,13 @@ public class CityServiceUpdateForm {
     return startDate;
   }
 
-  // TODO(ccaper): unit test
   /**
    * Gets the start date as Date.
    *
    * @return the start date as Date
    */
   public Date getStartDateAsDate() {
-    if (startDate == -64800000L) {
+    if (startDate == BEGINNING_OF_TIME) {
       return null;
     }
     return new Date(startDate);
@@ -55,14 +56,13 @@ public class CityServiceUpdateForm {
     return endDate;
   }
 
-  // TODO(ccaper): unit test
   /**
    * Gets the end date as Date.
    *
    * @return the end date as Date
    */
   public Date getEndDateAsDate() {
-    if (startDate == -64800000L) {
+    if (startDate == BEGINNING_OF_TIME) {
       return null;
     }
     return new Date(endDate);
