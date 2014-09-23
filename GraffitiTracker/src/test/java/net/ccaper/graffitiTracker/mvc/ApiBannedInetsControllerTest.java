@@ -22,7 +22,6 @@ import net.ccaper.graffitiTracker.service.BannedInetsService;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 
