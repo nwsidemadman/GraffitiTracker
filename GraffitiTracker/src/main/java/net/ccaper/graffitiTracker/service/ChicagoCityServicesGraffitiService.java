@@ -18,11 +18,12 @@ public interface ChicagoCityServicesGraffitiService {
   /**
    * Gets the chicago city service graffiti requests from server and store in repo.
    *
+   * @param recipients List of emails to notify of process results
    * @param startDate the start date
    * @param endDate the end date
    * @return the chicago city service graffiti requests from server and store in repo
    */
-  void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(Date startDate, Date endDate);
+  void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(List<String> recipients, Date startDate, Date endDate);
 
   /**
    * Gets the all graffiti from repository matching criteria.

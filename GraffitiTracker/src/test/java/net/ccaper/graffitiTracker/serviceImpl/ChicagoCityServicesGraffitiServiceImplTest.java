@@ -76,7 +76,7 @@ public class ChicagoCityServicesGraffitiServiceImplTest {
     classUnderTest.setChicagoCityServicesServerDao(mockDao);
     classUnderTest
         .getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
-            startDate, endDate);
+            new ArrayList<String>(0), startDate, endDate);
     verify(mockDao).getGraffiti(startDate, endDate, 1);
     verify(mockDao).getGraffiti(startDate, endDate, 2);
   }

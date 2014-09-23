@@ -1,6 +1,8 @@
 package net.ccaper.graffitiTracker.mvc;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import net.ccaper.graffitiTracker.objects.CityServiceUpdateForm;
@@ -99,25 +101,33 @@ public class CityServicesController {
    *          the model
    * @return the view name
    */
+  // TODO(ccaper): update test
   @RequestMapping(value = "/update", method = RequestMethod.POST)
   public String updateCityServiceData(
       CityServiceUpdateForm cityServiceUpdateForm, Map<String, Object> model) {
+    String userEmail = null;
     if (!userSecurityService.isUserAnonymous()) {
-      model.put("appUser", appUserService.getUserByUsername(userSecurityService
-          .getUsernameFromSecurity()));
+      String username = userSecurityService.getUsernameFromSecurity();
+      userEmail = appUserService.getEmailByUsername(username);
+      model.put("appUser", username);
     }
-    // TODO(ccaper): send email with results
-    getDateFromServerAndStoreInRepoAsynch(
+    getDateFromServerAndStoreInRepoAsynch(userEmail,
         cityServiceUpdateForm.getStartDateAsDate(),
         cityServiceUpdateForm.getEndDateAsDate());
     return "city_services/updateStatus";
   }
 
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
   @Async
-  private void getDateFromServerAndStoreInRepoAsynch(Date startDate,
-      Date endDate) {
+  private void getDateFromServerAndStoreInRepoAsynch(String userEmail,
+      Date startDate, Date endDate) {
+    List<String> recipients = new ArrayList<String>(1);
+    if (userEmail != null) {
+      recipients.add(userEmail);
+    }
     chicagoCityServicesGraffitiService
         .getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
-            startDate, endDate);
+            recipients, startDate, endDate);
   }
 }

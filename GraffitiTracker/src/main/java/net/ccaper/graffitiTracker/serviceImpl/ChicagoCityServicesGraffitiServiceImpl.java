@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
+import net.ccaper.graffitiTracker.enums.EnvironmentEnum;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
+import net.ccaper.graffitiTracker.service.MailService;
 import net.ccaper.graffitiTracker.utils.DateFormats;
 
 /**
@@ -27,14 +29,12 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     ChicagoCityServicesGraffitiService {
   private static final Logger logger = LoggerFactory
       .getLogger(ChicagoCityServicesGraffitiServiceImpl.class);
-
-  /** The chicago city services server dao. */
   @Autowired
   private ChicagoCityServicesServerDao chicagoCityServicesServerDao;
-
-  /** The chicago city services graffiti dao. */
   @Autowired
   private ChicagoCityServicesGraffitiDao chicagoCityServicesGraffitiDao;
+  @Autowired
+  private MailService mailService;
 
   // visible for testing
   /**
@@ -62,9 +62,21 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
 
   // visible for testing
   /**
+   * Sets the mail service.
+   * 
+   * @param mailService
+   *          the new mail service
+   */
+  void setMailService(MailService mailService) {
+    this.mailService = mailService;
+  }
+
+  // visible for testing
+  /**
    * Store chicago city service graffiti requests in repo.
    *
-   * @param data the data to persist
+   * @param data
+   *          the data to persist
    * @return number of records saved
    */
   int storeChicagoCityServiceGraffitiRequestsInRepo(
@@ -92,16 +104,21 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
         status, startDate, endDate);
   }
 
-  /* (non-Javadoc)
-   * @see net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService#getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(java.util.Date, java.util.Date)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService#
+   * getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo
+   * (java.util.Date, java.util.Date)
    */
   @Override
+  // TODO(ccaper): update test
   public void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
-      Date startDate, Date endDate) {
+      List<String> recipients, Date startDate, Date endDate) {
     int page = 1;
     List<ChicagoCityServiceGraffiti> temp;
-    int totalItemsServer = 0;
-    int totalItemsSaved = 0;
+    int totalRecordsServer = 0;
+    int totalRecordsSaved = 0;
     do {
       temp = chicagoCityServicesServerDao.getGraffiti(startDate, endDate, page);
       logger.info(String.format(
@@ -115,8 +132,8 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
                 .getRequestedDateTime())));
       }
       int numberRecordsSaved = storeChicagoCityServiceGraffitiRequestsInRepo(temp);
-      totalItemsServer += temp.size();
-      totalItemsSaved += numberRecordsSaved;
+      totalRecordsServer += temp.size();
+      totalRecordsSaved += numberRecordsSaved;
       logger
           .info(String
               .format(
@@ -128,6 +145,27 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
             .format(
                 "Fetch from city services server and save to repo "
                     + "complete, %d total records found on server, %d total records saved to repo.",
-                totalItemsServer, totalItemsSaved));
+                totalRecordsServer, totalRecordsSaved));
+    emailFetchAndStoreResults(recipients, totalRecordsServer, totalRecordsSaved);
+  }
+
+  // TODO(ccaper): javadoc
+  private void emailFetchAndStoreResults(List<String> recipients,
+      int totalRecordsServer, int totalRecordsSaved) {
+    mailService
+        .sendSimpleEmail(
+            recipients,
+            String.format(
+                "%s GraffitiTracker CityService Data Update %s",
+                EnvironmentEnum
+                    .getEnvironmentEnumFromEnvironmentPropertyString(
+                        System.getProperty("CLASSPATH_PROP_ENV"))
+                    .getDisplayString(),
+                DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT
+                    .format(new Date())),
+            String
+                .format(
+                    "Number of records found on city server: %d\nNumber of records inserted/updated in repo: %d",
+                    totalRecordsServer, totalRecordsSaved));
   }
 }
