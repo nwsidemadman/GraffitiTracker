@@ -3,6 +3,7 @@ package net.ccaper.graffitiTracker.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,22 +47,28 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
   private static final String SYSTEM_CREATED_TIMESTAMP_COL = "system_created_timestamp";
   private static final String SYSTEM_UPDATED_TIMESTAMP_COL = "system_updated_timestamp";
 
-  private static final String SQL_INSERT_GRAFFITI = String.format(
-      "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) VALUES "
-          + "(:%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s) "
-          + "ON DUPLICATE KEY UPDATE %s = :%s, %s = :%s, %s = :%s, %s = :%s, "
-          + "%s = :%s, %s = :%s, %s = :%s, %s = :%s, %s = :%s, %s = :%s",
-      CHICAGO_CITY_SERVICE_GRAFFITI_TABLE, SERVICE_REQUEST_ID_COL, STATUS_COL,
-      REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, ADDRESS_COL, LATITUDE_COL,
-      LONGITUDE_COL, MEDIA_URL_COL, WARD_COL, POLICE_DISTRICT_COL, ZIPCODE_COL,
-      SERVICE_REQUEST_ID_COL, STATUS_COL, REQUESTED_DATETIME_COL,
-      UPDATED_DATETIME_COL, ADDRESS_COL, LATITUDE_COL, LONGITUDE_COL,
-      MEDIA_URL_COL, WARD_COL, POLICE_DISTRICT_COL, ZIPCODE_COL, STATUS_COL,
-      STATUS_COL, REQUESTED_DATETIME_COL, REQUESTED_DATETIME_COL,
-      UPDATED_DATETIME_COL, UPDATED_DATETIME_COL, ADDRESS_COL, ADDRESS_COL,
-      LATITUDE_COL, LATITUDE_COL, LONGITUDE_COL, LONGITUDE_COL, MEDIA_URL_COL,
-      MEDIA_URL_COL, WARD_COL, WARD_COL, POLICE_DISTRICT_COL,
-      POLICE_DISTRICT_COL, ZIPCODE_COL, ZIPCODE_COL).toLowerCase();
+  private static final String SQL_INSERT_GRAFFITI = String
+      .format(
+          "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) VALUES "
+              + "(:%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s, :%s) "
+              + "ON DUPLICATE KEY UPDATE %s = :%s, %s = :%s, %s = :%s, %s = :%s, "
+              + "%s = :%s, %s = :%s, %s = :%s, %s = :%s, %s = :%s, %s = :%s, %s = :%s",
+          CHICAGO_CITY_SERVICE_GRAFFITI_TABLE, SERVICE_REQUEST_ID_COL,
+          STATUS_COL, REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL,
+          ADDRESS_COL, LATITUDE_COL, LONGITUDE_COL, MEDIA_URL_COL, WARD_COL,
+          POLICE_DISTRICT_COL, ZIPCODE_COL, SYSTEM_CREATED_TIMESTAMP_COL,
+          SYSTEM_UPDATED_TIMESTAMP_COL, SERVICE_REQUEST_ID_COL, STATUS_COL,
+          REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL, ADDRESS_COL,
+          LATITUDE_COL, LONGITUDE_COL, MEDIA_URL_COL, WARD_COL,
+          POLICE_DISTRICT_COL, ZIPCODE_COL, SYSTEM_CREATED_TIMESTAMP_COL,
+          SYSTEM_UPDATED_TIMESTAMP_COL, STATUS_COL, STATUS_COL,
+          REQUESTED_DATETIME_COL, REQUESTED_DATETIME_COL, UPDATED_DATETIME_COL,
+          UPDATED_DATETIME_COL, ADDRESS_COL, ADDRESS_COL, LATITUDE_COL,
+          LATITUDE_COL, LONGITUDE_COL, LONGITUDE_COL, MEDIA_URL_COL,
+          MEDIA_URL_COL, WARD_COL, WARD_COL, POLICE_DISTRICT_COL,
+          POLICE_DISTRICT_COL, ZIPCODE_COL, ZIPCODE_COL,
+          SYSTEM_UPDATED_TIMESTAMP_COL, SYSTEM_UPDATED_TIMESTAMP_COL)
+      .toLowerCase();
   // visible for testing
   static final String SQL_GET_ALL_GRAFFITI = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s FROM %s",
@@ -136,8 +143,13 @@ public class JdbcChicagoCityServicesGraffitiDaoImpl extends
     graffitiParamMap.put(LONGITUDE_COL, graffiti.getLongitude());
     graffitiParamMap.put(MEDIA_URL_COL, graffiti.getMediaUrl());
     graffitiParamMap.put(WARD_COL, graffiti.getExtendedAttributes().getWard());
-    graffitiParamMap.put(POLICE_DISTRICT_COL, graffiti.getExtendedAttributes().getPoliceDistrict());
-    graffitiParamMap.put(ZIPCODE_COL, graffiti.getExtendedAttributes().getZipcode());
+    graffitiParamMap.put(POLICE_DISTRICT_COL, graffiti.getExtendedAttributes()
+        .getPoliceDistrict());
+    graffitiParamMap.put(ZIPCODE_COL, graffiti.getExtendedAttributes()
+        .getZipcode());
+    Timestamp now = new Timestamp((new Date()).getTime());
+    graffitiParamMap.put(SYSTEM_CREATED_TIMESTAMP_COL, now);
+    graffitiParamMap.put(SYSTEM_UPDATED_TIMESTAMP_COL, now);
     getNamedParameterJdbcTemplate().update(SQL_INSERT_GRAFFITI,
         graffitiParamMap);
   }
