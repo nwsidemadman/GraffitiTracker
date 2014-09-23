@@ -38,7 +38,6 @@ public class RestChicagoCityServicesServerDaoImpl implements
       PAGE_SIZE_ARG, PAGE_SIZE_ARG, PAGE_ARG, PAGE_ARG);
   private static final String PAGE_SIZE = "500";
 
-  // TODO(ccaper): unit test
   /* (non-Javadoc)
    * @see net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao#getGraffiti(java.util.Date, java.util.Date, int)
    */

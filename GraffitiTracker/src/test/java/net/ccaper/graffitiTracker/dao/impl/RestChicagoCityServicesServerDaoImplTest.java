@@ -3,6 +3,7 @@ package net.ccaper.graffitiTracker.dao.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -38,6 +39,12 @@ public class RestChicagoCityServicesServerDaoImplTest {
     classUnderTest.getGraffiti(startDate, endDate, 1);
   }
   
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetGraffiti_InvalidPage() throws Exception {
+    ChicagoCityServicesServerDao classUnderTest = new RestChicagoCityServicesServerDaoImpl();
+    classUnderTest.getGraffiti(null, null, 0);
+  }
+  
   @Test
   public void testGetGraffiti_happyPathNonNullDates() throws Exception {
     final ChicagoCityServiceGraffiti result = new ChicagoCityServiceGraffiti();
@@ -60,7 +67,16 @@ public class RestChicagoCityServicesServerDaoImplTest {
     RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
     Calendar cal = GregorianCalendar.getInstance();
     cal.set(2014, 8, 15, 0, 0);
-    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(cal.getTime(), cal.getTime(), 1);
+    List<ChicagoCityServiceGraffiti> results = new ArrayList<ChicagoCityServiceGraffiti>();
+    List<ChicagoCityServiceGraffiti> temp;
+    int page = 1;
+    do {
+      temp = classUnderTest.getGraffiti(cal.getTime(), cal.getTime(), page);
+      if (temp.size() > 0) {
+        ++page;
+        results.addAll(temp);
+      }
+    } while (temp.size() > 0);
     assertEquals(1, results.size());
     assertTrue(results.contains(result));
   }
@@ -85,7 +101,16 @@ public class RestChicagoCityServicesServerDaoImplTest {
     }
     
     RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
-    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(null, null, 1);
+    List<ChicagoCityServiceGraffiti> results = new ArrayList<ChicagoCityServiceGraffiti>();
+    List<ChicagoCityServiceGraffiti> temp;
+    int page = 1;
+    do {
+      temp = classUnderTest.getGraffiti(null, null, page);
+      if (temp.size() > 0) {
+        ++page;
+        results.addAll(temp);
+      }
+    } while (temp.size() > 0);
     assertEquals(1, results.size());
     assertTrue(results.contains(result));
   }
