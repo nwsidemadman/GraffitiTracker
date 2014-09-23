@@ -13,8 +13,8 @@ CREATE TABLE `chicago_city_service_data_graffiti` (
   `ward` tinyint(2) unsigned NOT NULL,
   `police_district` tinyint(2) unsigned NOT NULL,
   `zipcode` smallint(5) unsigned NOT NULL,
-  `system_created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `system_updated_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `system_created_timestamp` timestamp NOT NULL,
+  `system_updated_timestamp` timestamp NOT NULL,
   PRIMARY KEY(`service_request_id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
