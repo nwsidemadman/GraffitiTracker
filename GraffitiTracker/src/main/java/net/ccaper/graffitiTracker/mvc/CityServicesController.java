@@ -109,7 +109,7 @@ public class CityServicesController {
     if (!userSecurityService.isUserAnonymous()) {
       String username = userSecurityService.getUsernameFromSecurity();
       userEmail = appUserService.getEmailByUsername(username);
-      model.put("appUser", username);
+      model.put("appUser", appUserService.getUserByUsername(username));
     }
     getDataFromServerAndStoreInRepoAsynch(userEmail,
         cityServiceUpdateForm.getStartDateAsDate(),
@@ -117,7 +117,6 @@ public class CityServicesController {
     return "city_services/updateStatus";
   }
 
-  // TODO(ccaper): unit test
   /**
    * Wrapper to get the data from server and store in repo async.
    *
