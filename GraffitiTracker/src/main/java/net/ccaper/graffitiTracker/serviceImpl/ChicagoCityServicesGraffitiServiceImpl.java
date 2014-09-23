@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
@@ -112,6 +113,7 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
    * (java.util.Date, java.util.Date)
    */
   @Override
+  @Async
   public void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
       List<String> recipients, Date startDate, Date endDate) {
     int page = 1;
@@ -155,7 +157,8 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
                 "Fetch from city services server and save to repo "
                     + "complete, %d total records found on server, %d total records saved to repo.",
                 totalRecordsServer, totalRecordsSaved));
-    emailFetchAndStoreResults(recipients, totalRecordsServer, totalRecordsSaved);
+    emailFetchAndStoreResults(recipients, totalRecordsServer,
+        totalRecordsSaved, startDate, endDate);
   }
 
   /**
@@ -169,7 +172,8 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
    *          the total records saved in repo from fetch
    */
   private void emailFetchAndStoreResults(List<String> recipients,
-      int totalRecordsServer, int totalRecordsSaved) {
+      int totalRecordsServer, int totalRecordsSaved, Date startDate,
+      Date endDate) {
     mailService
         .sendSimpleEmail(
             recipients,
@@ -183,7 +187,13 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
                     .format(new Date())),
             String
                 .format(
-                    "Number of records found on city server: %d\nNumber of records inserted/updated in repo: %d",
-                    totalRecordsServer, totalRecordsSaved));
+                    "Using %s for start date and %s for end date.\nNumber of records found on city server: %d\nNumber of records inserted/updated in repo: %d",
+                    startDate == null ? "null"
+                        : DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT
+                            .format(startDate),
+                    endDate == null ? "null"
+                        : DateFormats.YEAR_SLASH_MONTH_SLASH_DAY_FORMAT
+                            .format(endDate), totalRecordsServer,
+                    totalRecordsSaved));
   }
 }

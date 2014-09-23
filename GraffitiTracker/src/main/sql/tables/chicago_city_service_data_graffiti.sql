@@ -3,7 +3,7 @@ Drop table `chicago_city_service_data_graffiti`;
 CREATE TABLE `chicago_city_service_data_graffiti` (
   `service_request_id` varchar(11) NOT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `status` enum('open', 'closed') NOT NULL DEFAULT 'open',
+  `status` enum('open', 'closed', 'submitted') NOT NULL DEFAULT 'open',
   `status_notes` varchar(30),
   `requested_datetime` timestamp NOT NULL,
   `updated_datetime` timestamp NOT NULL,

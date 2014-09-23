@@ -9,5 +9,6 @@
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
     <p>System is getting data from City Services and storing to repo.</p>
+    <p>Email notification will be sent when complete, including stats.</p>
   </div>
 </sec:authorize>

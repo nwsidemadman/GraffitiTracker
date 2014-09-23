@@ -110,28 +110,14 @@ public class CityServicesController {
       userEmail = appUserService.getEmailByUsername(username);
       model.put("appUser", appUserService.getUserByUsername(username));
     }
-    getDataFromServerAndStoreInRepoAsynch(userEmail,
-        cityServiceUpdateForm.getStartDateAsDate(),
-        cityServiceUpdateForm.getEndDateAsDate());
-    return "city_services/updateStatus";
-  }
-
-  /**
-   * Wrapper to get the data from server and store in repo async.
-   *
-   * @param userEmail the user email
-   * @param startDate the start date
-   * @param endDate the end date
-   */
-  @Async
-  private void getDataFromServerAndStoreInRepoAsynch(String userEmail,
-      Date startDate, Date endDate) {
     List<String> recipients = new ArrayList<String>(1);
     if (userEmail != null) {
       recipients.add(userEmail);
     }
     chicagoCityServicesGraffitiService
         .getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
-            recipients, startDate, endDate);
+            recipients, cityServiceUpdateForm.getStartDateAsDate(),
+            cityServiceUpdateForm.getEndDateAsDate());
+    return "city_services/updateStatus";
   }
 }

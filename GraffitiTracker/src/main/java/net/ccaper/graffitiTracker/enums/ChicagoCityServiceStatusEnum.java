@@ -8,7 +8,7 @@ package net.ccaper.graffitiTracker.enums;
  *
  */
 public enum ChicagoCityServiceStatusEnum {
-  OPEN("open", "Open"), CLOSED("closed", "Closed");
+  OPEN("open", "Open"), CLOSED("closed", "Closed"), SUBMITTED("submitted", "Submitted");
 
   private String dbString;
   private String displayString;
