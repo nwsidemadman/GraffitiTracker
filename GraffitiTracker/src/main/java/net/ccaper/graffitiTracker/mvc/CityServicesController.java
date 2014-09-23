@@ -71,7 +71,12 @@ public class CityServicesController {
   }
 
   // TODO(ccaper): unit test
-  // TODO(ccaper): javadoc
+  /**
+   * Gets the data update form.
+   *
+   * @param model the model
+   * @return the view name
+   */
   @RequestMapping(value = "/update", method = RequestMethod.GET)
   public String getUpdateForm(Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
@@ -84,17 +89,23 @@ public class CityServicesController {
   }
 
   // TODO(ccaper): unit test
-  // TODO(ccaper): javadoc
+  /**
+   * Update city service data from user choices.
+   *
+   * @param cityServiceUpdateForm the city service update form
+   * @param model the model
+   * @return the view name
+   */
   @RequestMapping(value = "/update", method = RequestMethod.POST)
   public String updateCityServiceData(
-      CityServiceUpdateForm citySerivceUpdateForm, Map<String, Object> model) {
+      CityServiceUpdateForm cityServiceUpdateForm, Map<String, Object> model) {
     if (!userSecurityService.isUserAnonymous()) {
       model.put("appUser", appUserService.getUserByUsername(userSecurityService
           .getUsernameFromSecurity()));
     }
     // TODO(ccaper): make asynch and send email with results
-    chicagoCityServicesGraffitiService.getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(citySerivceUpdateForm.getStartDateAsDate(),
-            citySerivceUpdateForm.getEndDateAsDate());
+    chicagoCityServicesGraffitiService.getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(cityServiceUpdateForm.getStartDateAsDate(),
+            cityServiceUpdateForm.getEndDateAsDate());
     return "city_services/updateStatus";
   }
 }

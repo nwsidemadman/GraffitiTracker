@@ -60,8 +60,13 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     this.chicagoCityServicesGraffitiDao = chicagoCityServicesGraffitiDao;
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test?
+  /**
+   * Store chicago city service graffiti requests in repo.
+   *
+   * @param data the data to persist
+   * @return number of records saved
+   */
   private int storeChicagoCityServiceGraffitiRequestsInRepo(
       List<ChicagoCityServiceGraffiti> data) {
     int counter = 0;
@@ -87,8 +92,10 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
         status, startDate, endDate);
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /* (non-Javadoc)
+   * @see net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService#getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(java.util.Date, java.util.Date)
+   */
   @Override
   public void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
       Date startDate, Date endDate) {

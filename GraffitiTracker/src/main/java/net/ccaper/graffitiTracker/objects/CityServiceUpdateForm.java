@@ -2,7 +2,14 @@ package net.ccaper.graffitiTracker.objects;
 
 import java.util.Date;
 
-// TODO(ccaper): javadoc
+/**
+ * 
+ * @author ccaper
+ * 
+ *         POJO backing the form for the user choices for updating data from
+ *         city services server.
+ *
+ */
 public class CityServiceUpdateForm {
   private long startDate;
   private long endDate;
