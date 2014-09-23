@@ -17,14 +17,49 @@ import net.ccaper.graffitiTracker.enums.ChicagoCityServiceStatusEnum;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChicagoCityServiceGraffiti {
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public class ExtendedAttributes {
+    @JsonProperty("ward")
+    private int ward;
+    @JsonProperty("police")
+    private int policeDistrict;
+    @JsonProperty("zip")
+    private int zipcode;
+
+    public ExtendedAttributes() {
+    }
+
+    public int getWard() {
+      return ward;
+    }
+
+    public void setWard(int ward) {
+      this.ward = ward;
+    }
+
+    public int getPoliceDistrict() {
+      return policeDistrict;
+    }
+
+    public void setPoliceDistrict(int policeDistrict) {
+      this.policeDistrict = policeDistrict;
+    }
+
+    public int getZipcode() {
+      return zipcode;
+    }
+
+    public void setZipcode(int zip) {
+      this.zipcode = zip;
+    }
+  }
+
   @JsonIgnore
   private int id;
   @JsonProperty("service_request_id")
   private String serviceRequestId;
   @JsonProperty("status")
   private ChicagoCityServiceStatusEnum status;
-  @JsonProperty("status_notes")
-  private String statusNotes;
   @JsonProperty("requested_datetime")
   private Timestamp requestedDateTime;
   @JsonProperty("updated_datetime")
@@ -37,6 +72,8 @@ public class ChicagoCityServiceGraffiti {
   private double longitude;
   @JsonProperty("media_url")
   private String mediaUrl;
+  @JsonProperty("extended_attributes")
+  private ExtendedAttributes extendedAttributes;
   @JsonIgnore
   private Timestamp systemCreatedTimestamp;
   @JsonIgnore
@@ -109,25 +146,6 @@ public class ChicagoCityServiceGraffiti {
   public void setStatus(String statusString) {
     status = ChicagoCityServiceStatusEnum
         .getChicagoCityServiceStatusEnumFromDbOrServerString(statusString);
-  }
-
-  /**
-   * Gets the status notes.
-   *
-   * @return the status notes
-   */
-  public String getStatusNotes() {
-    return statusNotes;
-  }
-
-  /**
-   * Sets the status notes.
-   *
-   * @param statusNotes
-   *          the new status notes
-   */
-  public void setStatusNotes(String statusNotes) {
-    this.statusNotes = statusNotes;
   }
 
   /**
@@ -242,6 +260,14 @@ public class ChicagoCityServiceGraffiti {
    */
   public void setMediaUrl(String mediaUrl) {
     this.mediaUrl = mediaUrl;
+  }
+
+  public ExtendedAttributes getExtendedAttributes() {
+    return extendedAttributes;
+  }
+
+  public void setExtendedAttributes(ExtendedAttributes extendedAttributes) {
+    this.extendedAttributes = extendedAttributes;
   }
 
   /**

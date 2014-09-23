@@ -30,12 +30,14 @@ public class RestChicagoCityServicesServerDaoImpl implements
   private static final String PAGE_SIZE_ARG = "page_size";
   private static final String START_DATE_ARG = "start_date";
   private static final String END_DATE_ARG = "end_date";
+  private static final String EXTENSIONS_ARG = "extensions";
+  private static final String EXTENSIONS_VALUE = "true";
 
   // visible for testing
   static String chicagoServicesDateRangeUrl = String.format(
       "http://311api.cityofchicago.org/open311/v2/requests.json?"
-          + "%s={%s}&%s={%s}&%s={%s}", SERVICE_CODE_ARG, SERVICE_CODE_ARG,
-      PAGE_SIZE_ARG, PAGE_SIZE_ARG, PAGE_ARG, PAGE_ARG);
+          + "%s={%s}&%s={%s}&%s={%s}&%s={%s}", SERVICE_CODE_ARG, SERVICE_CODE_ARG,
+      PAGE_SIZE_ARG, PAGE_SIZE_ARG, PAGE_ARG, PAGE_ARG, EXTENSIONS_ARG, EXTENSIONS_ARG);
   private static final String PAGE_SIZE = "500";
 
   /* (non-Javadoc)
@@ -56,6 +58,7 @@ public class RestChicagoCityServicesServerDaoImpl implements
     Map<String, String> urlVariables = new HashMap<String, String>(5);
     urlVariables.put(SERVICE_CODE_ARG, GRAFFITI_SERVICE_CODE);
     urlVariables.put(PAGE_SIZE_ARG, PAGE_SIZE);
+    urlVariables.put(EXTENSIONS_ARG, EXTENSIONS_VALUE);
     setDateInChicagoServicesDateRangeUrl(startDate, START_DATE_ARG,
         urlVariables);
     setDateInChicagoServicesDateRangeUrl(endDate, END_DATE_ARG, urlVariables);
@@ -100,6 +103,14 @@ public class RestChicagoCityServicesServerDaoImpl implements
     if (date != null) {
       chicagoServicesDateRangeUrl += String.format("&%s={%s}", arg, arg);
       vars.put(arg, DateFormats.W3_DATE_FORMAT.format(date));
+    }
+  }
+  
+  public static void main(String[] args) {
+    RestChicagoCityServicesServerDaoImpl dao = new RestChicagoCityServicesServerDaoImpl();
+    List<ChicagoCityServiceGraffiti> data = dao.getGraffiti(null, null, 1);
+    for (ChicagoCityServiceGraffiti datum : data) {
+      System.out.println(datum);
     }
   }
 }
