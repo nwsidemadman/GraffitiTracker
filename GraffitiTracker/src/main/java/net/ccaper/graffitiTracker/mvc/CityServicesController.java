@@ -1,9 +1,7 @@
 package net.ccaper.graffitiTracker.mvc;
 
-import java.util.List;
 import java.util.Map;
 
-import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.objects.CityServiceUpdateForm;
 import net.ccaper.graffitiTracker.service.AppUserService;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  *         Controller for city services actions
  * 
  */
-// TODO(ccaper): add security for super admin only
 @Controller
 @RequestMapping("/city_services")
 @Scope("session")
@@ -95,12 +92,9 @@ public class CityServicesController {
       model.put("appUser", appUserService.getUserByUsername(userSecurityService
           .getUsernameFromSecurity()));
     }
-    List<ChicagoCityServiceGraffiti> data = chicagoCityServicesGraffitiService
-        .getChicagoCityServiceGraffitiRequestsFromServer(
-            citySerivceUpdateForm.getStartDateAsDate(),
+    // TODO(ccaper): make asynch and send email with results
+    chicagoCityServicesGraffitiService.getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(citySerivceUpdateForm.getStartDateAsDate(),
             citySerivceUpdateForm.getEndDateAsDate());
-    model.put("dataSizeStored", chicagoCityServicesGraffitiService.storeChicagoCityServiceGraffitiRequests(data));
-    model.put("dataSizeServer", data.size());
     return "city_services/updateStatus";
   }
 }

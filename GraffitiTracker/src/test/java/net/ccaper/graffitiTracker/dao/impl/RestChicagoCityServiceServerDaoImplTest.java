@@ -35,7 +35,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
     cal.roll(Calendar.DAY_OF_MONTH, -1);
     Date endDate = cal.getTime();
     ChicagoCityServicesServerDao classUnderTest = new RestChicagoCityServicesServerDaoImpl();
-    classUnderTest.getGraffiti(startDate, endDate);
+    classUnderTest.getGraffiti(startDate, endDate, 1);
   }
   
   @Test
@@ -60,7 +60,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
     RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
     Calendar cal = GregorianCalendar.getInstance();
     cal.set(2014, 8, 15, 0, 0);
-    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(cal.getTime(), cal.getTime());
+    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(cal.getTime(), cal.getTime(), 1);
     assertEquals(1, results.size());
     assertTrue(results.contains(result));
   }
@@ -85,7 +85,7 @@ public class RestChicagoCityServiceServerDaoImplTest {
     }
     
     RestChicagoCityServicesServerDaoImpl classUnderTest = new RestChicagoCityServiceServerDaoImplMock();
-    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(null, null);
+    List<ChicagoCityServiceGraffiti> results = classUnderTest.getGraffiti(null, null, 1);
     assertEquals(1, results.size());
     assertTrue(results.contains(result));
   }

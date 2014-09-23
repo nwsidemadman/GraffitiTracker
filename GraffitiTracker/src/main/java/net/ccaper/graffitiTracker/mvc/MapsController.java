@@ -112,7 +112,7 @@ public class MapsController {
     model
         .put(
             "graffiti",
-            chicagoCityServicesGraffitiService.getAllGraffiti(status,
+            chicagoCityServicesGraffitiService.getAllGraffitiFromRepo(status,
                 mapForm.getStartDateAsTimestamp(),
                 mapForm.getEndDateAsTimestamp()));
     return "maps/map";

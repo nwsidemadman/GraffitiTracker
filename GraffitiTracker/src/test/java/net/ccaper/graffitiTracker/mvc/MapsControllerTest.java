@@ -136,7 +136,7 @@ public class MapsControllerTest {
     List<ChicagoCityServiceGraffiti> results = new ArrayList<ChicagoCityServiceGraffiti>();
     results.add(new ChicagoCityServiceGraffiti());
     when(
-        chicagoCityServicesGraffitiServiceMock.getAllGraffiti(status,
+        chicagoCityServicesGraffitiServiceMock.getAllGraffitiFromRepo(status,
             userChoices.getStartDateAsTimestamp(),
             userChoices.getEndDateAsTimestamp())).thenReturn(results);
     classUnderTest
@@ -150,7 +150,7 @@ public class MapsControllerTest {
     verify(userSecurityServiceMock).isUserAnonymous();
     verify(userSecurityServiceMock).getUsernameFromSecurity();
     verify(appUserServiceMock).getUserByUsername(username);
-    verify(chicagoCityServicesGraffitiServiceMock).getAllGraffiti(status,
+    verify(chicagoCityServicesGraffitiServiceMock).getAllGraffitiFromRepo(status,
         userChoices.getStartDateAsTimestamp(),
         userChoices.getEndDateAsTimestamp());
   }
@@ -178,7 +178,7 @@ public class MapsControllerTest {
     List<ChicagoCityServiceGraffiti> results = new ArrayList<ChicagoCityServiceGraffiti>();
     results.add(new ChicagoCityServiceGraffiti());
     when(
-        chicagoCityServicesGraffitiServiceMock.getAllGraffiti(status,
+        chicagoCityServicesGraffitiServiceMock.getAllGraffitiFromRepo(status,
             userChoices.getStartDateAsTimestamp(),
             userChoices.getEndDateAsTimestamp())).thenReturn(results);
     classUnderTest
@@ -189,7 +189,7 @@ public class MapsControllerTest {
     assertTrue(model.containsKey("graffiti"));
     assertEquals(results, model.get("graffiti"));
     verify(userSecurityServiceMock).isUserAnonymous();
-    verify(chicagoCityServicesGraffitiServiceMock).getAllGraffiti(status,
+    verify(chicagoCityServicesGraffitiServiceMock).getAllGraffitiFromRepo(status,
         userChoices.getStartDateAsTimestamp(),
         userChoices.getEndDateAsTimestamp());
   }

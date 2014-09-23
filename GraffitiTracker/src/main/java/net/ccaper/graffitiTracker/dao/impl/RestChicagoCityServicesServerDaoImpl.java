@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,8 +24,6 @@ import net.ccaper.graffitiTracker.utils.DateFormats;
 @Repository("chicagoCityServicesServerDao")
 public class RestChicagoCityServicesServerDaoImpl implements
     ChicagoCityServicesServerDao {
-  private static final Logger logger = LoggerFactory
-      .getLogger(RestChicagoCityServicesServerDaoImpl.class);
   private static final String GRAFFITI_SERVICE_CODE = "4fd3b167e750846744000005";
   private static final String SERVICE_CODE_ARG = "service_code";
   private static final String PAGE_ARG = "page";
@@ -42,16 +38,14 @@ public class RestChicagoCityServicesServerDaoImpl implements
       PAGE_SIZE_ARG, PAGE_SIZE_ARG, PAGE_ARG, PAGE_ARG);
   private static final String PAGE_SIZE = "500";
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao#getGraffiti
-   * (java.util.Date, java.util.Date)
-   */
+  // TODO(ccaper): unit test
+  // TODO(ccaper): javadoc
   @Override
   public List<ChicagoCityServiceGraffiti> getGraffiti(Date startDate,
-      Date endDate) {
+      Date endDate, int page) {
+    if (page < 1) {
+      throw new IllegalArgumentException(String.format("page %d must be greater than 1", page));
+    }
     if ((startDate != null && endDate != null) && endDate.before(startDate)) {
       throw new IllegalArgumentException(String.format(
           "startDate '%s' must be <= to endDate '%s'",
@@ -65,49 +59,14 @@ public class RestChicagoCityServicesServerDaoImpl implements
         urlVariables);
     setDateInChicagoServicesDateRangeUrl(endDate, END_DATE_ARG, urlVariables);
     List<ChicagoCityServiceGraffiti> results = new ArrayList<ChicagoCityServiceGraffiti>();
-    int page = 1;
-    List<ChicagoCityServiceGraffiti> temp;
-    do {
-      urlVariables.put(PAGE_ARG, Integer.toString(page));
-      temp = Arrays.asList(getGraffitiData(urlVariables));
-      if (temp.size() != 0) {
-        ++page;
-        results.addAll(temp);
-      }
-    } while (temp.size() != 0);
-    return results;
-  }
-
-  @Override
-  public void getGraffitiFromServerAndStoreInRepo(Date startDate, Date endDate) {
-    if ((startDate != null && endDate != null) && endDate.before(startDate)) {
-      throw new IllegalArgumentException(String.format(
-          "startDate '%s' must be <= to endDate '%s'",
-          DateFormats.W3_DATE_FORMAT.format(startDate),
-          DateFormats.W3_DATE_FORMAT.format(endDate)));
+    urlVariables.put(PAGE_ARG, Integer.toString(page));
+    List<ChicagoCityServiceGraffiti> temp = Arrays
+        .asList(getGraffitiData(urlVariables));
+    if (temp.size() != 0) {
+      ++page;
+      results.addAll(temp);
     }
-    Map<String, String> urlVariables = new HashMap<String, String>(5);
-    urlVariables.put(SERVICE_CODE_ARG, GRAFFITI_SERVICE_CODE);
-    urlVariables.put(PAGE_SIZE_ARG, PAGE_SIZE);
-    setDateInChicagoServicesDateRangeUrl(startDate, START_DATE_ARG,
-        urlVariables);
-    setDateInChicagoServicesDateRangeUrl(endDate, END_DATE_ARG, urlVariables);
-    int page = 1;
-    List<ChicagoCityServiceGraffiti> temp;
-    do {
-      urlVariables.put(PAGE_ARG, Integer.toString(page));
-      temp = Arrays.asList(getGraffitiData(urlVariables));
-      logger.info(String.format(
-          "Page %d fetched from city services server with " + "%d items.",
-          page, temp.size()));
-      if (temp.size() != 0) {
-        logger.info(String.format("First item has a requested datetime of %s.",
-            DateFormats.W3_DATE_FORMAT.format(temp.get(0)
-                .getRequestedDateTime())));
-        ++page;
-      }
-      // save items here
-    } while (temp.size() != 0);
+    return results;
   }
 
   // isolated for testing

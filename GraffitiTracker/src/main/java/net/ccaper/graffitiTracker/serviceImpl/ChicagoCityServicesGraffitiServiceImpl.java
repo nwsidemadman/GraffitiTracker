@@ -1,21 +1,19 @@
 package net.ccaper.graffitiTracker.serviceImpl;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService;
-import net.ccaper.graffitiTracker.spring.AppConfig;
+import net.ccaper.graffitiTracker.utils.DateFormats;
 
 /**
  * 
@@ -27,6 +25,8 @@ import net.ccaper.graffitiTracker.spring.AppConfig;
 @Service("chicagoCityServicesGraffitiService")
 public class ChicagoCityServicesGraffitiServiceImpl implements
     ChicagoCityServicesGraffitiService {
+  private static final Logger logger = LoggerFactory
+      .getLogger(ChicagoCityServicesGraffitiServiceImpl.class);
 
   /** The chicago city services server dao. */
   @Autowired
@@ -60,27 +60,9 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     this.chicagoCityServicesGraffitiDao = chicagoCityServicesGraffitiDao;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService#
-   * getChicagoCityServiceGraffitiRequestsFromServer(java.util.Date,
-   * java.util.Date)
-   */
-  @Override
-  public List<ChicagoCityServiceGraffiti> getChicagoCityServiceGraffitiRequestsFromServer(
-      Date startDate, Date endDate) {
-    return chicagoCityServicesServerDao.getGraffiti(startDate, endDate);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see net.ccaper.graffitiTracker.service.ChicagoCityServicesGraffitiService#
-   * storeChicagoCityServiceGraffitiRequests(java.util.List)
-   */
-  @Override
-  public int storeChicagoCityServiceGraffitiRequests(
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test?
+  private int storeChicagoCityServiceGraffitiRequestsInRepo(
       List<ChicagoCityServiceGraffiti> data) {
     int counter = 0;
     for (ChicagoCityServiceGraffiti datum : data) {
@@ -99,9 +81,47 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
    * getAllGraffiti(java.util.List, java.sql.Timestamp, java.sql.Timestamp)
    */
   @Override
-  public List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status,
-      Timestamp startDate, Timestamp endDate) {
+  public List<ChicagoCityServiceGraffiti> getAllGraffitiFromRepo(
+      List<String> status, Timestamp startDate, Timestamp endDate) {
     return chicagoCityServicesGraffitiDao.getAllChicagoCityServicesGraffiti(
         status, startDate, endDate);
+  }
+
+  // TODO(ccaper): javadoc
+  // TODO(ccaper): unit test
+  @Override
+  public void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
+      Date startDate, Date endDate) {
+    int page = 1;
+    List<ChicagoCityServiceGraffiti> temp;
+    int totalItemsServer = 0;
+    int totalItemsSaved = 0;
+    do {
+      temp = chicagoCityServicesServerDao.getGraffiti(startDate, endDate, page);
+      logger.info(String.format(
+          "Page %d fetched from city services server with " + "%d items.",
+          page, temp.size()));
+      if (temp.size() != 0) {
+        ++page;
+        logger.info(String.format(
+            "First item in page %d batch has a requested datetime of %s.",
+            page, DateFormats.W3_DATE_FORMAT.format(temp.get(0)
+                .getRequestedDateTime())));
+      }
+      int numberRecordsSaved = storeChicagoCityServiceGraffitiRequestsInRepo(temp);
+      totalItemsServer += temp.size();
+      totalItemsSaved += numberRecordsSaved;
+      logger
+          .info(String
+              .format(
+                  "For page %d batch, %d items had media URL's and were saved to repo.",
+                  page, numberRecordsSaved));
+    } while (temp.size() != 0);
+    logger
+        .info(String
+            .format(
+                "Fetch from city services server and save to repo "
+                    + "complete, %d total records found on server, %d total records saved to repo.",
+                totalItemsServer, totalItemsSaved));
   }
 }

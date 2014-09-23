@@ -22,7 +22,6 @@ public interface ChicagoCityServicesGraffitiDao {
    */
   void storeChicagoCityServicesGraffiti(ChicagoCityServiceGraffiti graffiti);
 
-  
   /**
    * Gets the all chicago city services graffiti that match criteria.
    *

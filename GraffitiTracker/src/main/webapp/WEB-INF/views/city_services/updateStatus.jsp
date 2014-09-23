@@ -8,7 +8,6 @@
 </sec:authorize>
 <sec:authorize access="hasRole('ROLE_SUPERADMIN')">
   <div id="simple_content_text">
-    <p>${dataSizeServer} records were found on city services server.</p>
-    <p>${dataSizeStored} records had images and were stored on system.</p>
+    <p>System is getting data from City Services and storing to repo.</p>
   </div>
 </sec:authorize>

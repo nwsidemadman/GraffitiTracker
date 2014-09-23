@@ -15,29 +15,9 @@ import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
  */
 public interface ChicagoCityServicesGraffitiService {
 
-  /**
-   * Gets the chicago city service requests for graffiti from server.
-   * 
-   * @param startDate
-   *          the start date
-   * @param endDate
-   *          the end date
-   * @return the chicago city service requests from server
-   */
-  List<ChicagoCityServiceGraffiti> getChicagoCityServiceGraffitiRequestsFromServer(
-      Date startDate, Date endDate);
+  // TODO(ccaper): javadoc
+  void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(Date startDate, Date endDate);
 
-  //TODO(ccaper): update javadoc
-  /**
-   * Store chicago city service graffiti data.
-   * 
-   * @param data
-   *          the data
-   */
-  int storeChicagoCityServiceGraffitiRequests(
-      List<ChicagoCityServiceGraffiti> data);
-
-  
   /**
    * Gets the all graffiti from repository matching criteria.
    *
@@ -46,6 +26,6 @@ public interface ChicagoCityServicesGraffitiService {
    * @param endDate the end date
    * @return the graffiti matching criteria
    */
-  List<ChicagoCityServiceGraffiti> getAllGraffiti(List<String> status,
+  List<ChicagoCityServiceGraffiti> getAllGraffitiFromRepo(List<String> status,
       Timestamp startDate, Timestamp endDate);
 }
