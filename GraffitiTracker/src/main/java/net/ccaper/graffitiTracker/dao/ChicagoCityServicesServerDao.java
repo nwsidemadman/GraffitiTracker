@@ -22,4 +22,6 @@ public interface ChicagoCityServicesServerDao {
    * @return the graffiti
    */
   List<ChicagoCityServiceGraffiti> getGraffiti(Date startDate, Date endDate);
+  
+  void getGraffitiFromServerAndStoreInRepo(Date startDate, Date endDate);
 }

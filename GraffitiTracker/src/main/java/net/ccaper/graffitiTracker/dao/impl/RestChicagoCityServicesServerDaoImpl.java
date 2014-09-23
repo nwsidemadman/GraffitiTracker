@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,11 +21,13 @@ import net.ccaper.graffitiTracker.utils.DateFormats;
  * @author ccaper
  * 
  *         REST implementation of the ChicagoCityServicesServerDao.
- *
+ * 
  */
 @Repository("chicagoCityServicesServerDao")
 public class RestChicagoCityServicesServerDaoImpl implements
     ChicagoCityServicesServerDao {
+  private static final Logger logger = LoggerFactory
+      .getLogger(RestChicagoCityServicesServerDaoImpl.class);
   private static final String GRAFFITI_SERVICE_CODE = "4fd3b167e750846744000005";
   private static final String SERVICE_CODE_ARG = "service_code";
   private static final String PAGE_ARG = "page";
@@ -74,11 +78,43 @@ public class RestChicagoCityServicesServerDaoImpl implements
     return results;
   }
 
+  @Override
+  public void getGraffitiFromServerAndStoreInRepo(Date startDate, Date endDate) {
+    if ((startDate != null && endDate != null) && endDate.before(startDate)) {
+      throw new IllegalArgumentException(String.format(
+          "startDate '%s' must be <= to endDate '%s'",
+          DateFormats.W3_DATE_FORMAT.format(startDate),
+          DateFormats.W3_DATE_FORMAT.format(endDate)));
+    }
+    Map<String, String> urlVariables = new HashMap<String, String>(5);
+    urlVariables.put(SERVICE_CODE_ARG, GRAFFITI_SERVICE_CODE);
+    urlVariables.put(PAGE_SIZE_ARG, PAGE_SIZE);
+    setDateInChicagoServicesDateRangeUrl(startDate, START_DATE_ARG,
+        urlVariables);
+    setDateInChicagoServicesDateRangeUrl(endDate, END_DATE_ARG, urlVariables);
+    int page = 1;
+    List<ChicagoCityServiceGraffiti> temp;
+    do {
+      urlVariables.put(PAGE_ARG, Integer.toString(page));
+      temp = Arrays.asList(getGraffitiData(urlVariables));
+      logger.info(String.format(
+          "Page %d fetched from city services server with " + "%d items.",
+          page, temp.size()));
+      if (temp.size() != 0) {
+        logger.info(String.format("First item has a requested datetime of %s.",
+            DateFormats.W3_DATE_FORMAT.format(temp.get(0)
+                .getRequestedDateTime())));
+        ++page;
+      }
+      // save items here
+    } while (temp.size() != 0);
+  }
+
   // isolated for testing
   // visisble for testing
   /**
    * REST template call that gets the graffiti data.
-   *
+   * 
    * @param urlVariables
    *          the url variables for substitution in the url query string
    * @return the graffiti data
@@ -91,7 +127,7 @@ public class RestChicagoCityServicesServerDaoImpl implements
   // visible for testing
   /**
    * Sets the date in chicago services date range url.
-   *
+   * 
    * @param date
    *          the date
    * @param arg
