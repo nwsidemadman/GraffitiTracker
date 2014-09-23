@@ -70,7 +70,6 @@ public class CityServicesController {
     this.userSecurityService = userSecurityService;
   }
 
-  // TODO(ccaper): unit test
   /**
    * Gets the data update form.
    *
