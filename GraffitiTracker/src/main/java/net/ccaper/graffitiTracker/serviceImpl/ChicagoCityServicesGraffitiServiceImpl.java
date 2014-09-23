@@ -149,7 +149,13 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
     emailFetchAndStoreResults(recipients, totalRecordsServer, totalRecordsSaved);
   }
 
-  // TODO(ccaper): javadoc
+  /**
+   * Email fetch and store results.
+   *
+   * @param recipients the recipients to notify
+   * @param totalRecordsServer the total records on server from fetch
+   * @param totalRecordsSaved the total records saved in repo from fetch
+   */
   private void emailFetchAndStoreResults(List<String> recipients,
       int totalRecordsServer, int totalRecordsSaved) {
     mailService

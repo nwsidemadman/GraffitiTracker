@@ -111,16 +111,22 @@ public class CityServicesController {
       userEmail = appUserService.getEmailByUsername(username);
       model.put("appUser", username);
     }
-    getDateFromServerAndStoreInRepoAsynch(userEmail,
+    getDataFromServerAndStoreInRepoAsynch(userEmail,
         cityServiceUpdateForm.getStartDateAsDate(),
         cityServiceUpdateForm.getEndDateAsDate());
     return "city_services/updateStatus";
   }
 
-  // TODO(ccaper): javadoc
   // TODO(ccaper): unit test
+  /**
+   * Wrapper to get the data from server and store in repo async.
+   *
+   * @param userEmail the user email
+   * @param startDate the start date
+   * @param endDate the end date
+   */
   @Async
-  private void getDateFromServerAndStoreInRepoAsynch(String userEmail,
+  private void getDataFromServerAndStoreInRepoAsynch(String userEmail,
       Date startDate, Date endDate) {
     List<String> recipients = new ArrayList<String>(1);
     if (userEmail != null) {
