@@ -101,7 +101,6 @@ public class CityServicesController {
    *          the model
    * @return the view name
    */
-  // TODO(ccaper): update test
   @RequestMapping(value = "/update", method = RequestMethod.POST)
   public String updateCityServiceData(
       CityServiceUpdateForm cityServiceUpdateForm, Map<String, Object> model) {
