@@ -13,6 +13,7 @@ import java.util.List;
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesGraffitiDao;
 import net.ccaper.graffitiTracker.dao.ChicagoCityServicesServerDao;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
+import net.ccaper.graffitiTracker.service.MailService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -60,7 +61,9 @@ public class ChicagoCityServicesGraffitiServiceImplTest {
 
     Date startDate = null;
     Date endDate = null;
+    MailService mailServiceMock = mock(MailService.class);
     ChicagoCityServicesGraffitiServiceImplMock classUnderTest = new ChicagoCityServicesGraffitiServiceImplMock();
+    classUnderTest.setMailService(mailServiceMock);
     List<ChicagoCityServiceGraffiti> data = new ArrayList<ChicagoCityServiceGraffiti>(
         2);
     ChicagoCityServiceGraffiti datum1 = new ChicagoCityServiceGraffiti();

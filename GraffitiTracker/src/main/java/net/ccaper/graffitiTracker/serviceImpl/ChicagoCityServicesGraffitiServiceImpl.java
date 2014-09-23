@@ -112,7 +112,6 @@ public class ChicagoCityServicesGraffitiServiceImpl implements
    * (java.util.Date, java.util.Date)
    */
   @Override
-  // TODO(ccaper): update test
   public void getChicagoCityServiceGraffitiRequestsFromServerAndStoreInRepo(
       List<String> recipients, Date startDate, Date endDate) {
     int page = 1;
