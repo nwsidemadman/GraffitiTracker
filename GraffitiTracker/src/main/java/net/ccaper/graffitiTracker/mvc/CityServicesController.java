@@ -3,7 +3,6 @@ package net.ccaper.graffitiTracker.mvc;
 import java.util.List;
 import java.util.Map;
 
-import net.ccaper.graffitiTracker.objects.AppUser;
 import net.ccaper.graffitiTracker.objects.ChicagoCityServiceGraffiti;
 import net.ccaper.graffitiTracker.objects.CityServiceUpdateForm;
 import net.ccaper.graffitiTracker.service.AppUserService;
