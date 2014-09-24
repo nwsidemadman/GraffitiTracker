@@ -3,7 +3,7 @@ GraffitiTracker
 
 Status
 ------
-Basic infrastructure in place.  Login, username, password recovery feature complete. User account edits complete. Super admin user account edits complete.  Super admin ip banning complete.
+Basic infrastructure in place.  Login, username, password recovery feature complete. User account edits complete. Super admin user account edits complete.  Super admin ip banning complete.  Sourcing city service data, data loads initiated through super admin form taking a date range for load.  Basic graffiti map and datatable of data completed, allowing user to filter on status and date range.  Map gives markers for graffiti locations, with an info window of details and image thumbnail, with hyperlinks to full image and city service request.
 
 Summary
 -------
@@ -35,6 +35,8 @@ Feature/Infrastructure Overview
 -Bootstrap framework implemented for layout  
 -Datatables used for table display  
 -Ajax calls implemented with JSON and HTML responses where practical  
+-Graffiti data sourced through REST calls to city service Open 311 API  
+-Google Maps JavaScript API v3 used to display graffiti locations
 
 To Build With Maven
 -------------------
