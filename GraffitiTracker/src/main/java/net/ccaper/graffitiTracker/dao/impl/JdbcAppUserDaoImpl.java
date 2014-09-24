@@ -54,11 +54,11 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
   private static final String SQL_SELECT_ALL_USERS = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s", USER_ID_COL, USERNAME_COL,
       EMAIL_COL, IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL,
-      PREVIOUS_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE).toLowerCase();
+      CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE).toLowerCase();
   private static final String SQL_SELECT_USER_BY_ID = String.format(
       "SELECT %s, %s, %s, %s, %s, %s, %s FROM %s WHERE %s = :%s", USER_ID_COL,
       USERNAME_COL, EMAIL_COL, IS_ACTIVE_COL, REGISTRATION_TIMESTAMP_COL,
-      PREVIOUS_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE, USER_ID_COL,
+      CURRENT_LOGIN_TIMESTAMP_COL, LOGIN_COUNT_COL, USERS_TABLE, USER_ID_COL,
       USER_ID_COL).toLowerCase();
   private static final String SQL_INSERT_USER = String.format(
       "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (:%s, :%s, :%s, :%s, :%s)",
@@ -74,9 +74,8 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
           "SELECT CASE WHEN (SELECT COUNT(%s) FROM %S WHERE %S = :%s) > 0 THEN TRUE ELSE FALSE END",
           EMAIL_COL, USERS_TABLE, EMAIL_COL, EMAIL_COL).toLowerCase();
   private static final String SQL_SELECT_USERNAME_BY_EMAIL = String.format(
-      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;",
-      USERNAME_COL, USERS_TABLE, EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL)
-      .toLowerCase();
+      "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", USERNAME_COL,
+      USERS_TABLE, EMAIL_COL, EMAIL_COL, IS_ACTIVE_COL).toLowerCase();
   private static final String SQL_SELECT_EMAIL_BY_USERNAME = String.format(
       "SELECT %s FROM %s WHERE %s = :%s and %s = 1;", EMAIL_COL, USERS_TABLE,
       USERNAME_COL, USERNAME_COL, IS_ACTIVE_COL).toLowerCase();
@@ -184,8 +183,8 @@ public class JdbcAppUserDaoImpl extends NamedParameterJdbcDaoSupport implements
       appUser.setEmail(rs.getString(EMAIL_COL));
       appUser.setIsActive(rs.getBoolean(IS_ACTIVE_COL));
       appUser.setRegisterTimestamp(rs.getTimestamp(REGISTRATION_TIMESTAMP_COL));
-      appUser.setPreviousLoginTimestamp(rs
-          .getTimestamp(PREVIOUS_LOGIN_TIMESTAMP_COL));
+      appUser.setCurrentLoginTimestamp(rs
+          .getTimestamp(CURRENT_LOGIN_TIMESTAMP_COL));
       appUser.setLoginCount(rs.getInt(LOGIN_COUNT_COL));
       return appUser;
     }

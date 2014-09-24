@@ -81,7 +81,7 @@
                   return dateFormat_yyyymmdd(oObj);
                 }
               },
-              { "data": "previousLoginTimestamp",
+              { "data": "currentLoginTimestamp",
                 "mRender": function ( oObj ) {
                   if (oObj == null) {
                     return "N/A";

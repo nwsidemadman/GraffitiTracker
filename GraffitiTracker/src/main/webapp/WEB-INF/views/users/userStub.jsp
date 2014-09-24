@@ -36,7 +36,7 @@
           <input id="manageUsersIsActive" type="radio" name="isActive" value="false" <c:if test="${appUser.isActive == false}">checked</c:if>>No
         </div>
         <div>Registered: <fmt:formatDate value="${appUser.registerTimestamp}" pattern="yyyy-MM-dd" /></div>
-        <div>Last Login: <fmt:formatDate value="${appUser.previousLoginTimestamp}" pattern="yyyy-MM-dd" /></div>
+        <div>Last Login: <fmt:formatDate value="${appUser.currentLoginTimestamp}" pattern="yyyy-MM-dd" /></div>
         <div>Login Count: ${appUser.loginCount }</p>
         <div><input id="manageUserSubmit" type="submit" value="Edit"><p>
       </form>
